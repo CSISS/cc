@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="frame">
+<head>
+    <title>People</title>
+</head>
+<body>
+<div class="clearfix" layout:fragment="content">
+
+    <div class="sec-heading font-default">
+        <div class="container">
+            <h1 class="pull-left">People</h1>
+
+            <div class="detail-text pull-right">
+                Our team consists of geospatial information scientists, Earth science modelers, and cyber-system
+                developers. The team works closely for overall system architecture design, implementation,
+                end-to-end testing, demonstration, and community outreach.
+            </div>
+        </div>
+    </div>
+
+    <section class="container font-default">
+        <div class="panel panel-default">
+
+            <h2 id="pi-di">Principle Investigator</h2>
+
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-3">
+                            <img class="img-responsive img-thumbnail" th:attr="src=@{../images/photo_ldi.png}"/>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            <address>
+                                <h4><a href="http://cloud.csiss.gmu.edu/ldi">Dr. Liping Di</a></h4>
+                                <strong>Professor</strong><br/>
+                                <strong>Director, Center for Spatial Information Science &amp; Systems</strong><br/>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <address class="pull-left">
+                        <strong>George Mason University</strong><br/>
+                        4400 University Drive, MSN 6E1<br/>
+                        Fairfax, VA 22030<br/>
+                        <abbr title="Phone">Phone:</abbr> (703)-993-6114<br/>
+                        <abbr title="Email">Email:</abbr> <a href="mailto:ldi@gmu.edu">ldi@gmu.edu</a>
+                    </address>
+                </div>
+            </div>
+            <div class="seperator-line" id="co-pi"/>
+
+            <h2>Co-Principle Investigators</h2>
+
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-3">
+                            <img class="img-responsive img-thumbnail" th:attr="src=@{../images/photo_ben.png}"/>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            <address>
+                                <h4>Dr. Ben Domenico</h4>
+                                <strong>Development and Outreach Manager, Unidata</strong><br/>
+                                <strong>University Corporation for Atmospheric Research (UCAR)</strong><br/>
+                                3450 Mitchell Lane<br/>
+                                Boulder, CO 80301 <br/>
+                                <abbr title="Phone" id="co-pi-huang">Phone:</abbr> (303)-497-8631<br/>
+                                <abbr title="Email">Email:</abbr> <a href="mailto:ben@ucar.edu">ben@ucar.edu</a>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-3">
+                            <img class="img-responsive img-thumbnail" th:attr="src=@{../images/photo_huang.png}"/>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            <address>
+                                <h4>Dr. Haosheng Huang</h4>
+                                <strong>Associate Professor, Department of Oceanography and Coastal Science</strong><br/>
+                                <strong>Louisiana State University</strong><br/>
+                                320 Howe-Russell Geoscience Complex<br/>
+                                Baton Rouge, LA 70803<br/>
+                                <abbr title="Phone" id="co-pi-tong">Phone:</abbr> (225)-578-5117<br/>
+                                <abbr title="Email">Email:</abbr> <a href="mailto:hhuang7@lsu.edu">hhuang7@lsu.edu</a>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-3">
+                            <img class="img-responsive img-thumbnail" th:attr="src=@{../images/photo_tong.png}"/>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            <address>
+                                <h4>Dr. Daniel Tong</h4>
+                                <strong>Center for Spatial Information Science and Systems</strong><br/>
+                                <strong>George Mason University</strong><br/>
+                                4400 University Drive, MSN 6E1<br/>
+                                Fairfax, VA 22030<br/>
+                                <abbr title="Phone" id="co-pi-wu">Phone:</abbr> (703)-993-1210<br/>
+                                <abbr title="Email">Email:</abbr> <a href="mailto:qtong@gmu.edu">qtong@gmu.edu</a>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-3">
+                            <img class="img-responsive img-thumbnail" th:attr="src=@{../images/photo_wu.png}"/>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            <address>
+                                <h4>Dr. Xiaoqing Wu</h4>
+                                <strong>Department of Geological and Atmospheric Sciences</strong><br/>
+                                <strong>Iowa State University</strong><br/>
+                                320 Howe-Russell Geoscience Complex<br/>
+                                Baton Rouge, LA 70803<br/>
+                                <abbr title="Phone">Phone:</abbr> (515)-2904-9872<br/>
+                                <abbr title="Email">Email:</abbr> <a href="mailto:wuxq@iastate.edu">wuxq@iastate.edu</a>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

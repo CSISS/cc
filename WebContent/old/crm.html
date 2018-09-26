@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>CyberConnector Function Portal</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="css/bootstrap_style.css" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/navbar-static-top.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <!-- Static navbar head -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        
+        <div id="navbar" class="navbar-collapse collapse">
+			
+		  <img class="pull-left" src="images/logo_cyberconnector.png" style="width:34%; height:34%" />
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://cube.csiss.gmu.edu">Home</a></li>
+            <li><a href="index.html">Function</a></li>
+            <li><a href="doc.html">Documentation</a></li>
+			<li><a href="demo.html">Demonstration</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+          <!--<ul class="nav navbar-nav navbar-right">
+            <li><a href="../navbar/">Default</a></li>
+            <li class="active"><a href="./">Static top <span class="sr-only">(current)</span></a></li>
+            <li><a href="../navbar-fixed-top/">Fixed top</a></li>
+          </ul>-->
+        </div>
+      </div>
+    </nav>
+
+	<!--body-->
+    <div class="container">
+		<!-- Jumbotron -->
+		<div class="jumbotron">
+			<h2>Cloud Resolving Model</h2>
+		</div>
+		<p class="normal">&#33; This page is built to help automatically produce qualified inputs for Cloud Resolving Model application in Cyberinfrastructure.</p>
+		<p class="normal">&#33; <a href="http://www.meteor.iastate.edu/faculty/wuxq/wuxq.html">Prof. Xiaoqing Wu</a> from <a href="http://www.iastate.edu/">Iowa State University</a> provides the interior algorithms and codes which perform the actual data transformation processing. </p>
+		<p class="title">CSU array-averaged analysis products</p>
+		<p class="normal">These data products were created by objectively analyzing upper-air sonde data onto a regular 1-degree, 
+25-hPa grid using multiquadric interpolation. The gridded data fields were then averaged over the Northern Sounding Array (NSA) and Southern Sounding Arrays (SSA). The NSA analyses were strongly modulated by MJO signal while SSA analyses were modulated more by ITCZ convection. Default input files of Indian Ocean: </p>
+		<ul>
+			<li><a href="http://www3.csiss.gmu.edu/data/fields.lsan_v1">field.lsan_v1</a>
+			<li><a href="http://www3.csiss.gmu.edu/data/q1q2.lsan_v1">q1q2.lsan_v1</a></li>
+			<li><a href="http://www3.csiss.gmu.edu/data/nsa.dfluxes">nsa.dfluxes</a></li>
+		</ul>
+		<p class="normal">Time period: 1 October - 31 Decemeber 2011,  6-hr resolution unless noted otherwise</p>
+		<ul class="list-inline">
+			<li>
+				  <div class="form-group">
+				    <label for="field_file_url">Input Field file</label>
+				    <input id="field_file_url" type="text" class=" form-control col-lg-6"> <font style="color: red;">*</font>
+				  </div>			
+			</li>
+			<li>
+				<div class="form-group">
+				    <label for="q1q2_file_url">Input Q1 and Q2 file</label>
+				    <input id="q1q2_file_url"  type="text"  class=" form-control col-lg-6"> <font style="color: red;">*</font>
+				  </div>					
+			</li>
+			<li>
+				<div class="form-group">
+				    <label for="fluxes_file_url">Input Surface Fluxes file</label>
+				    <input id="fluxes_file_url"  type="text"  class=" form-control col-lg-6"> <font style="color: red;">*</font>
+				  </div>		
+			</li>
+			
+			<br>
+			<br>
+		</ul>
+		<ul>
+			<li class="largelinespace">Provide an email address to receive the final product: <input type="text" id="email" placeholder="receiver@example.com"> <font style="color: red;">*</font></li>
+			<li class="largelinespace">Click the button to place the order: <input type="button"  id="crm_btn" value="Place an order"></li>
+			<li class="largelinespace">Click <a href="http://www3.csiss.gmu.edu/VDP">here</a> to view the corresponding geoprocessing model and workflow of this virtual product.</li>
+			<li class="largelinespace">Click <a href="chkorder.html">here</a> to check the status of your order.</li>
+		</ul>
+		<br>
+    </div> <!-- /container -->
+	
+	<!--footer-->
+	<footer class="footer-sponsor col-xs-12">
+		<div class="container text-center">
+			<div class="col-sm-3">
+				<a href="http://csiss.gmu.edu/" target="_blank"><img style="width:80%; height:80%" src="images/logo_gmucsiss.png" /></a>
+			</div>
+			<div class="col-sm-4">
+				<a href="http://www.unidata.ucar.edu/" target="_blank"><img style="width:82%; height:82%" src="images/logo_unidata.png" /></a>
+			</div>
+			<div class="col-sm-2">
+				<a href="http://www.iastate.edu/" target="_blank"><img style="width:85%; height:85%" src="images/logo_iowa.png" /></a>
+			</div>
+			<div class="col-sm-2">
+				<a href="http://www.lsu.edu/" target="_blank"><img style="width:85%; height:85%" src="images/logo_lsu.png" /></a>
+			</div>
+
+		</div>
+		<!-- end .container -->
+	</footer>
+
+	<footer class="footer-disclaimer col-xs-12">
+		<div class="container active">
+			&copy; 2014 - <span>2016</span> CyberConnector |
+			<a href="http://csiss.gmu.edu/" target="_blank" title="Center for Spatail Information Science &amp; System"> CSISS </a> |
+			<a href="http://earthcube.org/" target="_blank" title="EarthCube Home Page"> EarthCube </a> |
+			<a href="http://www.nsf.gov/geo/earthcube/" target="_blank" title="Official NSF EarthCube content">
+				Funded by National Science Foundatation
+			</a>
+			<img style="width: 40px; height: 40px;" src="images/logo_nsf.gif" />
+			<p>If you have technical problems about using this website, please contact Dr. Ziheng Sun.</p>
+			<p>E-mail: zsun@gmu.edu Phone: (+1) 703-993-6124</p>
+			<p>Mailing address: 4400 University Drive, MSN 6E1, Fairfax, VA 22030, USA.</p>
+			<br>
+			
+		</div>
+		
+	</footer>
+	
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.3.min.js"><\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+		<!-- updated by Ziheng Sun on 8/31/2015 from 1.4.4 to 1.11.3 -->
+	<!--<script type="text/javascript" src="js/jquery-1.11.3.min.js" ></script>-->
+	<script type="text/javascript" language="javascript" src="js/datetimepicker.js"></script>
+	
+	<script type="text/javascript" src="js/cc.js" ></script>
+	<script type="text/javascript" src="js/cc.util.js" ></script>
+	<script type="text/javascript" src="js/cc.crm.js"></script>
+	<script type="text/javascript" src="js/cc.main.js" ></script>
+  </body>
+</html>

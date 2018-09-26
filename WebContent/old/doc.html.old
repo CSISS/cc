@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Document Page - CyberConnector</title>
+		<link href="favicon.ico" rel="bookmark" type="image/x-icon" />
+		<link href="favicon.ico" rel="icon" type="image/x-icon" />
+		<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" /> 
+		<link rel="stylesheet" media="all" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<header>
+			<h1>CyberConnector Data Request Interface</h1>	
+		</header>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li> 
+				<li><a href="doc.html">Documentation</a></li>
+				<li><a href="demo.html">Demonstration</a></li>
+				<li><a href="about.html">About</a></li>
+			</ul>
+		</nav>
+		<div class="CyberConnectorClient">
+			<table class="intro" id="intro">
+					<tr>
+						<td class="portal">
+							<p class="title">Documentation of CyberConnector Data Request Interface</p>
+							<h4>1. Brief introduction</h4>
+							<p>CyberConnector, as an EarthCube building block, is developed for facilitating the automatic preparation and feeding of both historic and near-real time Earth Observation (EO) customized data and on-demand derived products into Earth science models (ESM).</p>
+							<br>
+						 	<p>It will automatically process the EO data into the right products in the right form needed for ESM initialization, validation, and inter-comparison. It can support many different ESMs through its standard interfaces under a unified framework.</p>
+						 	<br>
+						 	<p>The goals of CyberConnector are:</p>
+						 	<ul>
+						 		<li>Efficiently and robustly preparing and feeding EO data to ESMs</li>
+						 		<li>Efficiency, scalability, and generality</li>
+						 		<li>Enabling the knowledge accumulation and sharing</li>
+						 		<li>Automatically presenting ESM outputs/results through the Web</li>
+						 		<li>Facilitating Business Event Processing (BEP)</li>
+						 		<li>Engaging in broad community participations in developing and using CyberConnector and sustaining its operation.</li>
+						 	</ul>
+						 	
+							<h4>2. Framework</h4>
+							<p>The framework of CyberConnector is designed by following the spirits and conceptual rules of model web. It contains several modules most of which are distributable and selfrunnable. The characteristics make CyberConnector into a very loosely coupled and scalable framework. Simply speaking, CyberConnector is composed of five major components: model designer, model instantiation, model runner, model monitor and order manager. </p>
+							<ul>
+								<li>Model designer helps experts to design abstract models based on their specific domain knowledge.</li>
+								<li>Model instantiation is responsible to instantiate the designed models into runnable workflow instances.</li>
+								<li>Model runner is used to deploy and execute the runnable workflow by user-specified inputs.</li>
+								<li>During the execution, model monitor will dynamically capture the status of each model run.</li>
+								<li>Order manager is responsible to interact with end-point users to notify them what status their orders are in.</li>
+							</ul>
+							<h4>3. Preprocess models</h4>
+							<p>CyberConnector provides and regularly  maintains the preprocess models of three science models for demonstrating the feasibility of the CyberConnector idea. The three default supported models are:</p>
+							<ul>
+								<li>
+									<a name="fvcom"></a>Finite Volume Community Ocean Model (FVCOM)
+									<ul>
+										<li><b>model introduction</b>: FVCOM is a prognostic, unstructured-grid, finite-volume, free-surface, three-dimensional primitive equation coastal ocean circulation model. FVCOM solves controlling partial differential equations using the finite-volume method. FVCOM is solved numerically by flux calculation using the integral form of the governing equations over a horizontal unstructured triangular grid and a vertical terrain-following coordinate. It provides perfect local conservation of mass, momentum, salt, heat, and tracer. These features make FVCOM ideally suited for environmental prediction and interdisciplinary applications in coastal oceans and estuaries.</li>
+										
+										<li>
+											The preprocess models for FVCOM include:
+											<ul>
+												<li>
+													Temperature and salinity condition
+													<ul>
+														<li>
+															<b>explanation</b>: Initial fields of water temperature and salinity at individual
+	triangular nodes. This file is extracted and interpolated from HYCOM output (<a href="ftp://ftp.hycom.org/datasets/
+	GOMl0.04 /expt_31.0/data/">ftp://ftp.hycom.org/datasets/
+	GOMl0.04 /expt_31.0/data/</a>) which is in NETCDF format (Filename example:
+	archv.2010_001_00_3z.nc). Steps to process this data:
+															<ul>
+																			<li>Read NETCDF files and interpolate T and S at individual nodes;</li>
+																			<li>Rewrite the output to FVCOM input format.</li>
+															</ul>
+														</li>
+														<li><b>model graph</b>: <a href="images/hycom_model_screenshot.jpg">View</a></li>
+														<li><b>coverage</b>: every hour between 2009.091 and 2014.365 (julian day format)</li>
+														<li><b>average duration time of model run</b>: 12 hours</li>
+													</ul>	
+												</li>
+												<li>
+													River discharge
+													<ul>
+														<li><b>explanation</b>: River discharge data including number of rivers, discharge volume,
+discharge temperature, and discharge salinity. River discharge data are extracted from USGS website. Details are introduced in the <a href="fvcom.html">fvcom page</a>.</li>
+														<li><b>model graph</b>: <a href="images/river_model_screenshot.jpg">View</a></li>
+														<li><b>coverage</b>: yearly product, from 2010 to 2014</li>
+														<li><b>average duration time of model run</b>: 30 minutes</li>
+													</ul>	
+												</li>
+												<li>
+													Wind forcing
+													<ul>
+														<li><b>explanation</b>: The real-time fields of wind velocity or wind stress used for FVCOM. Wind data comes from North American Regional Reanalysis (NARR, <a href="ftp://nomads.ncdc.noaa.gov/NARR/">ftp://nomads.ncdc.noaa.gov/NARR/</a>), which is 3-hourly and in the GRB format. Steps to convert NARR to FVCOM input file:
+ 														<ul>
+																	<li>Download data from NARR with python script and convert GRB format to txt;</li>
+																	<li>Pick up data within a small area which you are interested in;</li>
+																	<li>Interpolate wind velocity components u/v at each FVCOM triangular centroids;</li>
+																	<li>Rewrite to FVCOM input format and save to casename_wnd.dat.</li>
+															</ul>
+														</li>
+														<li><b>model graph</b>: <a href="images/wind_model_screenshot.jpg">View</a></li>
+														<li><b>coverage</b>: from 1979.1.1 to 2014.10.2</li>
+														<li><b>average duration time of model run</b>: depends on the inputted time scope</li>
+													</ul>	
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a name="crm"></a>Cloud Resolving Model (CRM)
+									<ul>
+										<li><b>model introduction</b>: CRM, which explicitly resolve the cloud-scale dynamical circulations and directly couple these physical processes, provide a useful tool to simulate the response of convection and clouds to the large-scale forcing under different climate regimes in producing cloud, precipitation and radiative properties. CRM simulations validated by field experiments have shown great values to improving the process-level understanding of cloud-related processes and their representation (such as closure assumption, trigger condition, convective momentum transport, and subgrid cloud distribution) in general circulation models (GCMs).</li>
+										<li>
+											The preprocess models for CRM include:
+											<ul>
+												<li>
+													Derived data of CSU array-averaged analysis products
+													<ul>
+														<li>
+														<b>explanation</b>: These data products were created by objectively analyzing upper-air sonde data onto a regular 1-degree, 25-hPa grid using multiquadric interpolation.  The gridded data fields were then averaged over the Northern Sounding Array (NSA) and Southern Sounding Arrays (SSA). The files include: 
+															<ul>
+																<li>Initial sounding</li>
+										  						<li>Velocity profile file</li>
+										  						<li>Profiles for large scale forcing terms</li>
+										  						<li>Time series of ocean surface potential temperature and water vapor mixing ratio</li>
+										  						<li>Temperature and water vapor mixing ratio profiles for selected period</li>
+															</ul>
+														</li>
+														<li><b>model graph</b>: <a href="images/crm_model_screenshot.jpg">View</a></li>
+														<li><b>coverage</b>: 1 October - 31 Decemeber 2011,  6-hr resolution</li>
+														<li><b>average duration time of model run</b>: less than 3 minutes</li>
+													</ul>	
+												</li>
+											</ul>
+											
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a name="cmaq"></a>Community Multi-scale Air Quality Model (CMAQM)
+									<ul>
+										<li><b>model introduction</b>: The Community Multiscale Air Quality Model (CMAQ) is an active open-source community-developed air quality model that consists of a suite of programs for conducting air quality model simulations. It is a widely used regional chemical transport model, providing technically sound estimates of ozone, particulates, toxics, and acid deposition. CMAQ has arguably the largest user community around the world. </li>
+										<li>
+										The preprocess models for CMAQM include:
+											<ul>
+												<li>
+													Pending
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a name="vci"></a>Vegetation Condition Index Generation Model 
+									<ul>
+										<li><b>model introduction</b>: </li>
+										<li>
+										The model for generating VCI  is:
+											<ul>
+												<li>
+													Pending
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							
+							<h4>4. Design&Run Preprocess Models</h4>
+							<p><a name="VDP"></a>Design new models - VDP (Virtual data product) designer</p>
+							<ul>
+								<li><b>Intro</b>: VDP is an abstract model designer for generating virtual data product. Virtual data product means the product which doesn't exist before users request them. Once a request is initialized, the product will be generated dynamically by running a data generation model. VDP is developed by Center for Spaital Information Science and Systems, George Mason University. The website of VDP is <a href="http://www3.csiss.gmu.edu/VDP">http://www3.csiss.gmu.edu/VDP</a>. Currently, the website offers VDP in several versions which can be used in both Microsoft Windows and Linux systems. </li>
+								<li><b>Usage</b>: The tool provides an interface for experts to design a new model by dragging and dropping the function component from a service tree to a workspace canvas and connecting the services by sequencely doubleclicking two objects on the workspace canvas. VDP will validate the designed models and lead experts to a pop-up wizard which lets them complete the establishment of models and related virtual products. The models and products will be all registered into our catalog. VDP also provides a button to automatically instantiate the abstract model into a runnable workflow instance in a standard workflow language (such as BPEL, Business Process Execution Language). </li>
+							</ul>
+							<p><a name="BPELPower"></a>Run models - BPELPower </p>
+							<ul>
+								<li><b>Intro</b>: BPELPower is a workflow engine software developed by Center for Spatial Information Science and Systems, George Mason University. It support parsing and executing WS-BPEL (1.1), WSDL 1.1, SOAP (1.1, 1.2), WS-Addressing (2003/03/03,2004/04/08, 2005/05/08), WS-Security (WS-Policy 1.2, SAML 1.1). BPELPower is used to execute the generated workflow instances to complete the model runs. The current address of BPELPower is <a href="http://www3.csiss.gmu.edu/BPELPower">http://www3.csiss.gmu.edu/BPELPower</a>.</li>
+								<li><b>Usage</b>: The workflow package will be uploaded to BPELPower for deployment. Once the deployment is done, BPELPower will offer a port for users to invoke the deployed workflow. If users input corresponding values to the exposed input parameters of the workflow, the workflow instance will be activated to run. When the workflow run is over, the output will be return to the users who initiated the execution. </li>
+							</ul>
+							
+							<h4>5. Register new web services/Unregister web services</h4>
+							<p><a name="regser"></a>Register new web services</p>
+							<ul>
+								<li>This function provides an interface to register new services into our catalog. Once a service is registered, you will be able to find it in the service tree of VDP. Currently, the registration function only supports WSDL. The services with other description language and regulations are not allowed for now. Make sure the inputted WSDL URLs are accessible. Otherwise, the registration will fail.</li>
+							</ul>
+							<p><a name="unregser"></a>Un-register old web services</p>
+							<ul>
+								<li>This function is provided to remove those web services which are no longer available or used. For now, WSDL only. </li>
+							</ul>
+							<h4>6. Order Submission and Status Checking</h4>
+							<p><a name="ordercheck"></a>Order status checking</p>
+							<ul>
+								<li>CyberConnector implementation uses an order mechanism. Every user request is considered as an order. The orders are first stored in a table and wait to be processed. If a worker thread in CyberConnector is available, a new order will be assigned to the worker to run instantly. Because the number of worker threads is restricted, not every order will be processed instantly once they are submitted. If the available workers are zero, the new-submitted orders will have to wait until a worker is released. So the duration of processing each order varies according to order waiting time and server load. </li>
+								<li>Users can check the status of their orders through <a href="chkorder.html">this interface</a>. Everytime users submit a request, an order id will be assigned and sent to users' email account. Using the order id users can query the status of the corresponding order. </li>
+							</ul>
+						</td>
+						
+					</tr>
+				</table>
+		</div>
+		
+		<footer>
+			<table class="contactarea">
+				<!-- Organization Icon Area -->
+				<!--  <tr>
+					<td><img src="csiss.gif"></td>
+					<td><img src=""></td>
+					<td></td>
+				</tr>-->
+				<!-- Contact information -->
+				<tr>
+					<td>
+						<p>All rights reserved. Copyright &copy; CSISS, George Mason University, 2015-2016.</p>
+						<p>If you have any problem in using this website, please contact Dr. Ziheng Sun. </p>
+						<p>E-mail: <a href="mailto:zsun@gmu.edu">zsun@gmu.edu</a> Phone: (+1) 703-993-6124</p>
+						<p>Mailing address: 4400 University Drive, MSN 6E1, Fairfax, VA 22030, USA.</p>
+					</td>
+				</tr>
+			</table>
+		</footer>
+	</body>
+</html>

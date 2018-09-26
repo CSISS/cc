@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Virtual Data Product Query Page - CyberConnector</title>
+		<link href="favicon.ico" rel="bookmark" type="image/x-icon" />
+		<link href="favicon.ico" rel="icon" type="image/x-icon" />
+		<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" /> 
+		<link rel="stylesheet" media="all" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<header>
+			<h1>CyberConnector Data Request Interface</h1>	
+		</header>
+		<nav>
+			<ul>
+				<li><a href="http://cube.csiss.gmu.edu">Home</a></li>
+            	<li><a href="index.html">Function</a></li>
+				<li><a href="doc.html">Documentation</a></li>
+				<li><a href="demo.html">Demonstration</a></li>
+				<li><a href="about.html">About</a></li>
+			</ul>
+		</nav>
+		
+		<form>
+			<div class="CyberConnectorClient" id="contentdiv">
+				<!-- <table class="intro" id="intro">
+					<tr>
+						<td>
+							<p>&nbsp;&nbsp;&nbsp;This interface provides users with an entrance to access the virtual geospatial data products registered in CyberConnector's CSW. The products are not present until someone requests them. Once a request is received, CyberConnector will invoke the product generation processing model on the server side and execute the model by adopting appropriate geoprocessing Web services. When the execution is over, the outputted products will be sent back to the data consumers automatically.</p>
+							<p>&nbsp;&nbsp;&nbsp;This online querying tool is built for the EarthCube funded project: <a href="http://earthcube.org/document/2015/cyberconnector-poster">CyberConnector: Bridging the Earth Observations and Earth Science Models</a>. The image on the right reveals the interior running mechanism of CyberConnector. For details please refer to the EarthCube website.</p>	
+						</td>
+						<td><a  href="http://earthcube.org/document/2015/cyberconnector-poster"><img src="images/cube.png" ></a></td>
+					</tr>
+				</table> -->
+				<table>
+					<tr>
+						<td>
+							<p>This page is built for a virtual product named customized neal real time vegetation condition index.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="title">1. Select virtual data product category</p>	
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="category">
+								<select defaultValue="select a product category..."  name="category" id="category">
+									<option>16 days 250m global customizable VCI</option>
+								</select><font color="red">*</font>
+							</p>
+							<p>Can't find your required products? Create one using <a href="/VDP" target=_blank>virtual data product designer</a>.</p>
+						</td> 
+					</tr>
+				</table>
+				<br>
+				<table>
+					<tr>
+						<td>
+							<p class="title">2. Specify a spatial extent</p>
+						</td>
+					</tr>
+					<tr>
+						<td  class="mapselector">
+							<!-- Bounding Box Selector Table-->
+							<table>
+								<tr>
+									<td colspan=2>
+										<div class="googlemapcontainer" id="gmap"></div>
+										<button id="delete" type='button'>Delete All Rectangles</button>
+									</td>
+								</tr>
+								<tr>
+									<td colspan=2>
+										Projection: 
+										<select id="proj">
+											<option>EPSG:4326</option>
+											<!-- <option>UTM</option>
+											<option>ESPG:32618</option> -->
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td colspan=2>Northern: <input type="text" id="north" name="north" value="" placeholder="90"><font color="red">*</font></td>
+								</tr>
+								<tr>
+									<td>Western: <input type="text" id="west"  name="west" value=""  placeholder="-180"><font color="red">*</font></td>
+									<td>Eastern: <input type="text" id="east" name="east" value=""  placeholder="180"><font color="red">*</font></td>
+								</tr>
+								<tr>
+									<td colspan=2>Southern: <input type="text" id="south" name="south" value="" placeholder="-90"><font color="red">*</font></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<br>
+				<table>
+					<tr>
+						<td>
+							<p class="title">3. Specify a temperal extent</p>
+						</td>
+					</tr>
+					<tr>
+						<td class="timeselector">
+							<!-- Tabel for Specifying Time Range -->
+							<table>
+								<tr>
+									<td>
+										Beginning Time: 
+									</td>
+									<td>
+										<input type="text" id="bdtv"  name="bdtv" onchange="cc.button.beginTimeTextChangeCallBack();" placeholder="2000-01-01 00:00:00"><font color="red">*</font>&nbsp;<button type='button' id="selectdate1"  class="buttondate" ><img src="images/calendar.png" height="16" width="16"></button>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Ending Time: 
+									</td>
+									<td>
+										<input type="text" id="edtv" name="edtv" onchange="cc.button.endTimeTextChangeCallBack();" placeholder="2000-01-01 00:00:00"><font color="red">*</font>&nbsp;<button type='button' id="selectdate2"  class="buttondate" ><img src="images/calendar.png" height="16" width="16" ></button>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<br>
+				<table>
+					<tr>
+						<td>
+							<p class="title">4. Provide your mail address</p>
+						</td>
+					</tr>
+					<tr>
+						<td class="timeselector">
+							<p>
+								Enter a mailing address to receive the products: <input type="text" name="mailaddress" id="mailaddress" value=""  placeholder="receiver@example.com"><font color="red">*</font>
+							</p>
+						</td>
+					</tr>
+				</table>
+
+				<table class="submittable">
+					<tr>
+						<td>
+							<input type="reset" value="Reset" >
+						</td>
+						<td>
+							<input type="button" value="Query"  id="query">
+						</td>
+					</tr>
+				</table>
+				
+			</div>
+		</form>
+		<footer>
+			<table class="contactarea">
+				<!-- Organization Icon Area -->
+				<!--  <tr>
+					<td><img src="csiss.gif"></td>
+					<td><img src=""></td>
+					<td></td>
+				</tr>-->
+				<!-- Contact information -->
+				<tr>
+					<td>
+						<p>All rights reserved. Copyright &copy; CSISS, George Mason University, 2015-2016.</p>
+						<p>If you have any problem in using this website, please contact Dr. Ziheng Sun. </p>
+						<p>E-mail: <a href="mailto:zsun@gmu.edu">zsun@gmu.edu</a> Phone: (+1) 703-993-6124</p>
+						<p>Mailing address: 4400 University Drive, MSN 6E1, Fairfax, VA 22030, USA.</p>
+					</td>
+				</tr>
+			</table>
+		</footer>
+	</body>
+	<!-- updated by Ziheng Sun on 8/31/2015 from 1.4.4 to 1.11.3 -->
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js" ></script>
+	<script type="text/javascript"src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzpGK0E70yB5M5cJpYuXayG29X3YJghD0&sensor=false&libraries=drawing"></script>
+	<script type="text/javascript" language="javascript" src="js/datetimepicker.js"></script>
+	
+	<script type="text/javascript" src="js/cc.js" ></script>
+	<script type="text/javascript" src="js/cc.util.js" ></script>
+	<script type="text/javascript" src="js/cc.list.js" ></script>
+	<script type="text/javascript" src="js/cc.button.js" ></script>
+	<script type="text/javascript" src="js/cc.map.js" ></script>
+	<script type="text/javascript" src="js/cc.main.js" ></script>
+</html>

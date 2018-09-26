@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="frame" >
+  	<head>
+    	<title>CyberConnector Service Type Select</title>
+    	
+    	<link rel="stylesheet" media="screen, projection" href="../css/select.css" th:href="@{../css/select.css}"/>
+    	
+  	</head>
+
+  <body>
+
+	<!--body-->
+    
+    <div class="clearfix" layout:fragment="content">
+    
+    	<div class="sec-heading font-default" >
+	        <div class="container" >
+	            <h2 class="pull-left">Select Service Type</h2>
+	            <div class="detail-text pull-right" >
+	                Only two types of services are supported for now. 
+	            </div>
+	        </div>
+	    </div>
+    
+    	<div class="container">
+    	
+		  <div class="selected-item">
+		    <p>You Selected Service Type : <span id="servicecategory">Empty</span></p>
+		  </div>
+		  
+		  <div class="dropdown">
+		
+		    <span class="selLabel">Select Category</span>
+		
+		    <input type="hidden" name="cd-dropdown" />
+		
+		    <ul class="dropdown-list">
+		      
+		      <li data-value="1">
+		
+		        <span>WSDL-SOAP</span>
+		
+		      </li>
+		      
+		      <li data-value="2">
+		
+		        <span>WPS</span>
+		
+		      </li>
+		      
+		    </ul>
+		
+		  </div>
+		  
+		  <div class="selected-item">
+		
+		    <p><button class="btn btn-default orange-circle-button text-black" href="" id="linkbtn">Go<br />Register</button></p>
+		
+		  </div>
+		  
+		</div>
+    	
+    </div>
+	
+	<th:block layout:fragment="script">
+  		
+  		
+		<script type="text/javascript" >
+		
+			$(".selLabel").click(function () {
+				
+			    $('.dropdown').toggleClass('active');
+			    
+			});
+		
+			
+			$(".dropdown-list li").click(function() {
+			    
+				$('.selLabel').text($(this).text());
+			    
+			    $('.dropdown').removeClass('active');
+			
+			    $('.selected-item p span').text($('.selLabel').text());
+			
+			});
+			
+			$( "#linkbtn" ).click(function() {
+				
+			  	var val = $.trim($("#servicecategory").text());
+				
+			  	//alert( "Service Type is changed to ." + val );
+			  	
+			  	if("WSDL-SOAP" == val){
+			  		
+			  		window.location.href = "regser";
+			  		
+			  	}else if("WPS" == val){
+			  		
+			  		window.location.href = "newservice";
+			  		
+			  	}else if("Empty" == val){
+			  		
+			  		alert("You haven't  chosen a service type.");
+			  		
+			  		return;
+			  		
+			  	}else{
+			  		
+			  		alert("Such service type is not supported yet.");
+			  		
+			  		return;
+			  		
+			  	}
+			  	
+			});
+		
+		</script>
+    
+    </th:block>
+	
+  </body>
+  
+</html>

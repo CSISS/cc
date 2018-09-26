@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Finite-Volume Coastal Ocean Model</title>
+		<link href="favicon.ico" rel="bookmark" type="image/x-icon" />
+		<link href="favicon.ico" rel="icon" type="image/x-icon" />
+		<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" /> 
+		<link rel="stylesheet" media="all" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<header>
+			<h1>CyberConnector Data Request Interface</h1>
+		</header>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li> 
+				<li><a href="doc.html">Documentation</a></li>
+				<li><a href="demo.html">Demonstration</a></li>
+				<li><a href="about.html">About</a></li>
+			</ul>
+		</nav>
+		
+		<form>
+			<div class="CyberConnectorClient" id="contentdiv">
+				<table>
+					<tr>
+						<td class="portal">
+							<p class="normal">&#33; This page is built to help automatically produce qualified inputs for Finite-Volume Coastal Ocean Model application in Cyberinfrastructure.</p>
+							<p class="normal">&#33; <a href="http://www.sce.lsu.edu/profile/haosheng-huang/">Prof. Haosheng Huang</a> from <a href="http://www.lsu.edu">Louisiana State University (LSU)</a> provides the interior algorithms and codes which perform the actual data transformation processing. </p>
+							<!-- Temperature and salinity initial condition file -->
+							<p class="title">Temperature and salinity initial condition file</p>
+							<p class="normal">This file is extracted and interpolated from HYCOM product (<a href="ftp://ftp.hycom.org/datasets/GOMl0.04/expt_31.0/data/">ftp://ftp.hycom.org/datasets/GOMl0.04/expt_31.0/data/</a>) which is free to download and generally in NetCDF format. The study area is Gulf of Mexico.</p>
+							
+							<ul>
+								<li class="largelinespace">Select a year: 
+									<select id="hycom_year" >
+									</select> <font style="color: red;">*</font>
+								</li>
+								<li class="largelinespace">Select a day: 
+									<select id="hycom_day">
+									</select> <font style="color: red;">*</font>
+								</li>
+								<li class="largelinespace">Select a hour: 
+									<select id="hycom_hour">
+									</select> <font style="color: red;">*</font>
+								</li>
+								<li class="largelinespace">Provide an email address to receive the final product: <input type="text" id="email_1" placeholder="receiver@example.com"> <font style="color: red;">*</font></li>
+								<li class="largelinespace">Click the button to place the order: <input type="button"  id="hycom_btn" value="Place an order"></li>
+								<li class="largelinespace">Click <a href="http://www3.csiss.gmu.edu/VDP">here</a> to view the corresponding geoprocessing model and workflow of this virtual product.</li>
+								<li class="largelinespace">Click <a href="chkorder.html">here</a> to check the status of your order.</li>
+							</ul>
+							<!-- River forcing file -->
+							<p class="title">River forcing file</p>
+							<p class="normal">River discharge data including number of rivers, discharge volume,
+discharge temperature, and discharge salinity. River discharge data are extracted from USGS website (<a href="http://waterdata.usgs.gov/usa/nwis/uv">http://waterdata.usgs.gov/usa/nwis/uv</a>). The file is generated based on four fixed observation sites (the site no in the basket is defined by USGS): </p>
+							<p class="normal">
+								<ul>
+									<li>Atchafalaya_River_at_Morgan_City (07381600)</li>
+									<li>Caernarvon_Outfall_Channel (295124089542100)</li>
+									<li>Mississippi_River_at_Belle_Chasse (07374525)</li>
+									<li>Wax_Lake_Outlet (07381590)</li>
+								</ul>
+							</p>
+							<p class="normal">Respectively, the list of adopted river properties for each site is (parameter no is defined and explained by USGS): </p>
+							<p class="normal">
+								<ul>
+									<li>00065; 00060</li>
+									<li>00065; 00010; 00060; 00095; 00480</li>
+									<li>00065; 00055; 00060</li>
+									<li>72020; 00060</li>
+								</ul>
+							</p>
+							<p class="normal">Complete the following form to request a FVCOM river input file:</p>
+							<ul>
+								<li class="largelinespace">Select a year: 
+									<select id="river_year">
+									</select> <font style="color: red;">*</font>
+								</li>
+								<li class="largelinespace">Provide an email address to receive the final product: <input type="text" id="email_2" placeholder="receiver@example.com"> <font style="color: red;">*</font></li>
+								<li class="largelinespace">Click the button to place the order: <input type="button"  id="river_btn" value="Place an order"></li>
+								<li class="largelinespace">Click <a href="http://www3.csiss.gmu.edu/VDP">here</a> to view the corresponding geoprocessing model and workflow of this virtual product.</li>
+								<li class="largelinespace">Click <a href="chkorder.html">here</a> to check the status of your order.</li>
+							</ul>
+							<!-- Wind forcing file -->
+							<p class="title">Wind forcing file</p>
+							<p class="normal">The real-time fields of wind velocity or wind stress used for FVCOM.</p>
+							<ul>
+								<li class="largelinespace">Select begin date: <input type="text" id="bdtv"  name="bdtv" onchange="cc.fvcom.beginTimeTextChangeCallBack();" placeholder="2000-01-01">&nbsp;<button type='button' id="selectdate1"  class="buttondate" ><img src="images/calendar.png" height="16" width="16"></button> <font style="color: red;">*</font></li>
+								<li class="largelinespace">Select end date:<input type="text" id="edtv"  name="edtv" onchange="cc.fvcom.endTimeTextChangeCallBack();" placeholder="2000-01-01">&nbsp;<button type='button' id="selectdate2"  class="buttondate" ><img src="images/calendar.png" height="16" width="16"></button> <font style="color: red;">*</font></li>
+								<li class="largelinespace">Provide an email address to receive the final product: <input type="text" id="email_3" placeholder="receiver@example.com"> <font style="color: red;">*</font></li>
+								<li class="largelinespace">Click the button to place the order: <input type="button"  id="wind_btn" value="Place an order"></li>
+								<li class="largelinespace">Click <a href="http://www3.csiss.gmu.edu/VDP">here</a> to view the corresponding geoprocessing model and workflow of this virtual product.</li>
+								<li class="largelinespace">Click <a href="chkorder.html">here</a> to check the status of your order.</li>
+							</ul>
+							
+						</td>
+					</tr>
+				</table>
+				
+				
+			</div>
+		</form>
+		<footer>
+			<table class="contactarea">
+				<!-- Organization Icon Area -->
+				<!--  <tr>
+					<td><img src="csiss.gif"></td>
+					<td><img src=""></td>
+					<td></td>
+				</tr>-->
+				<!-- Contact information -->
+				<tr>
+					<td>
+						<p>All rights reserved. Copyright &copy; CSISS, George Mason University, 2015-2016.</p>
+						<p>If you have any problem in using this website, please contact Dr. Ziheng Sun. </p>
+						<p>E-mail: <a href="mailto:zsun@gmu.edu">zsun@gmu.edu</a> Phone: (+1) 703-993-6124</p>
+						<p>Mailing address: 4400 University Drive, MSN 6E1, Fairfax, VA 22030, USA.</p>
+					</td>
+				</tr>
+			</table>
+		</footer>
+	</body>
+	<!-- updated by Ziheng Sun on 8/31/2015 from 1.4.4 to 1.11.3 -->
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js" ></script>
+	<script type="text/javascript" language="javascript" src="js/datetimepicker.js"></script>
+	
+	<script type="text/javascript" src="js/cc.js" ></script>
+	<script type="text/javascript" src="js/cc.util.js" ></script>
+	<script type="text/javascript" src="js/cc.fvcom.js"></script>
+	<script type="text/javascript" src="js/cc.main.js" ></script>
+</html>

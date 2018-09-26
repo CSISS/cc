@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Registration Page - CyberConnector</title>
+		<link href="favicon.ico" rel="bookmark" type="image/x-icon" />
+		<link href="favicon.ico" rel="icon" type="image/x-icon" />
+		<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" /> 
+		<link rel="stylesheet" media="all" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<header>
+			<h1>CyberConnector Data Request Interface</h1>	
+		</header>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li> 
+				<li><a href="doc.html">Documentation</a></li>
+				<li><a href="demo.html">Demonstration</a></li>
+				<li><a href="about.html">About</a></li>
+			</ul>
+		</nav>
+		<div class="CyberConnectorClient" id="contentdiv">
+			<table class="intro" id="intro">
+					<tr>
+						<td>
+							<h2>Register a geoprocessing Web service</h2>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="register">WSDL URI: &nbsp;&nbsp;&nbsp;<input type="text"  value="" class="wsdl" id="wsdluri" placeholder="input a WSDL URI..">&nbsp;&nbsp;&nbsp;<input type="button" id="regser" value="Register"><font color="red">*</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p><font color="red">*</font>This function is only for services with WSDL. The services following OGC standards will be supported in future.</p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h2>Un-register a geoprocessing Web service</h2>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="register">WSDL URI: &nbsp;&nbsp;&nbsp;<input type="text"  value="" class="wsdl" id="wsdluri2" placeholder="input a WSDL URI..">&nbsp;&nbsp;&nbsp;<input type="button" id="unregser" value="Un-Register"><font color="red">**</font></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p><font color="red">**</font>This function deletes the records of the submitted service in the registry.</p>
+						</td>
+					</tr>
+					
+				</table>
+		</div>
+		
+		<footer>
+			<table class="contactarea">
+				<!-- Organization Icon Area -->
+				<!--  <tr>
+					<td><img src="csiss.gif"></td>
+					<td><img src=""></td>
+					<td></td>
+				</tr>-->
+				<!-- Contact information -->
+				<tr>
+					<td>
+						<p>All rights reserved. Copyright &copy; CSISS, George Mason University, 2015-2016.</p>
+						<p>If you have any problem in using this website, please contact Dr. Ziheng Sun. </p>
+						<p>E-mail: <a href="mailto:zsun@gmu.edu">zsun@gmu.edu</a> Phone: (+1) 703-993-6124</p>
+						<p>Mailing address: 4400 University Drive, MSN 6E1, Fairfax, VA 22030, USA.</p>
+					</td>
+				</tr>
+			</table>
+		</footer>
+	</body>
+	<script type="text/javascript" src="js/jquery-1.4.4.min.js" ></script>
+	<script type="text/javascript" src="js/cc.js" ></script>
+	<script type="text/javascript" src="js/cc.util.js" ></script>
+	<script type="text/javascript" src="js/cc.register.js" ></script>
+	<script type="text/javascript" src="js/cc.button.js" ></script>
+	<script type="text/javascript" src="js/cc.main.js" ></script>
+</html>

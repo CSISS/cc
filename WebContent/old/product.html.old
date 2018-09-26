@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Virtual Product List Page - CyberConnector</title>
+		<link href="favicon.ico" rel="bookmark" type="image/x-icon" />
+		<link href="favicon.ico" rel="icon" type="image/x-icon" />
+		<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" /> 
+		<link rel="stylesheet" media="all" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<header>
+			<h1>CyberConnector Data Request Interface</h1>	
+		</header>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li> 
+				<li><a href="doc.html">Documentation</a></li>
+				<li><a href="demo.html">Demonstration</a></li>
+				<li><a href="about.html">About</a></li>
+			</ul>
+		</nav>
+		<div class="CyberConnectorClient">
+			<table class="intro" id="intro">
+					<tr>
+						<td class="portal">
+							<p  class="normal">&#33; This page is for users to select a desired product category and customize a dataset of the category. If the product is virtual, a real-world data will be dynamically generated on demand by a relative model workflow.</p>
+							<p class="title">Select a product category</p>
+							<p class="largelinespace category">Product List: 	<select id="product_list" ></select></p>
+							<p id="form_area"></p>
+						</td>
+						
+					</tr>
+				</table>
+		</div>
+		
+		<footer>
+			<table class="contactarea">
+				<!-- Organization Icon Area -->
+				<!--  <tr>
+					<td><img src="csiss.gif"></td>
+					<td><img src=""></td>
+					<td></td>
+				</tr>-->
+				<!-- Contact information -->
+				<tr>
+					<td>
+						<p>All rights reserved. Copyright &copy; CSISS, George Mason University, 2015-2016.</p>
+						<p>If you have any problem in using this website, please contact Dr. Ziheng Sun. </p>
+						<p>E-mail: <a href="mailto:zsun@gmu.edu">zsun@gmu.edu</a> Phone: (+1) 703-993-6124</p>
+						<p>Mailing address: 4400 University Drive, MSN 6E1, Fairfax, VA 22030, USA.</p>
+					</td>
+				</tr>
+			</table>
+		</footer>
+	</body>
+	<!-- updated by Ziheng Sun on 8/31/2015 from 1.4.4 to 1.11.3 -->
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js" ></script>
+	<script type="text/javascript" language="javascript" src="js/datetimepicker.js"></script>
+	
+	<script type="text/javascript" src="js/cc.js" ></script>
+	<script type="text/javascript" src="js/cc.util.js" ></script>
+	<script type="text/javascript" src="js/cc.product.js"></script>
+	<script type="text/javascript" src="js/cc.main.js" ></script>
+</html>
