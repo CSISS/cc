@@ -1,4 +1,8 @@
 language: java
+before_deploy:
+  - git config --local user.name "juozasg"
+  - git config --local user.email "juozasgaigalas@gmail.com"
+  - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 deploy:
   provider: releases
   api_key:
