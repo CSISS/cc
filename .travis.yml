@@ -1,1 +1,10 @@
 language: java
+deploy:
+  provider: releases
+  api_key:
+    secure: FdiEeNhFNXitE9rMK3JDMeQ07Vg8k7ZwDI4NExodG5AsyUEqwBEoCF1euDkm1WKJ6NhVNxHaK0ywF7V1mtJhc9FQCKV8CPzHSUk38PAlyQAIgsdEj2M9wfzugTZqh6Cy37YWvYS5G7s6ZRCP1E0gMnMygssFw/SoW/ajDZDT33y7+Zcg8R1QCgolG66iktnrF1gXqorbIhx8gCjPfv4bZsGoubgwG2nwKPpwRGdQDS324kY8sjlEFNND1ULF3AbdYXYR+IZ5w0fv41ExJZ2BstZ9ATAPuRXnRPIT2gS9GIgXS3gyKuOTRPuwXzCKq2b5OOJTu5LdS6RGMZN/TikBLoCHu2qSCMOJnoJgymrTP+jrSo+FX4cmC9aAv8pz75broq1RWg5tBkvpicm8O4z/bwiySjnTNllue9H0xYJhWHwYmOkaiAZaUIVRmX0Q0Pnz7nf/t9BM44/29QgFQLFYwSe/irl3GWZ0+1YblnbpbX/MjxXDCHEsnw5u+tuKa42XC0N1IBofpSZeWfd7P8TT8ywIIvVcgvP+DlsrfJsTjxIDDOixOjxSHrOir2ncA66ctYSwUm6T/e+Xw5eeBwdGHDZgP+YnUDsdEGSw64XErVlmbWftZ+UCVyKVN7WftxmCaEggZRBlYcHLz24JQ6cGQSGqq1kxkXE7mDJqAt9mzas=
+  file_glob: true
+  file: "**/*.war"
+  skip_cleanup: true
+  on:
+    repo: CSISS/cc
