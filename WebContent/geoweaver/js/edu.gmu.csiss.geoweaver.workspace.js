@@ -594,7 +594,8 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	  };      
 	
 	    	  var docEl = document.documentElement,
-	    	      bodyEl = document.getElementsByTagName('body')[0];
+//	    	      bodyEl = document.getElementsByTagName('body')[0];
+	    	  	  bodyEl = document.getElementById('workspace');
 	    	  
 	    	  var width = window.innerWidth || docEl.clientWidth || bodyEl.clientWidth,
 	    	      height =  window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
@@ -603,14 +604,16 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	      yLoc = 100;
 	
 	    	  // initial node data
-	    	  var nodes = [{title: "new concept", id: 0, x: xLoc, y: yLoc},
-	    	               {title: "new concept", id: 1, x: xLoc, y: yLoc + 200},
-	    	               {title: "new process", id: 2, x: xLoc-400, y: yLoc +400}];
+	    	  var nodes = [{title: "new process", id: 0, x: xLoc, y: yLoc},
+	    	               {title: "new process", id: 1, x: xLoc, y: yLoc + 200},
+	    	               {title: "new process", id: 2, x: xLoc-400, y: yLoc +400},
+	    	               {title: "new process", id: 3, x: xLoc-300, y: yLoc +400},
+	    	               {title: "new process", id: 4, x: xLoc-200, y: yLoc +600}];
 	    	  var edges = [{source: nodes[1], target: nodes[0]},
 	    		  		   {source: nodes[0], target: nodes[2]}];
 	    	  
 	    	  /** MAIN SVG **/
-	    	  var svg = d3.select("body").append("svg")
+	    	  var svg = d3.select("#workspace").append("svg")
 	    	        .attr("width", width)
 	    	        .attr("height", height);
 	    	  var graph = new edu.gmu.csiss.geoweaver.workspace.GraphCreator(svg, nodes, edges);

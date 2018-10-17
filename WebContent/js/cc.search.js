@@ -12,6 +12,8 @@ cc.search={
 		init: function(){
 			
 		},
+
+
 		
 		// Initialize Leaflet Map
 		
@@ -413,7 +415,7 @@ cc.search={
         	window.open(loc, '_blank');
         	
         },
-        
+
         /**
          * Transform data to VDP
          * @param id
@@ -647,7 +649,7 @@ cc.search={
         
         //initialized the table
         
-        initTable: function(request){
+        initTable: function(request, url){
         	
         	//var currentRecList = [];
             
@@ -661,7 +663,7 @@ cc.search={
                 
                 	//{'begindatetime':'1900-01-01T00:00:00','csw':'1','desc':false,'distime':false,'east':-16.875,'enddatetime':'2017-06-15T00:00:00','formats':null,'isvirtual':'0','keywords':false,'name':true,'north':57.326521225217064,'pageno':1,'recordsperpage':5,'searchtext':'bufr','south':7.013667927566642,'west':-154.3359375};
                 	
-                	"url": "search",
+                	"url": url,
                     
                 	"type": "POST",
                 	
@@ -722,17 +724,33 @@ cc.search={
                     	"data": "accessurl",
                         
                     	"render": function ( data, type, full, meta ) {
-                        	
+
                     		var content =  '<p>';
-    						
+
                     		if(full.ifvirtual=="1"){
-    							
+
     							content += '	<a href="productorder?pid='+full.id+'" class="btn btn-default"> <span '+
     							'		class="glyphicon glyphicon-shopping-cart pull-left"></span> '+
     							'		Order '+
     							'	</a> ';
-    							
-    						}else{
+
+    						} else if(full.iscollection == true) {
+                    			var url_query = jQuery.param({
+									'collection_url': full.accessurl,
+									'collection_name': full.id,
+									'collection_desc': full.desc,
+									'time_start': request.begindatetime,
+                                    'time_end': request.enddatetime,
+									'west': full.west,
+									'east': full.east,
+									'north': full.north,
+									'south': full.south
+								});
+                                content += '	<a href="listgranules?'+ url_query +'" class="btn btn-default"> <span '+
+                                    '		class="glyphicon glyphicon-list pull-left"></span> '+
+                                    '		List Granules '+
+                                    '	</a> ';
+							} else {
     							
     							var escapeid = full.id.replace(/\./g, '_');
     							
@@ -740,7 +758,7 @@ cc.search={
     							'		<a href="'+full.accessurl+'" class="btn btn-default" '+
     							'			target="_blank"> <span '+
     							'			class="glyphicon glyphicon-download-alt pull-left"></span> '+
-    							'			Download '+
+    							'			Download'+
     							'		</a> ';
 
     							if(!full.cached){
@@ -775,7 +793,7 @@ cc.search={
                     	"render": function ( data, type, full, meta ) {
                         
                     		var content;
-                    		
+
                     		if(full.isspatial=="1"){
                     			
                     			content = '<div id="recordmap_' + full.id + '" style="height: 150px;"></div>';
@@ -807,7 +825,7 @@ cc.search={
                     for(var i=0; i< settings.aoData.length; i++){
     	        		
     	        		var full = settings.aoData[i]._aData;
-    	        		
+
     	        		cc.search.initializeMap("recordmap_" + full.id, full.west, full.east, full.south, full.north);
     	        		
     	        		var escapeid = full.id.replace(/\./g, '\\.');

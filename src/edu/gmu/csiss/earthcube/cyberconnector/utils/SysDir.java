@@ -48,6 +48,8 @@ public class SysDir {
 	public static String upload_file_path = null;
     
 	public static String temp_file_path = null;
+
+	public static String thredds_harvester_path = null;
 	
 	static{
 		
@@ -105,6 +107,8 @@ public class SysDir {
 			upload_file_path = p.getProperty("upload_file_path");
 			
 			temp_file_path = p.getProperty("temp_file_path");
+
+			thredds_harvester_path = p.getProperty("thredds_harvester_path");
 			
 		} catch (Exception e) {
 			

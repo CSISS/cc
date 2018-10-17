@@ -33,31 +33,42 @@ import org.springframework.web.socket.WebSocketSession;
 
 public class SSHSessionOutput implements Runnable {
 
-    protected final Logger         log = LoggerFactory.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final BufferedReader in;
     
     private WebSocketSession out;
     
+    private boolean run = true;
     
     public SSHSessionOutput(BufferedReader in) {
         log.info("created");
         this.in = in;
     }
     
+    public void stop() {
+    	
+    	run = false;
+    	
+    }
+    
     @Override
     public void run() {
-        log.info("started");
-        while (true) {
+        
+    	log.info("SSH session output thread started");
+        
+        while (run) {
             try {
                 // readLine will block if nothing to send
                 String line = in.readLine();
                 log.debug("message out {}:{}", out.getId(), line);
                 out.sendMessage(new TextMessage(line));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        
+        log.info("SSH session output thread ended");
 
     }
     

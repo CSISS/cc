@@ -15,7 +15,19 @@ public class SearchRequest {
 	
 	String searchtext;
 	
-	boolean name = true, desc = false, keywords = false; //name, desc, keywords
+	boolean name = true;
+	boolean desc = false;
+	boolean keywords = false;
+
+	public boolean isCollectiongranules() {
+		return collectiongranules;
+	}
+
+	public void setCollectiongranules(boolean collectiongranules) {
+		this.collectiongranules = collectiongranules;
+	}
+
+	boolean collectiongranules = false; //name, desc, keywords
 	
 	String isvirtual = "1"; //virtual : 1, real : 0
 	
@@ -25,7 +37,7 @@ public class SearchRequest {
 	
 	boolean distime = false;
 	
-	String begindatetime = "1900-01-01T00:00:00", enddatetime = "2017-06-05T00:00:00"; //begin, end. Default: No restriction.
+	String begindatetime = "1900-01-01T00:00:00", enddatetime = "2019-06-05T00:00:00"; //begin, end. Default: No restriction.
 	
 	int recordsperpage = 5; //default = 5
 	

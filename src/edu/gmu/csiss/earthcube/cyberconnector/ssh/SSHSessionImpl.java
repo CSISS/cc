@@ -131,6 +131,13 @@ public class SSHSessionImpl implements SSHSession {
 
     @Override
     protected void finalize() {
+    	//stop the thread first
+        try {
+        	sender.stop();
+//        	thread.interrupt();
+        } catch (Throwable e) {
+        	e.printStackTrace();
+        }
         try {
             shell.close();
         } catch (Throwable e) {
@@ -142,11 +149,6 @@ public class SSHSessionImpl implements SSHSession {
         try {
             ssh.disconnect();
         } catch (Throwable e) {
-        }
-        try {
-        	thread.interrupt();
-        } catch (Throwable e) {
-        	e.printStackTrace();
         }
         log.info("session finalized");
     }

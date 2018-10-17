@@ -7,6 +7,8 @@ edu.gmu.csiss.covali.main = {
 	
 	init: function(){
 		
+		$("#menuheader").val("Geoweaver v" + edu.gmu.csiss.covali.version);
+		
 		this.initheight();
 		
 		edu.gmu.csiss.gpkg.cmapi.openlayers.init("openlayers1"); //left
@@ -20,6 +22,8 @@ edu.gmu.csiss.covali.main = {
 		edu.gmu.csiss.covali.projection.init();
 		
 		edu.gmu.csiss.covali.menu.init();
+		
+		edu.gmu.csiss.covali.about.init();
 		
 	},
 	

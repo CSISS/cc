@@ -588,6 +588,8 @@ public class SearchTool {
 			XPath accesslink = DocumentHelper.createXPath("gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
 			
 			XPath accessinfo = DocumentHelper.createXPath("gmd:CI_OnlineResource/gmd:name/gco:CharacterString");
+
+			XPath collection_url = DocumentHelper.createXPath("gmd:identificationInfo/gmd:MD_DataIdentification[@id = 'DataIdentification']/gmd:aggregationInfo[1]/gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString");
 			
 			xpath.setNamespaceURIs(map);
 			
@@ -610,7 +612,7 @@ public class SearchTool {
 				p.setName(identifier);
 				
 				//identifier must be escaped : and /
-				
+
 				identifier = identifier.replaceAll(":", "__y__");
 				
 				identifier = identifier.replaceAll("/", "__x__");
@@ -686,23 +688,31 @@ public class SearchTool {
 //					}
 //					
 //				}
-				
-				//for gmi
-				
-				if(accessoptions.selectSingleNode(ele)==null){
-					
-					logger.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
-					
-					String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
-					
-					p.setAccessurl(accessurl);
-					
-				}else{
-					
-					String accessurl = accessoptions.selectSingleNode(ele).getText();
-					
-					p.setAccessurl(accessurl);
-					
+
+				if(!identifier.contains("-COLLECTION")) {
+					p.setIscollection("0");
+
+					//for gmi
+					if (accessoptions.selectSingleNode(ele) == null) {
+
+						logger.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
+
+						String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
+
+						p.setAccessurl(accessurl);
+
+					} else {
+
+						String accessurl = accessoptions.selectSingleNode(ele).getText();
+
+						p.setAccessurl(accessurl);
+
+					}
+				} else {
+					String curl = collection_url.selectSingleNode(ele).getText();
+					p.setAccessurl(curl);
+					p.setIscollection("1");
+
 				}
 				
 				p.setIfvirtual("0");
@@ -714,7 +724,7 @@ public class SearchTool {
 			respobj.setProducts(products);
 			
 		}
-		
+
 		return respobj;
 		
 	}

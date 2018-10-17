@@ -26,21 +26,21 @@
 	
 		<div class="main">
 		
-			<div class="row" style="height:100%; margin: 0;">
+			<div class="row" style="height:100%; margin: 0; padding: 0;">
 			
-				<div class="col col-md-9" id="workspace">
+				<div class="col col-md-9" id="workspace" style="height:100%; margin: 0;padding: 0;">
 				
 				</div>
 			
-				<div class="col col-md-3" id="sidemenu">
-				
-					<div class="nav-side-menu">
+				<div class="col col-md-3" id="sidemenu" style="height:100%; margin: 0;padding: 0;">
 					
-					    <div style="color: yellow;" class="brand" >Geoweaver v0.8.1</div>
+					<div class="nav-side-menu" >
+			
+					    <div style="color: yellow;" class="brand" id="menuheader" >Geoweaver v0.8.1</div>
 					
 					    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
 					  
-					        <div class="menu-list">
+					    <div class="menu-list">
 					  
 					            <ul id="menu-content" class="menu-content collapse out">
 					                <li>
@@ -57,18 +57,7 @@
 					                    <li><a href="javascript:void(0)">Host2</a></li>
 					                    <li><a href="javascript:void(0)">Host3</a></li>
 					                </ul>
-					
-					
-					                <li data-toggle="collapse" data-target="#service" class="collapsed">
-					                  <a href="javascript:void(0)"><i class="fa fa-globe fa-lg"></i> Workflows <span class="arrow"></span></a>
-					                </li>  
-					                <ul class="sub-menu collapse" id="service">
-					                  <li><a href="javascript:void(0)">Workflow 1</a></li>
-					                  <li><a href="javascript:void(0)">Workflow 2</a></li>
-					                  <li><a href="javascript:void(0)">Workflow 3</a></li>
-					                </ul>
-					
-					
+					                
 					                <li data-toggle="collapse" data-target="#new" class="collapsed">
 					                  <a href="javascript:void(0)"><i class="fa fa-car fa-lg"></i> Process <span class="arrow"></span></a>
 					                </li>
@@ -79,21 +68,37 @@
 					                </ul>
 					
 					
-					                 <li>
+					                <li data-toggle="collapse" data-target="#service" class="collapsed">
+					                  <a href="javascript:void(0)"><i class="fa fa-globe fa-lg"></i> Workflows <span class="arrow"></span></a>
+					                </li>  
+					                <ul class="sub-menu collapse" id="service">
+					                  <li><a href="javascript:void(0)">Workflow 1</a></li>
+					                  <li><a href="javascript:void(0)">Workflow 2</a></li>
+					                  <li><a href="javascript:void(0)">Workflow 3</a></li>
+					                  <li><a href="javascript:void(0)">Workflow 4</a></li>
+					                  <li><a href="javascript:void(0)">Workflow 5</a></li>
+					                  <li><a href="javascript:void(0)">Workflow 6</a></li>
+					                  <li><a href="javascript:void(0)">Workflow 7</a></li>
+					                </ul>
+									
+					
+					                <li>
 					                  <a href="javascript:void(0)">
 					                  <i class="fa fa-user fa-lg"></i> Share
 					                  </a>
-					                  </li>
+					                </li>
 					
-					                 <li>
+					                <li>
 					                  <a href="javascript:void(0)">
 					                  <i class="fa fa-users fa-lg"></i> About
 					                  </a>
 					                </li>
 					            </ul>
+					            
 					     </div>
+					     
 					</div>
-				
+					
 				</div>
 				
 				

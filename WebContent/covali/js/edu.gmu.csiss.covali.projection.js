@@ -52,11 +52,15 @@ edu.gmu.csiss.covali.projection = {
 			
 			this.leftmap3d.setEnabled(false);
 			
+			this.leftmap3d = null;
+			
 		}
 		
 		if(this.rightmap3d != null){
 			
 			this.rightmap3d.setEnabled(false);
+			
+			this.rightmap3d = null;
 			
 		}
 		

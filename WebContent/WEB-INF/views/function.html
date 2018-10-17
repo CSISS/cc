@@ -48,10 +48,11 @@
 	        <div class="row">
 	            <div class="visible-lg-block visible-md-block col-md-2 menu">
 	                <dl id="menu">
-	                    <dd><a href="#">Available Tools</a></dd>
 	                    <dd><a href="productsearch">Data</a></dd>
 	                    <dd><a href="servicesearch">Service</a></dd>
-	                    <dd><a href="http://cube.csiss.gmu.edu/VDP">Model</a></dd>
+	                    <dd><a href="http://cube.csiss.gmu.edu/VDP">VDP</a></dd>
+	                    <dd><a href="covali">COVALI</a></dd>
+	                    <dd><a href="javascript:alert('not ready yet')">Geoweaver</a></dd>
 	                </dl>
 	            </div>
 	            
@@ -60,6 +61,12 @@
 	                <div class="panel panel-default">
 	                	
 	                	<!-- Model Panel -->
+	                	
+	                	<h2>Download</h2>
+	                	<div class="detail-text">CyberConnector is an open source project with source code on <a href="http://github.com/CSISS/cc">Github</a>. Use <mark>git clone https://github.com/CSISS/cc.git</mark> to download the latest source code to your local. The release file is a war, which you need a tomcat to run it. </div>
+	                	
+	                	
+						
 	                	
 	                	<h2>Earth Science Models</h2>
 	                	<div class="detail-text">We have already used CyberConnector to feed Earth Observation to several models including FVCOM (ocean), CRM (cloud), CMAQ (air quality) and VCI (vegetation condition). See more details by clicking the below links.</div>
@@ -223,7 +230,7 @@
 											
 											<p> 
 												
-												<a th:href="@{/covali/index.html}">ENTER HERE</a>
+												<a th:href="@{/web/covali}">ENTER HERE</a>
 											
 											</p> 
 							            

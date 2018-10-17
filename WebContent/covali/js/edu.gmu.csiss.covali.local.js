@@ -70,7 +70,8 @@ edu.gmu.csiss.covali.local = {
 						
 			            message: function(dialog){
 			            	
-			            	$content = $("<p class=\"text-success\">The file is parsed. Do you want to load it into the map now?</p>");
+			            	$content = $("<p class=\"text-success\">The file is parsed. Do you want to load it into the map now?</p>" +
+			            			"<p class=\"text-warning\">Warning: For netCDF format, only files compliant to CF convention are supported.</p>");
 			            	
 			            	return $content;
 			            	

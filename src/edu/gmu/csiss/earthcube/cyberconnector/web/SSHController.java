@@ -4,23 +4,32 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 
-import edu.gmu.csiss.earthcube.cyberconnector.search.SearchRequest;
+import edu.gmu.csiss.earthcube.cyberconnector.ssh.HostTool;
+import edu.gmu.csiss.earthcube.cyberconnector.ssh.ProcessTool;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSession;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSessionImpl;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSessionManager;
+import edu.gmu.csiss.earthcube.cyberconnector.ssh.WorkflowTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
+
+/**
+ * 
+ * Controller for SSH related activities, including all the handlers for Geoweaver.
+ * 
+ * @author Ziheng Sun
+ * 
+ * @date 5 Oct 2018
+ * 
+ */
 
 @Controller 
 //@RequestMapping(value="/")     
@@ -34,6 +43,122 @@ public class SSHController {
 	static {
 		
 		sshSessionManager = new SSHSessionManager();
+		
+	}
+	
+	@RequestMapping(value = "/del", method = RequestMethod.POST)
+    public @ResponseBody String delhost(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String id = request.getParameter("id");
+			
+			String type = request.getParameter("type");
+			
+			if(type.equals("host")) {
+
+				resp = HostTool.del(id);
+				
+			}else if(type.equals("process")) {
+				
+				resp = ProcessTool.del(id);
+				
+			}else if(type.equals("workflow")) {
+				
+				resp = WorkflowTool.del(id);
+				
+			}
+			
+		}catch(Exception e) {
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+    public @ResponseBody String listhost(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String type = request.getParameter("type");
+			
+			if(type.equals("host")) {
+
+				resp = HostTool.list("");
+				
+			}else if(type.equals("process")) {
+				
+				resp = ProcessTool.list("");
+				
+			}else if(type.equals("workflow")) {
+				
+				resp = WorkflowTool.list("");
+				
+			}
+			
+		}catch(Exception e) {
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+    public @ResponseBody String addhost(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String type = request.getParameter("type");
+			
+			if(type.equals("host")) {
+				
+				String hostname = request.getParameter("hostname");
+				
+				String hostip = request.getParameter("hostip");
+				
+				String hostport = request.getParameter("hostport");
+				
+				String username = request.getParameter("username");
+				
+				String hostid = HostTool.add(hostname, hostip, hostport, username, null);
+				
+				resp = "{ 'hostid' : '" + hostid + "', 'hostname' : ' "+ hostname + "' }";
+				
+			}else if(type.equals("process")) {
+				
+				ProcessTool.add();
+				
+				resp = "";
+				
+				
+			}else if(type.equals("workflow")) {
+				
+				WorkflowTool.add();
+				
+				resp = "";
+				
+			}
+			
+		}catch(Exception e) {
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
 		
 	}
 	

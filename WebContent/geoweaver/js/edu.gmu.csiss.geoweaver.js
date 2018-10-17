@@ -15,6 +15,8 @@ edu = {
 							"Short Term Memory (LSTM) Recurrent Neural Network (RNN) workflows in web browsers " +
 							"by taking advantage of the online spatial data facilities, high-performance " +
 							"computation platforms, and open-source deep learning libraries. ",
+							
+					sponsor: "ESIPLab incubator project and NSF EarthCube CyberWay project",
 					
 					version: "0.8.1",
 					

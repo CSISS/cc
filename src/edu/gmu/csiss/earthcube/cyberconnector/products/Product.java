@@ -13,7 +13,7 @@ public class Product {
 
 	String id, abbr, desc, keywords, name, srs, begintime, endtime, ifvirtual,
 				isspatial, modelid, format, accessurl, parentmodel, ontology, 
-				lastupdate, userid; 
+				lastupdate, userid, iscollection;
 	
 	int likes;
 	
@@ -53,7 +53,7 @@ public class Product {
 	 * @param inputmap
 	 */
 	public Product(String id, String abbr, String desc, String keywords, String name, String srs, String parentmodel, String begintime,
-			String endtime, String ifvirtual, String isspatial, String modelid, String format, String accessurl, String ontology,
+			String endtime, String ifvirtual, String isspatial, String iscollection, String modelid, String format, String accessurl, String ontology,
 			String lastupdate, String userid, double east, double south, double west, double north, List<Input> inputlist, int likes) {
 		super();
 		this.id = id;
@@ -79,8 +79,12 @@ public class Product {
 		this.north = north;
 		this.inputlist = inputlist;
 		this.likes = likes;
+		this.iscollection = iscollection;
 	}
-	
+
+	public String getIscollection() {return iscollection; }
+	public void setIscollection(String iscollection) { this.iscollection = iscollection; }
+
 	public boolean isCached() {
 		return cached;
 	}

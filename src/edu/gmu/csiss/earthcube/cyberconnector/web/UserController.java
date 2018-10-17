@@ -1,5 +1,6 @@
 package edu.gmu.csiss.earthcube.cyberconnector.web;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,15 +8,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import edu.gmu.csiss.earthcube.cyberconnector.search.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,9 +44,6 @@ import edu.gmu.csiss.earthcube.cyberconnector.products.DeleteProductTool;
 import edu.gmu.csiss.earthcube.cyberconnector.products.LikeProductTool;
 import edu.gmu.csiss.earthcube.cyberconnector.products.Product;
 import edu.gmu.csiss.earthcube.cyberconnector.products.RetrieveProductTool;
-import edu.gmu.csiss.earthcube.cyberconnector.search.SearchRequest;
-import edu.gmu.csiss.earthcube.cyberconnector.search.SearchResponse;
-import edu.gmu.csiss.earthcube.cyberconnector.search.SearchTool;
 import edu.gmu.csiss.earthcube.cyberconnector.services.QueryServiceTool;
 import edu.gmu.csiss.earthcube.cyberconnector.services.RegisterServiceTool;
 import edu.gmu.csiss.earthcube.cyberconnector.services.Service;
@@ -52,6 +55,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.Message;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
+
 
 /**
 *Class UserController.java
@@ -322,120 +326,82 @@ public class UserController {
     }
     
     @RequestMapping(value = "/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String tableserver(@ModelAttribute("request") SearchRequest searchreq,  WebRequest request, HttpSession session){
-    	
-    	String name = (String)session.getAttribute("sessionUser");
-    	
+	public @ResponseBody String tableserver(@ModelAttribute("request") SearchRequest searchreq,  WebRequest request) {
+
+		SearchResponse sr = SearchTool.search(searchreq);
+
+
     	int start = Integer.parseInt(request.getParameter("start")) + 1;
-    	
     	int length = Integer.parseInt(request.getParameter("length"));
+    	int pageNum = start/length;
     	
-//    	int pageno = start/length + 1; //this might be wrong - Z. June 15 2017
-    	
+    	searchreq.setPageno(pageNum);
+
     	int pageno = start/length;
     	
     	searchreq.setPageno(pageno);
-    	
-    	SearchResponse sr = SearchTool.search(searchreq);
-    	
+
     	//for JQuery DataTables
-    	
     	String draw = request.getParameter("draw");
-    	
+
     	sr.setDraw(Integer.parseInt(draw));
-    	
     	sr.setRecordsFiltered(sr.getProduct_total_number());
-    	
     	sr.setRecordsTotal(sr.getProduct_total_number());
-    	
-		//Object to JSON in String
-    	
-    	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-    	
-    	String json = null;
-    	
-		try {
-		
-			json = ow.writeValueAsString(sr);
-			
-		} catch (JsonGenerationException e) {
-			
-			e.printStackTrace();
-			
-		} catch (JsonMappingException e) {
-			
-			e.printStackTrace();
-			
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-			
+
+		return toJSONString(sr);
+    }
+
+
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String productsearch(@ModelAttribute("request") SearchRequest searchreq,  ModelMap model){
+
+    	//int x = 1;
+		//model.addAttribute("request", searchreq);
+
+    	return "searchresult";
+    }
+
+
+	@RequestMapping(value = "/listgranules", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String listgranules_ajax(@ModelAttribute("request") GranulesRequest gRequest, WebRequest webRequest) {
+		int start = Integer.parseInt(webRequest.getParameter("start"));
+		int length = Integer.parseInt(webRequest.getParameter("length"));
+
+
+        GranulesTool.indexCollectionGranules(gRequest);
+
+        List<Granule> granules = GranulesTool.getCollectionGranules(gRequest);
+
+		SearchResponse sr = new SearchResponse();
+
+		List products = new ArrayList();
+		for(int i = start; i < start + length && i < granules.size() ; i++) {
+			Granule g = granules.get(i);
+			Product p = g.toProduct(gRequest);
+
+			products.add(p);
 		}
-		
-//		StringBuffer json = new StringBuffer("{")
-//				
-//				.append("\"draw\": ").append(sr.getRecordsperpage()).append(", ")
-//				
-//				.append("\"recordsTotal\": ").append(sr.getProduct_total_number()).append(",")
-//				
-//				.append("\"recordsFiltered\": ").append(sr.getProduct_total_number()).append(",")
-//				
-//				.append("\"data\": [");
-//				
-//				for(int i=0, num=sr.getProducts().size(); i<num; i++){
-//					
-//					Product p = sr.getProducts().get(i);
-//					
-//					if(i!=0){
-//						
-//						json.append(",");
-//						
-//					}
-//					
-//					json.append("{ \"identifier\" : \"");
-//					
-//					json.append(p.getId());
-//					
-//					json.append("\", \"operation\" : \"").append(p.getAccessurl());
-//					
-//					json.append("\", \"map\" : \"").append(p.getWest()).append(p.getSouth()).append("\" } ");
-//					
-//				}
-//				
-//				json.append("]}");
-		
-    	return json;
-    	
+
+		sr.setProducts(products);
+
+		int draw = Integer.parseInt(webRequest.getParameter("draw"));
+		sr.setDraw(draw);
+
+		sr.setRecordsFiltered(granules.size());
+		sr.setRecordsTotal(granules.size());
+
+
+		return toJSONString(sr);
     }
-    
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String productsearch(@ModelAttribute("request") SearchRequest searchreq, BindingResult result, ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-    	
-    	String name = (String)session.getAttribute("sessionUser");
-    	
-    	String resp = "searchresult";
-    	
-    	//revise by Z. June 8 2017
-    	//product search requires no log in
-    	
-//    	if(name == null){
-//    		
-//    		resp = "redirect:login";
-//    		
-//    	}else{
-    		
-//    		SearchResponse sr = SearchTool.search(searchreq);
-    		
-    		model.addAttribute("request", searchreq);
-    		
-//    		model.addAttribute("result", sr);
-    		
-//    	}
-    	
-    	return resp;
-    	
-    }
-    
+
+	@RequestMapping(value = "/listgranules", method = RequestMethod.GET)
+    public String listgranules(@ModelAttribute("request") GranulesRequest request, ModelMap model){
+
+		return "listgranules";
+	}
+
+
+
     @RequestMapping(value = "/updateservice", method = RequestMethod.POST)
     public @ResponseBody String updateService(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
     	
@@ -1582,5 +1548,28 @@ public class UserController {
     } 
     
     /*************************************************************************************/
+
+
+	private String toJSONString(Object value) {
+		String json = null;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+
+		try {
+			json = ow.writeValueAsString(value);
+
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+
+
 
 }

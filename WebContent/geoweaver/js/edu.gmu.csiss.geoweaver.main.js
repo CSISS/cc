@@ -12,7 +12,11 @@ edu.gmu.csiss.geoweaver.main = {
 		
 		init: function(){
 			
+			$("#menuheader").val("Geoweaver v" + edu.gmu.csiss.geoweaver.version);
+			
 			edu.gmu.csiss.geoweaver.workspace.init();
+			
+			edu.gmu.csiss.geoweaver.menu.init();
 			
 		}
 		

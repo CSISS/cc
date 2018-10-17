@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 //import org.geotools.data.DataStoreFinder;
 //import org.geotools.data.FeatureSource;
 //import org.geotools.geometry.jts.ReferencedEnvelope;
-//import org.geotools.referencing.ReferencingFactoryFinder;
+//import org.geotools.referencing.ReferencingF±±actoryFinder;
 //import org.opengis.feature.simple.SimpleFeature;
 //import org.opengis.feature.simple.SimpleFeatureType;
 //import org.opengis.geometry.BoundingBox;
