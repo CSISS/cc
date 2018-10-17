@@ -138,9 +138,9 @@ public class SysDir {
 
 			ncPassword = secrets.getProperty("ncwms_password");
 
-			database_user = p.getProperty("database_user");
+			database_user = secrets.getProperty("database_user");
 
-			database_password = p.getProperty("database_password");
+			database_password = secrets.getProperty("database_password");
 			
 		} catch (Exception e) {
 			
