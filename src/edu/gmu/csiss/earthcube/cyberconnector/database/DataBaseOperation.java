@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import java.util.logging.Level;
 
+import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 import org.apache.log4j.Logger;
 
 import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
@@ -32,19 +33,11 @@ public class DataBaseOperation {
     
 	private  static Connection q_conn, e_conn,u_conn;
 	
-	static{
-		try {
-			Properties p = new Properties();			
-			FileInputStream ferr = new FileInputStream(BaseTool.getClassPath() + File.separator +"database.properties");
-			p.load(ferr);
-			ferr.close();
-			driver = p.getProperty("driver");
-			database_url = p.getProperty("database_url");
-			user = p.getProperty("user");
-			password = p.getProperty("password");
-		}catch(IOException e){
-			e.printStackTrace();
-		}
+	static {
+		driver = SysDir.database_driver;
+		database_url = SysDir.database_url;
+		user = SysDir.database_user;
+		password = SysDir.database_password;
 	}
 	/**
 	 * Execute SQL in the current database.

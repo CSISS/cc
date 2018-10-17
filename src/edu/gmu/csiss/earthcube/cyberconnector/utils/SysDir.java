@@ -3,6 +3,7 @@ package edu.gmu.csiss.earthcube.cyberconnector.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -50,25 +51,45 @@ public class SysDir {
 	public static String temp_file_path = null;
 
 	public static String thredds_harvester_path = null;
-	
+
+	public static String database_driver = null;
+
+	public static String database_url = null;
+
+	public static String database_user = null;
+
+	public static String database_password = null;
+
+	static Properties readProperties(String path) {
+		Properties p = new Properties();
+
+		try {
+			FileInputStream fileIn = new FileInputStream(path);
+
+			p.load(fileIn);
+			fileIn.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		return p;
+	}
+
 	static{
 		
 		//initialize from config file
 		try {
 			
 			BaseTool t = new BaseTool();
+			String configFile = t.getClassPath()+File.separator+"config.properties";
 			
-			String configfile = t.getClassPath()+File.separator+"config.properties";
-			
-			FileInputStream ferr;
-			
-			ferr = new FileInputStream(configfile);
-			
-			Properties p = new Properties();	
-			
-			p.load(ferr);
-			
-			ferr.close();
+			Properties p = readProperties(configFile);
+
+			String secretConfigFile = p.getProperty("secret_properties_path");
+
+			Properties secrets = readProperties(secretConfigFile);
+
 			
 			String number = p.getProperty("workernumber");
 			
@@ -98,10 +119,6 @@ public class SysDir {
 			
 			ncWMSURL = p.getProperty("ncwmsurl");
 			
-			ncUsername = p.getProperty("ncwms_username");
-			
-			ncPassword = p.getProperty("ncwms_password");
-			
 			covali_file_path = p.getProperty("covali_file_path");
 			
 			upload_file_path = p.getProperty("upload_file_path");
@@ -109,6 +126,21 @@ public class SysDir {
 			temp_file_path = p.getProperty("temp_file_path");
 
 			thredds_harvester_path = p.getProperty("thredds_harvester_path");
+
+			database_driver = p.getProperty("database_driver");
+
+			database_url = p.getProperty("database_url");
+
+
+			// SECRET PROPERTIES
+
+			ncUsername = secrets.getProperty("ncwms_username");
+
+			ncPassword = secrets.getProperty("ncwms_password");
+
+			database_user = p.getProperty("database_user");
+
+			database_password = p.getProperty("database_password");
 			
 		} catch (Exception e) {
 			
