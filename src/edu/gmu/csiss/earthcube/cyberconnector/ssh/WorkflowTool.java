@@ -1,5 +1,6 @@
 package edu.gmu.csiss.earthcube.cyberconnector.ssh;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
@@ -10,6 +11,28 @@ public class WorkflowTool {
 	public static String list(String owner) throws SQLException {
 		
 		StringBuffer json = new StringBuffer("[");
+		
+		ResultSet rs = DataBaseOperation.query("select * from abstract_model; ");
+		
+		int num = 0;
+		
+		while(rs.next()) {
+			
+			if(num!=0) {
+				
+				json.append(",");
+				
+			}
+			
+			json.append("{ \"id\": \"")
+				.append(rs.getString("identifier"))
+				.append("\", \"name\": \"")
+				.append(rs.getString("name"))
+				.append("\" }");
+			
+			num++;
+			
+		}
 		
 		json.append("]");
 		

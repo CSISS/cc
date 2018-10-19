@@ -27,6 +27,8 @@
 		
 		<script type="text/javascript" src="../geoweaver/codemirror/mode/shell/shell.js"></script>
 		
+		<script type="text/javascript" src="../geoweaver/codemirror/addon/display/placeholder.js"></script>
+		
 		<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 		
 		<script type="text/javascript" src="../js/bootstrap-dialog.min.js"></script>
@@ -40,6 +42,22 @@
 		<div class="main">
 		
 			<div class="row" style="height:100%; margin: 0; padding: 0;">
+			
+				<div id="toolbox">
+			      
+			      <input type="file" id="hidden-file-upload"/>
+			      
+			      <i id="upload-input" title="upload graph" class="btn fa fa-upload" style="height: 30px; width: 30px;font-size:30px;color:gray" alt="upload graph" />
+			      
+			      <i id="download-input" title="download graph" class="btn fa fa-download" style="height: 30px; width: 30px;font-size:30px;color:gray" alt="download graph" /> 
+			      
+			      <i id="execute-workflow" title="execute workflow" class="btn fa fa-play" style="height: 30px; width: 30px;font-size:30px;color:gray" alt="execute workflow"></i> 
+			      
+			      <i id="geoweaver-tutorial" title="tutorial" class="btn fa fa-info" style="height: 30px; width: 30px;font-size:30px;color:gray" alt="geoweaver tutorial"></i> 
+			      
+			      <i id="delete-graph" title="delete graph" class="btn fa fa-trash" style="height: 30px; width: 30px;font-size:30px;color:gray"  alt="delete graph" /> 
+			      
+			    </div>
 			
 				<div class="col col-md-9" id="workspace" style="height:100%; margin: 0;padding: 0;">
 				
@@ -70,9 +88,9 @@
 					                </ul>
 					                
 					                <li>
-					                  <a href="javascript:void(0)"><i class="fa fa-car fa-lg"  data-toggle="tooltip" title="Add new process"></i> Process <i class="fa fa-plus" id="newprocess"></i> <span data-toggle="collapse" data-target="#processes" class="arrow collapsed"></span></a>
+					                  <a href="javascript:void(0)"><i class="fa fa-car fa-lg"  data-toggle="tooltip" title="Add new process"></i> Process <i class="fa fa-plus" id="newprocess"></i> <span data-toggle="collapse" data-target="#processs" class="arrow collapsed"></span></a>
 					                </li>
-					                <ul class="sub-menu collapse" id="processes">
+					                <ul class="sub-menu collapse" id="processs">
 					                  
 					                </ul>
 					

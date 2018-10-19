@@ -12,7 +12,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import edu.gmu.csiss.earthcube.cyberconnector.web.SSHController;
+import edu.gmu.csiss.earthcube.cyberconnector.web.GeoweaverController;
 
 /**
  * Created by usta on 20.02.2015.
@@ -39,7 +39,7 @@ public class ShellSocket implements WebSocketHandler {
         
         String messageText = ((TextMessage)message).getPayload();
         
-        SSHSession sshSession = SSHController.sshSessionManager.sessionsByWebsocketID.get(session.getId());
+        SSHSession sshSession = GeoweaverController.sshSessionManager.sessionsByWebsocketID.get(session.getId());
         
         if (sshSession == null) {
             
@@ -47,13 +47,13 @@ public class ShellSocket implements WebSocketHandler {
             
             // TODO is there a better way to do this?
             // Can the client send the websocket session id and username in a REST call to link them up?
-            sshSession = SSHController.sshSessionManager.sessionsByToken.get(messageText);
+            sshSession = GeoweaverController.sshSessionManager.sessionsByToken.get(messageText);
             
             if(sshSession!=null&&sshSession.getSSHInput().ready()) {
             	
             	sshSession.setWebSocketSession(session);
                 
-            	SSHController.sshSessionManager.sessionsByWebsocketID.put(session.getId(), sshSession);
+            	GeoweaverController.sshSessionManager.sessionsByWebsocketID.put(session.getId(), sshSession);
                 
             }else {
             	
@@ -61,7 +61,7 @@ public class ShellSocket implements WebSocketHandler {
             		
             		sshSession.logout();
             		
-            		SSHController.sshSessionManager.sessionsByWebsocketID.remove(session.getId());
+            		GeoweaverController.sshSessionManager.sessionsByWebsocketID.remove(session.getId());
             		
             	}
             	
@@ -102,13 +102,13 @@ public class ShellSocket implements WebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.info("websocket connection closed: {}", status.getReason());
 
-        if(SSHController.sshSessionManager!=null) {
+        if(GeoweaverController.sshSessionManager!=null) {
         	
-        	SSHSession sshSession = SSHController.sshSessionManager.sessionsByWebsocketID.get(session.getId());
+        	SSHSession sshSession = GeoweaverController.sshSessionManager.sessionsByWebsocketID.get(session.getId());
             if (sshSession != null) {
                 sshSession.logout();
             }
-            SSHController.sshSessionManager.sessionsByWebsocketID.remove(session.getId());
+            GeoweaverController.sshSessionManager.sessionsByWebsocketID.remove(session.getId());
         	
         }
         

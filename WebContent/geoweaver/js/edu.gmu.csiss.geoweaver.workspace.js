@@ -5,6 +5,8 @@
 
 edu.gmu.csiss.geoweaver.workspace = {
 		
+		theGraph: null,
+		
 		/**
 		 * Create a new GraphCreator object
 		 * @svg SVG object
@@ -210,7 +212,7 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	    var thisGraph = this,
 	    	        doDelete = true;
 	    	    if (!skipPrompt){
-	    	      doDelete = window.confirm("Press OK to delete this graph");
+	    	      doDelete = window.confirm("Warning: everything in work area will be erased!!! Press OK to proceed.");
 	    	    }
 	    	    if(doDelete){
 	    	      thisGraph.nodes = [];
@@ -455,6 +457,27 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	    }
 	    	    state.graphMouseDown = false;
 	    	  };
+	    	  
+	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.removeNode = function(pid) {
+	    	    var thisGraph = this;
+  	    		var selectedNode = thisGraph.getNodesById(pid);
+    			thisGraph.nodes.splice(selectedNode, 1);
+    			thisGraph.spliceLinksForNode(selectedNode);
+  	    		thisGraph.state.selectedNode = null;
+  	    		thisGraph.updateGraph();
+	    	  }
+	    	  
+	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.removeNodes = function(pid) {
+		    	    var thisGraph = this;
+		    	    //remove the workspace object
+    	    		var selectedNodes = thisGraph.getNodesById(pid);
+    	    		for(var i=0;i<selectedNodes.length;i++){
+    	    			thisGraph.nodes.splice(selectedNodes[i], 1);
+    	    			thisGraph.spliceLinksForNode(selectedNodes[i]);
+    	    		}
+    	    		thisGraph.state.selectedNode = null;
+    	    		thisGraph.updateGraph();
+	    	  }
 	
 	    	  // keydown on main svg
 	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.svgKeyDown = function() {
@@ -473,14 +496,19 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	    case consts.DELETE_KEY:
 	    	      d3.event.preventDefault();
 	    	      if (selectedNode){
-	    	        thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
-	    	        thisGraph.spliceLinksForNode(selectedNode);
-	    	        state.selectedNode = null;
-	    	        thisGraph.updateGraph();
+	    	        
+	    	    	var pid = selectedNode.id;
+	    	    	console.log("going to remove process: " + pid);
+//	    	    	edu.gmu.csiss.geoweaver.menu.del(pid, "process");
+	    	    	thisGraph.removeNode(pid);
+	    	    	
 	    	      } else if (selectedEdge){
+	    	    	
+	    	    	//removing an edge is much easier than removing a process
 	    	        thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
 	    	        state.selectedEdge = null;
 	    	        thisGraph.updateGraph();
+	    	        
 	    	      }
 	    	      break;
 	    	    }
@@ -571,6 +599,83 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	    d3.select("." + this.consts.graphClass)
 	    	      .attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")"); 
 	    	  };
+	    	  
+	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.addProcess = function(id, name){
+		  			
+	    		  	var thisGraph = this;
+		  			//how to find a location
+		  			
+		  			var x = Math.floor(Math.random() * 900) + 1;
+		  			
+		  			var y = Math.floor(Math.random() * 600) + 1;
+		  			
+		  			var randomid = edu.gmu.csiss.geoweaver.workspace.makeid();
+		  			
+		  			var insid = id +"-"+ randomid;
+		  			
+		  			thisGraph.nodes.push({title: name, id: insid, x: x, y: y});
+		  			
+		  			thisGraph.setIdCt(thisGraph.nodes.length);
+		  			
+		  			thisGraph.updateGraph();
+		  			
+		  			return insid;
+		  			
+		  	  };
+		  	  
+		  	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.addEdge = function(frompid, topid){
+		  			
+		  		  	var thisGraph = this;
+		  		  
+		  			var fromnode = thisGraph.getNodeById(frompid);
+		  			
+		  			var tonode = thisGraph.getNodeById(topid);
+		  			
+		  			thisGraph.edges.push({source: fromnode, target: tonode});
+		  			
+		      };
+	    	  
+		      edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.getNodesById = function(id){
+		    	  
+		    	var thisGraph = this;
+		    		
+	  			var thenodes = [];
+	  			
+	  			for(var i=0;i<thisGraph.nodes.length;i++){
+	  				
+	  				if(thisGraph.nodes[i].id.startsWith(id)){
+
+	  					thenodes.push(thisGraph.nodes[i]);
+	  					
+	  				}
+	  					
+	  			}
+	  			
+	  			return thenodes;
+		    	  
+		      };
+		      
+	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.getNodeById = function(id){
+	    	
+	    		var thisGraph = this;
+	    		
+	  			var thenode = null;
+	  			
+	  			for(var i=0;i<thisGraph.nodes.length;i++){
+	  				
+	  				if(thisGraph.nodes[i].id == id){
+
+	  					thenode = thisGraph.nodes[i];
+	  					
+	  					break;
+	  					
+	  				}
+	  					
+	  			}
+	  			
+	  			return thenode;
+	  			
+	  		  };
 	
 	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.updateWindow = function(svg){
 	    	    var docEl = document.documentElement,
@@ -581,6 +686,18 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	  };
 			
 		},
+		
+		makeid: function() {
+			
+			  var text = "";
+			  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+			  for (var i = 0; i < 5; i++)
+			    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+			  return text;
+		},
+		
 		
 		init: function(){
 			
@@ -604,23 +721,27 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	      yLoc = 100;
 	
 	    	  // initial node data
-	    	  var nodes = [{title: "new process", id: 0, x: xLoc, y: yLoc},
-	    	               {title: "new process", id: 1, x: xLoc, y: yLoc + 200},
-	    	               {title: "new process", id: 2, x: xLoc-400, y: yLoc +400},
-	    	               {title: "new process", id: 3, x: xLoc-300, y: yLoc +400},
-	    	               {title: "new process", id: 4, x: xLoc-200, y: yLoc +600}];
-	    	  var edges = [{source: nodes[1], target: nodes[0]},
-	    		  		   {source: nodes[0], target: nodes[2]}];
+//	    	  var nodes = [{title: "new process", id: 0, x: xLoc, y: yLoc},
+//	    	               {title: "new process", id: 1, x: xLoc, y: yLoc + 200},
+//	    	               {title: "new process", id: 2, x: xLoc-400, y: yLoc +400},
+//	    	               {title: "new process", id: 3, x: xLoc-300, y: yLoc +400},
+//	    	               {title: "new process", id: 4, x: xLoc-200, y: yLoc +600}];
+//	    	  var edges = [{source: nodes[1], target: nodes[0]},
+//	    		  		   {source: nodes[0], target: nodes[2]}];
+	    	  
+	    	  var nodes = [];
+	    	  
+	    	  var edges = [];
 	    	  
 	    	  /** MAIN SVG **/
 	    	  var svg = d3.select("#workspace").append("svg")
 	    	        .attr("width", width)
 	    	        .attr("height", height);
-	    	  var graph = new edu.gmu.csiss.geoweaver.workspace.GraphCreator(svg, nodes, edges);
+	    	  this.theGraph = new edu.gmu.csiss.geoweaver.workspace.GraphCreator(svg, nodes, edges);
 	    	  
-	    	  graph.setIdCt(2);
+	    	  this.theGraph.setIdCt(nodes.length);
 	    	  
-	    	  graph.updateGraph();
+	    	  this.theGraph.updateGraph();
 			
 		}
 		

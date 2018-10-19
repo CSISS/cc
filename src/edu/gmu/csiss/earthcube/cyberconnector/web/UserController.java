@@ -73,8 +73,6 @@ public class UserController {
     
     Logger logger = Logger.getLogger(this.getClass());
     
-    
-    
     @RequestMapping(value = "/regser", method = RequestMethod.GET)
     public String regser(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
     	

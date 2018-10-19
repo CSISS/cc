@@ -38,8 +38,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.socket.WebSocketSession;
 
-import edu.gmu.csiss.earthcube.cyberconnector.web.SSHController;
-
 
 public class SSHSessionImpl implements SSHSession {
 

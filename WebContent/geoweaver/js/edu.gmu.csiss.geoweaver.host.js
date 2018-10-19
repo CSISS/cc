@@ -191,17 +191,23 @@ edu.gmu.csiss.geoweaver.host = {
 			
 		},
 		
+		addMenuItem: function(one){
+			
+			$("#"+edu.gmu.csiss.geoweaver.menu.getPanelIdByType("host")).append("<li id=\"host-" + one.id + "\"><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.geoweaver.menu.details('"+one.id+"', 'host')\">" + 
+    				
+					one.name + "</a> <i class=\"fa fa-minus subalignicon\" data-toggle=\"tooltip\" title=\"Delete this host\" onclick=\"edu.gmu.csiss.geoweaver.menu.del('"+
+	            				
+					one.id+"','host')\"></i> <i class=\"fa fa-external-link-square subalignicon\" onclick=\"edu.gmu.csiss.geoweaver.menu.openssh('"+
+	            				
+					one.id+"')\" data-toggle=\"tooltip\" title=\"Connect SSH\"></i> </li>");
+			
+		},
+		
 		list: function(msg){
 			
 			for(var i=0;i<msg.length;i++){
 				
-				$("#"+edu.gmu.csiss.geoweaver.menu.getPanelIdByType("host")).append("<li id=\"" + type + "-" + msg[i].id + "\"><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.geoweaver.menu.details('"+msg[i].id+"', '" + type + "')\">" + 
-        				
-					msg[i].name + "</a> <i class=\"fa fa-minus subalignicon\" data-toggle=\"tooltip\" title=\"Delete this host\" onclick=\"edu.gmu.csiss.geoweaver.menu.del('"+
-	            				
-					msg[i].id+"','"+type+"')\"></i> <i class=\"fa fa-external-link-square subalignicon\" onclick=\"edu.gmu.csiss.geoweaver.menu.openssh('"+
-	            				
-					msg[i].id+"')\" data-toggle=\"tooltip\" title=\"Connect SSH\"></i> </li>");
+				this.addMenuItem(msg[i]);
 				
 			}
 			
@@ -209,49 +215,69 @@ edu.gmu.csiss.geoweaver.host = {
 			
 		},
 		
+		validateIP: function(value){
+			
+			var ip = "^(?:(?:25[0-5]2[0-4][0-9][01]?[0-9][0-9]?)\.){3}" +
+            "(?:25[0-5]2[0-4][0-9][01]?[0-9][0-9]?)$";
+			
+            return value.match(ip);
+			
+		},
+		
+		precheck: function(){
+			
+			var valid = false;
+			
+			if($("#hostname")&&$("#hostip")&&$("#hostport")&&$("#username")
+					&&this.validateIP($("#hostip"))&&$.isNumeric($("#hostport"))){
+				
+				valid = true;
+				
+			}
+			
+			return valid;
+			
+		},
+		
 		add: function(){
 			
-			var req = "type=host&hostname="+$("#hostname").val() + 
-    		
-	    		"&hostip=" + $("#hostip").val() +
+			if(this.precheck()){
+				
+				var req = "type=host&hostname="+$("#hostname").val() + 
 	    		
-	    		"&hostport=" + $("#hostport").val() + 
-	    		
-	    		"&username=" + $("#username").val();
-	    	
-	    	$.ajax({
-	    		
-	    		url: "add",
-	    		
-	    		method: "POST",
-	    		
-	    		data: req
-	    		
-	    	}).done(function(msg){
-	    		
-	    		msg = $.parseJSON(msg);
-	    		
-	    		var hostid = msg.hostid;
-	    		
-	    		var hostname = msg.hostname;
-	    		
-	    		$("#hosts").append("<li id=\"host-"+hostid+
-	    				
-	    				"\"><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.geoweaver.menu.details('"+
-	    				
-	    				hostid+"','host')\">" + 
-	    				
-	    				hostname + "</a> <i class=\"fa fa-minus subalignicon\" onclick=\"edu.gmu.csiss.geoweaver.menu.del('"+
-	    				
-	    				hostid+"','host')\"></i> <i class=\"fa fa-external-link-square subalignicon\" onclick=\"edu.gmu.csiss.geoweaver.menu.openssh('"+
-	        				
-	    				hostid+"')\" data-toggle=\"tooltip\" data-original-title=\"Connect SSH\"></i> </li>");
-	    		
-	    	}).fail(function(jqXHR, textStatus){
-	    		
-	    		alert("Fail to add the host.");
-	    		
-	    	});
+		    		"&hostip=" + $("#hostip").val() +
+		    		
+		    		"&hostport=" + $("#hostport").val() + 
+		    		
+		    		"&username=" + $("#username").val();
+		    	
+		    	$.ajax({
+		    		
+		    		url: "add",
+		    		
+		    		method: "POST",
+		    		
+		    		data: req
+		    		
+		    	}).done(function(msg){
+		    		
+		    		msg = $.parseJSON(msg);
+		    		
+		    		edu.gmu.csiss.geoweaver.host.addMenuItem(msg);
+		    		
+		    	}).fail(function(jqXHR, textStatus){
+		    		
+		    		alert("Fail to add the host.");
+		    		
+		    	});
+				
+			}else{
+				
+				alert("Invalid input");
+				
+			}
+			
+			
 			
 		},
 		

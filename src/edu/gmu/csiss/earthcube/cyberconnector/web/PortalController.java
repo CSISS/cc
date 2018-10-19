@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * 
  */
 @Controller
-public class Portal {
+public class PortalController {
 
 	Logger logger = Logger.getLogger(this.getClass());
 	

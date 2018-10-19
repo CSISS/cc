@@ -35,7 +35,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 @Controller 
 //@RequestMapping(value="/")     
 //@SessionAttributes({"SSHToken"})
-public class SSHController {
+public class GeoweaverController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -154,7 +154,7 @@ public class SSHController {
 			
 		}catch(Exception e) {
 			
-//			e.printStackTrace();
+			e.printStackTrace();
 			
 			throw new RuntimeException("failed " + e.getLocalizedMessage());
 			
@@ -199,9 +199,7 @@ public class SSHController {
 				
 				String pid = ProcessTool.add(name, lang, code, desc);
 				
-				resp = "{\"id\" : " + pid + "}";
-				
-				
+				resp = "{\"id\" : \"" + pid + "\"}";
 				
 			}else if(type.equals("workflow")) {
 				

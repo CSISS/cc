@@ -58,6 +58,22 @@ edu.gmu.csiss.geoweaver.menu = {
 			
 		},
 		
+		unescape: function(value){
+			
+			String.prototype.replaceAll = function(search, replacement) {
+			    var target = this;
+			    return target.replace(new RegExp(search, 'g'), replacement);
+			};
+			
+			var resp = value.replaceAll("-.-", "/")
+			.replaceAll("-·-", "'")
+			  .replaceAll("-··-", "\"")
+//			  .replaceAll("->-", "\\n")
+			  .replaceAll("-!-->-", "<br/>");
+			
+			return resp;
+			
+		},
 		
 		details: function(id, type){
 			
@@ -76,10 +92,21 @@ edu.gmu.csiss.geoweaver.menu = {
 				var content = "<dl class=\"row\">";
 				
 				jQuery.each(msg, function(i, val) {
-
-					  content += "    <dt class=\"col col-md-5\">"+i+"</dt>"+
-						"    <dd class=\"col col-md-5\">"+val+"</dd>";
 					
+					if(val!=null&&val!="null"&&val!=""){
+						
+						if(i=="code"){
+							
+							val = edu.gmu.csiss.geoweaver.menu.unescape(val);
+							
+						}
+						
+
+						content += "    <dt class=\"col col-md-5\">"+i+"</dt>"+
+							"    <dd class=\"col col-md-5\">"+val+"</dd>";
+						
+					}
+
 				});
 				
 				content += "</dl>";
@@ -175,13 +202,22 @@ edu.gmu.csiss.geoweaver.menu = {
 	        				
 	        				method: "POST",
 	        				
+	        				//remove the database record
 	        				data: "id="+id + "&type=" + type
 	        				
 	        			}).done(function(msg){
 	        				
 	        				if(msg=="done"){
 	        					
+	        					//remove the menu item
 	        					$("#"+type+"-" + id).remove();
+	        					
+	        					if(type=="process"){
+	        						
+	        						//remove the workspace object
+	        						edu.gmu.csiss.geoweaver.workspace.theGraph.removeNodes(id);
+	        						
+	        					}
 	        					
 	        					console.log("the element is removed " + type + "-" + id);
 	        					
