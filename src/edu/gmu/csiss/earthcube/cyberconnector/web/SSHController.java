@@ -1,5 +1,6 @@
 package edu.gmu.csiss.earthcube.cyberconnector.web;
 
+import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -46,8 +47,18 @@ public class SSHController {
 		
 	}
 	
+	@PreDestroy
+    public void destroy() {
+		
+        System.out.println(
+          "Callback triggered - @PreDestroy.");
+        
+        sshSessionManager.closeAll();
+        
+    }
+	
 	@RequestMapping(value = "/del", method = RequestMethod.POST)
-    public @ResponseBody String delhost(ModelMap model, WebRequest request){
+    public @ResponseBody String del(ModelMap model, WebRequest request){
 		
 		String resp = null;
 		
@@ -81,8 +92,45 @@ public class SSHController {
 		
 	}
 	
+	@RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public @ResponseBody String detail(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String type = request.getParameter("type");
+					
+			String id = request.getParameter("id");
+			
+			if(type.equals("host")) {
+
+				resp = HostTool.detail(id);
+				
+			}else if(type.equals("process")) {
+				
+				resp = ProcessTool.detail(id);
+				
+			}else if(type.equals("workflow")) {
+				
+				resp = WorkflowTool.detail(id);
+				
+			}
+			
+		}catch(Exception e) {
+			
+//			e.printStackTrace();
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
-    public @ResponseBody String listhost(ModelMap model, WebRequest request){
+    public @ResponseBody String list(ModelMap model, WebRequest request){
 		
 		String resp = null;
 		
@@ -106,6 +154,8 @@ public class SSHController {
 			
 		}catch(Exception e) {
 			
+//			e.printStackTrace();
+			
 			throw new RuntimeException("failed " + e.getLocalizedMessage());
 			
 		}
@@ -115,7 +165,7 @@ public class SSHController {
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-    public @ResponseBody String addhost(ModelMap model, WebRequest request){
+    public @ResponseBody String add(ModelMap model, WebRequest request){
 		
 		String resp = null;
 		
@@ -135,13 +185,22 @@ public class SSHController {
 				
 				String hostid = HostTool.add(hostname, hostip, hostport, username, null);
 				
-				resp = "{ 'hostid' : '" + hostid + "', 'hostname' : ' "+ hostname + "' }";
+				resp = "{ \"hostid\" : \"" + hostid + "\", \"hostname\" : \""+ hostname + "\" }";
 				
 			}else if(type.equals("process")) {
 				
-				ProcessTool.add();
+				String lang = request.getParameter("lang");
 				
-				resp = "";
+				String code = request.getParameter("code");
+				
+				String name = request.getParameter("name");
+				
+				String desc = request.getParameter("desc");
+				
+				String pid = ProcessTool.add(name, lang, code, desc);
+				
+				resp = "{\"id\" : " + pid + "}";
+				
 				
 				
 			}else if(type.equals("workflow")) {
@@ -153,6 +212,8 @@ public class SSHController {
 			}
 			
 		}catch(Exception e) {
+			
+			e.printStackTrace();
 			
 			throw new RuntimeException("failed " + e.getLocalizedMessage());
 			
@@ -198,6 +259,104 @@ public class SSHController {
     	
     }
 	
+	@RequestMapping(value = "/geoweaver-ssh-logout-inbox", method = RequestMethod.POST)
+    public @ResponseBody String ssh_close_inbox(Model model, WebRequest request, HttpSession session){
+    	
+    	String resp = "";
+    	
+    	try {
+    		
+        	String token = request.getParameter("token");
+        	
+        	if(token != null) {
+
+            	SSHSession s =  sshSessionManager.sessionsByToken.get(token);
+            	
+            	if(s != null) {
+            		
+            		s.logout();
+            		
+            		sshSessionManager.sessionsByToken.remove(token);
+            		
+            	}
+        		
+        	}
+        	
+            resp = "done";
+            
+    	}catch(Exception e) {
+    		
+    		e.printStackTrace();
+    		
+    		throw new RuntimeException();
+    		
+    	}
+    	
+    	return resp;
+    	
+    }
+	
+	@RequestMapping(value = "/geoweaver-ssh-login-inbox", method = RequestMethod.POST)
+    public @ResponseBody String ssh_auth_inbox(Model model, WebRequest request, HttpSession session){
+    	
+    	String resp = "";
+    	
+    	try {
+    		
+    		String host = request.getParameter("host");
+        	
+        	String port = request.getParameter("port");
+        	
+        	String username = request.getParameter("username");
+        	
+        	String password = request.getParameter("password");
+        	
+        	String token = request.getParameter("token");
+        	
+        	if(token!=null && sshSessionManager.sessionsByToken.get(token)!=null) {
+        		
+        		token = sshSessionManager.sessionsByToken.get(token).getToken();
+        		
+        	}else {
+        		
+        		token = new RandomString(16).nextString();
+            	
+            	SSHSession sshSession = new SSHSessionImpl();
+            	
+            	boolean success = sshSession.login(host, port, username, password, token);
+            	
+            	logger.info("SSH login: {}={}", username, success);
+                        
+                logger.info("adding SSH session for {}", username);
+                
+//                sshSessionManager.sessionsByUsername.put(host+"-"+username, sshSession);
+                
+                sshSessionManager.sessionsByToken.put(token, sshSession);
+        		
+        	}
+        	
+//            model.addAttribute("host", host);
+//            
+//            model.addAttribute("username", username);
+//            
+//            model.addAttribute("port", port);
+//            
+//            model.addAttribute("token", token);
+            
+            resp = "{\"token\": \""+token+"\"}";
+            
+    	}catch(Exception e) {
+    		
+    		e.printStackTrace();
+    		
+    		throw new RuntimeException();
+    		
+    	}
+    	
+    	return resp;
+    	
+    }
+	
 	@RequestMapping(value = "/geoweaver-ssh-login", method = RequestMethod.POST)
     public String ssh_auth(Model model, WebRequest request, HttpSession session){
     	
@@ -213,20 +372,30 @@ public class SSHController {
         	
         	String password = request.getParameter("password");
         	
-        	String token = new RandomString(16).nextString();
+        	String token = null;
         	
-        	SSHSession sshSession = new SSHSessionImpl();
+        	if(sshSessionManager.sessionsByToken.get(host+"-"+username)!=null) {
+        		
+        		token = sshSessionManager.sessionsByToken.get(host+"-"+username).getToken();
+        		
+        	}else {
+        		
+        		token = new RandomString(16).nextString();
+            	
+            	SSHSession sshSession = new SSHSessionImpl();
+            	
+            	boolean success = sshSession.login(host, port, username, password, token);
+            	
+            	logger.info("SSH login: {}={}", username, success);
+                        
+                logger.info("adding SSH session for {}", username);
+                
+                sshSessionManager.sessionsByUsername.put(host+"-"+username, sshSession);
+                
+                sshSessionManager.sessionsByToken.put(token, sshSession);
+        		
+        	}
         	
-        	boolean success = sshSession.login(host, port, username, password, token);
-        	
-        	logger.info("SSH login: {}={}", username, success);
-                    
-            logger.info("adding SSH session for {}", username);
-            
-            sshSessionManager.sessionsByUsername.put(username, sshSession);
-            
-            sshSessionManager.sessionsByToken.put(token, sshSession);
-            
             model.addAttribute("host", host);
             
             model.addAttribute("username", username);

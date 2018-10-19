@@ -49,7 +49,7 @@ public class ShellSocket implements WebSocketHandler {
             // Can the client send the websocket session id and username in a REST call to link them up?
             sshSession = SSHController.sshSessionManager.sessionsByToken.get(messageText);
             
-            if(sshSession!=null) {
+            if(sshSession!=null&&sshSession.getSSHInput().ready()) {
             	
             	sshSession.setWebSocketSession(session);
                 
@@ -57,7 +57,17 @@ public class ShellSocket implements WebSocketHandler {
                 
             }else {
             	
+            	if(sshSession!=null) {
+            		
+            		sshSession.logout();
+            		
+            		SSHController.sshSessionManager.sessionsByWebsocketID.remove(session.getId());
+            		
+            	}
+            	
             	session.sendMessage(new TextMessage("No SSH connection is active"));
+            	
+            	session.close();
             	
             }
             

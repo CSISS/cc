@@ -19,6 +19,12 @@ public class WorkflowTool {
 		
 	}
 
+	public static String detail(String id) {
+		
+		
+		return null;
+		
+	}
 	
 	public static String add() {
 		

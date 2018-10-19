@@ -38,6 +38,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.socket.WebSocketSession;
 
+import edu.gmu.csiss.earthcube.cyberconnector.web.SSHController;
+
 
 public class SSHSessionImpl implements SSHSession {
 
@@ -111,6 +113,7 @@ public class SSHSessionImpl implements SSHSession {
             output = shell.getOutputStream();
             sender = new SSHSessionOutput(input);
         } catch (Exception e) {
+        	e.printStackTrace();
             log.error(e.getMessage());
             finalize();
             throw new SSHAuthenticationException(e.getMessage(), e);
@@ -133,7 +136,8 @@ public class SSHSessionImpl implements SSHSession {
     protected void finalize() {
     	//stop the thread first
         try {
-        	sender.stop();
+        	if(sender!=null)
+        		sender.stop();
 //        	thread.interrupt();
         } catch (Throwable e) {
         	e.printStackTrace();
@@ -148,8 +152,10 @@ public class SSHSessionImpl implements SSHSession {
         }
         try {
             ssh.disconnect();
+            
         } catch (Throwable e) {
         }
+        
         log.info("session finalized");
     }
 
