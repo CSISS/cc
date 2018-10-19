@@ -8,11 +8,15 @@
     
     <title>Geoweaver-SSH-Web</title>
     
+    
     <script src="../geoweaver/ssh/sockjs.js"  th:src="@{../geoweaver/ssh/sockjs.js}"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/js/jquery.terminal.min.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/css/jquery.terminal.min.css" rel="stylesheet"/>
     
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/js/jquery.terminal.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/css/jquery.terminal.min.css" rel="stylesheet"/> -->
+    <script src="../geoweaver/ssh/jquery.terminal/js/jquery.terminal.min.js"></script>
+	<link href="../geoweaver/ssh/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
+	<script src="../geoweaver/ssh/jquery.terminal/js/unix_formatting.js"></script>
     <!-- <script src="jquery.min.js"></script>
     
     <script src="jquery.terminal/js/jquery.mousewheel-min.js"></script>
@@ -26,6 +30,27 @@
         #title {
             color: yellow;
         }
+        
+        #content.terminal {
+        	
+	        font-size: calc(var(--size, 1) * 15px) !important;
+	        
+	        --background: #222 !important;
+	        
+	        --color: white !important;
+	        
+	        font-family: monospace, courier, fixed, swiss, sans-serif !important;
+	        
+	        font-variant-ligatures: none !important;
+	        
+	        font-weight:400 !important;
+	        
+	        line-height: 18px !important;
+	        
+	        white-space: nowrap !important;
+	        
+	    }
+	    
     </style>
 </head>
 
@@ -33,9 +58,9 @@
 
 <h1 id="title">Geoweaver Web-based SSH</h1>
 
-<div id="terminal"></div>
+<div id="content"></div>
 
-<form name="logout" action="logout" method="POST" style="display:none;">
+<form name="logout" action="geoweaver-ssh-login" method="GET" style="display:none;">
 	<!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"></input> -->
 </form>
 
@@ -76,10 +101,11 @@
     	  
     function ws_onopen(e) {
       
-      shell.echo(special.white + "connected" + special.reset);
+      //shell.echo(special.white + "connected" + special.reset);
+      shell.echo("connected");
       // link the SSH session established with spring security logon to the websocket session...
       send(token);
-      
+      shell.resume();
     }
     
     function send(data) {
@@ -98,10 +124,21 @@
     }
 
     function ws_onclose(e) {
-        shell.echo(special.white + "disconnected" + special.reset);
-        shell.destroy();
-        shell.purge();
-        document.forms['logout'].submit();
+    	
+        try{
+        
+        	shell.echo(special.white + "disconnected" + special.reset);
+            
+        	shell.destroy();
+            
+        	shell.purge();
+            
+        }catch(e){
+        	
+        	console.error(e);
+        }
+        
+    	document.forms['logout'].submit();
     }
 
     function ws_onerror(e) {
@@ -122,11 +159,11 @@
         	
         }
         
-        /* if (e.data.indexOf(special.ready) != -1) {
+        //if (e.data.indexOf(special.ready) != -1) {
         
-        	shell.resume();
+        //	shell.resume();
 		
-        } */
+        //}
         
       } catch(err) {
       
@@ -140,7 +177,7 @@
     	
       }
       
-      shell.resume(); //add temporarily
+      shell.resume();
       
     }
 
@@ -165,17 +202,19 @@
         
         ws.onerror = function(e) { ws_onerror(e) };
 		
-        shell = $('#terminal').terminal(function (command, term) {
+        shell = $('#content').terminal(function (command, term) {
         		
         		send(command);
         		
             }, {
             	
-                prompt: 'ssh> ',
+                prompt: '['+user+'@'+host+': ~]# ',
                 
                 name: 'Geoweaver SSH on Web',
                 
-                greetings: "SSH on Web started. \n This system is funded by <a href=\"https://nsf.gov\">National Science Foundation</a> ."
+                scrollOnEcho: true,
+                
+                greetings: "SSH on Web started. Type 'exit' to quit. \nThis system is funded by National Science Foundation (https://nsf.gov)."
                 
             }
             

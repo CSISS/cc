@@ -17,6 +17,8 @@ edu.gmu.csiss.geoweaver.menu = {
 				
 			}
 			
+			$('[data-toggle="tooltip"]').tooltip();
+			
 		},
 		
 		getPanelIdByType: function(type){
@@ -25,14 +27,93 @@ edu.gmu.csiss.geoweaver.menu = {
 			
 		},
 		
-		openssh: function(hostid){
+		
+		setFullScreen: function(dialog){
 			
-			//get the host information
+			dialog.getModal().css('width', '100%');
 			
+			dialog.getModal().css('height', '100%');
 			
-			//open the login page
+			dialog.getModal().css('padding', '0');
 			
+			dialog.getModalDialog().css('width', '100%');
 			
+			dialog.getModalDialog().css('height', '100%');
+			
+			dialog.getModalDialog().css('margin', '0');
+//			
+			dialog.getModalContent().css('height', '100%');
+//			
+			dialog.getModalBody().css('height', '75%');
+			
+			dialog.getModalBody().children()[0].style.height =  '100%';
+			
+			dialog.getModalBody().children()[0].children[0].style.height = '100%';
+			
+//			dialog.getModalHeader().css('height', '10%');
+//			
+//			dialog.getModalFooter().css('height', '10%');
+			
+//			dialog.open();
+			
+		},
+		
+		
+		details: function(id, type){
+			
+			$.ajax({
+				
+				url: "detail",
+				
+				method: "POST",
+				
+				data: "type=" + type + "&id=" + id
+				
+			}).done(function(msg){
+				
+				msg = $.parseJSON(msg);
+				
+				var content = "<dl class=\"row\">";
+				
+				jQuery.each(msg, function(i, val) {
+
+					  content += "    <dt class=\"col col-md-5\">"+i+"</dt>"+
+						"    <dd class=\"col col-md-5\">"+val+"</dd>";
+					
+				});
+				
+				content += "</dl>";
+				
+				BootstrapDialog.show({
+		            
+					title: 'Details',
+		            
+		            message: content,
+		            
+		            buttons: [{
+		                
+		            	label: 'Ok',
+		                
+		                action: function(dialog) {
+		                	
+		                	dialog.close();
+		                	
+		                }
+		            }, {
+		            	
+		                label: 'Cancel',
+		                
+		                action: function(dialog) {
+		                
+		                	dialog.close();
+		                
+		                }
+		            
+		            }]
+		        
+				});
+				
+			});
 			
 		},
 		
@@ -50,22 +131,24 @@ edu.gmu.csiss.geoweaver.menu = {
 				
 				msg = $.parseJSON(msg);
 				
-				for(var i=0;i<msg.length;i++){
+				if(type=="host"){
 					
-					$("#"+edu.gmu.csiss.geoweaver.menu.getPanelIdByType(type)).append("<li><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.geoweaver.menu.detals('"+msg[i].id+"', '" + type + "')\">" + 
-            				
-            				msg[i].name + "</a> <i class=\"arrow fa fa-minus\" onclick=\"edu.gmu.csiss.geoweaver.menu.del('"+
-		                				
-            				msg[i].id+"','"+type+"')\"></i> <i class=\"arrow fa fa-external-link-square\" onclick=\"edu.gmu.csiss.geoweaver.menu.openssh('"+
-		                				
-            				msg[i].id+"','"+type+"')\" data-toggle=\"tooltip\" data-original-title=\"Connect SSH\"></i> </li>");
+					edu.gmu.csiss.geoweaver.host.list(msg);
+					
+				}else if(type=="process"){
+					
+					edu.gmu.csiss.geoweaver.process.list(msg);
+					
+				}else if(type=="workflow"){
+					
+					edu.gmu.csiss.geoweaver.workflow.list(msg);
 					
 				}
 				
 				
 			}).fail(function(jxr, status){
 				
-				console.error("fail to list hosts " + status);
+				console.error("fail to list " + type);
 				
 			});
 			
@@ -100,6 +183,8 @@ edu.gmu.csiss.geoweaver.menu = {
 	        					
 	        					$("#"+type+"-" + id).remove();
 	        					
+	        					console.log("the element is removed " + type + "-" + id);
+	        					
 	        				}else{
 	        					
 	        					console.error("fail to remove " + id);
@@ -131,120 +216,31 @@ edu.gmu.csiss.geoweaver.menu = {
 			
 		},
 		
-		newHostDialog: function(){
-			
-			BootstrapDialog.show({
-				
-				title: "Add new host",
-				
-	            message: '<form>'+
-				       '   <div class="form-group row required">'+
-				       '     <label for="hostname" class="col-sm-2 col-form-label control-label">Host Name </label>'+
-				       '     <div class="col-sm-10">'+
-				       '       <input type="text" class="form-control" id="hostname" value="New Host">'+
-				       '     </div>'+
-				       '   </div>'+
-				       '   <div class="form-group row required">'+
-				       '     <label for="hostip" class="col-sm-2 col-form-label control-label">Hose IP</label>'+
-				       '     <div class="col-sm-10">'+
-				       '       <input type="text" class="form-control" id="hostip" placeholder="Host IP">'+
-				       '     </div>'+
-				       '   </div>'+
-				       '   <div class="form-group row required">'+
-				       '     <label for="hostport" class="col-sm-2 col-form-label control-label">Port</label>'+
-				       '     <div class="col-sm-10">'+
-				       '       <input type="text" class="form-control" id="hostport" placeholder="">'+
-				       '     </div>'+
-				       '   </div>'+
-				       '   <div class="form-group row required">'+
-				       '     <label for="username" class="col-sm-2 col-form-label control-label">User Name</label>'+
-				       '     <div class="col-sm-10">'+
-				       '       <input type="text" class="form-control" id="username" placeholder="">'+
-				       '     </div>'+
-				       '   </div>'+
-				       ' </form>',
-	            
-	            cssClass: 'dialog-vertical-center',
-	            
-	            buttons: [{
-	            	
-	                label: 'Add',
-	                
-	                action: function(dialogItself){
-	                	
-	                	var req = "hostname="+$("#hostname").val() + 
-	                		
-	                		"&hostip=" + $("#hostip").val() +
-	                		
-	                		"&hostport=" + $("#hostport").val() + 
-	                		
-	                		"&username=" + $("#username").val();
-	                	
-	                	$.ajax({
-	                		
-	                		url: "add",
-	                		
-	                		method: "POST",
-	                		
-	                		data: req
-	                		
-	                	}).done(function(msg){
-	                		
-	                		msg = $.parseJSON(msg);
-	                		
-	                		var hostid = msg.hostid;
-	                		
-	                		var hostname = msg.hostname;
-	                		
-	                		$("#hosts").append("<li id=\"host-"+hostid+
-	                				
-	                				"\"><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.geoweaver.menu.detals('"+
-	                				
-	                				hostid+"','host')\">" + 
-	                				
-	                				hostname + "</a> <i class=\"arrow fa fa-minus\" onclick=\"edu.gmu.csiss.geoweaver.menu.del('"+
-	                				
-	                				hostid+"','host')\"></i> <i class=\"arrow fa fa-external-link-square\" onclick=\"edu.gmu.csiss.geoweaver.menu.openssh('"+
-		                				
-	                				hostid+"')\" data-toggle=\"tooltip\" data-original-title=\"Connect SSH\"></i> </li>");
-	                		
-	                	}).fail(function(jqXHR, textStatus){
-	                		
-	                		alert("Fail to add the host.");
-	                		
-	                	});
-	                	
-	                    dialogItself.close();
-	                    
-	                }
-	            
-	            },{
-	            
-	            	label: 'Close',
-	                
-	                action: function(dialogItself){
-	                	
-	                    dialogItself.close();
-	                    
-	                }
-	        
-	            }]
-			
-	        });
-			
-		},
-		
 		listen: function(type){
 			
 			$("#new" + type).click(function(){
 				
 				if(type=="host"){
 					
-					edu.gmu.csiss.geoweaver.menu.newHostDialog();
+					edu.gmu.csiss.geoweaver.host.newDialog();
+					
+				}else if(type=="process"){
+					
+					edu.gmu.csiss.geoweaver.process.newDialog();
+					
+				}else if(type=="workflow"){
+
+					edu.gmu.csiss.geoweaver.workflow.newDialog();
 					
 				}
 				
 			});
+			
+//			$("#testhost").click(function(){
+//				
+//				edu.gmu.csiss.geoweaver.menu.showSSHCmd("test111");
+//				
+//			});
 			
 		}
 		
