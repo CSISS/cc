@@ -563,7 +563,8 @@ public class SearchTool {
 			XPath identifierpath = DocumentHelper.createXPath("gmd:fileIdentifier/gco:CharacterString"); 
 			
 			XPath descpath = DocumentHelper.createXPath("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
-			
+
+			XPath hierarchylevel = DocumentHelper.createXPath("gmd:hierarchyLevel/gmd:MD_ScopeCode");
 			
 			XPath begintimepath = DocumentHelper.createXPath("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition");
 			
@@ -689,30 +690,29 @@ public class SearchTool {
 //					
 //				}
 
-				if(!identifier.contains("-COLLECTION")) {
+				String level = hierarchylevel.selectSingleNode(ele).getText();
+				if(level.contains("series")) {
+
+					String curl = collection_url.selectSingleNode(ele).getText();
+					p.setAccessurl(curl);
+					p.setIscollection("1");
+
+				} else {
+
 					p.setIscollection("0");
 
 					//for gmi
 					if (accessoptions.selectSingleNode(ele) == null) {
-
 						logger.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
 
 						String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
-
 						p.setAccessurl(accessurl);
 
 					} else {
 
 						String accessurl = accessoptions.selectSingleNode(ele).getText();
-
 						p.setAccessurl(accessurl);
-
 					}
-				} else {
-					String curl = collection_url.selectSingleNode(ele).getText();
-					p.setAccessurl(curl);
-					p.setIscollection("1");
-
 				}
 				
 				p.setIfvirtual("0");
