@@ -11,3 +11,5 @@
 .classpath
 .project
 .settings
+
+*cc_secret.properties
