@@ -52,7 +52,7 @@ public class WorkflowTool {
 	public static String execute() {
 		
 		
-		return null;
+		return "";
 	}
 
 	
