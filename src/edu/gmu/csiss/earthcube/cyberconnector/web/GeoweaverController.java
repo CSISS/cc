@@ -164,6 +164,82 @@ public class GeoweaverController {
 		
 	}
 	
+	@RequestMapping(value = "/checkLiveSession", method = RequestMethod.POST)
+    public @ResponseBody String checklivesession(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String hid = request.getParameter("hostId");
+			
+			
+			
+			resp = "{\"exist\": false}";
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+
+	@RequestMapping(value = "/executeWorkflow", method = RequestMethod.POST)
+    public @ResponseBody String executeWorkflow(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String type = request.getParameter("type");
+			
+			WorkflowTool.execute();
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
+	@RequestMapping(value = "/executeProcess", method = RequestMethod.POST)
+    public @ResponseBody String executeProcess(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String pid = request.getParameter("processId");
+			
+			String hid = request.getParameter("hostId");
+			
+			String password = request.getParameter("pswd");
+			
+			ProcessTool.execute(pid, hid, password, null);
+			
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
     public @ResponseBody String add(ModelMap model, WebRequest request){
 		
@@ -199,7 +275,7 @@ public class GeoweaverController {
 				
 				String pid = ProcessTool.add(name, lang, code, desc);
 				
-				resp = "{\"id\" : \"" + pid + "\"}";
+				resp = "{\"id\" : \"" + pid + "\", \"name\":\"" + name + "\"}";
 				
 			}else if(type.equals("workflow")) {
 				
@@ -321,7 +397,7 @@ public class GeoweaverController {
             	
             	SSHSession sshSession = new SSHSessionImpl();
             	
-            	boolean success = sshSession.login(host, port, username, password, token);
+            	boolean success = sshSession.login(host, port, username, password, token, false);
             	
             	logger.info("SSH login: {}={}", username, success);
                         
@@ -382,7 +458,7 @@ public class GeoweaverController {
             	
             	SSHSession sshSession = new SSHSessionImpl();
             	
-            	boolean success = sshSession.login(host, port, username, password, token);
+            	boolean success = sshSession.login(host, port, username, password, token, false);
             	
             	logger.info("SSH login: {}={}", username, success);
                         

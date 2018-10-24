@@ -12,6 +12,7 @@
     </properties>
     <build>
         <sourceDirectory>src</sourceDirectory>
+       	<testSourceDirectory>test</testSourceDirectory>
         <resources>
             <resource>
                 <directory>src</directory>
@@ -25,8 +26,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -46,6 +47,12 @@
         </repository>
     </repositories>
     <dependencies>
+        <dependency>
+	        <groupId>junit</groupId>
+	        <artifactId>junit</artifactId>
+	        <version>4.12</version>
+	        <scope>test</scope>
+	    </dependency>
         <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>

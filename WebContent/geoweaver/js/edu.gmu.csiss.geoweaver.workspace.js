@@ -126,10 +126,16 @@ edu.gmu.csiss.geoweaver.workspace = {
     	        saveEdges.push({source: val.source.id, target: val.target.id});
     	      });
     	      var blob = new Blob([window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
-    	      saveAs(blob, "mydag.json");
+    	      window.saveAs(blob, "geoweaver.json");
     	    });
 
     	    // handle uploaded data
+    	    d3.select("#geoweaver-about").on("click", function(){
+    	    	
+    	    	edu.gmu.csiss.geoweaver.about.showDialog();
+    	    	
+    	    });
+    	    
     	    d3.select("#upload-input").on("click", function(){
     	      document.getElementById("hidden-file-upload").click();
     	    });

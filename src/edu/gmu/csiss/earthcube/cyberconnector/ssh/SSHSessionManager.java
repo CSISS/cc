@@ -39,12 +39,38 @@ public class SSHSessionManager {
     public final ConcurrentHashMap<String, SSHSession> sessionsByUsername = new ConcurrentHashMap<String, SSHSession>();   
     
     public final ConcurrentHashMap<String, SSHSession> sessionsByToken = new ConcurrentHashMap<String, SSHSession>();
-
+    
     public void closeAll() {
     	
-    	for (Entry<String, SSHSession> o : sessionsByUsername.entrySet()) {
-    	    
-    		o.getValue().logout();
+    	try {
+    		
+    		for (Entry<String, SSHSession> o : sessionsByUsername.entrySet()) {
+        	    
+        		o.getValue().logout();
+        		
+        	}
+    		
+        	for (Entry<String, SSHSession> o : sessionsByWebsocketID.entrySet()) {
+        	    
+        		o.getValue().logout();
+        		
+        	}
+        	
+        	for (Entry<String, SSHSession> o : sessionsByToken.entrySet()) {
+        	    
+        		o.getValue().logout();
+        		
+        	}
+        	
+        	sessionsByUsername.clear();
+        	
+        	sessionsByWebsocketID.clear();
+        	
+        	sessionsByToken.clear();
+        	
+    	}catch(Exception e) {
+    		
+    		e.printStackTrace();
     		
     	}
     	

@@ -21,7 +21,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.web.GeoweaverController;
  */
 public class ShellSocket implements WebSocketHandler {
 
-    protected final Logger          log = LoggerFactory.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
     
     private List<String> logoutCommands = Arrays.asList(new String[]{"logout", "exit"});
     
@@ -78,6 +78,12 @@ public class ShellSocket implements WebSocketHandler {
             sshSession.getSSHOutput().write((messageText + '\n').getBytes());
             
             sshSession.getSSHOutput().flush();
+            
+//			//send Ctrl + C command to the SSH to close the connection
+//			
+//			cmd.getOutputStream().write(3);
+//			
+//		    cmd.getOutputStream().flush();
             
         }
         

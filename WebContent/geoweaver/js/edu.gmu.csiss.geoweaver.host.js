@@ -134,7 +134,13 @@ edu.gmu.csiss.geoweaver.host = {
 		                	
 		                    dialog.enableButtons(false);
 		                	
-		                	var req = "host=" + msg.ip + "&port=" + msg.port + "&username=" + msg.user + "&password=" + $("#inputpswd").val();
+		                	var req = "host=" + msg.ip + 
+		                		
+		                		"&port=" + msg.port + 
+		                		
+		                		"&username=" + msg.user + 
+		                		
+		                		"&password=" + $("#inputpswd").val();
 		                	
 		                	$.ajax({
 		                		
@@ -195,11 +201,11 @@ edu.gmu.csiss.geoweaver.host = {
 			
 			$("#"+edu.gmu.csiss.geoweaver.menu.getPanelIdByType("host")).append("<li id=\"host-" + one.id + "\"><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.geoweaver.menu.details('"+one.id+"', 'host')\">" + 
     				
-					one.name + "</a> <i class=\"fa fa-minus subalignicon\" data-toggle=\"tooltip\" title=\"Delete this host\" onclick=\"edu.gmu.csiss.geoweaver.menu.del('"+
-	            				
-					one.id+"','host')\"></i> <i class=\"fa fa-external-link-square subalignicon\" onclick=\"edu.gmu.csiss.geoweaver.menu.openssh('"+
-	            				
-					one.id+"')\" data-toggle=\"tooltip\" title=\"Connect SSH\"></i> </li>");
+				one.name + "</a> <i class=\"fa fa-external-link-square subalignicon\" onclick=\"edu.gmu.csiss.geoweaver.host.openssh('"+
+            				
+				one.id+"')\" data-toggle=\"tooltip\" title=\"Connect SSH\"></i> <i class=\"fa fa-minus subalignicon\" data-toggle=\"tooltip\" title=\"Delete this host\" onclick=\"edu.gmu.csiss.geoweaver.menu.del('"+
+            				
+				one.id+"','host')\"></i> </li>");
 			
 		},
 		

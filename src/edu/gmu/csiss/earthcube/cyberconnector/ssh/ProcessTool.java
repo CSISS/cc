@@ -2,6 +2,7 @@ package edu.gmu.csiss.earthcube.cyberconnector.ssh;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,6 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
+import edu.gmu.csiss.earthcube.cyberconnector.web.GeoweaverController;
+import net.schmizz.sshj.common.IOUtils;
+import net.schmizz.sshj.connection.channel.direct.Session;
 
 public class ProcessTool {
 	
@@ -148,6 +152,116 @@ public class ProcessTool {
 		
 	}
 	
+	/**
+	 * Get code by Id
+	 * @param pid
+	 * @return
+	 */
+	public static String getCodeById(String pid) {
+		
+		StringBuffer sql = new StringBuffer("select code from process_type where id = '").append(pid).append("';");
+		
+		ResultSet rs = DataBaseOperation.query(sql.toString());
+		
+		String code = null;
+		
+		try {
+			
+			if(rs.next())
+				
+				code = rs.getString("code");
+			
+			DataBaseOperation.closeConnection();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+		return code;
+		
+	}
+	
+	
+	
+	/**
+	 * Execute one process on a host
+	 * @param id
+	 * process Id
+	 * @param hid
+	 * host Id
+	 * @param pswd
+	 * password
+	 * @return
+	 */
+	public static String execute(String id, String hid, String pswd, String token) {
+		
+		try {
+
+			//get code of the process
+			
+			String code = getCodeById(id);
+			
+			System.out.println(code);
+			
+			//get host ip, port, user name and password
+			
+			String[] hostdetails = HostTool.getHostDetailsById(hid);
+			
+			//establish SSH session
+			
+			if(token == null) {
+				
+				token = new RandomString(12).nextString();
+				
+			}
+			
+			SSHSession session = new SSHSessionImpl();
+			
+			session.login(hostdetails[1], hostdetails[2], hostdetails[3], pswd, token, false);
+			
+			GeoweaverController.sshSessionManager.sessionsByToken.put(token, session);
+			
+			//feed the process code into the SSH session
+			
+			String executebash = "echo \"" + code.replaceAll("\"", "\\\\\"") + "\" > geoweaver-" + token + ".sh;"+
+			
+					"chmod +x geoweaver-" + token + ".sh; " + 
+					
+					"./geoweaver-" + token + ".sh;";
+			
+			Session.Command cmd = session.getSSHJSession().exec(executebash);
+			
+			String output = IOUtils.readFully(cmd.getInputStream()).toString();
+			
+			logger.info(output);
+			
+			//wait until the process execution is over
+			
+	        cmd.join(5, TimeUnit.SECONDS);
+	        
+			cmd.close();
+			
+			session.logout();
+			
+			GeoweaverController.sshSessionManager.sessionsByToken.remove(token);
+			
+			//register the input/output into the database
+	        
+			
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+		} 
+        		
+		return token;
+		
+	}
+	
+	
 	public static void main(String[] args) {
 		
 //		String code = "#!/bin/sh\r\n" + 
@@ -164,7 +278,11 @@ public class ProcessTool {
 		
 //		ProcessTool.add("test21", "shell", code, null);
 		
-		System.out.println(ProcessTool.detail("di1xlf"));
+//		System.out.println(ProcessTool.detail("di1xlf"));
+		
+		System.out.println(ProcessTool.execute("degrzr", "kps1gf", "Chuntian18$", null));
+		
+		
 		
 	}
 	

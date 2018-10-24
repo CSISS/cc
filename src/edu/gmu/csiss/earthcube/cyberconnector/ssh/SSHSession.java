@@ -29,17 +29,34 @@ import java.io.OutputStream;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.socket.WebSocketSession;
 
+import net.schmizz.sshj.connection.channel.direct.Session;
+
 public interface SSHSession {
 
-    boolean login(String host, String port, String username, String password, String token) throws AuthenticationException;
+	/**
+	 * login with user name and password
+	 * @param host
+	 * @param port
+	 * @param username
+	 * @param password
+	 * @param token
+	 * token is websocket token
+	 * @return
+	 * @throws AuthenticationException
+	 */
+    public boolean login(String host, String port, String username, String password, String token, boolean isShell) throws AuthenticationException;
 
-    boolean logout();
+    public boolean logout();
+    
+    public Session getSSHJSession();
 
-    BufferedReader getSSHInput();
+	public void setSSHJSession(Session session);
 
-    OutputStream getSSHOutput();
+	public BufferedReader getSSHInput();
 
-    void setWebSocketSession(WebSocketSession session);
+	public OutputStream getSSHOutput();
+    
+	public void setWebSocketSession(WebSocketSession session);
     
     public String getUsername() ;
 

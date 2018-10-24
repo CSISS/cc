@@ -65,7 +65,15 @@ public class SSHSessionImpl implements SSHSession {
     
     private String           port;
     
-    public String getUsername() {
+    public Session getSSHJSession() {
+		return session;
+	}
+
+	public void setSSHJSession(Session session) {
+		this.session = session;
+	}
+
+	public String getUsername() {
 		return username;
 	}
 
@@ -82,7 +90,7 @@ public class SSHSessionImpl implements SSHSession {
 	}
 
 	@Override
-    public boolean login(String host, String port, String username, String password, String token) throws AuthenticationException {
+    public boolean login(String host, String port, String username, String password, String token, boolean isShell) throws AuthenticationException {
         try {
             logout();
             // ssh.authPublickey(System.getProperty("user.name"));
@@ -102,14 +110,18 @@ public class SSHSessionImpl implements SSHSession {
             session = ssh.startSession();
             log.info("allocating PTY");
             session.allocateDefaultPTY();
-            log.info("starting shell");
-            shell = session.startShell();
-            log.info("SSH session established");
-            this.username = username;
-            this.token = token;
-            input = new BufferedReader(new InputStreamReader(shell.getInputStream()));
-            output = shell.getOutputStream();
-            sender = new SSHSessionOutput(input);
+            
+            if(isShell) {
+            	log.info("starting shell");
+                shell = session.startShell();
+                log.info("SSH session established");
+                this.username = username;
+                this.token = token;
+                input = new BufferedReader(new InputStreamReader(shell.getInputStream()));
+                output = shell.getOutputStream();
+                sender = new SSHSessionOutput(input);
+            }
+            
         } catch (Exception e) {
         	e.printStackTrace();
             log.error(e.getMessage());
