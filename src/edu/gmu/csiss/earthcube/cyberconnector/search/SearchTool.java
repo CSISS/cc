@@ -562,7 +562,7 @@ public class SearchTool {
 			
 			XPath identifierpath = DocumentHelper.createXPath("gmd:fileIdentifier/gco:CharacterString"); 
 			
-			XPath descpath = DocumentHelper.createXPath("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
+			XPath titlepath = DocumentHelper.createXPath("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
 
 			XPath hierarchylevel = DocumentHelper.createXPath("gmd:hierarchyLevel/gmd:MD_ScopeCode");
 			
@@ -609,8 +609,9 @@ public class SearchTool {
 				Element ele = (Element)it.next();
 				
 				String identifier = identifierpath.selectSingleNode(ele).getText();
-				
+
 				p.setName(identifier);
+				p.setDesc(identifier);
 				
 				//identifier must be escaped : and /
 
@@ -622,12 +623,11 @@ public class SearchTool {
 				
 				logger.debug("identifier : " + identifier);
 				
-				if(descpath.selectSingleNode(ele)!=null){
+				if(titlepath.selectSingleNode(ele)!=null){
 					
-					String desc = descpath.selectSingleNode(ele).getText();
-					
-					p.setDesc(desc);
-					
+					String title = titlepath.selectSingleNode(ele).getText();
+					title = title.replaceAll("_", " ");
+					p.setTitle(title);
 				}
 				
 				if(begintimepath.selectSingleNode(ele)!=null){
@@ -696,6 +696,9 @@ public class SearchTool {
 					String curl = collection_url.selectSingleNode(ele).getText();
 					p.setAccessurl(curl);
 					p.setIscollection("1");
+
+					String title = p.getTitle();
+					p.setTitle(title + " [COLLECTION]");
 
 				} else {
 

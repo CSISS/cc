@@ -16,7 +16,8 @@ public class GranulesTool {
         String indexerPath = SysDir.thredds_harvester_path + "/index_collection_granules.py";
 
         ProcessBuilder indexerPB = new ProcessBuilder("python3", indexerPath, request.collection_url, request.collection_name);
-        File log = new File(SysDir.thredds_harvester_path + "/pbuilder.log");
+        indexerPB.directory(new File(SysDir.thredds_harvester_path));
+        File log = new File(SysDir.thredds_harvester_path + "/cc-index_collection_granules.log");
         indexerPB.redirectErrorStream(true);
         indexerPB.redirectOutput(ProcessBuilder.Redirect.appendTo(log));
 
@@ -33,6 +34,7 @@ public class GranulesTool {
         String indexReaderPath = SysDir.thredds_harvester_path + "/get_collection_granules.py";
 
         ProcessBuilder readerPB = new ProcessBuilder("python3", indexReaderPath, request.collection_url, request.time_start, request.time_end);
+        readerPB.directory(new File(SysDir.thredds_harvester_path));
 
         String jsonOutput;
         List<Granule> granules = null;
