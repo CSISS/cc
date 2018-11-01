@@ -18,21 +18,29 @@ public class RSAEncryptTool {
 	
 	public static Map<String, KeyPair> token2KeyPair = new HashMap();
 	
-	public static String getPublicKey() throws NoSuchAlgorithmException {
+	public static String getPublicKey(String sessionid) throws NoSuchAlgorithmException {
 		
 		StringBuffer key = new StringBuffer();
 		
-		String token = new RandomString(20).nextString();
-		
 		KeyPair kp = RSAEncryptTool.buildKeyPair();
 		
-		token2KeyPair.put(token, kp);
+		token2KeyPair.put(sessionid, kp);
 		
-		key.append("{ \"token\": \"").append(token).append("\", ");
-		
-		key.append(" \"rsa_public\": \"").append(RSAEncryptTool.byte2Base64(kp.getPublic().getEncoded())).append("\" } ");
+		key.append("{ \"rsa_public\": \"").append(RSAEncryptTool.byte2Base64(kp.getPublic().getEncoded())).append("\" } ");
 		
 		return key.toString();
+		
+	}
+	
+	public static String getPassword(String encrypted, String sessionid) throws Exception {
+		
+		byte[] pswdbytes = base642Byte(encrypted);
+		
+		PrivateKey pk = token2KeyPair.get(sessionid).getPrivate();
+		
+		String password = new String(decrypt(pk, pswdbytes));
+		
+		return password;
 		
 	}
 	

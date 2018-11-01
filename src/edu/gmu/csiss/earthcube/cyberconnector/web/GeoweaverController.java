@@ -131,13 +131,13 @@ public class GeoweaverController {
 	}
 	
 	@RequestMapping(value = "/key", method = RequestMethod.POST)
-    public @ResponseBody String getpublickey(ModelMap model, WebRequest request){
+    public @ResponseBody String getpublickey(ModelMap model, WebRequest request, HttpSession session){
 		
 		String resp = null;
 		
 		try {
 			
-			resp = RSAEncryptTool.getPublicKey();
+			resp = RSAEncryptTool.getPublicKey(session.getId());
 			
 		}catch(Exception e) {
 			
@@ -301,7 +301,7 @@ public class GeoweaverController {
 	}
 	
 	@RequestMapping(value = "/executeProcess", method = RequestMethod.POST)
-    public @ResponseBody String executeProcess(ModelMap model, WebRequest request){
+    public @ResponseBody String executeProcess(ModelMap model, WebRequest request, HttpSession session){
 		
 		String resp = null;
 		
@@ -311,7 +311,9 @@ public class GeoweaverController {
 			
 			String hid = request.getParameter("hostId");
 			
-			String password = request.getParameter("pswd");
+			String encrypted_password = request.getParameter("pswd");
+			
+			String password = RSAEncryptTool.getPassword(encrypted_password, session.getId());
 			
 			resp = ProcessTool.execute(pid, hid, password, null);
 			

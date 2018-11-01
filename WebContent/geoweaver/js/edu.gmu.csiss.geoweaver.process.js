@@ -399,13 +399,31 @@ edu.gmu.csiss.geoweaver.process = {
 	                		
 	                		//encrypt the password using the received rsa key
 	                		
+	                		msg = $.parseJSON(msg);
+	                		
+	                		var encrypt = new JSEncrypt();
+	                		
+	                        encrypt.setPublicKey(msg.rsa_public);
+	                        
+	                        var encrypted = encrypt.encrypt($('#inputpswd').val());
+	                        
+	                        var req = {
+	                        		
+	                        		processId: pid,
+	                        		
+	                        		hostId: hid,
+	                        		
+	                        		pswd: encrypted
+	                        		
+	                        }
+	                		
 	                		$.ajax({
 		        				
 		        				url: "executeProcess",
 		        				
 		        				type: "POST",
 		        				
-		        				data: "processId=" + pid + "&hostId=" + hid + "&pswd=" + $("#inputpswd").val()
+		        				data: req
 		        				
 		        			}).done(function(msg){
 		        				
