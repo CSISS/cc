@@ -48,14 +48,14 @@ public class RSAEncryptTool {
         return cipher.doFinal(encrypted);  
     }
     
-    public static String byte2Base64(byte [] bytes) {
-    	
-    	Base64 codec = new Base64();
-    	String encoded = codec.encodeBase64String(bytes);
-    	
-    	return encoded;
-    	
-    }
+//    public static String byte2Base64(byte [] bytes) {
+//    	
+//    	Base64 codec = new Base64();
+//    	String encoded = codec.encodeBase64String(bytes);
+//    	
+//    	return encoded;
+//    	
+//    }
     
     public static byte[] encrypt(PublicKey publicKey, String message) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA");  
