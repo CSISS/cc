@@ -118,7 +118,138 @@ edu.gmu.csiss.geoweaver.process = {
 		 */
 		history: function(pid, pname){
 			
+			$.ajax({
+				
+				url: "logs",
+				
+				method: "POST",
+				
+				data: "type=process&id=" + pid
+				
+			}).done(function(msg){
+				
+				if(!msg.length){
+					
+					alert("no history found");
+					
+					return;
+					
+				}
+				
+				msg = $.parseJSON(msg);
+				
+				var content = "<table class=\"table\"> "+
+				"  <thead> "+
+				"    <tr> "+
+				"      <th scope=\"col\">Execution Id</th> "+
+				"      <th scope=\"col\">Begin Time</th> "+
+				"      <th scope=\"col\">Action</th> "+
+				"    </tr> "+
+				"  </thead> "+
+				"  <tbody> ";
+
+				
+				for(var i=0;i<msg.length;i++){
+					
+					content += "    <tr> "+
+						"      <td>"+msg[i].id+"</td> "+
+						"      <td>"+msg[i].begin_time+"</td> "+
+						"      <td><a href=\"javascript: edu.gmu.csiss.geoweaver.process.getHistoryDetails('"+msg[i].id+"')\">Check</a></td> "+
+						"    </tr>";
+					
+				}
+				
+				content += "</tbody>";
+				
+				BootstrapDialog.show({
+					
+					title: "History",
+					
+					message: content,
+					
+					buttons: [{
+						
+						label: "Close",
+						
+						action: function(dialog){
+							
+							dialog.close();
+							
+						}
+						
+					}]
+					
+				});
+				
+			}).fail(function(jxr, status){
+				
+				
+			});
 			
+		},
+		
+		getHistoryDetails: function(history_id){
+			
+			$.ajax({
+				
+				url: "log",
+				
+				method: "POST",
+				
+				data: "type=process&id=" + history_id
+				
+			}).done(function(msg){
+				
+				msg = $.parseJSON(msg);
+				
+				var content = "<div class=\"form-group row\"> "+
+				"	    <dt class=\"col col-md-3\">Log Id</dt>"+
+				"	    <dd class=\"col col-md-7\">"+msg.id+"</dd>"+
+				"	  </div>"+
+				"<div class=\"form-group row\"> "+
+				"	    <dt class=\"col col-md-3\">Process Id</dt>"+
+				"	    <dd class=\"col col-md-7\">"+msg.process+"</dd>"+
+				"	  </div>"+
+				"<div class=\"form-group row\"> "+
+				"	    <dt class=\"col col-md-3\">Begin Time</dt>"+
+				"	    <dd class=\"col col-md-7\">"+msg.begin_time+"</dd>"+
+				"	  </div>"+
+				"<div class=\"form-group row\"> "+
+				"	    <dt class=\"col col-md-3\">End Time</dt>"+
+				"	    <dd class=\"col col-md-7\">"+msg.end_time+"</dd>"+
+				"	  </div>"+
+				"<div class=\"form-group row\"> "+
+				"	    <dt class=\"col col-md-3\">Input</dt>"+
+				"	    <dd class=\"col col-md-7\">"+msg.input+"</dd>"+
+				"	  </div>"+
+				"<div class=\"form-group row\"> "+
+				"	    <dt class=\"col col-md-3\">Output</dt>"+
+				"	    <dd class=\"col col-md-7\">"+msg.output+"</dd>"+
+				"	  </div>";
+				
+				BootstrapDialog.show({
+					
+					title: "Process Log",
+					
+					message: content,
+					
+					buttons: [{
+						
+						label: "Close",
+						
+						action: function(dialog){
+							
+							dialog.close();
+						}
+						
+					}]
+					
+				});
+				
+			}).fail(function(){
+				
+				
+			});
 			
 		},
 		
@@ -212,6 +343,15 @@ edu.gmu.csiss.geoweaver.process = {
 		},
 		
 		/**
+		 * create a WebSocket-based dialog for outputting the log of Bash scripts
+		 */
+		showSSHOutputLog: function(msg){
+			
+			edu.gmu.csiss.geoweaver.ssh.openLog(msg.token);
+			
+		},
+		
+		/**
 		 * Execute one process
 		 */
 		executeProcess: function(pid, hid){
@@ -238,38 +378,77 @@ edu.gmu.csiss.geoweaver.process = {
 	                
 	                action: function(dialogItself){
 	                	
+	                	var $button = this;
+	                	
+	                	$button.spin();
+	                	
+	                	dialogItself.enableButtons(false);
+	                	
+	                	//Two-step encryption is applied here. 
+	                	//First, get public key from server.
+	                	//Second, encrypt the password and sent the encypted string to server. 
 	                	$.ajax({
-	        				
-	        				url: "executeProcess",
-	        				
-	        				type: "POST",
-	        				
-	        				data: "processId=" + pid + "&hostId=" + hid + "&pswd=" + $("#inputpswd").val()
-	        				
-	        			}).done(function(msg){
-	        				
-	        				msg = $.parseJSON(msg);
-	        				
-	        				if(msg.ret == "success"){
-	        					
-	        					console.log("the process is successfully executed.");
-	        					
-	        					console.log(msg.output)
-	        					
-	        				}else if(msg.ret == "fail"){
-	        					
-	        					console.error("fail to execute the process " + msg.reason);
-	        					
-	        				}
-	        				
-	        			}).fail(function(jxr, status){
-	        				
-	        				console.error("fail to execute the process " + pid);
-	        				
-	        			});
+	                		
+	                		url: "key",
+	                		
+	                		type: "POST",
+	                		
+	                		data: ""
+	                		
+	                	}).done(function(msg){
+	                		
+	                		//encrypt the password using the received rsa key
+	                		
+	                		$.ajax({
+		        				
+		        				url: "executeProcess",
+		        				
+		        				type: "POST",
+		        				
+		        				data: "processId=" + pid + "&hostId=" + hid + "&pswd=" + $("#inputpswd").val()
+		        				
+		        			}).done(function(msg){
+		        				
+		        				msg = $.parseJSON(msg);
+		        				
+		        				if(msg.ret == "success"){
+		        					
+		        					console.log("the process is under execution.");
+		        					
+		        					console.log("history id: " + msg.history_id);
+		        					
+		        					edu.gmu.csiss.geoweaver.process.showSSHOutputLog(msg);
+		        					
+		        				}else if(msg.ret == "fail"){
+		        					
+		        					alert("Fail to execute the process.");
+		        					
+		        					console.error("fail to execute the process " + msg.reason);
+		        					
+		        				}
+		        				
+	        					dialogItself.close();
+		        				
+		        			}).fail(function(jxr, status){
+		        				
+		        				alert("Error: unable to log on. Check if your password or the configuration of host is correct.");
+		        				
+		        				$("#inputpswd").val("");
+
+		        				$button.stopSpin();
+		                		
+		        				dialogItself.enableButtons(true);
+		                		
+		        				console.error("fail to execute the process " + pid);
+		        				
+		        			});
+	                		
+	                	}).fail(function(jxr, status){
+	                		
+	                	});
+	                	
+	                	
 	        			
-	                    dialogItself.close();
-	                    
 	                }
 					
 				},{
@@ -285,104 +464,6 @@ edu.gmu.csiss.geoweaver.process = {
 				}]
 				
 			});
-			
-		},
-		
-		runProcesses: function(pidList, pnameList){
-			
-//			var content = '<form>'+
-//			   '   <div class="form-group row required">'+
-//		       '     <label for="hostselector" class="col-sm-4 col-form-label control-label">Execute all processes on one host: </label>'+
-//		       '     <div class="col-sm-8">'+
-//		       '		<input class="form-check-input" type="checkbox" value="" id="allonone" />'+
-//		       '     </div>'+
-//		       '   </div>';
-//			
-//			for(var i=0;i<pidList.length;i++){
-//				
-//				content += '   <div class="form-group row required">'+
-//			       '     <label for="host'+i+'selector" class="col-sm-4 col-form-label control-label">Run Process '+pnameList[i]+' on: </label>'+
-//			       '     <div class="col-sm-8">'+
-//			       '		<select class="form-control" id="host'+i+'selector" onchange="edu.gmu.csiss.geoweaver.host.checklive()">'+
-//			       '  		</select>'+
-//			       '     </div>'+
-//			       '   </div>';
-//				
-//			}
-//			
-//			content += '</form>';
-//			
-//			BootstrapDialog.show({
-//				
-//				title: "Select a host",
-//				
-//				closable: false,
-//				
-//	            message: content,
-//	            
-//	            onshown: function(){
-//	            	
-//	            	$.ajax({
-//	            		
-//	            		url: "list",
-//	            		
-//	            		method: "POST",
-//	            		
-//	            		data: "type=host"
-//	            		
-//	            	}).done(function(msg){
-//	            		
-//	            		msg = $.parseJSON(msg);
-//	            		
-//	            		for(var i=0;i<pidList.length;i++){
-//	            			
-//	            			$("#host"+i+"selector").find('option').remove().end();
-//		            		
-//		            		for(var i=0;i<msg.length;i++){
-//		            			
-//		            			$("#host"+i+"selector").append("<option id=\""+msg[i].id+"\">"+msg[i].name+"</option>");
-//		            			
-//		            		}
-//	            			
-//	            		}
-//	            		
-//	            	}).fail(function(jxr, status){
-//	    				
-//	    				console.error("fail to list host");
-//	    				
-//	    			});
-//	            	
-//	            },
-//	            
-//	            buttons: [{
-//		            
-//	            	label: 'Execute',
-//	                
-//	                action: function(dialogItself){
-//	                	
-//	                	var hostid = $("#hostselector").children(":selected").attr("id");
-//	                	
-//	                	console.log("selected host: " + hostid);
-//	                	
-//	                	edu.gmu.csiss.geoweaver.process.executeWorkflow(pidList);
-//	                	
-//	                    dialogItself.close();
-//	                    
-//	                }
-//	        
-//	            },{
-//		            
-//	            	label: 'Cancel',
-//	                
-//	                action: function(dialogItself){
-//	                	
-//	                    dialogItself.close();
-//	                    
-//	                }
-//	        
-//	            }]
-//	            
-//			});
 			
 		},
 		

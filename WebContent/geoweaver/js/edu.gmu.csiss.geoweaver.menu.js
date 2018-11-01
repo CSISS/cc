@@ -101,10 +101,13 @@ edu.gmu.csiss.geoweaver.menu = {
 							
 						}
 						
-
-						content += "    <dt class=\"col col-md-5\">"+i+"</dt>"+
-							"    <dd class=\"col col-md-5\">"+val+"</dd>";
+						if(typeof val =='object')
+						{
+						  val = JSON.stringify(val);
+						}
 						
+						content += "    <dt class=\"col col-md-3\">"+i+"</dt>"+
+						"    <dd class=\"col col-md-7\">"+val+"</dd>";
 					}
 
 				});

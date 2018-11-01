@@ -23,6 +23,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,24 +36,79 @@ public class SSHSessionManager {
     protected final Logger          log = LoggerFactory.getLogger(getClass());
     
     // TODO consider alternative implementation
+    /**
+     * this map onlys contains the ssh sessions with one or more associated websocket sessions
+     */
     public final ConcurrentHashMap<String, SSHSession> sessionsByWebsocketID = new ConcurrentHashMap<String, SSHSession>();   
     
-    public final ConcurrentHashMap<String, SSHSession> sessionsByUsername = new ConcurrentHashMap<String, SSHSession>();   
-    
+//    public final ConcurrentHashMap<String, SSHSession> sessionsByUsername = new ConcurrentHashMap<String, SSHSession>();   
+    /**
+     * this map contains all the ssh sessions
+     */
     public final ConcurrentHashMap<String, SSHSession> sessionsByToken = new ConcurrentHashMap<String, SSHSession>();
+    
+    public void closeByToken(String token) {
+    	
+    	if(sessionsByToken.containsKey(token)) {
+    		
+    		log.info("log out the session");
+    		
+    		SSHSession sshSession = sessionsByToken.get(token);
+    		
+    		sshSession.logout();
+    		
+    		sessionsByToken.remove(token);
+    		
+    		//close all the related websocket sessions
+    		
+    		Iterator it = sessionsByWebsocketID.entrySet().iterator();
+    	    
+    		while (it.hasNext()) {
+    	    	
+    	    	ConcurrentHashMap.Entry pair = (ConcurrentHashMap.Entry)it.next();
+    	    	
+    	    	SSHSession ssh = (SSHSession)pair.getValue();
+    	    	
+    	    	if(ssh.getToken().equals(token)) {
+    	    		
+    	    		String websocketid = (String)pair.getKey();
+    	    		
+    	    		try {
+						
+    	    			ShellSocket.findSessionById(websocketid).close();
+    	    			
+    	    			sessionsByWebsocketID.remove(websocketid);
+						
+					} catch (Exception e) {
+						
+						e.printStackTrace();
+						
+					}
+    	    		
+    	    	}
+    	    }
+    		
+    		
+    	}
+    	
+    }
     
     public void closeAll() {
     	
     	try {
     		
-    		for (Entry<String, SSHSession> o : sessionsByUsername.entrySet()) {
-        	    
-        		o.getValue().logout();
-        		
-        	}
+//    		for (Entry<String, SSHSession> o : sessionsByUsername.entrySet()) {
+//        	    
+//        		o.getValue().logout();
+//        		
+//        	}
     		
         	for (Entry<String, SSHSession> o : sessionsByWebsocketID.entrySet()) {
-        	    
+        		
+        		String websocketid = (String)o.getKey();
+        		
+        		ShellSocket.findSessionById(websocketid).close();
+    			
         		o.getValue().logout();
         		
         	}
@@ -62,7 +119,7 @@ public class SSHSessionManager {
         		
         	}
         	
-        	sessionsByUsername.clear();
+//        	sessionsByUsername.clear();
         	
         	sessionsByWebsocketID.clear();
         	

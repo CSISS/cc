@@ -36,11 +36,13 @@ edu.gmu.csiss.geoweaver.about = {
 				
 				buttons: [{
 				
-					"Close": function(dialog){
-						
-						dialog.close();
-						
-					}
+					label: 'Close',
+	                
+	                action: function(dialog) {
+	                	
+	                	dialog.close();
+	                	
+	                }
 					
 				}]
 				

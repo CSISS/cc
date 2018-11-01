@@ -128,11 +128,40 @@ edu.gmu.csiss.geoweaver.workspace = {
     	      var blob = new Blob([window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
     	      window.saveAs(blob, "geoweaver.json");
     	    });
-
-    	    // handle uploaded data
-    	    d3.select("#geoweaver-about").on("click", function(){
+    	    
+    	    d3.select("#execute-workflow").on("click", function(){
     	    	
-    	    	edu.gmu.csiss.geoweaver.about.showDialog();
+    	    	//if the current workspace is loaded with an existing workflow, run it directly. Otherwise, save the workflow first.
+    	    	if(edu.gmu.csiss.geoweaver.workflow.loaded_workflow==null){
+    	    		
+        	    	edu.gmu.csiss.geoweaver.workflow.newDialog(true);
+        	    	
+    	    	}else{
+    	    		
+    	    		edu.gmu.csiss.geoweaver.workflow.run(edu.gmu.csiss.geoweaver.workflow.loaded_workflow);
+    	    		
+    	    	}
+    	    	
+    	    });
+    	    
+    	    // handle uploaded data
+    	    d3.select("#geoweaver-details").on("click", function(){
+    	    	
+    	    	//get the selected node id
+    	    	
+    	    	var selectedNode = edu.gmu.csiss.geoweaver.workspace.theGraph.state.selectedNode;
+    	    	
+    	    	if(selectedNode == null){
+    	    		
+    	    		alert("No process is selected");
+    	    		
+    	    	}else{
+    	    		
+    	    		var id = selectedNode.id.split("-")[0];
+    	    		
+    	    		edu.gmu.csiss.geoweaver.menu.details(id, "process");
+    	    		
+    	    	}
     	    	
     	    });
     	    
@@ -217,14 +246,38 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.deleteGraph = function(skipPrompt){
 	    	    var thisGraph = this,
 	    	        doDelete = true;
-	    	    if (!skipPrompt){
-	    	      doDelete = window.confirm("Warning: everything in work area will be erased!!! Press OK to proceed.");
+	    	    
+	    	    //if some objects are selected, delete the selected only. If nothing selected, delete all.
+	    	    if(thisGraph.state.selectedEdge){
+	    	    	
+	    	    	//removing an edge is much easier than removing a process
+	    	        thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
+	    	        state.selectedEdge = null;
+	    	        thisGraph.updateGraph();
+	    	        
+	    	    }else if(thisGraph.state.selectedNode){
+	    	    	
+	    	    	var pid = thisGraph.state.selectedNode.id;
+	    	    	console.log("going to remove process: " + pid);
+	    	    	thisGraph.removeNode(pid);
+	    	    	
+	    	    }else{
+	    	    	
+	    	    	if (!skipPrompt){
+	    	    		
+	  	    	      doDelete = window.confirm("Warning: everything in work area will be erased!!! Press OK to proceed.");
+	  	    	    }
+	  	    	    if(doDelete){
+	  	    	      
+	  	    	      thisGraph.nodes = [];
+	  	    	      thisGraph.edges = [];
+	  	    	      thisGraph.updateGraph();
+	  	    	      
+	  	    	    }
+	    	    	
 	    	    }
-	    	    if(doDelete){
-	    	      thisGraph.nodes = [];
-	    	      thisGraph.edges = [];
-	    	      thisGraph.updateGraph();
-	    	    }
+	    	    
+	    	    
 	    	  };
 	
 	    	  /* select all text in element: taken from http://stackoverflow.com/questions/6139107/programatically-select-text-in-a-contenteditable-html-element */
@@ -280,6 +333,7 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	      thisGraph.removeSelectFromNode();
 	    	    }
 	    	    thisGraph.state.selectedNode = nodeData;
+	    	    console.log("selected node changed : " + nodeData.id);
 	    	  };
 	    	  
 	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.removeSelectFromNode = function(){
@@ -288,6 +342,7 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	      return cd.id === thisGraph.state.selectedNode.id;
 	    	    }).classed(thisGraph.consts.selectedClass, false);
 	    	    thisGraph.state.selectedNode = null;
+	    	    
 	    	  };
 	
 	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.removeSelectFromEdge = function(){
@@ -465,9 +520,25 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	  };
 	    	  
 	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.removeNode = function(pid) {
-	    	    var thisGraph = this;
-  	    		var selectedNode = thisGraph.getNodesById(pid);
-    			thisGraph.nodes.splice(selectedNode, 1);
+	    	    
+	    		var thisGraph = this;
+  	    		
+	    	    var selectedNode = null;
+  	    		
+  	    		for(var i=0;i<thisGraph.nodes.length;i++){
+  	    			
+  	    			if(thisGraph.nodes[i].id == pid){
+  	    			
+  	    				selectedNode = thisGraph.nodes[i];
+  	    				
+  	    				thisGraph.nodes.splice(i, 1);
+  	    				
+  	    				break;
+  	    			}
+  	    			
+  	    		}
+  	    		
+//    			thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
     			thisGraph.spliceLinksForNode(selectedNode);
   	    		thisGraph.state.selectedNode = null;
   	    		thisGraph.updateGraph();
@@ -530,6 +601,8 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	    var thisGraph = this,
 	    	        consts = thisGraph.consts,
 	    	        state = thisGraph.state;
+	    	    
+	    	    this.setIdCt(this.nodes.length);
 	    	    
 	    	    thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
 	    	      return String(d.source.id) + "+" + String(d.target.id);
@@ -621,9 +694,9 @@ edu.gmu.csiss.geoweaver.workspace = {
 		  			
 		  			thisGraph.nodes.push({title: name, id: insid, x: x, y: y});
 		  			
-		  			thisGraph.setIdCt(thisGraph.nodes.length);
-		  			
 		  			thisGraph.updateGraph();
+		  			
+		  			console.log("new process added: " + insid);
 		  			
 		  			return insid;
 		  			
@@ -693,6 +766,23 @@ edu.gmu.csiss.geoweaver.workspace = {
 			
 		},
 		
+		/**
+		 * check if the workspace has more than one processes
+		 */
+		checkIfWorkflow: function(){
+			
+			var workflow = false;
+			
+			if(this.theGraph.nodes.length>1){
+				
+				workflow = true;
+				
+			}
+			
+			return workflow;
+			
+		},
+		
 		makeid: function() {
 			
 			  var text = "";
@@ -745,7 +835,7 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	        .attr("height", height);
 	    	  this.theGraph = new edu.gmu.csiss.geoweaver.workspace.GraphCreator(svg, nodes, edges);
 	    	  
-	    	  this.theGraph.setIdCt(nodes.length);
+//	    	  this.theGraph.setIdCt(nodes.length);
 	    	  
 	    	  this.theGraph.updateGraph();
 			

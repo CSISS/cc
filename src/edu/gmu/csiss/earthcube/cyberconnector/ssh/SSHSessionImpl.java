@@ -24,12 +24,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.PublicKey;
+import java.util.Calendar;
 
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.direct.Session.Command;
 import net.schmizz.sshj.connection.channel.direct.Session.Shell;
 import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
@@ -38,20 +41,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.socket.WebSocketSession;
 
+import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 
+/**
+ * Geoweaver SSH session wrapper
+ * @author JensenSun
+ *
+ */
 public class SSHSessionImpl implements SSHSession {
 
     protected final Logger   log = LoggerFactory.getLogger(getClass());
 
     private SSHClient        ssh;
     
-    private Session          session;
+    private Session          session; //sshj session
     
     private Shell            shell;
     
     private String           username;
     
-    private String			 token; //add by Ziheng on 12 Sep 2018
+    private String			 token; //add by Ziheng on 12 Sep 2018 - token of each execution
     
     private BufferedReader   input;
     
@@ -65,10 +76,45 @@ public class SSHSessionImpl implements SSHSession {
     
     private String           port;
     
+    /**********************************************/
+    /** section of the geoweaver history records **/
+    /**********************************************/
+    private String			 history_input;
+    
+    private String			 history_output;
+    
+    private String			 history_begin_time;
+    
+    private String			 history_end_time;
+    
+    private String			 history_process;
+    
+    private String			 history_id;
+    
+    /**********************************************/
+    /** end of history section **/
+    /**********************************************/
+    
+    public String getHistory_process() {
+		return history_process;
+	}
+
+	public void setHistory_process(String history_process) {
+		this.history_process = history_process;
+	}
+
+	public String getHistory_id() {
+		return history_id;
+	}
+
+	public void setHistory_id(String history_id) {
+		this.history_id = history_id;
+	}
+	
     public Session getSSHJSession() {
 		return session;
 	}
-
+    
 	public void setSSHJSession(Session session) {
 		this.session = session;
 	}
@@ -109,17 +155,30 @@ public class SSHSessionImpl implements SSHSession {
             log.info("starting session");
             session = ssh.startSession();
             log.info("allocating PTY");
-            session.allocateDefaultPTY();
+            session.allocateDefaultPTY(); 
+            
+            this.username = username;
+            this.token = token;
             
             if(isShell) {
+            	//shell
             	log.info("starting shell");
-                shell = session.startShell();
+                shell = session.startShell(); //if shell is null, it is in command mode.
                 log.info("SSH session established");
-                this.username = username;
-                this.token = token;
+                
                 input = new BufferedReader(new InputStreamReader(shell.getInputStream()));
                 output = shell.getOutputStream();
-                sender = new SSHSessionOutput(input);
+                sender = new SSHSessionOutput(input, token);
+                //moved here on 10/29/2018
+                //all SSH sessions must have a output thread
+                thread = new Thread(sender);
+                thread.setName("SSH output thread");
+                log.info("starting sending thread");
+                thread.start();
+            }else {
+            	//command
+            	//do nothing here
+            	
             }
             
         } catch (Exception e) {
@@ -168,13 +227,129 @@ public class SSHSessionImpl implements SSHSession {
         
         log.info("session finalized");
     }
-
+    
+    
+    
     @Override
+	public void saveHistory(String logs) {
+		
+    	this.history_end_time = BaseTool.getCurrentMySQLDatetime();
+    	
+    	this.history_output = logs;
+    	
+    	StringBuffer sql = new StringBuffer("insert into history (id, process, begin_time, end_time, input, output) values (\"");
+    	
+    	sql.append(this.history_id).append("\",\"");
+    	
+    	sql.append(this.history_process).append("\",\"");
+    	
+    	sql.append(this.history_begin_time).append("\",\"");
+    	
+    	sql.append(this.history_end_time).append("\",?, ? )");
+    	
+    	DataBaseOperation.preexecute(sql.toString(), new String[] {this.history_input, this.history_output});
+    	
+	}
+
+	@Override
+	public void runBash(String script, String processid) {
+    	
+		this.history_id = new RandomString(12).nextString();
+		
+		this.history_process = processid;
+		
+		this.history_begin_time = BaseTool.getCurrentMySQLDatetime();
+		
+		this.history_input = script;
+    	
+    	try {
+    		
+    		log.info("starting command");
+    		
+    		String cmdline = "echo \"" + script.replaceAll("\"", "\\\\\"") + "\" > geoweaver-" + token + ".sh; ";
+    		
+    		cmdline += "chmod +x geoweaver-" + token + ".sh; ";
+    		
+    		cmdline += "./geoweaver-" + token + ".sh; ";
+    		
+    		cmdline += "echo \"==== Geoweaver Bash Output Finished ====\"; ";
+			
+    		log.info(cmdline);
+    		
+    		Command cmd = session.exec(cmdline);
+//            con.writer().print(IOUtils.readFully(cmd.getInputStream()).toString());
+//            cmd.join(5, TimeUnit.SECONDS);
+//            con.writer().print("\n** exit status: " + cmd.getExitStatus());
+    		
+            log.info("SSH command session established");
+            
+            input = new BufferedReader(new InputStreamReader(cmd.getInputStream()));
+            
+            sender = new SSHSessionOutput(input, token);
+            
+            //moved here on 10/29/2018
+            //all SSH sessions must have a output thread
+            
+            thread = new Thread(sender);
+            
+            thread.setName("SSH output thread");
+            
+            log.info("starting sending thread");
+            
+            thread.start();
+            
+            log.info("returning to the client..");
+//	        
+//	        output.write((cmd + '\n').getBytes());
+//			
+////	        output.flush();
+//	        
+//	        cmd = "./geoweaver-" + token + ".sh";
+//	        		
+//	        output.write((cmd + '\n').getBytes());
+//			
+////	        output.flush();
+//	        	
+//	        cmd = "echo \"==== Geoweaver Bash Output Finished ====\"";
+//	        
+//	        output.write((cmd + '\n').getBytes());
+//	        output.flush();
+	        
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+		}
+    	
+    	//feed the process code into the SSH session
+    	
+
+//		
+//		Session.Command cmd = session.getSSHJSession().exec(executebash);
+//		
+//		String output = IOUtils.readFully(cmd.getInputStream()).toString();
+//		
+//		logger.info(output);
+//		
+//		//wait until the process execution is over
+//		
+//        cmd.join(5, TimeUnit.SECONDS);
+//        
+//		cmd.close();
+//		
+//		session.logout();
+	}
+
+	@Override
+	public void runMultipleBashes(String[] script, String processid) {
+		// TODO Auto-generated method stub
+		
+		
+	}
+
+	@Override
     public void setWebSocketSession(WebSocketSession session) {
-        this.sender.setWebSocketSession(session);
-        thread = new Thread(sender);
-        log.info("starting sending thread");
-        thread.start();
+        this.sender.setWebSocketSession(session); //connect WebSocket with SSH output thread
     }
 
     @Override

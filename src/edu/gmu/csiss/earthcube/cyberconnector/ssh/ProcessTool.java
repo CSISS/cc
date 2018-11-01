@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
+import edu.gmu.csiss.earthcube.cyberconnector.user.User;
+import edu.gmu.csiss.earthcube.cyberconnector.user.UserTool;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.Message;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 import edu.gmu.csiss.earthcube.cyberconnector.web.GeoweaverController;
 import net.schmizz.sshj.common.IOUtils;
@@ -17,7 +20,6 @@ import net.schmizz.sshj.connection.channel.direct.Session;
 public class ProcessTool {
 	
 	static Logger logger = LoggerFactory.getLogger(ProcessTool.class);
-	
 	
 	public static String list(String owner) throws SQLException {
 		
@@ -49,8 +51,6 @@ public class ProcessTool {
 				
 			}
 			
-			
-			
 		}
 		
 		json.append("]");
@@ -77,13 +77,11 @@ public class ProcessTool {
 				
 				resp.append("\"name\":\"").append(rs.getString("name")).append("\", ");
 				
-				resp.append("\"code\":\"").append(rs.getString("code")).append("\", ");
+				resp.append("\"code\":\"").append(escape(rs.getString("code"))).append("\", ");
 				
 				resp.append("\"description\":\"").append(rs.getString("description")).append("\" }");
 				
 			}
-			
-			
 			
 		} catch (Exception e) {
 			
@@ -104,7 +102,7 @@ public class ProcessTool {
 	 */
 	public static String escape(String code) {
 		
-		String resp = code.replaceAll("/", "-.-").replaceAll("'", "-·-").replaceAll("\"", "-··-").replaceAll("\\n", "->-").replaceAll("\\r", "-!-");
+		String resp = code.replaceAll("\"", "\\\\\"").replaceAll("(\r\n|\r|\n|\n\r)", "<br/>");
 		
 		logger.info(resp);
 		
@@ -167,9 +165,11 @@ public class ProcessTool {
 		
 		try {
 			
-			if(rs.next())
+			if(rs.next()) {
 				
 				code = rs.getString("code");
+				
+			}
 			
 			DataBaseOperation.closeConnection();
 			
@@ -197,6 +197,8 @@ public class ProcessTool {
 	 */
 	public static String execute(String id, String hid, String pswd, String token) {
 		
+		String resp = null;
+		
 		try {
 
 			//get code of the process
@@ -209,7 +211,7 @@ public class ProcessTool {
 			
 			String[] hostdetails = HostTool.getHostDetailsById(hid);
 			
-			//establish SSH session
+			//establish SSH session and generate a token for it
 			
 			if(token == null) {
 				
@@ -223,44 +225,124 @@ public class ProcessTool {
 			
 			GeoweaverController.sshSessionManager.sessionsByToken.put(token, session);
 			
-			//feed the process code into the SSH session
+			session.runBash(code, id); 
 			
-			String executebash = "echo \"" + code.replaceAll("\"", "\\\\\"") + "\" > geoweaver-" + token + ".sh;"+
+			String historyid = session.getHistory_id();
 			
-					"chmod +x geoweaver-" + token + ".sh; " + 
+			resp = "{\"history_id\": \""+historyid+
 					
-					"./geoweaver-" + token + ".sh;";
+					"\", \"token\": \""+token+
+					
+					"\", \"ret\": \"success\"}";
 			
-			Session.Command cmd = session.getSSHJSession().exec(executebash);
-			
-			String output = IOUtils.readFully(cmd.getInputStream()).toString();
-			
-			logger.info(output);
-			
-			//wait until the process execution is over
-			
-	        cmd.join(5, TimeUnit.SECONDS);
-	        
-			cmd.close();
-			
-			session.logout();
-			
-			GeoweaverController.sshSessionManager.sessionsByToken.remove(token);
+//			SSHCmdSessionOutput task = new SSHCmdSessionOutput(code);
 			
 			//register the input/output into the database
 	        
-			
-			
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 			
+			throw new RuntimeException(e.getLocalizedMessage());
+			
 		} 
         		
-		return token;
+		return resp;
 		
 	}
+
 	
+	/**
+	 * get all details of one history
+	 * @param hid
+	 * @return
+	 */
+	public static String one_history(String hid) {
+		
+		StringBuffer resp = new StringBuffer();
+		
+		StringBuffer sql = new StringBuffer("select * from history where id = \"").append(hid).append("\";");
+		
+		try {
+			
+			ResultSet rs = DataBaseOperation.query(sql.toString());
+			
+			if(rs.next()) {
+				
+				resp.append("{ \"id\": \"").append(rs.getString("id")).append("\", ");
+				
+				resp.append("\"process\": \"").append(rs.getString("process")).append("\", ");
+				
+				resp.append("\"begin_time\":\"").append(rs.getString("begin_time")).append("\", ");
+				
+				resp.append("\"end_time\":\"").append(rs.getString("end_time")).append("\", ");
+				
+				resp.append("\"input\":\"").append(escape(rs.getString("input"))).append("\", ");
+				
+				resp.append("\"output\":\"").append(escape(rs.getString("output"))).append("\" }");
+				
+			}
+			
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+			
+		}
+		
+		return resp.toString();
+		
+	}
+
+	/**
+	 * get all the execution history of this process
+	 * @param pid
+	 * @return
+	 */
+	public static String all_history(String pid) {
+		
+		StringBuffer resp = new StringBuffer() ;
+		
+		StringBuffer sql = new StringBuffer("select * from history where process = \"").append(pid).append("\";");
+		
+		ResultSet rs = DataBaseOperation.query(sql.toString());
+		
+		try {
+			
+			resp.append("[");
+			
+			int num = 0;
+			
+			while(rs.next()) {
+				
+				if(num!=0) {
+					
+					resp.append(", ");
+					
+				}
+				
+				resp.append("{ \"id\": \"").append(rs.getString("id")).append("\", ");
+				
+				resp.append("\"begin_time\": \"").append(rs.getString("begin_time")).append("\"}");
+				
+				num++;
+				
+			}
+			
+			resp.append("]");
+			
+			if(num==0)
+				
+				resp = new StringBuffer();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+		return resp.toString();
+		
+	}
 	
 	public static void main(String[] args) {
 		
@@ -269,6 +351,17 @@ public class ProcessTool {
 //				"echo \"Good\"\r\n";
 //		
 //		ProcessTool.escape(code);
+		
+		User user = new User();
+		
+		user.setName("szh");
+		
+		user.setPassword("111");
+		
+		Message msg = UserTool.login(user);
+		
+		System.out.println(msg.getInformation());
+		
 //		
 //		ProcessTool.unescape(code);
 		
@@ -280,10 +373,11 @@ public class ProcessTool {
 		
 //		System.out.println(ProcessTool.detail("di1xlf"));
 		
-		System.out.println(ProcessTool.execute("degrzr", "kps1gf", "Chuntian18$", null));
+//		System.out.println(ProcessTool.execute("degrzr", "kps1gf", "Chuntian18$", null));
 		
 		
 		
 	}
+	
 	
 }

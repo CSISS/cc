@@ -1,5 +1,7 @@
 package edu.gmu.csiss.earthcube.cyberconnector.web;
 
+import java.io.InputStreamReader;
+
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
 
@@ -119,7 +121,92 @@ public class GeoweaverController {
 			
 		}catch(Exception e) {
 			
-//			e.printStackTrace();
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
+	@RequestMapping(value = "/key", method = RequestMethod.POST)
+    public @ResponseBody String getpublickey(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
+	@RequestMapping(value = "/log", method = RequestMethod.POST)
+    public @ResponseBody String one_history(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String type = request.getParameter("type");
+			
+			String hid = request.getParameter("id");
+			
+			if(type.equals("process")) {
+				
+				resp = ProcessTool.one_history(hid);
+				
+			}else if(type.equals("workflow")) {
+				
+				resp = WorkflowTool.one_history("");
+				
+			}
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
+	@RequestMapping(value = "/logs", method = RequestMethod.POST)
+    public @ResponseBody String all_history(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String type = request.getParameter("type");
+			
+			String pid = request.getParameter("id");
+			
+			if(type.equals("process")) {
+				
+				resp = ProcessTool.all_history(pid);
+				
+			}else if(type.equals("workflow")) {
+				
+				resp = WorkflowTool.all_history("");
+				
+			}
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
 			
 			throw new RuntimeException("failed " + e.getLocalizedMessage());
 			
@@ -196,9 +283,9 @@ public class GeoweaverController {
 		
 		try {
 			
-			String type = request.getParameter("type");
+			String id = request.getParameter("id");
 			
-			WorkflowTool.execute();
+			WorkflowTool.execute(id);
 			
 		}catch(Exception e) {
 			
@@ -225,8 +312,7 @@ public class GeoweaverController {
 			
 			String password = request.getParameter("pswd");
 			
-			ProcessTool.execute(pid, hid, password, null);
-			
+			resp = ProcessTool.execute(pid, hid, password, null);
 			
 		}catch(Exception e) {
 			
@@ -279,9 +365,15 @@ public class GeoweaverController {
 				
 			}else if(type.equals("workflow")) {
 				
-				WorkflowTool.add();
+				String name = request.getParameter("name");
 				
-				resp = "";
+				String nodes = request.getParameter("nodes");
+				
+				String edges = request.getParameter("edges");
+				
+				String wid = WorkflowTool.add(name, nodes, edges);
+				
+				resp = "{\"id\" : \"" + wid + "\", \"name\":\"" + name + "\"}";
 				
 			}
 			
@@ -464,7 +556,7 @@ public class GeoweaverController {
                         
                 logger.info("adding SSH session for {}", username);
                 
-                sshSessionManager.sessionsByUsername.put(host+"-"+username, sshSession);
+//                sshSessionManager.sessionsByUsername.put(host+"-"+username, sshSession);
                 
                 sshSessionManager.sessionsByToken.put(token, sshSession);
         		
