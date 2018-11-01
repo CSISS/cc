@@ -18,6 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.HostTool;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.ProcessTool;
+import edu.gmu.csiss.earthcube.cyberconnector.ssh.RSAEncryptTool;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSession;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSessionImpl;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSessionManager;
@@ -136,7 +137,7 @@ public class GeoweaverController {
 		
 		try {
 			
-			
+			resp = RSAEncryptTool.getPublicKey();
 			
 		}catch(Exception e) {
 			

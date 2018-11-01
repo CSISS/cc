@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.crypto.Cipher;
 
+import org.apache.commons.codec.binary.Base64;
+
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 
 public class RSAEncryptTool {
@@ -28,7 +30,7 @@ public class RSAEncryptTool {
 		
 		key.append("{ \"token\": \"").append(token).append("\", ");
 		
-		key.append(" \"rsa_public\": \"").append(kp.getPublic().getEncoded()).append("\" } ");
+		key.append(" \"rsa_public\": \"").append(RSAEncryptTool.byte2Base64(kp.getPublic().getEncoded())).append("\" } ");
 		
 		return key.toString();
 		
@@ -48,14 +50,25 @@ public class RSAEncryptTool {
         return cipher.doFinal(encrypted);  
     }
     
-//    public static String byte2Base64(byte [] bytes) {
-//    	
-//    	Base64 codec = new Base64();
-//    	String encoded = codec.encodeBase64String(bytes);
-//    	
-//    	return encoded;
-//    	
-//    }
+    public static String byte2Base64(byte [] bytes) {
+    	
+    	Base64 codec = new Base64();
+    	
+    	byte[] encoded = codec.encodeBase64(bytes);
+    	
+    	return new String(encoded);
+    	
+    }
+    
+    public static byte[] base642Byte(String base64) {
+    	
+    	Base64 codec = new Base64();
+    	
+    	byte[] decoded = codec.decodeBase64(base64.getBytes());
+    	
+    	return decoded;
+    	
+    }
     
     public static byte[] encrypt(PublicKey publicKey, String message) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA");  
@@ -70,12 +83,18 @@ public class RSAEncryptTool {
         PublicKey pubKey = keyPair.getPublic();
         PrivateKey privateKey = keyPair.getPrivate();
         
+        System.out.println("public key base64: " + RSAEncryptTool.byte2Base64(pubKey.getEncoded()));
+        
+        System.out.println("private key base64: " + RSAEncryptTool.byte2Base64(privateKey.getEncoded()));
+        
         // sign the message
-        byte [] signed = encrypt(pubKey, "This is a secret message");     
+        byte [] signed = encrypt(pubKey, "This is a secret message");   
+        
         System.out.println(new String(signed));  // <<signed message>>
         
         // verify the message
-        byte[] verified = decrypt(privateKey, signed);                                 
+        byte[] verified = decrypt(privateKey, signed);              
+        
         System.out.println(new String(verified));     // This is a secret message
     	
 //    	System.out.println(RSAEncryptTool.getPublicKey());
