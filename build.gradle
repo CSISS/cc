@@ -1,0 +1,96 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+
+bootJar {
+    baseName = 'cyberconnector'
+    version = '0.7.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+// <dependency>
+//     <groupId>net.opengis.wms</groupId>
+//     <artifactId>net.opengis.wms</artifactId>
+//     <version>2.6.2</version>
+//     <scope>system</scope>
+//     <systemPath>${basedir}/lib/net.opengis.wms-v_1_3_0-2.6.2-SNAPSHOT.jar</systemPath>
+// </dependency>
+
+
+
+
+dependencies {
+    def springBoot = "2.0.5.RELEASE"
+    // def spring     = "5.0.9.RELEASE"
+
+    // Spring Boot    
+    compile "org.springframework.boot:spring-boot-starter-web:${springBoot}"
+    compile "org.springframework.boot:spring-boot-starter-security:${springBoot}"
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf:${springBoot}"
+    compile "org.springframework.boot:spring-boot-devtools:${springBoot}"
+    compile "org.springframework.boot:spring-boot-starter-websocket:${springBoot}"
+
+    compile "org.springframework.security:spring-security-taglibs"
+
+    // Thyme
+    compile "org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE"
+    compile "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.3.0"
+
+    // Data Transformation
+    compile "com.googlecode.json-simple:json-simple:1.1.1"
+    compile "jaxen:jaxen:1.1.6"
+    compile "org.dom4j:dom4j:2.1.1"
+    compile "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:1.11.1"
+    compile "javax.el:javax.el-api:2.2.4"
+
+
+    // SQL
+    compile "mysql:mysql-connector-java:5.1.42"
+
+    // Apache components
+    compile "commons-codec:commons-codec:1.11"
+    compile "commons-fileupload:commons-fileupload:1.3"
+    compile "commons-io:commons-io:2.4"
+    compile "org.apache.commons:commons-lang3:3.7"
+    compile "org.apache.httpcomponents:httpclient:4.5.6"
+
+
+    // Geoweaver
+    compile "com.hierynomus:sshj:0.11.0"
+    compile "net.sf.expectit:expectit-core:0.6.1"
+
+    // Other
+    compile "it.sauronsoftware.cron4j:cron4j:2.2.5"
+    
+
+    // Test
+    testCompile "junit:junit"
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBoot}"
+    testCompile "org.springframework.security:spring-security-test:${springBoot}"
+}
+
+task getJavaInfo {
+    doLast {
+        println gradle.gradleHomeDir
+        println System.properties.find { it.key == "java.home" }
+    }
+}
