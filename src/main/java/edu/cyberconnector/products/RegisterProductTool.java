@@ -3,12 +3,7 @@ package edu.cyberconnector.products;
 import edu.cyberconnector.database.DataBaseBroker;
 import edu.cyberconnector.utils.RandomString;
 
-/**
- *Class RegisterProductTool.java
- *@author Ziheng Sun
- *@time Aug 12, 2015 11:19:35 AM
- *Original aim is to support CyberConnector.
- */
+
 public class RegisterProductTool {
 	/**
 	 * Register a new product category

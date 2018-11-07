@@ -1,24 +1,20 @@
 package edu.cyberconnector.web;
 
-import java.io.InputStreamReader;
-
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
 
-import edu.cyberconnector.ssh.HostTool;
-import edu.cyberconnector.ssh.ProcessTool;
-import edu.cyberconnector.ssh.RSAEncryptTool;
-import edu.cyberconnector.ssh.SSHSession;
-import edu.cyberconnector.ssh.SSHSessionImpl;
-import edu.cyberconnector.ssh.SSHSessionManager;
-import edu.cyberconnector.ssh.WorkflowTool;
-import edu.cyberconnector.utils.RandomString;
+
+import edu.cyberconnector.ssh.*;
+import edu.cyberconnector.utils.*;
 
 /**
  * 
@@ -35,7 +31,7 @@ import edu.cyberconnector.utils.RandomString;
 //@SessionAttributes({"SSHToken"})
 public class GeoweaverController {
 
-	Logger logger = LoggerFactory.getLogger(getClass());
+	private static Logger log = LoggerFactory.getLogger(GeoweaverController.class);
 	
 	public static SSHSessionManager sshSessionManager;
 	
@@ -392,7 +388,7 @@ public class GeoweaverController {
     	
     	String token = request.getParameter("token");
     	
-    	logger.info("token : {}", token);
+    	log.info("token : {}", token);
     	
     	String resp = "redirect:geoweaver-ssh-login";
     	
@@ -489,9 +485,9 @@ public class GeoweaverController {
             	
             	boolean success = sshSession.login(host, port, username, password, token, false);
             	
-            	logger.info("SSH login: {}={}", username, success);
+            	log.info("SSH login: {}={}", username, success);
                         
-                logger.info("adding SSH session for {}", username);
+                log.info("adding SSH session for {}", username);
                 
 //                sshSessionManager.sessionsByUsername.put(host+"-"+username, sshSession);
                 
@@ -550,9 +546,9 @@ public class GeoweaverController {
             	
             	boolean success = sshSession.login(host, port, username, password, token, false);
             	
-            	logger.info("SSH login: {}={}", username, success);
+            	log.info("SSH login: {}={}", username, success);
                         
-                logger.info("adding SSH session for {}", username);
+                log.info("adding SSH session for {}", username);
                 
 //                sshSessionManager.sessionsByUsername.put(host+"-"+username, sshSession);
                 

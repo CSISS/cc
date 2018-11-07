@@ -26,8 +26,10 @@ import java.util.Map;
 
 import javax.xml.soap.SOAPException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -196,7 +198,7 @@ public class BaseTool {
                 u = new URL(imgUrl);
                 connection = u.openConnection();
         } catch (Exception e) {
-                logger.info("ERR:" + imgUrl);
+                log.info("ERR:" + imgUrl);
                 return;
         }
         connection.setReadTimeout(1000000); //milliseconds
@@ -229,7 +231,7 @@ public class BaseTool {
                 }
                 throw new RuntimeException("Fail to download the image from the link.."+e.getClass().getName()+":"+e.getLocalizedMessage());
         }
-        logger.info(imgUrl+" is downloaded!");
+        log.info(imgUrl+" is downloaded!");
 //        buffer = null;
         // System.gc();
 	}
@@ -245,8 +247,8 @@ public class BaseTool {
 		String tempName = uri.substring(uri.lastIndexOf("/")+1);
 		String tempfilepath = tempdir+tempName;
 		if(!uri.startsWith(tempurl)&&!new File(tempfilepath).exists()){
-			logger.info("Begin dowloading the image from the link..");
-			logger.info("File URI: "+uri);
+			log.info("Begin dowloading the image from the link..");
+			log.info("File URI: "+uri);
 			if(uri.startsWith("http")){
 				down(tempfilepath, uri);
 			}else{
@@ -254,10 +256,10 @@ public class BaseTool {
 				throw new RuntimeException("The input file url is not by http protocal.");
 			}
 	    	
-	    	logger.info("File is saved to:" + tempfilepath);
-	    	logger.info("Download ends successfully.");
+	    	log.info("File is saved to:" + tempfilepath);
+	    	log.info("Download ends successfully.");
 		}else{
-			logger.info("The file from the link "+uri+"already exists on the server..");
+			log.info("The file from the link "+uri+"already exists on the server..");
 		}
 		String[] urianddir = new String[2];
 		urianddir[0] = tempurl+tempName;
@@ -545,7 +547,7 @@ public class BaseTool {
     	
     	content = content.replace("[orderid]", orderid);
     	
-    	logger.info(content);
+    	log.info(content);
     	
     	return notifyUserByEmail(address, content);
     }

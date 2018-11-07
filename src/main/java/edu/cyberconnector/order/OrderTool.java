@@ -5,7 +5,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.database.DataBaseOperation;
 import edu.cyberconnector.tools.PlaceOrderTool;
@@ -18,8 +19,8 @@ import edu.cyberconnector.utils.BaseTool;
 *Original aim is to support CyberConnector.
 */
 public class OrderTool {
-	
-	static Logger logger  = Logger.getLogger(OrderTool.class);
+
+	private static Logger log = LoggerFactory.getLogger(OrderTool.class);
 	
 	public static boolean deleteOrder(String orderid){
 		

@@ -3,12 +3,28 @@ package edu.cyberconnector.web;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+
+import org.springframework.validation.BindingResult;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
+
+
+import edu.cyberconnector.services.*;
+import edu.cyberconnector.utils.*;
+import edu.cyberconnector.user.*;
 
 @RestController
 public class ServiceController {
+
+    private static Logger log = LoggerFactory.getLogger(ServiceController.class);
+
     @GetMapping(value = "/regser")
     public String regser(ModelMap model, WebRequest request, SessionStatus status, HttpSession session) {
 
@@ -27,50 +43,49 @@ public class ServiceController {
         }
 
         return resp;
+    }
 
+    @PostMapping(value = "/updateservice")
+    public @ResponseBody String updateService(WebRequest request, HttpSession session) {
 
-        @PostMapping(value = "/updateservice")
-        public @ResponseBody String updateService (ModelMap model, WebRequest request, SessionStatus status, HttpSession
-        session){
+        String name = (String) session.getAttribute("sessionUser");
 
-            String name = (String) session.getAttribute("sessionUser");
+        String resp = ""; //number of likes
 
-            String resp = ""; //number of likes
+        log.debug("Service update request received.");
 
-            logger.debug("Service update request received.");
+        if (name == null) {
 
-            if (name == null) {
+            resp = "redirect:login";
 
-                resp = "redirect:login";
+        } else {
 
-            } else {
+            String sid = request.getParameter("serviceid");
 
-                String sid = request.getParameter("serviceid");
+            log.debug("service id is : " + sid);
 
-                logger.debug("service id is : " + sid);
+            RegisterServiceTool tool = new RegisterServiceTool();
 
-                RegisterServiceTool tool = new RegisterServiceTool();
+            try {
 
-                try {
+                tool.updateWSDL(sid);
 
-                    tool.updateWSDL(sid);
+                System.out.print("Server response is : " + resp);
 
-                    System.out.print("Server response is : " + resp);
+                resp = "Done";
 
-                    resp = "Done";
+            } catch (Exception e) {
 
-                } catch (Exception e) {
+                throw new RuntimeException("Failed. " + e.getLocalizedMessage());
 
-                    throw new RuntimeException("Failed. " + e.getLocalizedMessage());
-
-                }
             }
-
-            return resp;
-
         }
 
+        return resp;
+
     }
+
+
 
     @PostMapping(value = "/deleteservice")
     public String deleteservice(Model model, WebRequest request, SessionStatus status, HttpSession session) {
@@ -126,19 +141,19 @@ public class ServiceController {
         //get user information by session user name
 
         String username = (String) session.getAttribute("sessionUser");
-        logger.debug("New Service: Username: " + username);
+        log.debug("New Service: Username: " + username);
 
         String resp = "";
 
         if (username == null) {
 
-            logger.debug("New Service: Redirect to login");
+            log.debug("New Service: Redirect to login");
 
             resp = "redirect:login";
 
         } else {
 
-            logger.debug("New Service: Get User Profile : \n SessionId is: " + session.getId());
+            log.debug("New Service: Get User Profile : \n SessionId is: " + session.getId());
 
             Service s = new Service();
 
@@ -158,7 +173,7 @@ public class ServiceController {
         String username = (String) session.getAttribute("sessionUser");
         User u = UserTool.retrieveInformation(username);
 
-        logger.debug("New Service: Service Name entered " + service.getName() + " userID:" + u.getId() + "\n");
+        log.debug("New Service: Service Name entered " + service.getName() + " userID:" + u.getId() + "\n");
 
         Message msg = RegisterServiceTool.registerWPS(service, u.getId());
 

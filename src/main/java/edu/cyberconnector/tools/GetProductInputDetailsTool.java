@@ -1,6 +1,7 @@
 package edu.cyberconnector.tools;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.utils.BaseTool;
 import edu.cyberconnector.utils.SysDir;
@@ -12,13 +13,13 @@ import edu.cyberconnector.utils.SysDir;
  *Original aim is to support CyberConnector.
  */
 public class GetProductInputDetailsTool {
-	
-	Logger logger = Logger.getLogger(GetProductInputDetailsTool.class);
+
+	private static Logger log = LoggerFactory.getLogger(GetProductInputDetailsTool.class);
 	
 	public String getInputDetailsJSON(String productid){
-		logger.debug("Trying to fetch the input details...");
+		log.debug("Trying to fetch the input details...");
 		String details = BaseTool.POST("$GETPRODUCTINPUTDETAILS$"+productid, SysDir.executionservletaddress);
-		logger.debug(details);
+		log.debug(details);
 		return details;
 	}
 	

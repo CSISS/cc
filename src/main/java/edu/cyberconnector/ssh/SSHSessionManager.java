@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 public class SSHSessionManager {
 
-    protected final Logger          log = LoggerFactory.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(SSHSessionManager.class);
     
     // TODO consider alternative implementation
     /**

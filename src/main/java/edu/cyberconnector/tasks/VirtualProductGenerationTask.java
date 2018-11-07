@@ -2,7 +2,8 @@ package edu.cyberconnector.tasks;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.database.DataBaseBroker;
 import edu.cyberconnector.utils.BaseTool;
@@ -19,7 +20,9 @@ public class VirtualProductGenerationTask extends Task {
 	String oid, product, productid, proj, east, south, west, north, begintime, endtime, mail;
 
 	BaseTool tool = new BaseTool();
-	Logger logger = Logger.getLogger(this.getClass());
+
+	protected static Logger log = LoggerFactory.getLogger(VirtualProductGenerationTask.class);
+
 	/**
 	 * Construction function
 	 * @param oid
@@ -94,28 +97,28 @@ public class VirtualProductGenerationTask extends Task {
 	public void execute() {
 		try{
 			//set the status of an order as running
-			logger.info(">>> Update the status of the order to Running");
+			log.info(">>> Update the status of the order to Running");
 			DataBaseBroker.updateAnOrderStatus(oid, "Running", "The order starts to be processed.");
 			//fetch the abstract model of the specified virtual product
-			logger.info(">>> Fetch abstract model of the virutal data product");
+			log.info(">>> Fetch abstract model of the virutal data product");
 			String abstractmodelid = DataBaseBroker.queryAbstractModelIdByProductName(product);
 			//comment by Ziheng - 8/27/2015
 			//ParameterConnections XML is useless since LPM 2.0
 			String[] abstractmodelxml = DataBaseBroker.queryAbstracModelXMLById(abstractmodelid); //0 is process connection; 1 is parameter connection.
 			//generate messagetype by logicprocess
-			logger.info(">>> Generating messagetype by logicprocess");
+			log.info(">>> Generating messagetype by logicprocess");
 			String req = abstractmodelxml[0];
 			String resp = BaseTool.POST(req, SysDir.instantiationservletaddress0);
 			String mt = resp;
 			//generate a workflow by the virtual product's abstract model and message type
-			logger.info(">>> Instantiating logicprocess and messagetype into a BPEL workflow");
+			log.info(">>> Instantiating logicprocess and messagetype into a BPEL workflow");
 			req = "$INSTANTIATIONLPM2$"+abstractmodelxml[0]+"$LPMT$"+mt.trim();
 			
 	        resp = BaseTool.POST(req, SysDir.instantiationservletaddress);
 	        if(resp.indexOf("Sorry, exception happens.")!=-1){
 	        	throw new RuntimeException("Fail to instantiate the abstract model into an executable workflow."+resp);
 	        }
-	        logger.info("The response of the initiation servlet: "+ resp);
+	        log.info("The response of the initiation servlet: "+ resp);
 	        //need a parameter map containing spatial and temporal extent as input values
 	        
 			//execute the workflow with the spatial extent and temperal extent as the inputs
@@ -132,22 +135,22 @@ public class VirtualProductGenerationTask extends Task {
 	        while(true){
 	        	loopnumber++;
 	        	sleeptime = 1000*(int)(Math.pow(loopnumber, 2)/2); //the time algorithm: y = pow(x, 2)/2;
-	        	logger.info("Current sleep time is" +  sleeptime);
+	        	log.info("Current sleep time is" +  sleeptime);
 	        	Thread.sleep(sleeptime);
-	        	logger.info("This is number " + loopnumber + " status checking.");
+	        	log.info("This is number " + loopnumber + " status checking.");
 	        	req = "$CHECKSTATUSOFWORKFLOW$"+requestid.trim();
 	        	String ret = BaseTool.POST(req, SysDir.executionservletaddress).trim();
 	        	if(ret.startsWith("SUCCESS")){
 	        		producturl = ret.substring("SUCCESS.".length()).trim();
-	        		logger.info("The loop is over with success response.");
+	        		log.info("The loop is over with success response.");
 	        		break;
 	        	}else if(ret.startsWith("ERR.")||ret.startsWith("UNKNOWN TASK")){
 	        		throw new RuntimeException(ret);
 	        	}
 	        	long currenttime = System.currentTimeMillis();
-	        	logger.info("The overall lasting time: " + (currenttime-begintime));
+	        	log.info("The overall lasting time: " + (currenttime-begintime));
 	        	if((currenttime-begintime)>36*60*60*1000){
-	        		logger.warn("The while loop lasts too long (>36 hours). Self terminated.");
+	        		log.warn("The while loop lasts too long (>36 hours). Self terminated.");
 	        		break;
 	        	}
 	        }

@@ -1,10 +1,6 @@
 package edu.cyberconnector.utils;
-/**
-*Class Message.java
-*@author Ziheng Sun
-*@time Jan 27, 2017 11:08:53 PM
-*Original aim is to support CyberConnector.
-*/
+
+
 public class Message {
 	
 	String a, //performer

@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.tools.PlaceOrderTool;
 import edu.cyberconnector.user.User;
@@ -29,8 +30,8 @@ import edu.cyberconnector.utils.TimeExtentValidator;
 public class VirtualProductQueryServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	
-	Logger logger = Logger.getLogger(this.getClass());
+
+	private static Logger log = LoggerFactory.getLogger(VirtualProductQueryServlet.class);
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -45,9 +46,9 @@ public class VirtualProductQueryServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		try{
 			
-			logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			
-			logger.debug("New request arrives.");
+			log.debug("New request arrives.");
 			
 			Map<String, String[]> pmap = request.getParameterMap();
 			
@@ -59,7 +60,7 @@ public class VirtualProductQueryServlet extends HttpServlet {
 		    
 				Map.Entry pair = (Map.Entry)it.next();
 		        
-				logger.debug(pair.getKey() + " = " + pair.getValue());
+				log.debug(pair.getKey() + " = " + pair.getValue());
 		        
 				parametermap.put((String)pair.getKey(), ((String[])pair.getValue())[0]);
 		    
@@ -69,7 +70,7 @@ public class VirtualProductQueryServlet extends HttpServlet {
 			
 			if(username==null){
 				
-				logger.debug("The session is not logged in. Check if the requested product is for demo use.");
+				log.debug("The session is not logged in. Check if the requested product is for demo use.");
 				
 				String pid = parametermap.get("productid");
 				
@@ -79,7 +80,7 @@ public class VirtualProductQueryServlet extends HttpServlet {
 						||pid.equals("urn:uuid:beb9d320-7531-1033-ac74-df4e81aea662")) //CRM_array_averaged_analysis_model
 				{
 					
-					logger.debug("This request is for demo purpose. Give permit.");
+					log.debug("This request is for demo purpose. Give permit.");
 					
 				}else{
 					
@@ -117,7 +118,7 @@ public class VirtualProductQueryServlet extends HttpServlet {
 			
 			//e.printStackTrace();
 			
-			logger.error(e.getLocalizedMessage());
+			log.error(e.getLocalizedMessage());
 			
 			out.println("Failure. "+ e.getLocalizedMessage());
 			
@@ -127,7 +128,7 @@ public class VirtualProductQueryServlet extends HttpServlet {
         
         out.close();
 		
-        logger.debug("A request is processed.\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        log.debug("A request is processed.\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         
     }
 

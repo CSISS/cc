@@ -16,8 +16,8 @@ import edu.cyberconnector.utils.BaseTool;
 
 
 public class DataBaseBroker {
-	
-	static Logger logger = LoggerFactory.getLogger(DataBaseBroker.class);
+
+	private static Logger log = LoggerFactory.getLogger(DataBaseBroker.class);
 
 	public static List getListofVirtualProducts(){
 //		SELECT  `identifier`,  `abbreviation`,  LEFT(`desc`, 256),  LEFT(`keywords`, 256),  `name`,  `east`,  `south`,  `west`,  `north`,  `srs`,  `begintime`,  `endtime`,  `ifvirtual`,  `parent_abstract_model`,  `dataFormat`,  LEFT(`accessURL`, 256),  LEFT(`ontology_reference`, 256),  `lastUpdateDate` FROM `cyberconnector`.`products` LIMIT 1000;
@@ -43,7 +43,7 @@ public class DataBaseBroker {
 		sql.append(oid).append("','");
 		sql.append(name).append("','");
 		sql.append(producturl).append("');");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		DataBaseOperation.execute(sql.toString());
 	}
 
@@ -82,7 +82,7 @@ public class DataBaseBroker {
 				.append(curtime)
 				.append("','")
 				.append((String)parametermap.get("userid")).append("');");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		DataBaseOperation.execute(sql.toString());
 	}
 	/**
@@ -104,7 +104,7 @@ public class DataBaseBroker {
 		sql.append(oid).append("','").append(category).append("','").append(tool.getCurrentMySQLDatetime()).append("','").append(tool.getCurrentMySQLDatetime()).append("','").append(proj).append("','").append(east).append("','");
 		sql.append(south).append("','").append(west).append("','").append(north).append("','").append(mail).append("','");
 		sql.append(begintime).append("','").append(endtime).append("','Ready', 'A new order is placed.');");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		DataBaseOperation.execute(sql.toString());
 	}
 	/**
@@ -131,7 +131,7 @@ public class DataBaseBroker {
 		message = tool.escape(message);
 		String curtime = tool.getCurrentMySQLDatetime();
 		StringBuffer sql = new StringBuffer("update cyberconnector.orders set status = '").append(status).append("', updatetime = '").append(curtime).append("', endtime = '").append(curtime).append("', message = '").append(message).append(" ' where orderid = '").append(oid).append("';");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		DataBaseOperation.update(sql.toString());
 	}
 	/**
@@ -223,7 +223,7 @@ public class DataBaseBroker {
 		sql.append(ifvirtual).append(",'").append(parent_abstract_model).append("','");
 		sql.append(dataformat).append("','").append(accessURL).append("','");
 		sql.append(ontologyreference).append("','").append(lastUpdateDate).append("');");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		DataBaseOperation.execute(sql.toString());
 	}
 	/**
@@ -235,7 +235,7 @@ public class DataBaseBroker {
 	 */
 	public static String queryAbstractModelIdByProductName(String product) {
 		StringBuffer sql = new StringBuffer("select abstract_model.identifier from cyberconnector.abstract_model, cyberconnector.products where products.name = '").append(product).append("' and products.parent_abstract_model = abstract_model.identifier;");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		ResultSet rs = DataBaseOperation.query(sql.toString());
 		String amid = null;
 		try {
@@ -257,7 +257,7 @@ public class DataBaseBroker {
 	 */
 	public static String getProductNameById(String productid) {
 		StringBuffer sql = new StringBuffer("select name from cyberconnector.products where identifier = '").append(productid).append("';");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		ResultSet rs = DataBaseOperation.query(sql.toString());
 		String name = null;
 		try {
@@ -282,7 +282,7 @@ public class DataBaseBroker {
 	 */
 	public static String[] queryAbstracModelXMLById(String abstractmodelid) {
 		StringBuffer sql = new StringBuffer("select process_connection, param_connection from abstract_model where identifier = '").append(abstractmodelid).append("';");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		ResultSet rs = DataBaseOperation.query(sql.toString());
 		String[] array = new String[2];
 		try {
@@ -310,7 +310,7 @@ public class DataBaseBroker {
 	 */
 	public static String getParametermap(String oid) {
 		StringBuffer sql = new StringBuffer("select parametermap from cyberconnector.orders where orderid = '").append(oid).append("';");
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		ResultSet rs = DataBaseOperation.query(sql.toString());
 		String pmap = null;
 		try {

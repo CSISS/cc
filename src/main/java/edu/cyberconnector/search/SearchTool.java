@@ -9,7 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -29,8 +31,8 @@ import edu.cyberconnector.utils.SysDir;
 *Original aim is to support CyberConnector.
 */
 public class SearchTool {
-	
-	private static Logger logger = Logger.getLogger(SearchTool.class);
+
+	private static Logger log = LoggerFactory.getLogger(SearchTool.class);
 	
 	static Map<String, String> map = new HashMap<String, String>();
 	
@@ -80,7 +82,7 @@ public class SearchTool {
 		
 //		sql.append(" LIMIT ").append(req.getRecordsperpage()).append(";");
 		
-		logger.debug(sql);
+		log.debug(sql.toString());
 		
 		try {
 			
@@ -166,7 +168,7 @@ public class SearchTool {
 		
 		sql2.append(" and ifvirtual = '").append(req.isvirtual).append("' ");
 		
-		logger.debug(sql2);
+		log.debug(sql2.toString());
 		
 		try {
 			
@@ -311,13 +313,7 @@ public class SearchTool {
 		return nd.asXML();
 		
 	}
-	/**
-	 * Get current url in ISO metadata
-	 * @param md
-	 * @param rawurl
-	 * @param newurl
-	 * @return
-	 */
+
 	public static String getCurrentURLinISO(String md){
 		
 		Document doc = BaseTool.parseString(md);
@@ -394,9 +390,6 @@ public class SearchTool {
 	
 	/**
 	 * Update Existing Records with New Http Download URL
-	 * @param id
-	 * @param newurl
-	 * @return
 	 */
 	public static boolean updatePyCSWDataURL(String id, String rawurl){
 		
@@ -435,13 +428,13 @@ public class SearchTool {
 				
 				String cswresp = BaseTool.POST(req.toString(), SysDir.CSISS_CSW_URL);
 				
-				logger.debug(cswresp);
+				log.debug(cswresp);
 				
 				success = parseUpdateResponse(cswresp);
 				
 			}else{
 				
-				logger.debug("The data is already cached.");
+				log.debug("The data is already cached.");
 				
 				success = true;
 				
@@ -449,7 +442,7 @@ public class SearchTool {
 			
 		}else{
 			
-			logger.debug("the URL is cached. Skip this step.");
+			log.debug("the URL is cached. Skip this step.");
 			
 			success = true;
 			
@@ -512,11 +505,11 @@ public class SearchTool {
 		
 		String cswreq = SearchTool.constructCSWRequest(req);
 		
-		logger.debug(cswreq);
+		log.debug(cswreq);
 		
 		String cswresp = BaseTool.POST(cswreq, SysDir.CSISS_CSW_URL);
 		
-		logger.debug(cswresp);
+		log.debug(cswresp);
 		
 		SearchResponse resp = SearchTool.parseCSWResponse(cswresp);
 		
@@ -550,7 +543,7 @@ public class SearchTool {
 			
 			int numberOfRecordsReturned = ((Double)numberOfRecordsReturnedPath.numberValueOf(document)).intValue();
 			
-			logger.debug("NextRecord:" + nextrecordindex + "\nNumber of Records Matched :" + numberOfRecordsMatched + "\nNumber of Records Returned : " + numberOfRecordsReturned);
+			log.debug("NextRecord:" + nextrecordindex + "\nNumber of Records Matched :" + numberOfRecordsMatched + "\nNumber of Records Returned : " + numberOfRecordsReturned);
 			
 			respobj.setProduct_total_number(numberOfRecordsMatched);
 			
@@ -621,7 +614,7 @@ public class SearchTool {
 				
 				p.setId(identifier);
 				
-				logger.debug("identifier : " + identifier);
+				log.debug("identifier : " + identifier);
 				
 				if(titlepath.selectSingleNode(ele)!=null){
 					
@@ -680,7 +673,7 @@ public class SearchTool {
 //						
 //						String acslink =  accesslink.selectSingleNode(onlinenodes.get(i)).getText();
 //						
-//						logger.debug("Access Name : " + acsname + " - Access Link : " + acslink);
+//						log.debug("Access Name : " + acsname + " - Access Link : " + acslink);
 //						
 //						p.setAccessurl(acslink);
 //						
@@ -706,7 +699,7 @@ public class SearchTool {
 
 					//for gmi
 					if (accessoptions.selectSingleNode(ele) == null) {
-						logger.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
+						log.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
 
 						String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
 						p.setAccessurl(accessurl);
@@ -843,27 +836,27 @@ public class SearchTool {
 	 */
 	public static SearchResponse search(SearchRequest req){
 		
-		logger.debug("Request Name :" + req.name);
+		log.debug("Request Name :" + req.name);
 		
-		logger.debug("Request Description :" + req.desc);
+		log.debug("Request Description :" + req.desc);
 		
-		logger.debug("Request Keywords :" + req.keywords);
+		log.debug("Request Keywords :" + req.keywords);
 		
-		logger.debug("Is Virtual :  " + req.isvirtual); //0 : real; 1: virtual; 2: both
+		log.debug("Is Virtual :  " + req.isvirtual); //0 : real; 1: virtual; 2: both
 		
-		logger.debug("Disable time: " + req.distime);
+		log.debug("Disable time: " + req.distime);
 		
 		SearchResponse resp = null;
 		
 		if(req.isvirtual.equals("1")){
 			
-			logger.debug("This is for VDP. Search in CyberConnector database..");
+			log.debug("This is for VDP. Search in CyberConnector database..");
 			
 			resp = SearchTool.searchVDP(req);
 			
 		}else if(req.isvirtual.equals("0")){
 			
-			logger.debug("This is for real data. Search in PyCSW for Unidata..");
+			log.debug("This is for real data. Search in PyCSW for Unidata..");
 			
 			resp = SearchTool.searchRealData(req);
 			

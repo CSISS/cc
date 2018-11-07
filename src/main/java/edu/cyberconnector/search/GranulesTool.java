@@ -1,16 +1,18 @@
 package edu.cyberconnector.search;
 
-import edu.cyberconnector.utils.SysDir;
-import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.IOUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import edu.cyberconnector.utils.SysDir;
 
 
 public class GranulesTool {

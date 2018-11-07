@@ -1,6 +1,7 @@
 package edu.cyberconnector.order;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.tools.PlaceOrderTool;
 
@@ -13,8 +14,8 @@ import edu.cyberconnector.tools.PlaceOrderTool;
 public class KillCronRunnable implements Runnable{
 
 	String oid;
-	
-	Logger log = Logger.getLogger(this.getClass());
+
+	private static Logger log = LoggerFactory.getLogger(KillCronRunnable.class);
 	
 	public KillCronRunnable(String oid){
 		

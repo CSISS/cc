@@ -3,12 +3,7 @@ package edu.cyberconnector.products;
 import java.util.List;
 import java.util.Map;
 
-/**
-*Class Product.java
-*@author Ziheng Sun
-*@time Feb 2, 2017 5:48:43 PM
-*Original aim is to support CyberConnector.
-*/
+
 public class Product {
 
 	String id;

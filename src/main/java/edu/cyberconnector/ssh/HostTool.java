@@ -4,7 +4,9 @@ package edu.cyberconnector.ssh;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.json.simple.JSONObject;
 
 import edu.cyberconnector.database.DataBaseOperation;
@@ -12,7 +14,7 @@ import edu.cyberconnector.utils.RandomString;
 
 public class HostTool {
 
-	static Logger logger = Logger.getLogger(HostTool.class);
+	private static Logger log = LoggerFactory.getLogger(HostTool.class);
 	
 	public static String detail(String id) {
 		
@@ -82,7 +84,7 @@ public class HostTool {
 			
 			detail = obj.toJSONString();
 			
-			logger.info(detail);
+			log.info(detail);
 			
 		} catch (Exception e) {
 			
@@ -205,7 +207,7 @@ public class HostTool {
 				
 				.append(owner).append("'); ");
 		
-//		logger.info(sql);
+//		log.info(sql);
 		
 		DataBaseOperation.execute(sql.toString());
 		

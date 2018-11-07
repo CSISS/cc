@@ -1,17 +1,37 @@
 package edu.cyberconnector.web;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+
 
 
 import org.springframework.web.context.request.WebRequest;
 
+import edu.cyberconnector.utils.*;
+import edu.cyberconnector.user.*;
+
 @RestController
 public class UserController {
+    private static Logger log = LoggerFactory.getLogger(UserController.class);
+
+    // Thread safe map
+    static Map<String, User> users = Collections.synchronizedMap(new HashMap<String, User>());
+
+
     @PostMapping(value = "/checklog")
     public @ResponseBody String checklogin(HttpSession session){
 
@@ -118,7 +138,7 @@ public class UserController {
 
 //    		session.setAttribute("sessionUser", u.getName());
 //
-//    		logger.debug("User email: "+ u.getEmail() + "\n" );
+//    		log.debug("User email: "+ u.getEmail() + "\n" );
         }
         else {
 
@@ -147,7 +167,7 @@ public class UserController {
 
 //    	String name = (String)session.getAttribute("sessionUser");
 
-        logger.debug("sesion user: "+ user.getName() + "\n" );
+        log.debug("sesion user: "+ user.getName() + "\n" );
 
         Message msg = UserTool.resetPassword(user);
 
@@ -225,8 +245,8 @@ public class UserController {
 
 
     @PostMapping(value = "/user_forget")
-    public String forget(@ModelAttributeUser user, BindingResult result, Model model) {
-        logger.debug(" Name entered "+ user.getEmail()+ "\n" );
+    public String forget(@ModelAttribute User user, BindingResult result, Model model) {
+        log.debug(" Name entered "+ user.getEmail()+ "\n" );
 
         Message msg = null;
 
@@ -288,7 +308,7 @@ public class UserController {
 
         }else{
 
-            logger.debug("Get User Profile : \n SessionId is: " + session.getId());
+            log.debug("Get User Profile : \n SessionId is: " + session.getId());
 
             User u = UserTool.retrieveInformation(username);
 
@@ -315,7 +335,7 @@ public class UserController {
 
         user = UserTool.retrieveInformation(user.getName());
 
-        logger.debug("User Profile Post : User Information is retrieved.");
+        log.debug("User Profile Post : User Information is retrieved.");
 
         model.addAttribute("user", user);
 
@@ -324,7 +344,7 @@ public class UserController {
 
 
     @PostMapping(value = "/logout")
-    public String logout( ModelMap model,  WebRequest request, SessionStatus status, HttpSession session) {
+    public String logout(ModelMap model,  WebRequest request, SessionStatus status, HttpSession session) {
 
         Message msg = UserTool.logout((String)session.getAttribute("sessionUser"));
 
@@ -368,7 +388,7 @@ public class UserController {
 
         }
 
-        logger.debug("Current user: " + (String)session.getAttribute("sessionUser"));
+        log.debug("Current user: " + (String)session.getAttribute("sessionUser"));
 
         return resp;
     }
@@ -467,7 +487,7 @@ public class UserController {
     @PostMapping(value = "/login")
     public String login(    @ModelAttribute("user") User user, BindingResult result, ModelMap model, HttpSession session) {
 
-        logger.debug("Display Name on the Profile Page "+ user.getName()+ "\n" );
+        log.debug("Display Name on the Profile Page "+ user.getName()+ "\n" );
 
         Message msg = UserTool.login(user);
 
@@ -477,7 +497,7 @@ public class UserController {
 
             session.setAttribute("sessionUser", user.getName());
 
-            logger.debug("SessionId is: " + session.getId());
+            log.debug("SessionId is: " + session.getId());
 
             user = UserTool.retrieveInformation(user.getName());
 
@@ -501,7 +521,7 @@ public class UserController {
 
         }
 
-        logger.debug("Response page is: " + resp);
+        log.debug("Response page is: " + resp);
 
         return resp;
     }
@@ -589,9 +609,9 @@ public class UserController {
     @PostMapping(value = "/user_register")
     public String register(@ModelAttribute User user, BindingResult result, Model model) {
 
-        logger.debug(" Name entered "+ user.getName()+ "\n" );
+        log.debug(" Name entered "+ user.getName()+ "\n" );
 
-        logger.debug(" Password entered " + user.getPassword() + "\n");
+        log.debug(" Password entered " + user.getPassword() + "\n");
 
         Message msg = UserTool.registerNewUser(user);
 

@@ -2,12 +2,7 @@ package edu.cyberconnector.tools;
 
 import edu.cyberconnector.utils.BaseTool;
 
-/**
- *Class DataR.java
- *@author Ziheng Sun
- *@time Dec 8, 2015 5:03:08 PM
- *Original aim is to support CyberConnector.
- */
+
 public class DataR {
 	/**
 	 * 

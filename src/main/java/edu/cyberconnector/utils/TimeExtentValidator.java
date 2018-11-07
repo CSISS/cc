@@ -2,12 +2,7 @@ package edu.cyberconnector.utils;
 
 import java.util.Date;
 
-/**
- *Class TimeExtentValidator.java
- *@author Ziheng Sun
- *@time Sep 2, 2015 11:28:30 AM
- *Original aim is to support CyberConnector.
- */
+
 public class TimeExtentValidator {
 	/**
 	 * Validate the time extent

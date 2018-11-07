@@ -1,16 +1,32 @@
 package edu.cyberconnector.web;
 
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+
+
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.context.request.WebRequest;
 
+import edu.cyberconnector.tools.*;
+import edu.cyberconnector.utils.*;
+import edu.cyberconnector.order.*;
+import edu.cyberconnector.user.*;
+import edu.cyberconnector.products.*;
 
 @RestController
 public class OrderController {
+
+    private static Logger log = LoggerFactory.getLogger(GeoweaverController.class);
+
     @PostMapping(value = "/deleteorder")
-    public String  deleteorder(Model model, WebRequest request, SessionStatus status, HttpSession session){
+    public String  deleteorder(Model model, WebRequest request, HttpSession session){
 
         String name = (String)session.getAttribute("sessionUser");
 
@@ -68,7 +84,7 @@ public class OrderController {
 
         }else{
 
-            logger.info("receive the reorder request");
+            log.info("receive the reorder request");
 
             String oid = request.getParameter("oid");
 
@@ -94,7 +110,7 @@ public class OrderController {
 
 
     @PostMapping(value = "/placeorder")
-    public String placeorder(Model model, WebRequest request, SessionStatus status, HttpSession session) {
+    public String placeorder(Model model, WebRequest request, HttpSession session) {
 
         String name = (String)session.getAttribute("sessionUser");
 
@@ -118,7 +134,7 @@ public class OrderController {
 
                     Map.Entry pair = (Map.Entry)it.next();
 
-                    logger.debug(pair.getKey() + " = " + ((String[])pair.getValue())[0]);
+                    log.debug(pair.getKey() + " = " + ((String[])pair.getValue())[0]);
 
                     parametermap.put((String)pair.getKey(), ((String[])pair.getValue())[0]);
 
@@ -178,7 +194,7 @@ public class OrderController {
 
 
     @GetMapping(value = "/productorder")
-    public String orderproduct(@RequestParam("pid") String productid, Model model,  WebRequest request, SessionStatus status, HttpSession session) {
+    public String orderproduct(@RequestParam("pid") String productid, Model model,  WebRequest request, HttpSession session) {
 
         String name = (String)session.getAttribute("sessionUser");
 
@@ -205,7 +221,7 @@ public class OrderController {
     }
 
     @PostMapping(value = "/vieworder")
-    public @ResponseBody String  vieworder(Model model, WebRequest request, SessionStatus status, HttpSession session){
+    public @ResponseBody String  vieworder(Model model, WebRequest request, HttpSession session){
 
         String orderdetailsjson = null;
 
@@ -223,12 +239,12 @@ public class OrderController {
 
                 orderdetailsjson = OrderTool.getOrderById(orderid).toJSON();
 
-                logger.debug(orderdetailsjson);
+                log.debug(orderdetailsjson);
 
             }catch(Exception e){
 
 //    			e.printStackTrace();
-                logger.error(e.getLocalizedMessage());
+                log.error(e.getLocalizedMessage());
 
                 orderdetailsjson = "{'error' : '"+e.getLocalizedMessage()+"'}";
 
@@ -241,7 +257,7 @@ public class OrderController {
 
 
     @PostMapping(value = "/deleteproduct")
-    public String  deleteproduct(Model model, WebRequest request, SessionStatus status, HttpSession session){
+    public String  deleteproduct(Model model, WebRequest request, HttpSession session){
 
         String name = (String)session.getAttribute("sessionUser");
 

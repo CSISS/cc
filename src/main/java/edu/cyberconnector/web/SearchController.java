@@ -1,5 +1,13 @@
 package edu.cyberconnector.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -9,15 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import edu.cyberconnector.search.*;
+import edu.cyberconnector.utils.*;
+import edu.cyberconnector.products.*;
 
 @RestController
 public class SearchController {
 
+    private static Logger log = LoggerFactory.getLogger(SearchController.class);
+
+
     @GetMapping(value = "/productsearch")
-    public String productsearchpage(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
+    public String productsearchpage(ModelMap model, HttpSession session){
 
         String name = (String)session.getAttribute("sessionUser");
 
@@ -36,11 +49,11 @@ public class SearchController {
 
         String name = (String)session.getAttribute("sessionUser");
 
-        String resp = "message";
+        String response = "message";
 
         if(name == null){
 
-            resp = "redirect:login";
+            response = "redirect:login";
 
         }else{
 
@@ -60,12 +73,12 @@ public class SearchController {
 
         }
 
-        return resp;
+        return response;
 
     }
 
     @PostMapping(value = "/search", produces = "application/json")
-    public @ResponseBody String tableserver(@ModelAttribute SearchRequest request,  WebRequest webRequest) {
+    public @ResponseBody SearchResponse tableserver(@ModelAttribute SearchRequest request,  WebRequest webRequest) {
 
         SearchResponse sr = SearchTool.search(request);
 
@@ -87,7 +100,7 @@ public class SearchController {
         sr.setRecordsFiltered(sr.getProduct_total_number());
         sr.setRecordsTotal(sr.getProduct_total_number());
 
-        return toJSONString(sr);
+        return sr;
     }
 
 
@@ -102,21 +115,21 @@ public class SearchController {
 
 
     @PostMapping(value = "/listgranules", produces = "application/json")
-    public @ResponseBody String listgranules_ajax(@ModelAttribute GranulesRequest request, WebRequest webRequest) {
+    public @ResponseBody SearchResponse listgranules_ajax(@ModelAttribute GranulesRequest request, WebRequest webRequest) {
         int start = Integer.parseInt(webRequest.getParameter("start"));
         int length = Integer.parseInt(webRequest.getParameter("length"));
 
 
-        GranulesTool.indexCollectionGranules(gRequest);
+        GranulesTool.indexCollectionGranules(request);
 
-        List<Granule> granules = GranulesTool.getCollectionGranules(gRequest);
+        List<Granule> granules = GranulesTool.getCollectionGranules(request);
 
         SearchResponse sr = new SearchResponse();
 
         List products = new ArrayList();
         for(int i = start; i < start + length && i < granules.size() ; i++) {
             Granule g = granules.get(i);
-            Product p = g.toProduct(gRequest);
+            Product p = g.toProduct(request);
 
             products.add(p);
         }
@@ -129,8 +142,7 @@ public class SearchController {
         sr.setRecordsFiltered(granules.size());
         sr.setRecordsTotal(granules.size());
 
-
-        return toJSONString(sr);
+        return sr;
     }
 
     @GetMapping(value = "/listgranules")
@@ -147,7 +159,7 @@ public class SearchController {
 
         String resp = ""; //number of likes
 
-        logger.debug("Like request received.");
+        log.debug("Like request received.");
 
         if(name == null){
 
@@ -157,7 +169,7 @@ public class SearchController {
 
             String productid = request.getParameter("pid");
 
-            logger.debug("product id is : " + productid);
+            log.debug("product id is : " + productid);
 
             int newlikes = LikeProductTool.like(productid);
 

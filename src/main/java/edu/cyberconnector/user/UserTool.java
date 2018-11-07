@@ -16,7 +16,8 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.database.DataBaseOperation;
 import edu.cyberconnector.order.Order;
@@ -25,17 +26,12 @@ import edu.cyberconnector.services.Service;
 import edu.cyberconnector.utils.BaseTool;
 import edu.cyberconnector.utils.Message;
 
-/**
-*Class UserTool.java
-*@author Ziheng Sun
-*@time Jan 27, 2017 10:59:58 PM
-*Original aim is to support CyberConnector.
-*/
+
 public class UserTool {
 	
 	static Map<String, Token> emailToToken = new HashMap();
-	
-	static Logger logger = Logger.getLogger(UserTool.class);
+
+	private static Logger log = LoggerFactory.getLogger(UserTool.class);
 	
 	public static boolean checkOwner(String uid, String pid){
 		
@@ -149,7 +145,7 @@ public class UserTool {
 		
 		String sql = "select uid, address, fullname, type, last_login_time, last_operate_time, status, email, phone, department, institute from users where name = '"+name+"'; ";
 		
-		logger.debug(sql);
+		log.debug(sql);
 		
 		try{
 			
@@ -185,7 +181,7 @@ public class UserTool {
 					
 					String sql2 = "select orderid, product, ordertime, status,parametermap  from orders where userid = '"+u.getId()+"' order by ordertime desc;";
 					
-					logger.error("SQL 2 : " + sql2);
+					log.error("SQL 2 : " + sql2);
 				
 					ResultSet rs2 = DataBaseOperation.query(sql2);
 					
@@ -250,7 +246,7 @@ public class UserTool {
 					
 					String sql3 = "select id, name, registerdate, accessURL from service where userid = '"+u.getId()+"' order by registerdate desc; ";
 					
-					logger.debug("SQL 3 : " + sql3);
+					log.debug("SQL 3 : " + sql3);
 					
 					ResultSet rs3 = DataBaseOperation.query(sql3);
 					
@@ -280,7 +276,7 @@ public class UserTool {
 					
 					String sql4 = "select identifier, name, begintime from products where userid = '"+u.getId()+"'; ";
 					
-					logger.debug("SQL4 :" + sql4);
+					log.debug("SQL4 :" + sql4);
 					
 					ResultSet rs4 = DataBaseOperation.query(sql4);
 					
@@ -339,7 +335,7 @@ public class UserTool {
 		
 		String sql = "UPDATE users SET last_operate_time='"+tool.getCurrentMySQLDatetime()+"', status = 'inactive' WHERE name = '"+username+"';";
 		
-		logger.debug(sql);
+		log.debug(sql);
 		
 		try {
 			
@@ -365,7 +361,7 @@ public class UserTool {
 		
 		String sql = "UPDATE users SET last_operate_time='"+tool.getCurrentMySQLDatetime()+"', status = 'active' WHERE name = '"+user.getName()+"';";
 		
-		logger.debug(sql);
+		log.debug(sql);
 		
 		try {
 			
@@ -385,7 +381,7 @@ public class UserTool {
 		
 		String sql = "select count(*) as total from users where name = '" + user.getName() + "' and pswd = '" + UserTool.get_SHA_512_SecurePassword(user.getPassword(), user.getName()) + "';";
 		
-		logger.debug(sql);
+		log.debug(sql);
 		
 		ResultSet rs = DataBaseOperation.query(sql);
 		
@@ -399,7 +395,7 @@ public class UserTool {
 				
 			}	
 			
-			logger.debug("The number of users is: " + num);
+			log.debug("The number of users is: " + num);
 			
 			if(num==1){
 				
@@ -447,7 +443,7 @@ public class UserTool {
 				
 				+ "' where name = '" + user.getName() + "' ; ";
 		
-		logger.debug(sql);
+		log.debug(sql);
 		
 		try{
 			
@@ -515,7 +511,7 @@ public class UserTool {
 			if(rsUser.next()){				
 				numUser = rsUser.getInt("total");				
 			}				
-			logger.debug("The number of users is: " + numUser);
+			log.debug("The number of users is: " + numUser);
 			
 			if(numUser>0){				
 				newUser = false;				
@@ -526,7 +522,7 @@ public class UserTool {
 			if(rsEmail.next()){				
 				numEmail = rsEmail.getInt("total");				
 			}				
-			logger.debug("The number of email is: " + numEmail);
+			log.debug("The number of email is: " + numEmail);
 			
 			if(numEmail>0){				
 				newEmail = false;				
@@ -566,7 +562,7 @@ public class UserTool {
 					+ user.getEmail() + "','" + user.getPhone() + "','" +user.getDepartment() + "','" + user.getInstitute() + "','"
 					+ user.getLast_ip() +"' );";
 			
-			logger.debug(sql);
+			log.debug(sql);
 						
 			try{
 			
@@ -576,7 +572,7 @@ public class UserTool {
 				
 			}catch(Exception e){
 				
-				logger.error(e.getLocalizedMessage());
+				log.error(e.getLocalizedMessage());
 				
 				msg = new Message("database", "user_register", e.getLocalizedMessage(), false);
 				
@@ -613,7 +609,7 @@ public class UserTool {
 			
 			//e.printStackTrace();
 			
-			logger.error(e.getLocalizedMessage());
+			log.error(e.getLocalizedMessage());
 			
 		}
 		
@@ -716,7 +712,7 @@ public class UserTool {
 		
 		String sql = "select name from users where email = '" + email + "';";
 		
-		logger.debug(sql);
+		log.debug(sql);
 		
 		ResultSet rs = DataBaseOperation.query(sql);
 		
@@ -739,7 +735,7 @@ public class UserTool {
 			msg = new Message("database", "user_login", e.getLocalizedMessage(), false );
 			
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage());
+			log.error(e.getLocalizedMessage());
 			
 		}finally{
 			DataBaseOperation.closeConnection();
@@ -760,7 +756,7 @@ public class UserTool {
 		
 		String sql = "update users set pswd='"+ UserTool.get_SHA_512_SecurePassword(user.getPassword(), user.getName()) + "' where name = '" + user.getName() + "' ; ";
 		
-		logger.debug(sql);
+		log.debug(sql);
 		
 		try{
 			
@@ -769,7 +765,7 @@ public class UserTool {
 		}catch(Exception e){
 			
 			//e.printStackTrace();
-			logger.error(e.getLocalizedMessage());
+			log.error(e.getLocalizedMessage());
 			
 			msg = new Message("database", "user_setpassword", "Error" + e.getLocalizedMessage(), false);
 			

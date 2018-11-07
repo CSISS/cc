@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.tools.CheckOrderStatusTool;
 import edu.cyberconnector.tools.PlaceOrderTool;
@@ -23,8 +24,8 @@ import edu.cyberconnector.utils.TimeExtentValidator;
 public class OrderCheckingServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	
-	Logger logger = Logger.getLogger(this.getClass());
+
+	private static Logger log = LoggerFactory.getLogger(OrderCheckingServlet.class);
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,9 +45,9 @@ public class OrderCheckingServlet extends HttpServlet {
 		
 		try{
 			
-			logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			
-			logger.debug("New order checking request arrives.");
+			log.debug("New order checking request arrives.");
 			
 			String ordernumber = request.getParameter("ordernumber").trim();
 			
@@ -64,7 +65,7 @@ public class OrderCheckingServlet extends HttpServlet {
 			
 			//e.printStackTrace();
 			
-			logger.error(e.getLocalizedMessage());
+			log.error(e.getLocalizedMessage());
 			
 			out.println("Failure. "+ e.getLocalizedMessage());
 			
@@ -74,7 +75,7 @@ public class OrderCheckingServlet extends HttpServlet {
         
         out.close();
 
-		logger.debug("A order checking request is processed.\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+		log.debug("A order checking request is processed.\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 	}
 
 }

@@ -21,7 +21,7 @@ public class SSHCmdSessionOutput  implements Runnable {
 //		
 //		String output = IOUtils.readFully(cmd.getInputStream()).toString();
 //		
-//		logger.info(output);
+//		log.info(output);
 //		
 //		//wait until the process execution is over
 //		

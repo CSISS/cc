@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +19,8 @@ import net.schmizz.sshj.common.IOUtils;
 import net.schmizz.sshj.connection.channel.direct.Session;
 
 public class ProcessTool {
-	
-	static Logger logger = LoggerFactory.getLogger(ProcessTool.class);
+
+	private static Logger log = LoggerFactory.getLogger(ProcessTool.class);
 	
 	public static String list(String owner) throws SQLException {
 		
@@ -104,7 +105,7 @@ public class ProcessTool {
 		
 		String resp = code.replaceAll("\"", "\\\\\"").replaceAll("(\r\n|\r|\n|\n\r)", "<br/>");
 		
-		logger.info(resp);
+		log.info(resp);
 		
 		return resp;
 		
@@ -114,7 +115,7 @@ public class ProcessTool {
 		
 		String resp = code.replaceAll("-.-", "/").replaceAll("-·-", "'").replaceAll("-··-", "\"").replaceAll("->-", "\\n").replaceAll("-!-", "\\r");
 		
-		logger.info(resp);
+		log.info(resp);
 		
 		return resp;
 		
@@ -132,7 +133,7 @@ public class ProcessTool {
 		
 		sql.append(description).append("'); ");
 		
-		logger.info(sql.toString());
+		log.info(sql.toString());
 		
 		DataBaseOperation.preexecute(sql.toString(), new String[] {code});
 		

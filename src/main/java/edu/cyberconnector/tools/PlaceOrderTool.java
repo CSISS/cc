@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.order.CronRunnable;
 import edu.cyberconnector.order.KillCronRunnable;
@@ -35,9 +36,9 @@ public class PlaceOrderTool {
 	public static Map<String, String> oid2termination = new HashMap(); //record the termination condition of each order
 	
 	public static List toBeDeletedScheduler = new ArrayList();
-	
-	private Logger log = Logger.getLogger(this.getClass());
-	
+
+	protected static Logger log = LoggerFactory.getLogger(PlaceOrderTool.class);
+
 	static{
 		
 		scheduler.start();

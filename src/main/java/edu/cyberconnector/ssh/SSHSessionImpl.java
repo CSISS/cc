@@ -38,6 +38,7 @@ import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -329,7 +330,7 @@ public class SSHSessionImpl implements SSHSession {
 //		
 //		String output = IOUtils.readFully(cmd.getInputStream()).toString();
 //		
-//		logger.info(output);
+//		log.info(output);
 //		
 //		//wait until the process execution is over
 //		

@@ -12,12 +12,8 @@ import org.json.simple.parser.JSONParser;
 import edu.cyberconnector.database.DataBaseOperation;
 import edu.cyberconnector.tools.GetProductInputDetailsTool;
 
-/**
-*Class RetrieveProductTool.java
-*@author Ziheng Sun
-*@time Feb 8, 2017 12:25:06 PM
-*Original aim is to support CyberConnector.
-*/
+
+
 public class RetrieveProductTool {
 	
 	/**

@@ -3,7 +3,8 @@ package edu.cyberconnector.services;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.database.DataBaseOperation;
 import edu.cyberconnector.user.UserTool;
@@ -18,8 +19,8 @@ import edu.cyberconnector.utils.SysDir;
  *Original aim is to support CyberConnector.
  */
 public class RegisterServiceTool {
-	
-	static Logger logger = Logger.getLogger(RegisterServiceTool.class);
+
+	private static Logger log = LoggerFactory.getLogger(RegisterServiceTool.class);
 	
 	public static void updateWSDL(String serviceid){
 		
@@ -74,7 +75,7 @@ public class RegisterServiceTool {
 		
 //		String req = "$SERVICEREGISTRATION$"+wsdl+"$"+username;
 		
-		logger.info("Registration Address" + SysDir.registrationaddress);
+		log.info("Registration Address" + SysDir.registrationaddress);
 		
 		String resp = BaseTool.POST(req, SysDir.registrationaddress);
 		
@@ -101,7 +102,7 @@ public class RegisterServiceTool {
 	public void registerWSDL(String wsdl, String username){
 		String req = "$SERVICEREGISTRATION$"+wsdl;
 //		String req = "$SERVICEREGISTRATION$"+wsdl+"$"+username;
-		logger.info("Registration Address" + SysDir.registrationaddress);
+		log.info("Registration Address" + SysDir.registrationaddress);
 		String resp = BaseTool.POST(req, SysDir.registrationaddress);
 		if(resp.indexOf("Sorry")==0){
 			//failed

@@ -2,12 +2,7 @@ package edu.cyberconnector.tools;
 
 import edu.cyberconnector.database.DataBaseOperation;
 
-/**
- *Class CheckOrderStatusTool.java
- *@author Ziheng Sun
- *@time Sep 2, 2015 4:54:22 PM
- *Original aim is to support CyberConnector.
- */
+
 public class CheckOrderStatusTool {
 	String on = null;
 	/**

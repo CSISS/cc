@@ -21,7 +21,8 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class SOAPClient
@@ -84,14 +85,14 @@ public class SOAPClient {
         SOAPBodyElement responseElement = (SOAPBodyElement)responseBody.getChildElements().next();
         SOAPElement returnElement = (SOAPElement)responseElement.getChildElements().next();
         if(responseBody.getFault()!=null){
-            logger.debug(returnElement.getValue()+" "+responseBody.getFault().getFaultString());
+            log.debug(returnElement.getValue()+" "+responseBody.getFault().getFaultString());
         } else {
-            logger.debug(returnElement.getValue());
+            log.debug(returnElement.getValue());
         }
  
         try {
-            logger.debug(getXmlFromSOAPMessage(message));
-            logger.debug(getXmlFromSOAPMessage(response));
+            log.debug(getXmlFromSOAPMessage(message));
+            log.debug(getXmlFromSOAPMessage(response));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,21 +118,21 @@ public class SOAPClient {
             SOAPMessage response = connection.call(message, getEndpoint());
             connection.close();
             String resp = getXmlFromSOAPMessage(response);
-            logger.debug(resp);
+            log.debug(resp);
             setRespmessage(resp);
         } catch (IOException ex) {
             String errmsg = ex.getClass().getName()+ ex.getLocalizedMessage();
-            logger.error(errmsg);
+            log.error(errmsg);
             throw new RuntimeException(errmsg);
         } catch (Exception ex){
             String errmsg = ex.getClass().getName()+ ex.getLocalizedMessage();
-            logger.error(errmsg);
+            log.error(errmsg);
             throw new RuntimeException(errmsg);
         }finally {
             try {
                 in.close();
             } catch (IOException ex) {
-                logger.error(ex.getLocalizedMessage());
+                log.error(ex.getLocalizedMessage());
             }
         }
     }
@@ -155,7 +156,7 @@ public class SOAPClient {
 "   </soapenv:Body>\n" +
 "</soapenv:Envelope>");
             client.send();
-            logger.debug("The response SOAP message is:\n"+client.getRespmessage());
+            log.debug("The response SOAP message is:\n"+client.getRespmessage());
         } catch (SOAPException ex) {
            	ex.printStackTrace();
         }

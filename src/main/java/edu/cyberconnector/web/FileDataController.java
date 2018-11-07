@@ -1,5 +1,8 @@
 package edu.cyberconnector.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -7,9 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.context.request.WebRequest;
 
+import edu.cyberconnector.tools.*;
+import edu.cyberconnector.utils.*;
+import edu.cyberconnector.ncwms.ncWMSTool;
+
 
 @RestController
 public class FileDataController {
+
+    private static Logger log = LoggerFactory.getLogger(FileDataController.class);
 
     @GetMapping(value = "/localfilelist")
     public @ResponseBody String localfilelist(WebRequest request){
@@ -60,7 +69,7 @@ public class FileDataController {
 
                 location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
 
-                logger.debug("the new location is : " + location);
+                log.debug("the new location is : " + location);
 
             }else if(location.startsWith(SysDir.covali_file_path)){
 

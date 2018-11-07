@@ -1,10 +1,6 @@
 package edu.cyberconnector.products;
-/**
-*Class Input.java
-*@author Ziheng Sun
-*@time Feb 8, 2017 11:03:44 PM
-*Original aim is to support CyberConnector.
-*/
+
+
 public class Input {
 
 	String datatype, format, key, name, ename, value;

@@ -13,7 +13,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //import org.geotools.data.DataStore;
 //import org.geotools.data.DataStoreFinder;
 //import org.geotools.data.FeatureSource;
@@ -60,40 +62,40 @@ public class WMSUtils {
 		List<Layer> layers = null;
 		try {		
 //			Vector<GeoFeature> gfVec2 = getWMSFeatures(wmsurl, box);
-//			logger.info("--------------------------------");
-//			logger.info("gfVec2.size()=" + gfVec2.size());
+//			log.info("--------------------------------");
+//			log.info("gfVec2.size()=" + gfVec2.size());
 //			for(GeoFeature gf:gfVec2) {
-//				logger.info("Name=" + gf.getName());
+//				log.info("Name=" + gf.getName());
 //			}
 			
 			WMSCapabilities ca = WMSUtils.parseWMSCapabilityURL(url);
 			
-			logger.info("Layers : " + ca.getCapability().getLayer().getLayer().size());
-			logger.info("WMS Name : " + ca.getCapability().getLayer().getName());
-			logger.info("WMS Title: " + ca.getCapability().getLayer().getTitle());
+			log.info("Layers : " + ca.getCapability().getLayer().getLayer().size());
+			log.info("WMS Name : " + ca.getCapability().getLayer().getName());
+			log.info("WMS Title: " + ca.getCapability().getLayer().getTitle());
 			
-			logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\nWMS Layer List:");
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\nWMS Layer List:");
 			layers = ca.getCapability().getLayer().getLayer();
 			
 			for(int i=0;i<layers.size();i++){
 				
 				Layer l = layers.get(i);
 				
-				logger.info("Layer No : " + i);
+				log.info("Layer No : " + i);
 				
-				logger.info("Layer Title : " + l.getTitle());
+				log.info("Layer Title : " + l.getTitle());
 				
-				logger.info(l.getBoundingBox().get(0).getCRS());
-				logger.info(l.getBoundingBox().get(0).getMaxy());
-				logger.info(l.getAttribution().getLogoURL().getFormat());
-				logger.info("height="+l.getAttribution().getLogoURL().getHeight());
-				logger.info("width="+l.getAttribution().getLogoURL().getWidth());
+				log.info(l.getBoundingBox().get(0).getCRS());
+				log.info(l.getBoundingBox().get(0).getMaxy());
+				log.info(l.getAttribution().getLogoURL().getFormat());
+				log.info("height="+l.getAttribution().getLogoURL().getHeight());
+				log.info("width="+l.getAttribution().getLogoURL().getWidth());
 				
 				if(l.getIdentifier().size()!=0){
-					logger.info("Layer Identifier : " + l.getIdentifier().get(0));
+					log.info("Layer Identifier : " + l.getIdentifier().get(0));
 				}
 				
-				logger.info("==================");
+				log.info("==================");
 			}
 			
 			
@@ -141,14 +143,14 @@ public class WMSUtils {
 	    	}
 			
 			getCapabilitiesResponse = MyHttpUtils.doGet(capability_doc_url);
-			logger.info(getCapabilitiesResponse);
+			log.info(getCapabilitiesResponse);
 			JAXBContext jaxbContext = null;
 			ca = JAXB.unmarshal(new StringReader(getCapabilitiesResponse), WMSCapabilities.class);
-		    //logger.info(ca.getCapability().getRequest().getGetFeatureInfo().getDCPType().get(0).getHTTP().getGet().getOnlineResource().getHref());
+		    //log.info(ca.getCapability().getRequest().getGetFeatureInfo().getDCPType().get(0).getHTTP().getGet().getOnlineResource().getHref());
 		    //Added by Lei Hu
 			//for DGIWG wms
-			logger.info(ca.getCapability().getRequest().getGetCapabilities().getDCPType().get(0).getHTTP().getGet().getOnlineResource().getHref());
-			logger.info(ca.getCapability().getRequest().getGetMap().getDCPType().get(0).getHTTP().getGet().getOnlineResource().getHref());
+			log.info(ca.getCapability().getRequest().getGetCapabilities().getDCPType().get(0).getHTTP().getGet().getOnlineResource().getHref());
+			log.info(ca.getCapability().getRequest().getGetMap().getDCPType().get(0).getHTTP().getGet().getOnlineResource().getHref());
 		
 		    
 		} catch (Exception e) {
@@ -192,13 +194,13 @@ public class WMSUtils {
 		for(int i=0;i<l.size();i++){
 			Layer ll = l.get(i);
 			if(ll.getName() != null){
-				logger.info(ll.getName());
-				logger.info(ll.getTitle());
+				log.info(ll.getName());
+				log.info(ll.getTitle());
 			}else{
 				for(int j=0;j<ll.getLayer().size();j++){
 					Layer lll = ll.getLayer().get(j);
-					logger.info(lll.getName());
-					logger.info(lll.getTitle());
+					log.info(lll.getName());
+					log.info(lll.getTitle());
 				}
 			}
 		}
@@ -241,7 +243,7 @@ public class WMSUtils {
 
 		// output string to console
 		String theXML = writer.toString();
-		logger.info(theXML);
+		log.info(theXML);
 		return theXML;
 	}
 	
@@ -257,7 +259,7 @@ public class WMSUtils {
 //		OperationType ot = of.createOperationType();
 //		JAXBElement<OperationType> getcapabilityreq = of.createGetCapabilities(ot);
 //		//turn jaxbelement to xml or json
-//		logger.info("GetCapability Request: " + WMSUtils.convertJAXBElementToXML(getcapabilityreq));
+//		log.info("GetCapability Request: " + WMSUtils.convertJAXBElementToXML(getcapabilityreq));
 		//return xml or json back
 		return ca;
 		
@@ -278,7 +280,7 @@ public class WMSUtils {
 //		connectionParameters.put("WMSDataStoreFactory:GET_CAPABILITIES_URL", wmsurl);
 //		
 //		DataStore dstore = DataStoreFinder.getDataStore(connectionParameters);	
-//		//logger.info("dstore=" + dstore);
+//		//log.info("dstore=" + dstore);
 //		String typeNames[] = dstore.getTypeNames();		
 //		if(typeNames == null)
 //			return null;
@@ -291,20 +293,20 @@ public class WMSUtils {
 //		else
 //			reqbound = new ReferencedEnvelope(box.minx, box.maxx, box.miny, box.maxy, reqepsg);
 //		
-//		logger.info("out bbox is " +box.toString());
-//		logger.info("Required bbox is " +reqbound);
+//		log.info("out bbox is " +box.toString());
+//		log.info("Required bbox is " +reqbound);
 //		
-//		logger.info("Interscted WMS Layers are listed as");
+//		log.info("Interscted WMS Layers are listed as");
 //		for(String tname: typeNames) {			
 //			FeatureSource<SimpleFeatureType, SimpleFeature> fsource = dstore.getFeatureSource(tname);
 //			ReferencedEnvelope databounds = fsource.getBounds();					
 //			BoundingBox datatarnsbounds = databounds.toBounds(reqepsg);												
 //			if(datatarnsbounds != null) {	
-//				logger.info( "src Bounds:"+ databounds);
-//				logger.info( "src Trans Bounds:"+ datatarnsbounds);
-//				logger.info( "req Bounds:"+ reqbound);
+//				log.info( "src Bounds:"+ databounds);
+//				log.info( "src Trans Bounds:"+ datatarnsbounds);
+//				log.info( "req Bounds:"+ reqbound);
 //				if(!datatarnsbounds.intersects(reqbound)) {
-//				/*	logger.info("Not intersected");*/
+//				/*	log.info("Not intersected");*/
 //					continue;
 //				}
 //				GeoFeature feature = new GeoFeature();			
@@ -317,7 +319,7 @@ public class WMSUtils {
 //					fbox = new BBOX(box.crs, datatarnsbounds.getMinY(), datatarnsbounds.getMinX(), datatarnsbounds.getMaxY(), datatarnsbounds.getMaxX());
 //				else
 //					fbox = new BBOX(box.crs, datatarnsbounds.getMinX(), datatarnsbounds.getMinY(), datatarnsbounds.getMaxX(), datatarnsbounds.getMaxY());
-//				logger.info(tname + "--" +fbox.toString());
+//				log.info(tname + "--" +fbox.toString());
 //				feature.addBBOX(fbox);			
 //				featureVec.add(feature);
 //			}

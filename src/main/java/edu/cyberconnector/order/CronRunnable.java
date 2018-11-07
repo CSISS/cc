@@ -1,6 +1,7 @@
 package edu.cyberconnector.order;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.tasks.Task;
 import edu.cyberconnector.tasks.TaskManager;
@@ -13,15 +14,15 @@ import edu.cyberconnector.utils.BaseTool;
 *@time Mar 24, 2017 6:16:12 PM
 *Original aim is to support CyberConnector.
 */
-public class CronRunnable implements Runnable{
+public class CronRunnable implements Runnable {
 	
 	Task t = null;
 	
 	String oid = null;
 	
 	int runtime = 0 ;
-	
-	Logger log = Logger.getLogger(this.getClass());
+
+	private static Logger log = LoggerFactory.getLogger(CronRunnable.class);
 	
 	BaseTool tool = new BaseTool();
 	

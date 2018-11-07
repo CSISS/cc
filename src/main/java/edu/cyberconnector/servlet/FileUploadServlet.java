@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.*;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.utils.BaseTool;
 import edu.cyberconnector.utils.SysDir;
@@ -24,8 +26,10 @@ import org.apache.commons.fileupload.disk.*;
  */
 @WebServlet(name = "FileUploadServlet", urlPatterns = {"/FileUploadServlet"})
 public class FileUploadServlet extends HttpServlet {
-    
-	private String relativePath=null,
+
+    private static Logger log = LoggerFactory.getLogger(FileUploadServlet.class);
+
+    private String relativePath=null,
 			
 			filePath=null,
 		
@@ -36,9 +40,8 @@ public class FileUploadServlet extends HttpServlet {
 			callback=null;
     
     private int maxvol = 2000;
-    
-    Logger logger = Logger.getLogger(this.getClass());
-    
+
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         
@@ -79,8 +82,8 @@ public class FileUploadServlet extends HttpServlet {
      * <code>GET</code> and
      * <code>POST</code> methods.
      *
-     * @param request servlet request
-     * @param response servlet response
+     * @param req servlet request
+     * @param res servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
@@ -110,8 +113,8 @@ public class FileUploadServlet extends HttpServlet {
             // threshold  4M 
             //extend to 2GB - updated by ziheng - 7/5/2018
             diskFactory.setSizeThreshold(maxvol * 1024);
-            // repository 
-            logger.fatal("Temp file path: " + tempPath);
+            // repository
+            log.error("Temp file path: " + tempPath);
             File newrepo = new File(tempPath);
             diskFactory.setRepository(newrepo);
                                  
@@ -193,9 +196,9 @@ public class FileUploadServlet extends HttpServlet {
         
         item.write(uploadFile);
         
-        logger.fatal("prefix url : " + prefix_url);
+        log.error("prefix url : " + prefix_url);
         
-        logger.fatal("file name : " + filename);
+        log.error("file name : " + filename);
         
         pw.println("<a id=\"filelink\" href=\""+prefix_url+filename+"\" >Link</a> to the uploaded file : "+filename);
         

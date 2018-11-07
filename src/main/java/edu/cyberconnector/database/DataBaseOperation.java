@@ -11,14 +11,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
-import java.util.logging.Level;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.utils.BaseTool;
 import edu.cyberconnector.utils.SysDir;
+
 
 /**
  * Class DataBaseOperation contains a series of functions which operate on a mysql database.
@@ -28,28 +27,16 @@ import edu.cyberconnector.utils.SysDir;
 public class DataBaseOperation {
 
 	private static String driver, database_url, user, password;
-	
-	private final static Logger logger = Logger.getLogger(DataBaseOperation.class);
+
+	private static Logger log = LoggerFactory.getLogger(DataBaseOperation.class);
     
-	private  static Connection q_conn, e_conn,u_conn;
+	private static Connection q_conn, e_conn,u_conn;
 	
-	static{
+	static {
 		driver = SysDir.database_driver;
 		database_url = SysDir.database_url;
 		user = SysDir.database_user;
 		password = SysDir.database_password;
-//		try {
-//			Properties p = new Properties();			
-//			FileInputStream ferr = new FileInputStream(BaseTool.getClassPath() + File.separator +"database.properties");
-//			p.load(ferr);
-//			ferr.close();
-//			driver = p.getProperty("driver");
-//			database_url = p.getProperty("database_url");
-//			user = p.getProperty("user");
-//			password = p.getProperty("password");
-//		}catch(IOException e){
-//			e.printStackTrace();
-//		}
 	}
 	/**
 	 * Execute SQL in the current database.
@@ -65,22 +52,22 @@ public class DataBaseOperation {
 			Class.forName(driver);	
 			q_conn = DriverManager.getConnection(database_url, user, password);	
 //			if(!conn.isClosed())	
-//				logger.info("Succeeded connecting to the Database!");
+//				log.info("Succeeded connecting to the Database!");
 			statement = q_conn.createStatement();
 			ResultSet rs = null;
 			rs = statement.executeQuery(sql);
 			return rs;		
                         
 		} catch(ClassNotFoundException e) {   
-			logger.error("Sorry,can`t find the Driver."+e.getLocalizedMessage());   
+			log.error("Sorry,can`t find the Driver."+e.getLocalizedMessage());   
 			//e.printStackTrace();   
                                                                    throw new RuntimeException("Sorry,can`t find the Driver."+e.getClass().getName()+":"+e.getLocalizedMessage());
 		} catch(SQLException e) {   
-			logger.error("The SQL query causes exception."+e.getLocalizedMessage());
+			log.error("The SQL query causes exception."+e.getLocalizedMessage());
                                                                     throw new RuntimeException("The SQL query causes exception."+e.getClass().getName()+":"+e.getLocalizedMessage());
 			//e.printStackTrace();   
 		} catch(Exception e) {   
-			logger.error("Exception happens." + e.getLocalizedMessage());
+			log.error("Exception happens." + e.getLocalizedMessage());
                                                                    throw new RuntimeException("Exception happens." +e.getClass().getName()+":"+ e.getLocalizedMessage());
 			//e.printStackTrace();   
 		}  
@@ -124,20 +111,20 @@ public class DataBaseOperation {
 			Class.forName(driver);		
 			e_conn = DriverManager.getConnection(database_url, user, password);		
 //			if(!conn.isClosed())		
-//			logger.info("Succeeded connecting to the Database!");	
+//			log.info("Succeeded connecting to the Database!");	
 			Statement statement = e_conn.createStatement();
 			issuccess = statement.execute(sql);
 			e_conn.close();
 		} catch(ClassNotFoundException e) {   
-			logger.error("Sorry,can`t find the Driver."+e.getLocalizedMessage());   
+			log.error("Sorry,can`t find the Driver."+e.getLocalizedMessage());   
 			//e.printStackTrace();   
             throw new RuntimeException("Sorry,can`t find the Driver."+e.getLocalizedMessage());
 		} catch(SQLException e) {   
-			logger.error("The SQL query causes exception."+e.getLocalizedMessage());
+			log.error("The SQL query causes exception."+e.getLocalizedMessage());
             throw new RuntimeException("The SQL query causes exception."+e.getLocalizedMessage());
 			//e.printStackTrace();   
 		} catch(Exception e) {   
-			logger.error("Exception happens." + e.getLocalizedMessage());
+			log.error("Exception happens." + e.getLocalizedMessage());
             throw new RuntimeException("Exception happens." + e.getLocalizedMessage());
 			//e.printStackTrace();   
 		}  finally{
@@ -181,16 +168,16 @@ public class DataBaseOperation {
 			e_conn.close();
 			
 		} catch(ClassNotFoundException e) {   
-			logger.error("Sorry,can`t find the Driver."+e.getLocalizedMessage());   
+			log.error("Sorry,can`t find the Driver."+e.getLocalizedMessage());   
 			//e.printStackTrace();   
             throw new RuntimeException("Sorry,can`t find the Driver."+e.getLocalizedMessage());
 		} catch(SQLException e) {   
-			logger.error("The SQL query causes exception."+e.getLocalizedMessage());
+			log.error("The SQL query causes exception."+e.getLocalizedMessage());
             throw new RuntimeException("The SQL query causes exception."+e.getLocalizedMessage());
 			//e.printStackTrace();   
 		} catch(Exception e) {   
 //			e.printStackTrace();
-			logger.error("Exception happens." + e.getLocalizedMessage());
+			log.error("Exception happens." + e.getLocalizedMessage());
             throw new RuntimeException("Exception happens." + e.getLocalizedMessage());
 			//e.printStackTrace();   
 		}  finally{
@@ -216,20 +203,20 @@ public class DataBaseOperation {
 			Class.forName(driver);	
 			u_conn = DriverManager.getConnection(database_url, user, password);	
 //			if(!conn.isClosed())	
-//			logger.info("Succeeded connecting to the Database!");	
+//			log.info("Succeeded connecting to the Database!");	
 			Statement statement = u_conn.createStatement();
 			rt = statement.executeUpdate(sql);
 			u_conn.close();
 		}catch(ClassNotFoundException e) {   
-			logger.error("Sorry,can`t find the Driver."+e.getLocalizedMessage());   
+			log.error("Sorry,can`t find the Driver."+e.getLocalizedMessage());   
 			//e.printStackTrace();   
            throw new RuntimeException("Sorry,can`t find the Driver."+e.getLocalizedMessage());
 		} catch(SQLException e) {   
-			logger.error("The SQL query causes exception."+e.getLocalizedMessage());
+			log.error("The SQL query causes exception."+e.getLocalizedMessage());
             throw new RuntimeException("The SQL query causes exception."+e.getLocalizedMessage());
 			//e.printStackTrace();   
 		} catch(Exception e) {   
-			logger.error("Exception happens." + e.getLocalizedMessage());
+			log.error("Exception happens." + e.getLocalizedMessage());
            throw new RuntimeException("Exception happens." + e.getLocalizedMessage());
 			//e.printStackTrace();   
 		}  
@@ -382,7 +369,8 @@ public class DataBaseOperation {
                             if(!q_conn.isClosed())
                                 q_conn.close();
                 } catch (SQLException ex) {
-                            java.util.logging.Logger.getLogger(DataBaseOperation.class.getName()).log(Level.SEVERE, null, ex);
+
+                            log.error("We are unable to close the mysql connections", ex);
                             throw new RuntimeException("Exception happens. We are unable to close the mysql connections" +ex.getClass().getName()+ ex.getLocalizedMessage());
                 }
      }
@@ -400,7 +388,7 @@ public class DataBaseOperation {
                             rn = rs.getInt("count(*)");
                     }
                 } catch (SQLException ex) {
-                    java.util.logging.Logger.getLogger(DataBaseOperation.class.getName()).log(Level.SEVERE, null, ex);
+                	log.error("Failed to get the number of records", ex);
                     throw new RuntimeException("ERR: Fail to get the number of records. " +ex.getClass().getName()+ ex.getLocalizedMessage());
                 }
                 return rn;
@@ -420,7 +408,7 @@ public class DataBaseOperation {
                             rn = rs.getInt("count(*)");
                     }
                 } catch (SQLException ex) {
-                    java.util.logging.Logger.getLogger(DataBaseOperation.class.getName()).log(Level.SEVERE, null, ex);
+                	log.error("Failed to get the number of previous records", ex);
                     throw new RuntimeException("ERR: Fail to get the number of previous records. " +ex.getClass().getName()+ ex.getLocalizedMessage());
                 }
                 return rn;

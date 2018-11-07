@@ -9,7 +9,9 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.cyberconnector.products.Product;
 import edu.cyberconnector.search.SearchResponse;
@@ -99,7 +101,7 @@ public class LocalFileTool {
 		
 		File folderfile = new File(folder);
 		
-		logger.debug("Searching folder: " + folder);
+		log.debug("Searching folder: " + folder);
 		
 		SearchResponse resp = new SearchResponse();
 		
@@ -161,7 +163,7 @@ public class LocalFileTool {
 	            		
 	            		if(num>=start&&num<(start+recordsperpage)) {
 	            			
-	            			logger.debug("found file: " + file.getName());
+	            			log.debug("found file: " + file.getName());
 	            			
 	            			Product p = new Product();
 	                		
@@ -230,7 +232,7 @@ public class LocalFileTool {
 	 */
 	public static SearchResponse search(String keywords, int recordsperpage, int pageno, List formats) {
 		
-		logger.debug("upload folder: " + BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path);
+		log.debug("upload folder: " + BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path);
 		
 		SearchResponse resp1 = LocalFileTool.search(keywords, recordsperpage, pageno,
 				BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path, formats);
@@ -261,7 +263,7 @@ public class LocalFileTool {
 		
 		String file_loc = SysDir.covali_file_path+ rootlocation;
 
-		logger.debug(file_loc);
+		log.debug(file_loc);
 		
 		File f = new File(file_loc);
 		
@@ -295,15 +297,15 @@ public class LocalFileTool {
 	
 	public static void main(String[] args) {
 		
-//		logger.debug(LocalFileTool.getLocalFileList("/"));
+//		log.debug(LocalFileTool.getLocalFileList("/"));
 		
 //		int distance = StringUtils.getLevenshteinDistance("sdfds", "werewrqweqwsadfsfdsgewr");
 		
-//		logger.debug("fuzzy distance: " + distance);
+//		log.debug("fuzzy distance: " + distance);
 		
 		SearchResponse resp = LocalFileTool.search("", 5, 16, null);
 		
-		logger.debug("total number " + resp.getProduct_total_number() + 
+		log.debug("total number " + resp.getProduct_total_number() + 
 				" recordsperpage: " + resp.getRecordsperpage() + 
 				" start position: " + resp.getStartposition());
 		
