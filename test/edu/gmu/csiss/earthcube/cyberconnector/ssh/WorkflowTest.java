@@ -17,13 +17,13 @@ public class WorkflowTest {
 		
 //		WorkflowTool.execute("5k56d9vcx4ip3tr5pj26", "one", hosts, pswds, null);
 		
-		try {
+//		try {
 //			TimeUnit.SECONDS.sleep(25);
 //			WorkerManager.waitJoin();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 	
