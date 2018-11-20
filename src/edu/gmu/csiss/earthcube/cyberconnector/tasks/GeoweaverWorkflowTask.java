@@ -115,6 +115,8 @@ public class GeoweaverWorkflowTask extends Task {
 				
 				String nextid = idnum[0];
 				
+				System.out.print("this round is : " + nextid);
+				
 				String processTypeId = nextid.split("-")[0];
 				
 				int num = Integer.parseInt(idnum[1]);

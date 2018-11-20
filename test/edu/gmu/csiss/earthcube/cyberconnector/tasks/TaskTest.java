@@ -8,8 +8,6 @@ import edu.gmu.csiss.earthcube.cyberconnector.workers.WorkerManager;
 
 public class TaskTest {
 	
-	
-
 	@Test
 	public void testTaskManagerThread() throws InterruptedException {
 		
