@@ -15,5 +15,6 @@
 *cc_secret.properties
 *all-*.sql
 /test/
+/test-bak/
 
 
