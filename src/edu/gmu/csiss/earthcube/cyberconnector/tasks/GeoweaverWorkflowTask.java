@@ -9,12 +9,14 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
+import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.HostTool;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.ProcessTool;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSession;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSessionImpl;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.Workflow;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.WorkflowTool;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 import edu.gmu.csiss.earthcube.cyberconnector.web.GeoweaverController;
 
@@ -32,7 +34,27 @@ public class GeoweaverWorkflowTask extends Task {
 	
 	String token;
 	
-	Map pid2hid = new HashMap();
+	/**********************************************/
+    /** section of the geoweaver history records **/
+    /**********************************************/
+	
+//	Map 			 pid2hid = new HashMap();
+	
+    String			 history_input;
+    
+    String			 history_output;
+    
+    String			 history_begin_time;
+    
+    String			 history_end_time;
+    
+    String			 history_process;
+    
+    String			 history_id;
+    
+    /**********************************************/
+    /** end of history section **/
+    /**********************************************/
 	
 	public GeoweaverWorkflowTask(String name) {
 		
@@ -72,6 +94,25 @@ public class GeoweaverWorkflowTask extends Task {
 		this.token = token;
 		
 	}
+	
+	
+	public void saveWorkflowHistory() {
+		
+		this.history_end_time = BaseTool.getCurrentMySQLDatetime();
+    	
+    	StringBuffer sql = new StringBuffer("insert into history (id, process, begin_time, end_time, input, output) values (\"");
+    	
+    	sql.append(this.history_id).append("\",\"");
+    	
+    	sql.append(this.history_process).append("\",\"");
+    	
+    	sql.append(this.history_begin_time).append("\",\"");
+    	
+    	sql.append(this.history_end_time).append("\",?, ? )");
+    	
+    	DataBaseOperation.preexecute(sql.toString(), new String[] {this.history_input, this.history_output});
+		
+	}
 
 	@Override
 	public void execute() {
@@ -84,6 +125,16 @@ public class GeoweaverWorkflowTask extends Task {
 		try {
 			
 			//get the nodes and edges of the workflows
+			
+			this.history_process = wid;
+			
+			this.history_id = new RandomString(11).nextString();
+			
+			this.history_begin_time = BaseTool.getCurrentMySQLDatetime();
+			
+			this.history_input = "";
+			
+			this.history_output = "";
 			
 			Workflow w = WorkflowTool.getById(wid);
 			
@@ -107,7 +158,7 @@ public class GeoweaverWorkflowTask extends Task {
 			
 			Map<String, List> node2condition = WorkflowTool.getNodeConditionMap(nodes, edges);
 			
-			while(executed_process < w.getNodes().length()) {
+			while(executed_process < (nodes.size())) {
 				
 				//find next process to execute - the id has two parts: process type id - process object id
 				
@@ -151,20 +202,25 @@ public class GeoweaverWorkflowTask extends Task {
 					
 				}
 				
-				//if the mode is one, reuse the same SSHSession object for all processes. 
-				//if the mode is different, create new SSHSession object for each process
-//				
+				//If the mode is one, reuse the same SSHSession object for all processes. 
+				//If the mode is different, create new SSHSession object for each process
+				//see if SSHJ allows this operation
+				
 				SSHSession session = new SSHSessionImpl();
-//				
+				
 				session.login(hostdetails[1], hostdetails[2], hostdetails[3], password, token, false);
-//				
+				
 				GeoweaverController.sshSessionManager.sessionsByToken.put(token, session);
-//				
+				
 				session.runBash(code, nextid);  //every task only has no more than one active SSH session at a time
-//				
+				
 				String historyid = session.getHistory_id();
 				
-				pid2hid.put(nextid, historyid); //save the mapping between process id and history id
+				this.history_input += nextid + ";";
+				
+				this.history_output += historyid + ";";
+				
+//				pid2hid.put(nextid, historyid); //save the mapping between process id and history id
 				
 				WorkflowTool.updateNodeStatus(nextid, flags, nodes, true); //once the process is finished, updated its status
 				
@@ -172,9 +228,14 @@ public class GeoweaverWorkflowTask extends Task {
 				
 			}
 			
+			log.info("workflow execution is finished.");
+			
+			saveWorkflowHistory();
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
+			
 		}
 
 	}

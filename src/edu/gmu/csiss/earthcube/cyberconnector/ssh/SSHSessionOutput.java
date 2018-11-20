@@ -82,7 +82,6 @@ public class SSHSessionOutput implements Runnable {
                 
                 linenumber++;
                 
-                
                 //when detected the command is finished, end this process
                 if(BaseTool.isNull(line)) {
                 	

@@ -299,6 +299,8 @@ public class SSHSessionImpl implements SSHSession {
             thread.start();
             
             log.info("returning to the client..");
+            
+            thread.join(7*24*60*60*1000); //longest waiting time - a week
 //	        
 //	        output.write((cmd + '\n').getBytes());
 //			

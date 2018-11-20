@@ -28,6 +28,10 @@ import javax.xml.soap.SOAPException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -67,6 +71,28 @@ public class BaseTool {
 		return sdf.format(time);
 		
 	}
+	
+
+	public static String toJSONString(Object value) {
+		String json = null;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+
+		try {
+			json = ow.writeValueAsString(value);
+
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+
 	/**
 	 * Write string to file
 	 * @param content
