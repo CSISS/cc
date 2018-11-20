@@ -13,13 +13,13 @@ public class WorkflowTest {
 		
 		String[] hosts = new String[] {"kps1gf","kps1gf","kps1gf"};
 		
-		String[] pswds = new String[] {"Chuntian18$","Chuntian18$","Chuntian18$"};
+		String[] pswds = new String[] {"!!!!!","!!!!!","!!!!!"};
 		
-		WorkflowTool.execute("5k56d9vcx4ip3tr5pj26", "one", hosts, pswds, null);
+//		WorkflowTool.execute("5k56d9vcx4ip3tr5pj26", "one", hosts, pswds, null);
 		
 		try {
 //			TimeUnit.SECONDS.sleep(25);
-			WorkerManager.waitJoin();
+//			WorkerManager.waitJoin();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
