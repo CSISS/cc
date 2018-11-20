@@ -88,8 +88,15 @@ public class SysDir {
 
 			String secretConfigFile = p.getProperty("secret_properties_path");
 
-			Properties secrets = readProperties(secretConfigFile);
-
+			Properties secrets = null;
+			
+			if(new File(secretConfigFile).exists())
+			
+				secrets = readProperties(secretConfigFile);
+			
+			else
+				
+				secrets = readProperties(t.getClassPath()+File.separator+secretConfigFile);
 			
 			String number = p.getProperty("workernumber");
 			

@@ -253,6 +253,118 @@ edu.gmu.csiss.geoweaver.process = {
 			
 		},
 		
+		unescape: function(code){
+			
+			String.prototype.replaceAll = function(search, replacement) {
+			    var target = this;
+			    return target.replace(new RegExp(search, 'g'), replacement);
+			};
+			
+			code = code.replaceAll("<br/>", "\n");
+			
+			return code;
+			
+		},
+		
+		edit: function(pid){
+			
+			$.ajax({
+				
+				url: "detail",
+				
+				method: "POST",
+				
+				data: "type=process&id=" + pid
+				
+			}).done(function(msg){
+				
+				msg = $.parseJSON(msg);
+				
+				var content = '<form>'+
+			       '   <div class="form-group row required">'+
+			       '     <label for="processcategory" class="col-sm-4 col-form-label control-label">Your Process Type </label>'+
+			       '     <div class="col-sm-8">'+
+			       '		<select class="form-control" id="processcategory">'+
+				   '    		<option>Shell</option>'+
+				   /*'    		<option>Python</option>'+
+				   '    		<option>R</option>'+
+				   '    		<option>Matlab</option>'+*/
+				   '  		</select>'+
+			       '     </div>'+
+			       '   </div>'+
+			       '   <div class="form-group row required">'+
+			       '     <label for="processname" class="col-sm-4 col-form-label control-label">Process Name </label>'+
+			       '     <div class="col-sm-8">'+
+			       '		<input class="form-control" id="processname" ></input>'+
+			       '     </div>'+
+			       '   </div>'+
+			       '   <div class="form-group row required" >'+
+			       '	 <textarea  id="codeeditor" placeholder="Code goes here..." ></textarea>'+
+			       '   </div>'+
+			       ' </form>';
+				
+				var dialog = new BootstrapDialog.show({
+					
+					title: "Edit process",
+					
+					closable: false,
+					
+		            message: content,
+		            
+		            cssClass: 'dialog-vertical-center',
+		            
+		            onshown: function(){
+		            	
+		            	//initiate the code editor
+		            	
+		            	edu.gmu.csiss.geoweaver.process.editor = CodeMirror.fromTextArea(document.getElementById("codeeditor"), {
+		            		
+		            		lineNumbers: true
+		            		
+		            	});
+		            	
+		            	$("#processname").val(msg.name);
+		            	
+		            	edu.gmu.csiss.geoweaver.process.editor.setValue(edu.gmu.csiss.geoweaver.process.unescape(msg.code));
+		            	
+		            },
+		            
+		            buttons: [{
+		            
+		            	label: 'Update',
+		                
+		                action: function(dialogItself){
+		                	
+		                	edu.gmu.csiss.geoweaver.process.update(msg.id);
+		                	
+		                    dialogItself.close();
+		                    
+		                }
+		        
+		            },{
+		            	
+		            	label: 'Close',
+		                
+		                action: function(dialogItself){
+		                	
+		                    dialogItself.close();
+		                    
+		                }
+		        
+		            }]
+					
+				});
+				
+				edu.gmu.csiss.geoweaver.menu.setFullScreen(dialog);
+				
+			}).fail(function(jxr, status){
+				
+				alert("Fail to get process details");
+				
+			});
+			
+		},
+		
 		/**
 		 * add a new item under the process menu
 		 */
@@ -297,6 +409,45 @@ edu.gmu.csiss.geoweaver.process = {
 			
 			$('#processs').collapse("show");
 			
+		},
+		
+		update: function(pid){
+			
+			if(this.precheck()){
+				
+				var req = "type=process&lang="+$("#processcategory").val() + 
+				
+					"&name=" + $("#processname").val() + 
+					
+					"&id=" + pid +
+	    			
+		    		"&code=" + edu.gmu.csiss.geoweaver.process.editor.getValue();
+		    	
+		    	$.ajax({
+		    		
+		    		url: "edit",
+		    		
+		    		method: "POST",
+		    		
+		    		data: req
+		    		
+		    	}).done(function(msg){
+		    		
+		    		msg = $.parseJSON(msg);
+		    		
+		    		alert("Updated!!");
+		    		
+		    	}).fail(function(jqXHR, textStatus){
+		    		
+		    		alert("Fail to update the process.");
+		    		
+		    	});
+				
+			}else{
+				
+				alert("Process name and code must be non-empty!");
+				
+			}
 		},
 		
 		add: function(run){
@@ -452,7 +603,7 @@ edu.gmu.csiss.geoweaver.process = {
 		        				alert("Error: unable to log on. Check if your password or the configuration of host is correct.");
 		        				
 		        				$("#inputpswd").val("");
-
+		        				
 		        				$button.stopSpin();
 		                		
 		        				dialogItself.enableButtons(true);

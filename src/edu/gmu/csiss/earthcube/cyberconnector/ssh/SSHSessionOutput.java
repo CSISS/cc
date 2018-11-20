@@ -66,6 +66,12 @@ public class SSHSessionOutput implements Runnable {
         
     	StringBuffer logs = new StringBuffer();
     	
+    	int linenumber = 0;
+    	
+    	int startrecorder = -1;
+    	
+    	int nullnumber = 0;
+    	
         while (run) {
         	
             try {
@@ -74,8 +80,53 @@ public class SSHSessionOutput implements Runnable {
             	
                 String line = in.readLine();
                 
+                linenumber++;
+                
+                
+                //when detected the command is finished, end this process
+                if(BaseTool.isNull(line)) {
+                	
+                	//if ten consective output lines are null, break this loop
+                	
+                	if(startrecorder==-1) 
+                		startrecorder = linenumber;
+                	else
+                		nullnumber++;
+                	
+                	if(nullnumber==10) {
+                		
+                		if((startrecorder+nullnumber)==linenumber) {
+                			
+                			System.out.println("null output lines exceed 100. Disconnected.");
+                			
+                			GeoweaverController.sshSessionManager.closeByToken(token);
+                		
+                			break;
+                			
+                		}else {
+                			
+                			startrecorder = -1;
+                			
+                			nullnumber = 0;
+                			
+                		}
+                		
+                	}
+                	
+                }else if(line.contains("==== Geoweaver Bash Output Finished ====")) {
+                	
+                	SSHSession session = GeoweaverController.sshSessionManager.sessionsByToken.get(token);
+                	
+                	session.saveHistory(logs.toString());
+                	
+                	GeoweaverController.sshSessionManager.closeByToken(token);
+                	
+                	break;
+                	
+                }
+                
                 System.out.println("thread output >> " + line);
-
+                
                 logs.append(line).append("\n");
                 
                 if(!BaseTool.isNull(out)) {
@@ -95,19 +146,6 @@ public class SSHSessionOutput implements Runnable {
                 }else {
                 	
                 	prelog.append(line).append("\n");
-                	
-                }
-                
-                //when detected the command is finished, end this process
-                if(line.contains("==== Geoweaver Bash Output Finished ====")) {
-                	
-                	SSHSession session = GeoweaverController.sshSessionManager.sessionsByToken.get(token);
-                	
-                	session.saveHistory(logs.toString());
-                	
-                	GeoweaverController.sshSessionManager.closeByToken(token);
-                	
-                	break;
                 	
                 }
                 

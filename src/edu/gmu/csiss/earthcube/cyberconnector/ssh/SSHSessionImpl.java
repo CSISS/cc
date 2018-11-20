@@ -266,7 +266,7 @@ public class SSHSessionImpl implements SSHSession {
     		
     		log.info("starting command");
     		
-    		String cmdline = "echo \"" + script.replaceAll("\"", "\\\\\"") + "\" > geoweaver-" + token + ".sh; ";
+    		String cmdline = "echo \"" + script.replaceAll("\r\n", "\n").replaceAll("\"", "\\\\\"") + "\" > geoweaver-" + token + ".sh; ";
     		
     		cmdline += "chmod +x geoweaver-" + token + ".sh; ";
     		

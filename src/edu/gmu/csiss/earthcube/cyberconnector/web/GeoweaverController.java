@@ -278,7 +278,7 @@ public class GeoweaverController {
 	}
 
 	@RequestMapping(value = "/executeWorkflow", method = RequestMethod.POST)
-    public @ResponseBody String executeWorkflow(ModelMap model, WebRequest request){
+    public @ResponseBody String executeWorkflow(ModelMap model, WebRequest request, HttpSession session){
 		
 		String resp = null;
 		
@@ -286,7 +286,15 @@ public class GeoweaverController {
 			
 			String id = request.getParameter("id");
 			
-			WorkflowTool.execute(id);
+			String mode = request.getParameter("mode");
+			
+			String[] hosts = request.getParameterValues("hosts");
+			
+			String[] encrypted_password = request.getParameterValues("passwords");
+			
+			String[] passwords = RSAEncryptTool.getPasswords(encrypted_password, session.getId());
+			
+			resp = WorkflowTool.execute(id, mode, hosts, passwords, null);
 			
 		}catch(Exception e) {
 			
@@ -329,6 +337,71 @@ public class GeoweaverController {
 		
 	}
 	
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public @ResponseBody String edit(ModelMap model, WebRequest request){
+		
+		String resp = null;
+		
+		try {
+			
+			String type = request.getParameter("type");
+			
+			if(type.equals("host")) {
+				
+//				String hostname = request.getParameter("hostname");
+//				
+//				String hostip = request.getParameter("hostip");
+//				
+//				String hostport = request.getParameter("hostport");
+//				
+//				String username = request.getParameter("username");
+//				
+//				String hostid = HostTool.update(hostname, hostip, hostport, username, null);
+//				
+//				resp = "{ \"hostid\" : \"" + hostid + "\", \"hostname\" : \""+ hostname + "\" }";
+				
+			}else if(type.equals("process")) {
+				
+				String lang = request.getParameter("lang");
+				
+				String code = request.getParameter("code");
+				
+				String name = request.getParameter("name");
+				
+				String desc = request.getParameter("desc");
+				
+				String id = request.getParameter("id");
+				
+				ProcessTool.update(id, name, lang, code, desc);
+				
+				resp = "{\"id\" : \"" + id + "\"}";
+				
+			}else if(type.equals("workflow")) {
+				
+				String wid = request.getParameter("id");
+				
+				String nodes = request.getParameter("nodes");
+				
+				String edges = request.getParameter("edges");
+				
+				WorkflowTool.update(wid, nodes, edges);
+				
+				resp = "{\"id\" : \"" + wid + "\"}";
+				
+			}
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
     public @ResponseBody String add(ModelMap model, WebRequest request){
 		
@@ -350,7 +423,7 @@ public class GeoweaverController {
 				
 				String hostid = HostTool.add(hostname, hostip, hostport, username, null);
 				
-				resp = "{ \"hostid\" : \"" + hostid + "\", \"hostname\" : \""+ hostname + "\" }";
+				resp = "{ \"id\" : \"" + hostid + "\", \"name\" : \""+ hostname + "\" }";
 				
 			}else if(type.equals("process")) {
 				

@@ -32,15 +32,56 @@ public class RSAEncryptTool {
 		
 	}
 	
+	public static String[] getPasswords(String[] encryptedlist, String sessionid)throws Exception {
+		
+		String[] passwords = new String[encryptedlist.length];
+		
+		try {
+			
+			for(int i=0;i<encryptedlist.length;i++) {
+				
+				byte[] pswdbytes = base642Byte(encryptedlist[i]);
+				
+				PrivateKey pk = token2KeyPair.get(sessionid).getPrivate();
+				
+				passwords[i] = new String(decrypt(pk, pswdbytes));
+			}
+			
+		}finally {
+			
+			voidKey(sessionid);
+			
+		}
+		
+		return passwords;
+		
+	}
+	
 	public static String getPassword(String encrypted, String sessionid) throws Exception {
 		
-		byte[] pswdbytes = base642Byte(encrypted);
+		String password = null;
 		
-		PrivateKey pk = token2KeyPair.get(sessionid).getPrivate();
-		
-		String password = new String(decrypt(pk, pswdbytes));
+		try {
+			
+			byte[] pswdbytes = base642Byte(encrypted);
+			
+			PrivateKey pk = token2KeyPair.get(sessionid).getPrivate();
+			
+			password = new String(decrypt(pk, pswdbytes));
+			
+		}finally {
+			
+			voidKey(sessionid);
+			
+		}
 		
 		return password;
+		
+	}
+	
+	public static void voidKey(String sessionid) {
+		
+		token2KeyPair.remove(sessionid);
 		
 	}
 	

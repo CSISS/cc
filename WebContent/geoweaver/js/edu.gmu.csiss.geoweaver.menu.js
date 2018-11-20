@@ -95,11 +95,11 @@ edu.gmu.csiss.geoweaver.menu = {
 					
 					if(val!=null&&val!="null"&&val!=""){
 						
-						if(i=="code"){
-							
-							val = edu.gmu.csiss.geoweaver.menu.unescape(val);
-							
-						}
+//						if(i=="code"){
+//							
+//							val = edu.gmu.csiss.geoweaver.menu.unescape(val);
+//							
+//						}
 						
 						if(typeof val =='object')
 						{

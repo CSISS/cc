@@ -120,6 +120,18 @@ public class ProcessTool {
 		
 	}
 	
+	public static void update(String id, String name, String lang, String code, String description) {
+		
+		StringBuffer sql = new StringBuffer("update process_type set name = \"").append(name)
+				
+				.append("\", code = ?, description = \"").append("\" where id = \"").append(id).append("\";");
+		
+		logger.info(sql.toString());
+		
+		DataBaseOperation.preexecute(sql.toString(), new String[] {code});
+		
+	}
+	
 	public static String add(String name, String lang, String code, String description) {
 		
 		String newid = new RandomString(6).nextString();

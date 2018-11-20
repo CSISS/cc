@@ -121,13 +121,39 @@ edu.gmu.csiss.geoweaver.workspace = {
 
     	    // handle download data
     	    d3.select("#download-input").on("click", function(){
-    	      var saveEdges = [];
-    	      thisGraph.edges.forEach(function(val, i){
-    	        saveEdges.push({source: val.source.id, target: val.target.id});
-    	      });
-    	      var blob = new Blob([window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
-    	      window.saveAs(blob, "geoweaver.json");
+    	      if(thisGraph.nodes.length!=0){
+    	    	  var saveEdges = [];
+        	      thisGraph.edges.forEach(function(val, i){
+        	        saveEdges.push({source: val.source.id, target: val.target.id});
+        	      });
+        	      var blob = new Blob([window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})], 
+        	    		  {type: "text/plain;charset=utf-8"});
+        	      window.saveAs(blob, "geoweaver.json");
+    	      }else{
+    	    	  alert("No nodes are present!");
+    	      }
+    	      
     	    });
+    	    
+    	    d3.select("#save-workflow").on("click", function(){
+    	    	
+      	      if(thisGraph.nodes.length!=0){
+      	    	  
+      	    	  var saveEdges = [];
+      	    	  
+          	      thisGraph.edges.forEach(function(val, i){
+          	        saveEdges.push({source: val.source, target: val.target});
+          	      });
+          	      
+          	      edu.gmu.csiss.geoweaver.workflow.save(thisGraph.nodes, saveEdges);
+//          	      var blob = new Blob([window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})], 
+//          	    		  {type: "text/plain;charset=utf-8"});
+//          	      window.saveAs(blob, "geoweaver.json");
+      	      }else{
+      	    	  alert("No nodes are present!");
+      	      }
+      	      
+      	    });
     	    
     	    d3.select("#execute-workflow").on("click", function(){
     	    	
@@ -144,7 +170,6 @@ edu.gmu.csiss.geoweaver.workspace = {
     	    	
     	    });
     	    
-    	    // handle uploaded data
     	    d3.select("#geoweaver-details").on("click", function(){
     	    	
     	    	//get the selected node id
@@ -183,8 +208,8 @@ edu.gmu.csiss.geoweaver.workspace = {
     	            thisGraph.setIdCt(jsonObj.nodes.length + 1);
     	            var newEdges = jsonObj.edges;
     	            newEdges.forEach(function(e, i){
-    	              newEdges[i] = {source: thisGraph.nodes.filter(function(n){return n.id == e.source;})[0],
-    	                          target: thisGraph.nodes.filter(function(n){return n.id == e.target;})[0]};
+    	              newEdges[i] = {source: thisGraph.nodes.filter(function(n){return n.id == e.source.id;})[0],
+    	                          target: thisGraph.nodes.filter(function(n){return n.id == e.target.id;})[0]};
     	            });
     	            thisGraph.edges = newEdges;
     	            thisGraph.updateGraph();
@@ -231,7 +256,7 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	  };
 	
 	    	  /* PROTOTYPE FUNCTIONS */
-	
+	    	  
 	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.dragmove = function(d) {
 	    	    var thisGraph = this;
 	    	    if (thisGraph.state.shiftNodeDrag){
@@ -279,6 +304,44 @@ edu.gmu.csiss.geoweaver.workspace = {
 	    	    
 	    	    
 	    	  };
+	    	  
+	    	  //add on 11/2/2018
+	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.load = function(workflow){
+	    		  
+	    		  try{
+	    			
+    	            var jsonObj = workflow;
+    	            
+    	            this.deleteGraph(true);
+    	            
+    	            this.nodes = jsonObj.nodes;
+    	            
+    	            this.setIdCt(jsonObj.nodes.length + 1);
+    	            
+    	            var newEdges = jsonObj.edges;
+    	            
+    	            newEdges.forEach(function(e, i){
+    	            	
+    	            	newEdges[i] = {source: edu.gmu.csiss.geoweaver.workspace.theGraph.nodes.filter(function(n){
+    	            			return n.id == e.source.id;
+    	            		})[0],
+    	                
+	            			target: edu.gmu.csiss.geoweaver.workspace.theGraph.nodes.filter(function(n){
+	            				return n.id == e.target.id;
+	            			})[0]};
+    	            	
+    	            });
+    	            
+    	            this.edges = newEdges;
+    	            
+    	            this.updateGraph();
+    	            
+    	          }catch(err){
+    	            window.alert("Error parsing uploaded file\nerror message: " + err.message);
+    	            return;
+    	          }
+	    		  
+	    	  }
 	
 	    	  /* select all text in element: taken from http://stackoverflow.com/questions/6139107/programatically-select-text-in-a-contenteditable-html-element */
 	    	  edu.gmu.csiss.geoweaver.workspace.GraphCreator.prototype.selectElementContents = function(el) {
