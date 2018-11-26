@@ -96,11 +96,13 @@ CyberConnector Service Register - a sub-system for registering and searching geo
 
 A demo instance has been deployed on George Mason University server. [here](http://cube.csiss.gmu.edu/CyberConnector/web/index)
 
+# License
+
+Apache 2.0
+
 # Developers
 
-Ziheng Sun (zsun@gmu.edu)
-
-Juozas Gaigalas (juozasgaigalas@gmail.com)
+[developer list](authors.md)
 
 # Funders
 
