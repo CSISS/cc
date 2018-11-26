@@ -422,7 +422,7 @@ edu.gmu.csiss.geoweaver.workflow = {
 								
 								hosts.push({
 									"name":$("#hostforprocess_"+i).val(), 
-									"id": $("#hostforworkflow").find('option:selected').attr('id')
+									"id": $("#hostforprocess_"+i).find('option:selected').attr('id')
 								});
 								
 							}
@@ -538,7 +538,7 @@ edu.gmu.csiss.geoweaver.workflow = {
 		for(var i=0;i<newhosts.length;i++){
 			
 			content += '   <div class="form-group row required">'+
-		       '     <label for="host password" class="col-sm-4 col-form-label control-label">Host '+newhosts[i]+' Password: </label>'+
+		       '     <label for="host password" class="col-sm-4 col-form-label control-label">Host '+newhosts[i].name+' Password: </label>'+
 		       '     <div class="col-sm-8">'+
 		       '		<input type=\"password\" class=\"form-control\" id=\"inputpswd_'+i+'\" placeholder=\"Password\">'+
 		       '     </div>'+
@@ -634,7 +634,14 @@ edu.gmu.csiss.geoweaver.workflow = {
 		        					
 		        					console.log("history id: " + msg.history_id);
 		        					
-		        					edu.gmu.csiss.geoweaver.process.showSSHOutputLog(msg);
+		        					edu.gmu.csiss.geoweaver.process.showSSHOutputLog(msg); //use the same method as the single process
+		        					
+		        					if(edu.gmu.csiss.geoweaver.workflow.loaded_workflow!=null
+		        							&&edu.gmu.csiss.geoweaver.workflow.loaded_workflow==wid){
+		        						
+			        					edu.gmu.csiss.geoweaver.monitor.startMonitor(msg.history_id);
+			        					
+		        					}
 		        					
 		        				}else if(msg.ret == "fail"){
 		        					
@@ -679,20 +686,21 @@ edu.gmu.csiss.geoweaver.workflow = {
 	        			});
              		
              	}).fail(function(jxr, status){
-             			console.error("fail to execute workflow");
+             		 
+             		 console.error("fail to execute workflow");
              	});
              	
              }
 				
 			},{
 				
-         	label: 'Cancel',
+				label: 'Cancel',
              
-             action: function(dialogItself){
-             	
-                 dialogItself.close();
-                 
-             }
+		        action: function(dialogItself){
+		         	
+		             dialogItself.close();
+		             
+		        }
 				
 			}]
 			
@@ -700,11 +708,185 @@ edu.gmu.csiss.geoweaver.workflow = {
 		
 	},
 	
+	history: function(wid, name){
+		
+		$.ajax({
+			
+			url: "logs",
+			
+			method: "POST",
+			
+			data: "type=workflow&id=" + wid
+			
+		}).done(function(msg){
+			
+			if(!msg.length){
+				
+				alert("no history found");
+				
+				return;
+				
+			}
+			
+			msg = $.parseJSON(msg);
+			
+			var content = "<table class=\"table\"> "+
+			"  <thead> "+
+			"    <tr> "+
+			"      <th scope=\"col\">Execution Id</th> "+
+			"      <th scope=\"col\">Begin Time</th> "+
+			"      <th scope=\"col\">Action</th> "+
+			"    </tr> "+
+			"  </thead> "+
+			"  <tbody> ";
+
+			
+			for(var i=0;i<msg.length;i++){
+				
+				content += "    <tr> "+
+					"      <td>"+msg[i].id+"</td> "+
+					"      <td>"+msg[i].begin_time+"</td> "+
+					"      <td><a href=\"javascript: edu.gmu.csiss.geoweaver.workflow.getHistoryDetails('"+msg[i].id+"')\">Check</a></td> "+
+					"    </tr>";
+				
+			}
+			
+			content += "</tbody>";
+			
+			BootstrapDialog.show({
+				
+				title: "History",
+				
+				message: content,
+				
+				buttons: [{
+					
+					label: "Close",
+					
+					action: function(dialog){
+						
+						dialog.close();
+						
+					}
+					
+				}]
+				
+			});
+			
+		}).fail(function(jxr, status){
+			
+			console.error("error in getting workflow history");
+			
+		});
+		
+	},
+	
+	showProcessLog: function(workflow_history_id, process_id){
+		
+		$.ajax({
+			
+			url: "log",
+			
+			method: "POST",
+			
+			data: "type=workflow&id=" + workflow_history_id
+			
+		}).done(function(msg){
+			
+			msg = $.parseJSON(msg);
+			
+			var process_history_id = null;
+			
+			for(var i=0;i<msg.input.length;i++){
+				
+				if(process_id == msg.input[i]){
+					
+					process_history_id = msg.output[i];
+					
+					break;
+					
+				}
+					
+			}
+			
+			edu.gmu.csiss.geoweaver.process.getHistoryDetails(process_history_id);
+			
+		}).fail(function(){
+			
+			console.error("fail to get log of this process");
+			
+		});
+		
+	},
+	
+	getHistoryDetails: function(history_id){
+		
+		$.ajax({
+			
+			url: "log",
+			
+			method: "POST",
+			
+			data: "type=workflow&id=" + history_id
+			
+		}).done(function(msg){
+			
+			msg = $.parseJSON(msg);
+			
+			var content = "<table class=\"table\"> "+
+			"  <thead> "+
+			"    <tr> "+
+			"      <th scope=\"col\">Process Id</th> "+
+			"      <th scope=\"col\">History Id</th> "+
+			"      <th scope=\"col\">Action</th> "+
+			"    </tr> "+
+			"  </thead> "+
+			"  <tbody> ";
+			
+			for(var i=0;i<msg.input.length;i++){
+				
+				content += "    <tr> "+
+					"      <td>"+msg.input[i]+"</td> "+
+					"      <td>"+msg.output[i]+"</td> "+
+					"      <td><a href=\"javascript: edu.gmu.csiss.geoweaver.process.getHistoryDetails('"+msg.output[i]+"')\">Check</a></td> "+
+					"    </tr>";
+				
+			}
+			
+			BootstrapDialog.show({
+				
+				title: "Workflow Log",
+				
+				message: content,
+				
+				buttons: [{
+					
+					label: "Close",
+					
+					action: function(dialog){
+						
+						dialog.close();
+					}
+					
+				}]
+				
+			});
+			
+		}).fail(function(){
+			
+			
+		});
+		
+		
+	},
+	
 	addMenuItem: function(one){
 		
 		$("#"+edu.gmu.csiss.geoweaver.menu.getPanelIdByType("workflow")).append("<li id=\"workflow-" + one.id + "\"><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.geoweaver.menu.details('"+one.id+"', 'workflow')\">" + 
 	    		
-				one.name + "</a><i class=\"fa fa-plus subalignicon\" data-toggle=\"tooltip\" title=\"Show/Add this workflow\" onclick=\"edu.gmu.csiss.geoweaver.workflow.add('"+
+				one.name + "</a> <i class=\"fa fa-history subalignicon\" onclick=\"edu.gmu.csiss.geoweaver.workflow.history('"+
+	        	
+				one.id+"', '" + one.name+"')\" data-toggle=\"tooltip\" title=\"List history logs\"></i> <i class=\"fa fa-plus subalignicon\" data-toggle=\"tooltip\" title=\"Show/Add this workflow\" onclick=\"edu.gmu.csiss.geoweaver.workflow.add('"+
 	        	
 				one.id+"')\"></i> <i class=\"fa fa-minus subalignicon\" data-toggle=\"tooltip\" title=\"Delete this workflow\" onclick=\"edu.gmu.csiss.geoweaver.menu.del('"+
 	        	

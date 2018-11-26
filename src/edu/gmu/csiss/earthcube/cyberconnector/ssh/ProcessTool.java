@@ -221,7 +221,7 @@ public class ProcessTool {
 			
 			//get host ip, port, user name and password
 			
-			String[] hostdetails = HostTool.getHostDetailsById(hid);
+//			String[] hostdetails = HostTool.getHostDetailsById(hid);
 			
 			//establish SSH session and generate a token for it
 			
@@ -233,11 +233,11 @@ public class ProcessTool {
 			
 			SSHSession session = new SSHSessionImpl();
 			
-			session.login(hostdetails[1], hostdetails[2], hostdetails[3], pswd, token, false);
+			session.login(hid, pswd, token, false);
 			
 			GeoweaverController.sshSessionManager.sessionsByToken.put(token, session);
 			
-			session.runBash(code, id); 
+			session.runBash(code, id, false); 
 			
 			String historyid = session.getHistory_id();
 			
@@ -257,7 +257,11 @@ public class ProcessTool {
 			
 			throw new RuntimeException(e.getLocalizedMessage());
 			
-		} 
+		}  finally {
+			
+			GeoweaverController.sshSessionManager.closeWebSocketByToken(token); //close this websocket at the end
+			
+		}
         		
 		return resp;
 		

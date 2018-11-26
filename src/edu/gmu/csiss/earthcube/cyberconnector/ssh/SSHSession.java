@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.socket.WebSocketSession;
 
+import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
 
 public interface SSHSession {
@@ -45,10 +46,14 @@ public interface SSHSession {
 	 * @throws AuthenticationException
 	 */
     public boolean login(String host, String port, String username, String password, String token, boolean isShell) throws AuthenticationException;
+    
+    public boolean login(String hostid, String password, String token, boolean isShell);
 
     public boolean logout();
     
     public Session getSSHJSession();
+    
+    public SSHClient getSsh();
 
 	public void setSSHJSession(Session session);
 	
@@ -66,7 +71,7 @@ public interface SSHSession {
     
 	public void setWebSocketSession(WebSocketSession session);
 	
-	public void runBash(String script, String processid);
+	public void runBash(String script, String processid, boolean isjoin);
 	
 	public void runMultipleBashes(String[] script, String processid);
 	

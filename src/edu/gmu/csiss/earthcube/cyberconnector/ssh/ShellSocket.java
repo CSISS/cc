@@ -40,7 +40,7 @@ public class ShellSocket implements WebSocketHandler {
         
         }
         
-        String messageText = ((TextMessage)message).getPayload();
+        String messageText = ((TextMessage)message).getPayload(); //token from client
         
         SSHSession sshSession = GeoweaverController.sshSessionManager.sessionsByWebsocketID.get(session.getId());
         
@@ -61,13 +61,15 @@ public class ShellSocket implements WebSocketHandler {
                 
             }else {
             	
-            	if(sshSession!=null) {
-            		
-            		sshSession.logout();
-            		
-            		GeoweaverController.sshSessionManager.sessionsByWebsocketID.remove(session.getId());
-            		
-            	}
+            	// impossible code
+            	
+//            	if(sshSession!=null) {
+//            		
+//            		sshSession.logout();
+//            		
+//            		GeoweaverController.sshSessionManager.sessionsByWebsocketID.remove(session.getId());
+//            		
+//            	}
             	
             	session.sendMessage(new TextMessage("No SSH connection is active"));
             	
@@ -98,7 +100,7 @@ public class ShellSocket implements WebSocketHandler {
             
         	log.info("valid logout command received: {}", messageText);
         	
-        	session.close(); //close WebSocket session
+        	session.close(); //close WebSocket session. Notice: the SSHSession will continue to run.
         	
         }
     }

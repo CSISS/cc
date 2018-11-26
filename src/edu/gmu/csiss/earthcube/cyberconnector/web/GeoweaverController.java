@@ -1,8 +1,12 @@
 package edu.gmu.csiss.earthcube.cyberconnector.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.annotation.PreDestroy;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -10,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import edu.gmu.csiss.earthcube.cyberconnector.ssh.FileTool;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.HostTool;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.ProcessTool;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.RSAEncryptTool;
@@ -24,6 +30,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSessionImpl;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.SSHSessionManager;
 import edu.gmu.csiss.earthcube.cyberconnector.ssh.WorkflowTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 
 /**
  * 
@@ -168,7 +175,7 @@ public class GeoweaverController {
 				
 			}else if(type.equals("workflow")) {
 				
-				resp = WorkflowTool.one_history("");
+				resp = WorkflowTool.one_history(hid);
 				
 			}
 			
@@ -193,15 +200,15 @@ public class GeoweaverController {
 			
 			String type = request.getParameter("type");
 			
-			String pid = request.getParameter("id");
+			String id = request.getParameter("id");
 			
 			if(type.equals("process")) {
 				
-				resp = ProcessTool.all_history(pid);
+				resp = ProcessTool.all_history(id);
 				
 			}else if(type.equals("workflow")) {
 				
-				resp = WorkflowTool.all_history("");
+				resp = WorkflowTool.all_history(id);
 				
 			}
 			
@@ -288,9 +295,9 @@ public class GeoweaverController {
 			
 			String mode = request.getParameter("mode");
 			
-			String[] hosts = request.getParameterValues("hosts");
+			String[] hosts = request.getParameterValues("hosts[]");
 			
-			String[] encrypted_password = request.getParameterValues("passwords");
+			String[] encrypted_password = request.getParameterValues("passwords[]");
 			
 			String[] passwords = RSAEncryptTool.getPasswords(encrypted_password, session.getId());
 			
@@ -389,6 +396,65 @@ public class GeoweaverController {
 				resp = "{\"id\" : \"" + wid + "\"}";
 				
 			}
+			
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+			throw new RuntimeException("failed " + e.getLocalizedMessage());
+			
+		}
+		
+		return resp;
+		
+	}
+	
+	@RequestMapping(value = "/file/{file_name}", method = RequestMethod.GET)
+	public void getFile(@PathVariable("file_name") String fileName, HttpServletResponse response) {
+		
+	    try {
+	    
+	    	// get your file as InputStream
+	    	String fileloc = SysDir.geoweaver_file_path + fileName;
+	      
+	    	File my_file = new File(fileloc);
+	      
+	    	InputStream is = new FileInputStream(my_file);
+	      
+	    	// copy it to response's OutputStream
+	      
+	    	org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+	      
+	    	response.flushBuffer();
+	    	
+	    } catch (Exception ex) {
+	      
+	    	logger.info("Error writing file to output stream. Filename was '{}'", fileName, ex);
+	    	
+	    	throw new RuntimeException("IOError writing file to output stream");
+	    	
+	    }
+
+	}
+	
+	@RequestMapping(value = "/retrieve", method = RequestMethod.POST)
+    public @ResponseBody String retrieve(ModelMap model, WebRequest request, HttpSession session){
+		
+		//retrieve file from remote to geoweaver
+		
+		String resp = null;
+		
+		try {
+			
+			String hid = request.getParameter("hostid");
+			
+			String encrypted = request.getParameter("pswd");
+			
+			String password = RSAEncryptTool.getPassword(encrypted, session.getId());
+			
+			String filepath = request.getParameter("filepath");
+			
+			resp = FileTool.scp_download(hid, password, filepath);
 			
 		}catch(Exception e) {
 			

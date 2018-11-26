@@ -18,7 +18,7 @@ edu = {
 							
 					sponsor: "ESIPLab incubator project and NSF EarthCube CyberWay project",
 					
-					version: "0.8.1",
+					version: "0.6.7",
 					
 					author: "Ziheng Sun",
 					

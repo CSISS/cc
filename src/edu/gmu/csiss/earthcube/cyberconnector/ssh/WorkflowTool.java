@@ -15,7 +15,9 @@ import org.json.simple.parser.ParseException;
 import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
 import edu.gmu.csiss.earthcube.cyberconnector.tasks.GeoweaverWorkflowTask;
 import edu.gmu.csiss.earthcube.cyberconnector.tasks.TaskManager;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.STATUS;
 import edu.gmu.csiss.earthcube.cyberconnector.web.GeoweaverController;
 
 /**
@@ -71,7 +73,7 @@ public class WorkflowTool {
 	
 	public static Workflow getById(String id) {
 		
-		Workflow w = new Workflow();
+		Workflow w = null;
 
 		StringBuffer sql = new StringBuffer("select * from abstract_model where identifier = \"").append(id).append("\";");
 		
@@ -82,6 +84,8 @@ public class WorkflowTool {
 			ResultSet rs = DataBaseOperation.query(sql.toString());
 			
 			if(rs.next()) {
+				
+				w = new Workflow();
 				
 				w.setName(rs.getString("name"));
 				
@@ -193,7 +197,7 @@ public class WorkflowTool {
 	 * @param nodes
 	 * @return
 	 */
-	public static String[] findNextProcess(Map<String, List> nodemap, boolean[] flags, JSONArray nodes) {
+	public static String[] findNextProcess(Map<String, List> nodemap, STATUS[] flags, JSONArray nodes) {
 		
 		String id = null;
 		
@@ -203,7 +207,7 @@ public class WorkflowTool {
 			
 			String currentid = (String)((JSONObject)nodes.get(i)).get("id");
 			
-			if(checkNodeStatus(currentid, flags, nodes)) {
+			if(checkNodeStatus(currentid, flags, nodes)!=STATUS.READY) {
 				
 				continue;
 				
@@ -221,7 +225,8 @@ public class WorkflowTool {
 				
 				//if any of the pre- nodes is not satisfied, this node is passed. 
 				
-				if(!checkNodeStatus(prenodeid, flags, nodes)) {
+				if(checkNodeStatus(prenodeid, flags, nodes)!=STATUS.DONE
+						&&checkNodeStatus(prenodeid, flags, nodes)!=STATUS.FAILED) {
 					
 					satisfied = false;
 					
@@ -256,7 +261,7 @@ public class WorkflowTool {
 	 * @param nodes
 	 * @param status
 	 */
-	public static void updateNodeStatus(String id, boolean[] flags, JSONArray nodes, boolean status) {
+	public static void updateNodeStatus(String id, STATUS[] flags, JSONArray nodes, STATUS status) {
 		
 		for(int j=0;j<nodes.size();j++) {
 			
@@ -281,15 +286,15 @@ public class WorkflowTool {
 	 * @param nodes
 	 * @return
 	 */
-	private static boolean checkNodeStatus(String id, boolean[] flags, JSONArray nodes) {
+	private static STATUS checkNodeStatus(String id, STATUS[] flags, JSONArray nodes) {
 		
-		boolean status = false;
+		STATUS status = null;
 		
 		for(int j=0;j<nodes.size();j++) {
 			
-			String prenodeid = (String)((JSONObject)nodes.get(j)).get("id");
+			String nodeid = (String)((JSONObject)nodes.get(j)).get("id");
 			
-			if(prenodeid.equals(id)) {
+			if(nodeid.equals(id)) {
 				
 				status = flags[j];
 				
@@ -322,11 +327,17 @@ public class WorkflowTool {
 			
 			GeoweaverWorkflowTask task = new GeoweaverWorkflowTask(id);
 			
+			if(BaseTool.isNull(token)) {
+				
+				token = new RandomString(12).nextString(); //this token will be used to establish websocket session
+				
+			}
+			
 			task.initialize(id, mode, hosts, pswds, token);
 			
 			TaskManager.addANewTask(task);
 
-			resp = "{\"history_id\": \""+null+
+			resp = "{\"history_id\": \""+task.getHistory_id()+
 					
 					"\", \"token\": \""+token+
 					
@@ -399,14 +410,116 @@ public class WorkflowTool {
 	 */
 	public static String all_history(String workflow_id) {
 		
+
+		StringBuffer resp = new StringBuffer() ;
 		
-		return null;
+		StringBuffer sql = new StringBuffer("select * from history where process = \"").append(workflow_id).append("\";");
+		
+		ResultSet rs = DataBaseOperation.query(sql.toString());
+		
+		try {
+			
+			resp.append("[");
+			
+			int num = 0;
+			
+			while(rs.next()) {
+				
+				if(num!=0) {
+					
+					resp.append(", ");
+					
+				}
+				
+				resp.append("{ \"id\": \"").append(rs.getString("id")).append("\", ");
+				
+				resp.append("\"begin_time\": \"").append(rs.getString("begin_time")).append("\"}");
+				
+				num++;
+				
+			}
+			
+			resp.append("]");
+			
+			if(num==0)
+				
+				resp = new StringBuffer();
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+		return resp.toString();
+		
+	}
+	
+	/**
+	 * List to JSON
+	 * @param list
+	 * @return
+	 */
+	public static String list2JSON(String list) {
+		
+		StringBuffer json = new StringBuffer("[");
+		
+		String[] ps = list.split(";");
+		
+		for(int i=0;i<ps.length;i++) {
+			
+			if(i!=0) {
+				
+				json.append(",");
+				
+			}
+			
+			json.append("\"").append(ps[i]).append("\"");			
+		}
+		
+		json.append("]");
+		
+		return json.toString();
 		
 	}
 
-	public static String one_history(String string) {
+	public static String one_history(String hid) {
 
-		return null;
+		StringBuffer resp = new StringBuffer();
+		
+		StringBuffer sql = new StringBuffer("select * from history where id = \"").append(hid).append("\";");
+		
+		try {
+			
+			ResultSet rs = DataBaseOperation.query(sql.toString());
+			
+			if(rs.next()) {
+				
+				resp.append("{ \"id\": \"").append(rs.getString("id")).append("\", ");
+				
+				resp.append("\"process\": \"").append(rs.getString("process")).append("\", ");
+				
+				resp.append("\"begin_time\":\"").append(rs.getString("begin_time")).append("\", ");
+				
+				resp.append("\"end_time\":\"").append(rs.getString("end_time")).append("\", ");
+				
+				String processes = rs.getString("input");
+				
+				String histories = rs.getString("output");
+				
+				resp.append("\"input\":").append(list2JSON(processes)).append(", ");
+				
+				resp.append("\"output\":").append(list2JSON(histories)).append(" }");
+				
+			}
+			
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+			
+		}
+		
+		return resp.toString();
 		
 	}
 	

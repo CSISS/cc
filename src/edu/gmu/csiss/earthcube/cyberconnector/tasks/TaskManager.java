@@ -3,6 +3,8 @@ package edu.gmu.csiss.earthcube.cyberconnector.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.socket.WebSocketSession;
+
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 import edu.gmu.csiss.earthcube.cyberconnector.workers.WorkerManager;
 
@@ -19,13 +21,13 @@ import edu.gmu.csiss.earthcube.cyberconnector.workers.WorkerManager;
 public class TaskManager {
 	
 	private static List<Task> waitinglist;
-//	private static List<Task> runninglist;
+	private static List<Task> runninglist;
 	private static RunningTaskObserver rto;
 	private static WaitingTaskObserver wto;
 	
 	static{
 		waitinglist = new ArrayList();
-//		runninglist = new ArrayList();
+		runninglist = new ArrayList();
 //		rto = new RunningTaskObserver();
 //		wto = new WaitingTaskObserver();
 	}
@@ -48,7 +50,7 @@ public class TaskManager {
 		if(WorkerManager.getCurrentWorkerNumber()<SysDir.worknumber){
 //			t.addObserver(rto);
 			WorkerManager.createANewWorker(t);
-//			runninglist.add(t);
+			runninglist.add(t);
 			is = true;
 		}else{
 			System.out.println("!!!This function is not called by the method notifyWaitinglist.");
@@ -57,6 +59,60 @@ public class TaskManager {
 		}
 		return is;
 	}
+	
+	public static Task searchByHistoryId(String historyid) {
+		
+		Task t = null;
+		
+		for(int i=0;i<waitinglist.size();i++) {
+			
+			if(historyid.equals(((GeoweaverWorkflowTask)waitinglist.get(i)).getHistory_id())) {
+				
+				t = waitinglist.get(i);
+				
+				break;
+				
+			}
+			
+		}
+		
+		if(t==null) {
+			
+			for(int i=0;i<runninglist.size();i++) {
+				
+				if(historyid.equals(((GeoweaverWorkflowTask)runninglist.get(i)).getHistory_id())) {
+					
+					t = runninglist.get(i);
+					
+					break;
+					
+				}
+				
+			}
+			
+		}
+		
+		return t;
+		
+	}
+	
+	/**
+	 * Monitor the status of a task
+	 * @param sessionid
+	 * @param taskname
+	 */
+	public static void monitorTask(String historyid, WebSocketSession session) {
+		
+		// search the task with the name in waitinglist and runninglist
+		
+		Task t = searchByHistoryId(historyid);
+		
+		GeoweaverWorkflowTask gt = (GeoweaverWorkflowTask) t;
+		
+		gt.startMonitor(session);
+		
+	}
+	
 	/**
 	 * Notify the waiting list that there is at least an available worker
 	 */
@@ -76,7 +132,7 @@ public class TaskManager {
 	 */
 	public static void done(Task t){
 //		t.deleteObserver(rto);
-//		runninglist.remove(t);
+		runninglist.remove(t);
 		notifyWaitinglist();
 	}
 	

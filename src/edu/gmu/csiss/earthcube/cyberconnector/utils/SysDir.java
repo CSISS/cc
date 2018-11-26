@@ -45,6 +45,8 @@ public class SysDir {
 	public static String ncPassword = null;
     
 	public static String covali_file_path = null;
+	
+	public static String geoweaver_file_path = null;
     
 	public static String upload_file_path = null;
     
@@ -127,6 +129,8 @@ public class SysDir {
 			ncWMSURL = p.getProperty("ncwmsurl");
 			
 			covali_file_path = p.getProperty("covali_file_path");
+			
+			geoweaver_file_path = p.getProperty("geoweaver_file_path");
 			
 			upload_file_path = p.getProperty("upload_file_path");
 			

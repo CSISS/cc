@@ -56,6 +56,8 @@ public class SSHSessionImpl implements SSHSession {
 
     private SSHClient        ssh;
     
+    private String 			 hostid;
+    
     private Session          session; //sshj session
     
     private Shell            shell;
@@ -111,7 +113,11 @@ public class SSHSessionImpl implements SSHSession {
 		this.history_id = history_id;
 	}
 	
-    public Session getSSHJSession() {
+    public SSHClient getSsh() {
+		return ssh;
+	}
+    
+	public Session getSSHJSession() {
 		return session;
 	}
     
@@ -133,6 +139,16 @@ public class SSHSessionImpl implements SSHSession {
 
 	public String getPort() {
 		return port;
+	}
+	
+	public boolean login(String hostid, String password, String token, boolean isShell) {
+		
+		this.hostid = hostid;
+		
+		String[] hostdetails = HostTool.getHostDetailsById(hostid);
+		
+		return this.login(hostdetails[1], hostdetails[2], hostdetails[3], password, token, false);
+		
 	}
 
 	@Override
@@ -237,7 +253,7 @@ public class SSHSessionImpl implements SSHSession {
     	
     	this.history_output = logs;
     	
-    	StringBuffer sql = new StringBuffer("insert into history (id, process, begin_time, end_time, input, output) values (\"");
+    	StringBuffer sql = new StringBuffer("insert into history (id, process, begin_time, end_time, input, output, host) values (\"");
     	
     	sql.append(this.history_id).append("\",\"");
     	
@@ -245,18 +261,20 @@ public class SSHSessionImpl implements SSHSession {
     	
     	sql.append(this.history_begin_time).append("\",\"");
     	
-    	sql.append(this.history_end_time).append("\",?, ? )");
+    	sql.append(this.history_end_time).append("\",?, ?, \"");
+    	
+    	sql.append(this.hostid).append("\" )");
     	
     	DataBaseOperation.preexecute(sql.toString(), new String[] {this.history_input, this.history_output});
     	
 	}
 
 	@Override
-	public void runBash(String script, String processid) {
+	public void runBash(String script, String processid, boolean isjoin) {
     	
 		this.history_id = new RandomString(12).nextString();
 		
-		this.history_process = processid;
+		this.history_process = processid.split("-")[0]; //only retain process id, remove object id
 		
 		this.history_begin_time = BaseTool.getCurrentMySQLDatetime();
 		
@@ -300,7 +318,7 @@ public class SSHSessionImpl implements SSHSession {
             
             log.info("returning to the client..");
             
-            thread.join(7*24*60*60*1000); //longest waiting time - a week
+            if(isjoin) thread.join(7*24*60*60*1000); //longest waiting time - a week
 //	        
 //	        output.write((cmd + '\n').getBytes());
 //			

@@ -44,7 +44,7 @@ edu.gmu.csiss.geoweaver.menu = {
 //			
 			dialog.getModalContent().css('height', '100%');
 //			
-			dialog.getModalBody().css('height', '75%');
+			dialog.getModalBody().css('height', '85%');
 			
 			dialog.getModalBody().children()[0].style.height =  '100%';
 			

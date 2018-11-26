@@ -23,7 +23,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,40 +58,47 @@ public class SSHSessionManager {
     		
     		sessionsByToken.remove(token);
     		
-    		//close all the related websocket sessions
-    		
-    		Iterator it = sessionsByWebsocketID.entrySet().iterator();
-    	    
-    		while (it.hasNext()) {
-    	    	
-    	    	ConcurrentHashMap.Entry pair = (ConcurrentHashMap.Entry)it.next();
-    	    	
-    	    	SSHSession ssh = (SSHSession)pair.getValue();
-    	    	
-    	    	if(ssh.getToken().equals(token)) {
-    	    		
-    	    		String websocketid = (String)pair.getKey();
-    	    		
-    	    		try {
-						
-    	    			ShellSocket.findSessionById(websocketid).close();
-    	    			
-    	    			sessionsByWebsocketID.remove(websocketid);
-						
-					} catch (Exception e) {
-						
-						e.printStackTrace();
-						
-					}
-    	    		
-    	    	}
-    	    }
-    		
-    		
     	}
     	
     }
     
+    public void closeWebSocketByToken(String token) {
+    	
+		// close all the related websocket sessions 
+		// updated: websocket will be automatically closed if it detects no SSH session on the back end
+		
+		Iterator it = sessionsByWebsocketID.entrySet().iterator();
+	    
+		while (it.hasNext()) {
+	    	
+	    	ConcurrentHashMap.Entry pair = (ConcurrentHashMap.Entry)it.next();
+	    	
+	    	SSHSession ssh = (SSHSession)pair.getValue();
+	    	
+	    	if(ssh.getToken().equals(token)) {
+	    		
+	    		String websocketid = (String)pair.getKey();
+	    		
+	    		try {
+					
+	    			ShellSocket.findSessionById(websocketid).close();
+	    			
+	    			sessionsByWebsocketID.remove(websocketid);
+					
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+					
+				}
+	    		
+	    	}
+	    }
+    	
+    }
+    
+    /**
+     * Close all SSH sessions
+     */
     public void closeAll() {
     	
     	try {

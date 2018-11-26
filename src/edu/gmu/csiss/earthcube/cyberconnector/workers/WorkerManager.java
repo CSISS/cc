@@ -137,7 +137,9 @@ public class WorkerManager {
 		
 		//check the waiting list to start running new task
 		
-		TaskManager.notifyWaitinglist();
+//		TaskManager.notifyWaitinglist();
+		
+		TaskManager.done(w.getTask());
 		
 //		workerlist.remove(w);
 	}

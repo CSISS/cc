@@ -64,6 +64,31 @@ public class BaseTool {
 		return isnull;
 	}
 	
+	public static String array2String(String[] arr, String splitter) {
+		
+		if (arr.length > 0) {
+			
+		    StringBuilder nameBuilder = new StringBuilder();
+
+		    for (String n : arr) {
+		        nameBuilder.append(n).append(splitter);
+		        // can also do the following
+		        // nameBuilder.append("'").append(n.replace("'", "''")).append("',");
+		    }
+
+//		    nameBuilder.deleteCharAt(nameBuilder.length() - 1);
+
+		    return nameBuilder.toString();
+		    
+		} else {
+		    
+			return "";
+			
+		}
+		
+		
+	}
+	
 	public static String long2Date(long time) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

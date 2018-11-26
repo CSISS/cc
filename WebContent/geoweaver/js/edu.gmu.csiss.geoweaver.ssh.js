@@ -50,8 +50,6 @@ edu.gmu.csiss.geoweaver.ssh = {
 	      prompt:  "$"
 	    },
 	    
-	    
-	    
 	    echo: function(content){
 	    	
 	    	content = content.replace(/\n/g,'<br/>')
@@ -190,21 +188,25 @@ edu.gmu.csiss.geoweaver.ssh = {
 			        
 				},
 				
-				buttons: [{
-					
-					label: "Interrupt",
-					
-					action: function(dialog){
-						
-						//send the message to shut down the SSH session and stop the process
-						
-						edu.gmu.csiss.geoweaver.ssh.ws.send("exit");
-						
-//						dialog.close();
-						
-					}
-					
-				},{
+				buttons: [
+					// NO Turn Back! is the symbol of web-based system
+//					{
+//					
+//					label: "Interrupt",
+//					
+//					action: function(dialog){
+//						
+//						//send the message to shut down the SSH session and stop the process
+//						
+//						edu.gmu.csiss.geoweaver.ssh.ws.send("exit");
+//						
+////						dialog.close();
+//						
+//					}
+//					
+//				},
+				
+				{
 					
 					label: "Run in background",
 					

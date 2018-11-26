@@ -69,6 +69,8 @@ edu.gmu.csiss.geoweaver.process = {
 	            		
 	            	});
 	            	
+	            	edu.gmu.csiss.geoweaver.process.editor.setValue("#!/bin/bash\n#write your bash script\n");
+	            	
 	            },
 	            
 	            buttons: [{
@@ -234,6 +236,16 @@ edu.gmu.csiss.geoweaver.process = {
 					message: content,
 					
 					buttons: [{
+						
+						label: "Retrieve Result",
+						
+						action: function(dialog){
+							
+							edu.gmu.csiss.geoweaver.result.showDialog(history_id);
+							
+						}
+						
+					},{
 						
 						label: "Close",
 						
@@ -454,7 +466,9 @@ edu.gmu.csiss.geoweaver.process = {
 			
 			if(this.precheck()){
 				
-				var req = "type=process&lang="+$("#processcategory").val() + 
+				var req = "type=process&lang="+$("#processcategory").val() +
+					
+					"&desc=" + $("#processcategory").val() + //use the description column to store the process type
 				
 					"&name=" + $("#processname").val() + 
 	    			
