@@ -57,37 +57,39 @@ CyberConnector Service Register - a sub-system for registering and searching geo
 
 # Usage
 
+## COVALI
 
-
-## Roam around the Globe
+### Roam around the Globe
 
 ![roam](docs/ccportal.gif)
 
-## Search Data
+### Search Data
 
-### search in UCAR THREDDS server
-
-
-### search in the public folder
+#### search in UCAR THREDDS server
 
 
-### search in broker
+#### search in the public folder
 
 
-## Add Data
+#### search in broker
 
 
-## Control Map
+### Add Data
+
+COVALI supports visualizing GRIB/NetCDF data on the maps. 
+
+![visualization](docs/cc-add-data.gif)
+
+### Control Map
 
 
-## Calculate Difference
+### Calculate Difference
 
 
-## Statistic Report
+### Statistic Report
 
 
-
-## Animation of changes
+### Animation of changes
 
 
 
@@ -106,7 +108,7 @@ Apache 2.0
 
 # Funders
 
-National Science Foundation
+National Science Foundation (#1740693 and #1440294)
 
 ![nsf](docs/logo_nsf.gif)
 
