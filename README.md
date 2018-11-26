@@ -59,9 +59,15 @@ CyberConnector Service Register - a sub-system for registering and searching geo
 
 ## COVALI
 
+
+
 ### Roam around the Globe
 
 ![roam](docs/ccportal.gif)
+
+COVALI has different projection options and 3-D view to enable multi-perspective viewing the data.
+
+![globe](docs/cc-3d.gif)
 
 ### Search Data
 
@@ -80,8 +86,11 @@ COVALI supports visualizing GRIB/NetCDF data on the maps.
 
 ![visualization](docs/cc-add-data.gif)
 
-### Control Map
+### Settings
 
+COVALI provides a Settings menu to controll the two maps. It allows users to manage the added data layers.
+
+![settings](docs/cc-settings.gif)
 
 ### Calculate Difference
 
