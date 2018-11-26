@@ -13,15 +13,15 @@ This project aims to connect the existing data sources to the Earth science mode
 
 JDK 1.8+
 
-Tomcat 8.0+
+Tomcat 8.0+ (web container)
 
-MySQL 5.5+
+MySQL 5.5+ (database, initialize it with cc.empty.sql)
 
-ncWMS 2.4.1+
+ncWMS 2.4.1+ (download ncWMS.war and deploy it into Tomcat webapps folder)
 
 [cc-thredds-pycsw](https://github.com/CSISS/cc-thredds-pycsw)
 
-Maven 3.5.0+
+Maven 3.5.0+ (building CyberConnector.war from source)
 
 ## Quick Start
 

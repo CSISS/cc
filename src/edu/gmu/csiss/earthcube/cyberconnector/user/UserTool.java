@@ -185,8 +185,6 @@ public class UserTool {
 					
 					String sql2 = "select orderid, product, ordertime, status,parametermap  from orders where userid = '"+u.getId()+"' order by ordertime desc;";
 					
-					logger.error("SQL 2 : " + sql2);
-				
 					ResultSet rs2 = DataBaseOperation.query(sql2);
 					
 					List orders = new ArrayList();
