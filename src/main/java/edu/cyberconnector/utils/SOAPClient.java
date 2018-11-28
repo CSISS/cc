@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SOAPClient {
  
-	static Logger  logger = Logger.getLogger(SOAPClient.class);
+	static Logger log = LoggerFactory.getLogger(SOAPClient.class);
 	
     private String soapmessage;
     private String endpoint;

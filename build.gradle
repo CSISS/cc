@@ -1,16 +1,11 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
-    }
+plugins {
+    id "com.palantir.docker" version "0.20.1"
+    id "org.springframework.boot" version "2.0.5.RELEASE"
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 
@@ -21,21 +16,13 @@ bootJar {
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
-
-// <dependency>
-//     <groupId>net.opengis.wms</groupId>
-//     <artifactId>net.opengis.wms</artifactId>
-//     <version>2.6.2</version>
-//     <scope>system</scope>
-//     <systemPath>${basedir}/lib/net.opengis.wms-v_1_3_0-2.6.2-SNAPSHOT.jar</systemPath>
-// </dependency>
-
-
 
 
 dependencies {
@@ -80,12 +67,28 @@ dependencies {
 
     // Other
     compile "it.sauronsoftware.cron4j:cron4j:2.2.5"
+
+
+    // Local files
+    compile name: "net.opengis.wms-v_1_3_0-2.6.2-SNAPSHOT"
     
 
     // Test
     testCompile "junit:junit"
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBoot}"
     testCompile "org.springframework.security:spring-security-test:${springBoot}"
+}
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/dependency")
+}
+
+docker {
+    name "csiss/${bootJar.baseName}"
+    copySpec.from(tasks.unpack.outputs).into("dependency")
+    buildArgs(['DEPENDENCY': "dependency"])
 }
 
 task getJavaInfo {

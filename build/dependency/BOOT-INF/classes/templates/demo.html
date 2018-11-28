@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="frame">
+<head>
+    <title>Demo</title>
+</head>
+<body>
+<div class="clearfix" layout:fragment="content">
+
+    <div class="sec-heading font-default">
+        <div class="container">
+            <h1>Demonstration &amp; Links</h1>
+        </div>
+    </div>
+
+    <section class="container font-default">
+        <div class="panel panel-default">
+
+            <h3>Demo Videos</h3>
+            
+            <div class="row">
+            
+            	<div class="col-xs-12 col-md-6">
+            	
+            		<h4>Overall processes using CyberConnector to order data.</h4>
+            		
+            		<div class="text-center">
+						 
+						 <iframe width="100%" height="418"  allowfullscreen="allowfullscreen" 	src="http://www.youtube.com/embed/2ZzFNj8W7Mc?autoplay=0"></iframe>
+						  
+					</div>
+            		
+            	</div>
+            	
+            	<div class="col-xs-12 col-md-6">
+            	
+            		<h4>Search &amp; Download Data from Unidata Thredds via CyberConnector</h4>
+            		
+            		<div class="text-center">
+            		
+						 <iframe width="100%" height="418" allowfullscreen="allowfullscreen" 	src="http://www.youtube.com/embed/R7ysy6xgIAk?autoplay=0"></iframe>
+						  
+					</div>
+            		
+            	</div>
+            	
+            </div>
+
+            
+
+            <div class="seperator-line"/>
+
+            
+            <h3>Service Components</h3>
+            
+
+            <div class="row">
+            	<div class="col-xs-12 col-md-6">
+                
+                    <h4><a href="productsearch" target="_blank">VDP Searcher&amp;Orderer</a></h4>
+                    
+                    <p>
+                        VDP Searcher&amp;Orderer provide users with an entrance to access the virtual geospatial data
+                        products registered in CyberConnector's CSW. <br/>When an order to VDP is received, CyberConnector
+                        will invoke the processing model for product generation. When the execution is over, the outputted
+                        products will be sent back to the data consumers automatically.
+                    </p>
+                    
+                    <p><a href="productsearch" target="_blank"><img class="img-responsive center-block" style="width:85%" src="../images/pic_demo_vdp.png" th:attr="src=@{../images/pic_demo_vdp.png}"/></a></p>
+                    <p class="text-center"><a role="button" class="btn btn-default" href="productsearch" target="_blank"> Enter </a></p>
+                </div>
+                
+                <div class="col-xs-12 col-md-6">
+                    <h4><a href="http://www3.csiss.gmu.edu/OnAS/" target="_blank">GeoBrain Online Analysis System</a></h4>
+                    <p>
+                        GeOnAS is an online analysis system based upon Service Oriented Architecture. <br/>It provides an
+                        interoperable way of accessing geospatial web services; especially those from OGC, for
+                        integrating and analyzing distributed heterogeneous Earth Science data. And it utilizes
+                        geospatial in teroperability and web service standards developed by the OGC.
+                    </p>
+                    <p><a href="http://www3.csiss.gmu.edu/OnAS/" target="_blank"><img class="img-responsive center-block" style="width:85%" src="../images/pic_demo_geonas.jpg" th:attr="src=@{../images/pic_demo_geonas.jpg}"/></a></p>
+                    <p class="text-center"><a role="button" class="btn btn-default" href="http://www3.csiss.gmu.edu/OnAS/" target="_blank"> Enter </a></p>
+
+                </div>
+         </div>
+         
+         <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <h4><a href="http://cube.csiss.gmu.edu/BPELPower" target="_blank">Business Process Execution Language (BPEL) for Web Services</a></h4>
+                    <p>
+                        BPEL Process Manager is enhanced with: WS-Addressing for Aynchronony, WS-Security with extension
+                        to BPEL (access to SOAP header), and supports WS-BPEL 1.1, WSDL 1.1, SOAP, WS-Addressing, WS-Security
+                    </p>
+                    <ul>
+                        <li><a href="http://cube.csiss.gmu.edu/BPELPower" target="_blank">Enter</a></li>
+                    </ul>
+                    
+                    <h4><a href="http://cube.csiss.gmu.edu/grassweb/manuals/index.html" target="_blank">Geospatial Processing Services</a></h4>
+                    <p>
+                        Geospatial Processing Services are SOAP based geospatial Web services based upon GRASS, which could be used
+                        easily and invoked independently by any client in any part of the world.
+                    </p>
+                    <ul>
+                        <li><a href="http://cube.csiss.gmu.edu/grassweb/manuals/index.html" target="_blank">Manual</a></li>
+                        <li><a href="http://cube.csiss.gmu.edu/axis/servlet/AxisServlet" target="_blank">WSDL Index</a></li>
+                        <li>
+                            <p>CSW Endpoint:</p>
+                            <p><a href="http://cube.csiss.gmu.edu/srv/csw?config=services.cfg" target="_blank">http://cube.csiss.gmu.edu/srv/csw?config=services.cfg</a></p>
+                            <p><a href="http://cube.csiss.gmu.edu/srv/csw?config=services.cfg" target="_blank">GetCapabilities</a></p>
+                            <p><a href="http://cube.csiss.gmu.edu/srv/csw?config=services.cfg&amp;SERVICE=CSW&amp;REQUEST=GetRecords&amp;version=2.0.2&amp;resulttype=results&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;maxRecords=10&amp;typeNames=gmd:MD_Metadata&amp;elementSetName=full" target="_blank">GetRecords</a></p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <h4><a href="csw4unidata.html" target="_blank">CSISS Catalogue Service for Unidata</a></h4>
+                    <p>
+                        CSW is one part (or "profile") of the OGC Catalog Service, which defines common interfaces to
+                        discover, browse, and query metadata about data, services, and other potential resources. This CSW harvests and registers
+                        ISO19115-2 metadata from Unidata Thredds Server (<a href="http://thredds.ucar.edu/thredds" target="_blank">http://thredds.ucar.edu/thredds</a>).
+                    </p>
+                    <ul>
+                        <li>
+                            <p>CSW Endpoint:</p>
+                            <p><a href="http://cube.csiss.gmu.edu/srv/csw" target="_blank">http://cube.csiss.gmu.edu/srv/csw</a></p>
+                        </li>
+                        <li>
+                            <p>CSW OpenSearch Support: </p>
+                            <p><a href="http://cube.csiss.gmu.edu/srv/csw?mode=opensearch&amp;service=CSW&amp;version=2.0.2&amp;request=GetCapabilities" target="_blank">http://cube.csiss.gmu.edu/srv/csw?mode=opensearch&amp;service=CSW&amp;version=2.0.2&amp;request=GetCapabilities</a></p>
+                        </li>
+                        <li>More details: <a href="csw4unidata.html" target="_blank">Enter</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+        
+    </section>
+
+</div>
+</body>
+</html>

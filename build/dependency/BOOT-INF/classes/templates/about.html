@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="frame">
+<head>
+    <title>About</title>
+    <script>
+        $(document).ready(function() {
+            var stickyNavTop = $('#menu').offset().top - 62;
+
+            var stickyNav = function(){
+                var scrollTop = $(window).scrollTop();
+
+                if (scrollTop > stickyNavTop) {
+                    $('#menu').addClass('sticky');
+                } else {
+                    $('#menu').removeClass('sticky');
+                }
+            };
+
+            stickyNav();
+
+            $(window).scroll(function() {
+                stickyNav();
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="clearfix" layout:fragment="content">
+
+    <div class="sec-heading font-default">
+        <div class="container">
+            <h1>About CyberConnector</h1>
+        </div>
+    </div>
+
+    <section class="container font-default">
+        <div class="row">
+            <div class="visible-lg-block visible-md-block col-md-2 menu">
+                <dl id="menu">
+                    <dd><a href="#">What's CyberConnector</a></dd>
+                    <dd><a href="#para2">Background</a></dd>
+                    <dd><a href="#para3">Objectives</a></dd>
+                    <dd><a href="#para4">Framework</a></dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 col-md-10">
+                <div class="panel panel-default">
+
+                    <h3 class="bg color-light">What is CyberConnector</h3>
+                    <p>
+                        CyberConnector is designed to extensively adopt open geospatial standards/specifications, including
+                        the ISO geospatial data and metadata standards and standard-based geospatial web service, workflows, and
+                        sensor web technologies are the foundation. It bridges the sensors and earth science models through
+                        standard interfaces, such as Web Processing Service, Sensor Planning Service, and Catalogue Service for
+                        the Web. It facilitates the automatic preparation and feeding of both historic and near-real time Earth
+                        Observation customized data and on-demand derived products into Earth science models.The standard
+                        interfaces allow the automatic handshaking between components with workflow designers and
+                        <span id="para2">underlying</span> workflow execution language.
+                    </p>
+                    
+                    <p>
+                    	This system provides users with an entrance to access the virtual geospatial data products registered in 
+                    	CyberConnector's CSW. The products are not present until someone requests them. Once a request is 
+                    	received, CyberConnector will invoke the product generation processing model on the server side and 
+                    	execute the model by adopting appropriate geoprocessing Web services. When the execution is over, the 
+                    	outputted products will be sent back to the data consumers automatically.
+                    </p>
+                    
+                    <br/>
+
+                    <h3 class="bg color-light">Background</h3>
+                    <p>
+                        Earth observation (EO) through sensors is the most important way to collect Earth science data. It
+                        is very common that scientists who conduct data-intensive Earth science research need to integrate
+                        and analyze multi-source EO datasets, which are typically very diverse in the collecting sensors,
+                        data formats, projections, spatial/temporal resolutions and coverage, access methods, quality,
+                        documentation, and user support. Studies showed that scientists who used satellite remote sensing
+                        data for data-intensive geospatial science applications had to spend over 60% of their time just for
+                        data acquisition, preprocessing, and post-processing. The major barriers are 1) difficulty to
+                        find and obtain the needed data from geographically distributed data sources, 2) data not in
+                        ready-to-analyze form, 3) the unavailability of the needed data products, and 4) lack of or inadequate
+                        computing resources to handle the large volumes of data. The goal of CyberConnector is to
+                        remove or significantly lower these major barriers and to demonstrate the dramatic reduction of
+                        <span id="para3">the</span> time and efforts.
+                    </p><br/>
+
+                    <h3 class="bg color-light">Objectives</h3>
+                    <p>CyberConnector aims to achieve objectives:
+                        <ul>
+                            <li>Efficiently and robustly preparing and feeding EO data to ESMs</li>
+                            <li> Efficiency, scalability, and generality</li>
+                            <li>Enabling the knowledge accumulation and sharing </li>
+                            <li>Automatically presenting ESM outputs/results through the Web</li>
+                            <li>Facilitating Business Event Processing (BEP)</li>
+                            <li id="para4">Engaging in broad community participation in developing and using CyberConnector and sustaining its operation.</li>
+                        </ul>
+                    </p><br/>
+
+                    <h3 class="bg color-light">Framework</h3>
+                    <p><img class="img-responsive center-block" th:attr="src=@{../images/pic_framework_big.png}"/></p><br/>
+
+                    <h4>Data Discovery and Retrieval Services (DDRS)</h4>
+                    <p>
+                        DDRS is one of the two subcomponents in the framework that connect to the EO sensor and data
+                        world. The major functions of DDRS are to discover and obtain data. It uses open standards for
+                        interfacing with data sources, allowing a web sensor or an EO data system equipped with standard
+                        interfaces to be easily plugged into the framework.
+                    </p>
+                    <p><img class="img-responsive center-block" th:attr="src=@{../images/frm-DDRS.png}"/></p><br/>
+
+                    <h4>Data Preprocessing, Integration, and Assimilation Services (PIAS)</h4>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3">
+                            <ul>
+                                <li>Interactive model design</li>
+                                <li>GPM cataloguing</li>
+                                <li>BPEL execution service</li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-12 col-md-9">
+                            <ul>
+                                <li>Automatic service chain through ontology and artificial intelligence</li>
+                                <li>Instantiation abstract GPMs and generation of concrete BPEL workflow</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p><img class="img-responsive center-block" th:attr="src=@{../images/frm-PIAS.png}"/></p><br/>
+
+                    <h4>Data and Sensor Planning Services (DSPS)</h4>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <ul>
+                                <li>Parse the request and translate to subscriptions for SPS</li>
+                                <li>Parse the request and translate to orders for DOS (Data ordering system)</li>
+                                <li>Schedule and submit the request/order/subscription and notify CENS the creation of events</li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <ul>
+                                <li>Parse the response and retrieve the data from SOS (Sensor Observation Service), feed these data into DDRS, and notify the result to CENS</li>
+                                <li>Parse the response and retrieve data from DOS, feed these data into DDRS, and notify the result to CENS</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p><img class="img-responsive center-block" th:attr="src=@{../images/frm-DSPS.png}"/></p><br/>
+
+                    <h4>Science Goal Monitoring Services (SGMS)</h4>
+                    <p>
+                        SGMS takes ESM outputs and in many cases the geophysical products generated by PIAS as inputs to
+                        analyze against science goals for determining whether additional or refined geophysical products
+                        are needed by the model to meet these goals. Use of geophysical products in SGMS rather than
+                        sensor measurements hides the complexity of the EO world from science-goal analysis and enables
+                        dynamic plug-in and removal of sensors without affecting SGMS.
+                    </p><br/>
+
+                    <h4>Coordination and Event Notification Services (CENS)</h4>
+                    <ul>
+                        <li>Manages the messages past between PIAS, DDRS, and DSPS</li>
+                        <li>Coordinate the discovery, preparing, and downloading of data</li>
+                        <li>Notify and alert the the status of events to correpojnding services</li>
+                    </ul>
+                    <p><img class="img-responsive center-block" th:attr="src=@{../images/frm-CENS.png}"/></p><br/>
+
+					<h3 class="bg color-light">Developers</h3>
+					<ul>
+						<li>The developer team is
+							<a href="http://csiss.gmu.edu">Center for Spatial Information Science and Systems</a>, 
+							<a href="http://www.gmu.edu">George Mason University</a>. 
+						</li>
+						<li>The principle investigator is <a href="http://cloud.csiss.gmu.edu/ldi">Prof. Liping Di</a> (<a href="mailto:ldi@gmu.edu">ldi@gmu.edu</a>). </li>
+						<li>The major developer is <a href="http://zihengsun.wordpress.com">Dr. Ziheng Sun</a> (<a href="mailto:zsun@gmu.edu">zsun@gmu.edu</a>). </li>
+						
+					</ul>
+					
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+</body>
+</html>

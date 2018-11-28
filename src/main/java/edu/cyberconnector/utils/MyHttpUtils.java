@@ -1,37 +1,30 @@
 package edu.cyberconnector.utils;
 
 import java.net.*;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 
+import org.apache.http.*;
+import org.apache.http.auth.*;
+import org.apache.http.client.*;
+import org.apache.http.client.methods.*;
+import org.apache.http.client.utils.*;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.*;
+
+
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-/**
- * 
- * @author Administrator
- *
- * updated by Ziheng Sun on 4/22/2016
- *
- */
+
+
 public class MyHttpUtils
 {
 	
-	public static Logger theLogger = Logger.getLogger(MyHttpUtils.class);
+	public static Logger theLogger = LoggerFactory.getLogger(MyHttpUtils.class);
 	
-	/**
-	 * 
-	 * @param querystr
-	 * @return
-	 */
+
 	public static NameValuePair[] turnStr2NVPs(String querystr) {
 		
 		String[] ss = querystr.split("&");
@@ -42,132 +35,81 @@ public class MyHttpUtils
 			
 			String[] kv = ss[i].split("=");
 			
-			nvps[i] = new NameValuePair(kv[0], kv[1]);
+			nvps[i] = new BasicNameValuePair(kv[0], kv[1]);
 			
 		}
 		
 		return nvps;
 		
 	}
-	
+
 	public static String doPost_Auth_URLEncode(String url, String postContent, String username, String password) {
+		return _doPost_Auth(url, postContent, username, password, true);
+	}
+
+	public static String doPost_BasicAuth(String url, String postContent, String username, String password){
+		return _doPost_Auth(url, postContent, username, password, false);
+	}
+
+
+	private static String _doPost_Auth(String url, String postContent, String username, String password, boolean urlEncode) {
 		
-		String resp = "";
+		String responseBody = "";
 	    try {
-				HttpClient client = new HttpClient(); //or any method to get a client instance
-				Credentials credentials = new UsernamePasswordCredentials(username, password);
-				client.getState().setCredentials(AuthScope.ANY, credentials);
-				PostMethod post = new PostMethod(url);
-//		        post.setRequestEntity(new StringRequestEntity(postContent));
-//		        post.addParameter("location", "sdfdsfds");
-//		        post.addParameter("id", "sdfds");
-//		        post.addParameters(arg0);
-				post.addParameters(turnStr2NVPs(postContent));
-		        int returnCode = client.executeMethod(post);
-		        theLogger.info("ReturnCode: " + returnCode);
-		      //add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
-				if(returnCode == 401){
-					throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
-				}
-		        // execute method and handle any error responses.
-		        BufferedReader br = null;
-		        if(returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
-				       System.err.println("The Post method is not implemented by this URI");
-				       // still consume the response body
-				       resp = post.getResponseBodyAsString();
-			    } else {
-				       br = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream()));
-				       String readLine = null;
-					   while(((readLine = br.readLine()) != null)) {
-						      System.err.println(readLine);
-						      resp += readLine + "\n";
-					   }
-					   
-			    }
+			CredentialsProvider provider = new BasicCredentialsProvider();
+
+			Credentials credentials = new UsernamePasswordCredentials(username, password);
+			provider.setCredentials(AuthScope.ANY, credentials);
+
+
+			HttpClient client = HttpClientBuilder.create()
+					.setDefaultCredentialsProvider(provider)
+					.build();
+
+			URIBuilder builder = new URIBuilder(url);
+			if(urlEncode) {
+				builder.setParameters(turnStr2NVPs(postContent));
+			}
+
+			HttpPost post = new HttpPost(builder.build());
+			if(!urlEncode) {
+				post.setEntity(new StringEntity(postContent));
+			}
+
+			HttpResponse response = client.execute(post);
+			HttpEntity responseEntity = response.getEntity();
+			int returnCode = response.getStatusLine().getStatusCode();
+			theLogger.info("ReturnCode: " + returnCode);
+
+			if(returnCode == 401){
+				throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
+			}
+			// execute method and handle any error responses.
+			BufferedReader br = null;
+			if(returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
+				System.err.println("The Post method is not implemented by this URI");
+				responseBody = EntityUtils.toString(responseEntity);
+			} else {
+				   br = new BufferedReader(new InputStreamReader(responseEntity.getContent()));
+				   String readLine = null;
+				   while(((readLine = br.readLine()) != null)) {
+						  System.err.println(readLine);
+					   responseBody += readLine + "\n";
+				   }
+
+			}
 		} catch (Exception e) {
 				// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    theLogger.info("Response: " + resp);
+	    theLogger.info("Response: " + responseBody);
 	    
-		return resp;
+		return responseBody;
 	}
 	
-	/**
-	 * 
-	 * add by Ziheng Sun on 4/26/2016
-	 * @param url
-	 * @param postContent
-	 * @param username
-	 * @param password
-	 * @return
-	 */
-	public static String doPost_BasicAuth(String url, String postContent, String username, String password){
-		String resp = "";
-	    try {
-				HttpClient client = new HttpClient(); //or any method to get a client instance
-				Credentials credentials = new UsernamePasswordCredentials(username, password);
-				client.getState().setCredentials(AuthScope.ANY, credentials);
-				PostMethod post = new PostMethod(url);
-		        post.setRequestEntity(new StringRequestEntity(postContent));
-		        int returnCode = client.executeMethod(post);
-		        theLogger.info("ReturnCode: " + returnCode);
-		      //add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
-				if(returnCode == 401){
-					throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
-				}
-		        // execute method and handle any error responses.
-		        BufferedReader br = null;
-		        if(returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
-				       System.err.println("The Post method is not implemented by this URI");
-				       // still consume the response body
-				       resp = post.getResponseBodyAsString();
-			    } else {
-				       br = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream()));
-				       String readLine = null;
-					   while(((readLine = br.readLine()) != null)) {
-						      System.err.println(readLine);
-						      resp += readLine + "\n";
-					   }
-					   
-			    }
-		} catch (Exception e) {
-				// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    theLogger.info("Response: " + resp);
-//		try {
-////            URL url = new URL ("http://ip:port/login");
-//			URL u = new URL(url);
-////            String encoding = Base64Encoder.encode ((username+ ":" + password).getBytes());
-//			byte[] encodedBytes = Base64.encodeBase64("Test".getBytes());
-//			String encoding = new String(encodedBytes);
-//			theLogger.info("encodedBytes " + encoding);
-//
-//            HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-//            connection.setRequestMethod("POST");
-//            connection.setDoOutput(true);
-//            String userpass = username + ":" + password;
-//            String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-//            connection.setRequestProperty ("Authorization", basicAuth);
-//            InputStream content = (InputStream)connection.getInputStream();
-//            BufferedReader in   = new BufferedReader (new InputStreamReader (content));
-//            String line;
-//            while ((line = in.readLine()) != null) {
-//                theLogger.info(line);
-//            }
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
-		return resp;
-	}
-	/**
-	 * 
-	 * @param url
-	 * @param postContent
-	 * @return
-	 * @throws Exception
-	 */
+
+
+
 	public static String doPost2(String url, String postContent) throws Exception {
 		URL u = new URL(url);
 
@@ -207,18 +149,8 @@ public class MyHttpUtils
 
 		return buf.toString();
 	}
-	/**
-	 * 
-	 * doPost
-	 * 
-	 * created by Z.S. on 20160926
-	 * 
-	 * @param url
-	 * @param postContent
-	 * @param contenttype
-	 * @return
-	 * @throws Exception
-	 */
+
+
 	public static String doPost(String url, String postContent, String contenttype) throws Exception {
 		
 		URL u = new URL(url);
@@ -361,13 +293,7 @@ public class MyHttpUtils
 
 		return buf.toString();
 	}
-	/**
-	 * HTTP GET with cookies
-	 * @param url
-	 * @param cookie_str
-	 * @return
-	 * @throws Exception
-	 */
+
 	public static String doGetWithCookies(String url, String cookie_str) throws Exception
 	{
 		URL u = new URL(url);
@@ -402,14 +328,7 @@ public class MyHttpUtils
 	
 	
 	public static void main(String[] args){
-		
-//		String url = "http://test.webdav.org/auth-basic/";
-//		String postContent = "test";
-//		String username = "user1";
-//		String password = "user1";
-//		theLogger.info("Request: " + postContent);
-//		String resp = MyHttpUtils.doPost_BasicAuth(url, postContent, username, password);
-//		theLogger.info("Response: " + resp);
+
 		
 		try {
 			String resp = MyHttpUtils.doGet("http://ows.dev.52north.org:8080/wps/WebProcessingService?request=GetCapabilities&service=WPS&version=2.0.0");

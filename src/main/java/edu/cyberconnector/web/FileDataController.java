@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
 import org.springframework.web.context.request.WebRequest;
 
@@ -15,7 +15,7 @@ import edu.cyberconnector.utils.*;
 import edu.cyberconnector.ncwms.ncWMSTool;
 
 
-@RestController
+@Controller
 public class FileDataController {
 
     private static Logger log = LoggerFactory.getLogger(FileDataController.class);

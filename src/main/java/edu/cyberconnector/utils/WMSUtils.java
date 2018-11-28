@@ -40,7 +40,7 @@ import net.opengis.wms.v_1_3_0.WMSCapabilities;
  */
 public class WMSUtils {
 	
-	private static Logger logger = Logger.getLogger(WMSUtils.class);
+	private static Logger log = LoggerFactory.getLogger(WMSUtils.class);
 	
 	public static void main(String[] args) {
 		WMSUtils.parseWMS("http://ogc.bgs.ac.uk/cgi-bin/exemplars/BGS_Bedrock_and_Superficial_Geology/ows?service=WMS&request=GetCapabilities&version=1.3.0");
@@ -84,13 +84,15 @@ public class WMSUtils {
 				log.info("Layer No : " + i);
 				
 				log.info("Layer Title : " + l.getTitle());
-				
-				log.info(l.getBoundingBox().get(0).getCRS());
-				log.info(l.getBoundingBox().get(0).getMaxy());
-				log.info(l.getAttribution().getLogoURL().getFormat());
-				log.info("height="+l.getAttribution().getLogoURL().getHeight());
-				log.info("width="+l.getAttribution().getLogoURL().getWidth());
-				
+
+				String logInfo = String.format("CRS=%s   BB.MaxY=%f   logoURL.format=%s   logoURL.height=%d    logoURL.width=%d",
+						l.getBoundingBox().get(0).getCRS(),
+						l.getBoundingBox().get(0).getMaxy(),
+						l.getAttribution().getLogoURL().getFormat(),
+						l.getAttribution().getLogoURL().getHeight(),
+						l.getAttribution().getLogoURL().getWidth());
+
+				log.info(logInfo);
 				if(l.getIdentifier().size()!=0){
 					log.info("Layer Identifier : " + l.getIdentifier().get(0));
 				}

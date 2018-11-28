@@ -47,7 +47,7 @@ import org.dom4j.io.SAXReader;
 public class BaseTool {
 	
 	private static String _classpath = null;
-	static Logger logger = Logger.getLogger(BaseTool.class);
+	static Logger log = LoggerFactory.getLogger(BaseTool.class);
 	/**
 	 * Judge whether an object is null
 	 * @param obj
@@ -182,6 +182,13 @@ public class BaseTool {
 			_classpath = dir;
 		}
 		return _classpath;
+	}
+
+	public static String getResourcesPath() {
+		String classpath = BaseTool.getClassPath();
+
+		String resourcesPath = classpath;
+		return resourcesPath;
 	}
 	
 	/**

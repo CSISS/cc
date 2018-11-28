@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!-- 
+
+	Author : Z.S. 
+	Date : 2/3/2017
+
+ -->
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="frame" >
+  	
+  	<head>
+  		
+    	<title>CyberConnector Function Portal</title>
+    	
+    	<link rel="stylesheet" href="../css/leaflet.css" th:href="@{../css/leaflet.css}" />
+    	
+		<link rel="stylesheet" href="../css/searchresults.css" th:href="@{../css/searchresults.css}" />
+    	
+    	<script type="text/javascript" src="../js/leaflet.js" th:src="@{../js/leaflet.js}" ></script>
+    	
+    	<script type="text/javascript" src="../js/datetimepicker.js" th:src="@{../js/datetimepicker.js}" ></script>
+    	
+    	<script type="text/javascript" src="../js/cc.upload.js" th:src="@{../js/cc.upload.js}" ></script>
+		<script type="text/javascript" src="../js/cc.product.js" th:src="@{../js/cc.product.js}" ></script>
+		
+		<link rel="stylesheet" media="screen, projection" href="../css/dataTables.bootstrap.min.css" th:href="@{../css/dataTables.bootstrap.min.css}"/>
+	
+		<script type="text/javascript" src="../js/jquery.dataTables.min.js"  th:src="@{../js/jquery.dataTables.min.js}" ></script>
+		
+		<script type="text/javascript" src="../js/dataTables.bootstrap.min.js" th:src="@{../js/dataTables.bootstrap.min.js}"></script>
+		
+    	
+  	</head>
+  	
+  	<body>
+	    <div class="clearfix" layout:fragment="content" >
+	    
+	    	<div class="sec-heading font-default" >
+		        <div class="container" >
+		            
+		            <div class="col-md-4">
+		            
+		            	<h2 class="pull-left">Search Service</h2>
+		            
+		            </div>
+		            
+		            <div class="col-md-8">
+		            
+		            	<div class="detail-text pull-right" >
+			                This page contains all the public services registered in database. 
+			            </div>
+		            
+		            </div>
+		            
+		        </div>
+		    </div>
+		    
+		    <!-- ************************************************************* -->
+		    <!-- *************** Service List ********************************* -->
+		    <!-- ************************************************************* -->
+		    <div class="container">
+				<div class="row" >
+					<div class="row"  > 
+	                        <div class="col-sm-1">
+	                    <!-- 
+		                        <div class="list-group">
+		                            <div class="list-group-item">
+		                                <div class="row-picture">
+		                                    <a href="#" title="sintret">
+		                                        <img class="circle img-thumbnail img-box" src="../images/userprofile.png" />
+		                                    </a>
+		                                </div>
+		                                <div class="row-content">
+		                                    <div class="list-group-item-heading">
+		                                        <a href="#" title="sintret">
+		                                            <small th:text="${product.userid}">sintret</small>
+		                                        </a>
+		                                    </div>
+		                                    <small>
+		                                        <i class="glyphicon glyphicon-time"></i> 
+		                                       	3 days ago 
+		                                    </small>
+		                                </div>
+		                            </div>
+		                        </div>
+	                         -->
+	                    </div> 
+	                    <div class="col-sm-10">
+	                    
+	                    	<table id="servicetable" class="table table-striped table-bordered table-list">
+										    
+		                        <thead>
+			    
+			                        <tr>
+			    
+			                            <th class="hidden-xs">Identifier</th>
+			    
+			                            <th class="col-text">Name</th>
+			    
+			                            <th class="col-text col-sm-1">Author</th>
+			                            
+			                            <th class="col-text col-sm-1">ServiceType</th>
+			                            
+			                            <th class="col-text col-sm-1">Access</th>
+			                            
+			                        </tr>
+			    
+		                        </thead>
+		    
+		                        <tbody>
+		                        
+		                        	<tr th:each="service: ${services}" >
+		                        	
+		                        		<td>
+		                        		
+		                        			<p th:text="${service.id}">Naturally</p>
+		                        		
+		                        		</td>
+		                        		
+		                        		<td>
+		                        		
+		                        			<p th:text="${service.name}">Naturally</p>
+		                        		
+		                        		</td>
+		                        		
+		                        		<td>
+		                        		
+		                        			<p th:text="${service.username}">Naturally</p>
+		                        		
+		                        		</td>
+		                        		
+		                        		<td>
+		                        		
+		                        			<p th:text="${service.servicetype}">Naturally</p>
+		                        		
+		                        		</td>
+		                        		
+		                        		<td>
+		                        		
+		                        			 <a class="btn btn-info" th:href="${service.wsdlurl}">
+			                            
+			                                	<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+			                            
+			                                </a>
+		                        		
+		                        		</td>
+		                        	
+		                        	</tr>
+		                        
+		                        </tbody>
+		                        
+	                    </table>
+	                    
+	                    </div>
+	                    
+	                     
+	                </div>
+	                
+	                
+				</div>
+				
+			</div>
+			
+			<!-- ************************************************************* -->
+			
+			<div class="text-center" id="form_area" ></div>
+			
+	    </div>
+	    
+	    <th:block layout:fragment="script">
+	    
+	    	<script>
+	    		
+			//for format list
+			$('.all').on('click', function(e){
+			  $this = this;  
+			  $.each($(this).parents('ul').find('input'), function(i, item){
+			    $(item).prop('checked', $this.checked);
+			  });
+			});
+	    	
+	    	$(function () {
+	    	    $('.button-checkbox').each(function () {
+
+	    	        // Settings
+	    	        var $widget = $(this),
+	    	            $button = $widget.find('button'),
+	    	            $checkbox = $widget.find('input:checkbox'),
+	    	            color = $button.data('color'),
+	    	            settings = {
+	    	                on: {
+	    	                    icon: 'glyphicon glyphicon-check'
+	    	                },
+	    	                off: {
+	    	                    icon: 'glyphicon glyphicon-unchecked'
+	    	                }
+	    	            };
+
+	    	        // Event Handlers
+	    	        $button.on('click', function () {
+	    	            $checkbox.prop('checked', !$checkbox.is(':checked'));
+	    	            $checkbox.triggerHandler('change');
+	    	            updateDisplay();
+	    	        });
+	    	        $checkbox.on('change', function () {
+	    	            updateDisplay();
+	    	        });
+
+	    	        // Actions
+	    	        function updateDisplay() {
+	    	            var isChecked = $checkbox.is(':checked');
+
+	    	            // Set the button's state
+	    	            $button.data('state', (isChecked) ? "on" : "off");
+
+	    	            // Set the button's icon
+	    	            $button.find('.state-icon')
+	    	                .removeClass()
+	    	                .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+	    	            // Update the button's color
+	    	            if (isChecked) {
+	    	                $button
+	    	                    .removeClass('btn-default')
+	    	                    .addClass('btn-' + color + ' active');
+	    	            }
+	    	            else {
+	    	                $button
+	    	                    .removeClass('btn-' + color + ' active')
+	    	                    .addClass('btn-default');
+	    	            }
+	    	        }
+
+	    	        // Initialization
+	    	        function init() {
+
+	    	            updateDisplay();
+
+	    	            // Inject the icon if applicable
+	    	            if ($button.find('.state-icon').length == 0) {
+	    	                $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i> ');
+	    	            }
+	    	        }
+	    	        init();
+	    	    });
+	    		    
+	    	});
+	    	
+	    	</script>
+	    	
+	    	<script  th:inline="javascript">
+	    	/*<![CDATA[*/
+	    	//**********************************************//
+	    	
+	        //initialized the table
+	        $('#servicetable').DataTable();
+	        
+	    	//**********************************************//
+	    	/*]]>*/
+	    	</script>
+	    
+	    </th:block>
+	    
+	  </body>
+  
+</html>

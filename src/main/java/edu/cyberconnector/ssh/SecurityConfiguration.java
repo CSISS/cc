@@ -74,16 +74,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-                .antMatchers("/CyberConnect/web/ssh/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-            .formLogin()
-                .loginPage("/CyberConnector/web/ssh-login")
-                .permitAll()
-                .and()
-            .logout()
-                .logoutUrl("/CyberConnector/web/ssh-logout")
-                .permitAll();
+			.authorizeRequests()
+				.antMatchers("*").permitAll();
+//				.and()
+//            .authorizeRequests()
+//                .antMatchers("/CyberConnect/web/ssh/**").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//            .formLogin()
+//                .loginPage("/CyberConnector/web/ssh-login")
+//                .permitAll()
+//                .and()
+//            .logout()
+//                .logoutUrl("/CyberConnector/web/ssh-logout")
+//                .permitAll();
     }
 }

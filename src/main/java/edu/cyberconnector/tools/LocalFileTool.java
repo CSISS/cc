@@ -24,7 +24,7 @@ public class LocalFileTool {
 	final static public String[] FORMATS = {"tif", "tiff", "grb", "grib", "grib2", "nc", "nc4", "nc3", 
 			"tiff", "shp", "h5", "hdf", "hdfeos", "hdf4", "hdf5"}; 
 	
-	static Logger logger = Logger.getLogger(LocalFileTool.class);
+	static Logger log = LoggerFactory.getLogger(LocalFileTool.class);
 	
 	/**
 	 * Check if the file is in supported format

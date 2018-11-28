@@ -8,14 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
 
 import org.springframework.web.context.request.WebRequest;
 
@@ -23,24 +21,19 @@ import edu.cyberconnector.search.*;
 import edu.cyberconnector.utils.*;
 import edu.cyberconnector.products.*;
 
-@RestController
+@Controller
+@RequestMapping("/web")
 public class SearchController {
 
     private static Logger log = LoggerFactory.getLogger(SearchController.class);
 
 
     @GetMapping(value = "/productsearch")
-    public String productsearchpage(ModelMap model, HttpSession session){
-
-        String name = (String)session.getAttribute("sessionUser");
-
-        String resp = "productsearch";
-
+    public String productsearchpage(Model model){
 
         model.addAttribute("request", new SearchRequest());
 
-        return resp;
-
+        return "productsearch";
     }
 
 

@@ -30,7 +30,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SSHSessionManager {
 
     protected final Logger log = LoggerFactory.getLogger(SSHSessionManager.class);
