@@ -14,6 +14,8 @@ edu.gmu.csiss.covali.wms = {
 		
 		layerlist: [],
 		
+		layerjson: {},
+		
 		init: function(){
 			
 			this.showInputDialog();
@@ -30,16 +32,54 @@ edu.gmu.csiss.covali.wms = {
 				
 	            message: function(dialog){
 	            	
-	            	$content = $("<div class=\"row\"><div class=\"col-md-1\"></div><div class=\"input-group col-md-10\">"+
+	            	$content = $("<div class=\"row\" style=\"padding:10px;\">"+
+	            			
+	            			"<div class=\"input-group col-md-12\">"+
+	            			
+	            			"    <form> "+
+							"	    <label class=\"radio-inline\"> "+
+							"	      <input type=\"radio\" name=\"wms_source\" value=\"Custom\" checked > Other WMS"+
+							"	    </label> "+
+							"	    <label class=\"radio-inline\"> "+
+							"	      <input type=\"radio\" name=\"wms_source\" value=\"Builtin\"> Built-in ncWMS "+
+							"	    </label> "+
+							"	 </form>"+
+	            			
+	            			"</div>"+
+	            			
+	            			"<div class=\"input-group col-md-12\">"+
 	            			
 	            			"    <input type=\"text\" id=\"wms_capa_url\"  class=\"form-control\" placeholder=\"Please input the complete WMS capabilities URL..\">"+
 	            			
 	            			"    <span class=\"input-group-btn\"><button type=\"button\" onclick=\"edu.gmu.csiss.covali.wms.addWMS();\" class=\"btn btn-default\">Add</button></span>"+
 	            			
-	            			"</div><div class=\"col-md-1\"></div></div>"
+	            			"</div>"+
+	            			
+	            			"<div class=\"col-md-1\"></div></div>"
 	            	);
 	            	
 	            	return $content;
+	            	
+	            },
+	            
+	            onshown: function(){
+	            	
+	            	$('input[type=radio][name=wms_source]').change(function() {
+	            		
+	            		$("#wms_capa_url").val(""); //clear the existing text
+	            		
+	            	    if (this.value == 'Custom') {
+	            	        
+	            	    	console.log("customized wms source");
+	            	    	
+	            	    }else if (this.value == 'Builtin') {
+	            	        
+	            	    	console.log("built-in ncwms source");
+	            	    	
+	            	    	$("#wms_capa_url").val(edu.gmu.csiss.covali.wms.getBuiltinNCWMS());
+	            	        
+	            	    }
+	            	});
 	            	
 	            },
 	            
@@ -73,6 +113,18 @@ edu.gmu.csiss.covali.wms = {
 		},
 		
 		/**
+		 * Get layer in original WMS hierarchy
+		 */
+		getAllLayers: function(callback){
+			
+			var capa_url = this.getBuiltinNCWMS();
+			
+			this.parseAll(capa_url, callback);
+			
+		},
+		
+		
+		/**
 		 * Get built-in ncWMS getcapabilities
 		 */
 		getBuiltinNCWMS: function(){
@@ -93,7 +145,9 @@ edu.gmu.csiss.covali.wms = {
 			
 			var capability_url = $("#wms_capa_url").val();
 			
-			if(!(capability_url.startsWith("http")||capability_url.startsWith("HTTP"))){
+			if(!(capability_url.startsWith("http")
+					||capability_url.startsWith("HTTP")
+					||capability_url.startsWith("../../ncWMS2"))){
 				
 				capability_url = "http://"+capability_url;
 				
@@ -112,6 +166,137 @@ edu.gmu.csiss.covali.wms = {
 			}
 			
 		},
+		
+		parseAll: function(capa_url, callback){
+
+			var parser = new ol.format.WMSCapabilities();
+			
+		    fetch(capa_url).then(function(response) {
+		      
+		    	  return response.text();
+		    
+		      }).then(function(text) {
+		    	  
+		    	  try{
+		    		  
+		    		  var result = parser.read(text);
+				    	
+				      edu.gmu.csiss.covali.wms.currentWMSCapabilities = result;
+				    	
+				      var toppest_layer = result.Capability.Layer;
+				      
+				      edu.gmu.csiss.covali.wms.layerlist = []; //have to update the layerlist at the same time, this should be improved in future
+				      
+				      edu.gmu.csiss.covali.wms.layerjson = edu.gmu.csiss.covali.wms.getLayerJSON(toppest_layer);
+				      
+				      callback(edu.gmu.csiss.covali.wms.layerjson);
+		    		  
+		    	  }catch(error){
+		    		  
+		    		  	alert("Please try again.");
+		    		  	
+		    		  	console.error(error);
+		    		  	
+		    	  }
+		    	  
+		    });
+			
+		},
+		
+
+		getLayerJSON: function(layer){
+			
+			var json = {
+		    		  
+				text: layer.Title
+		    		  
+		    };
+			
+			if(layer.Layer==null){
+				
+				//get time dimension
+				
+				json = layer;
+				
+				json.text = layer.Title;
+				
+				edu.gmu.csiss.covali.wms.layerlist.push(layer); //update the layerlist as well. It means once layerjson is updated, layerlist must be updated. The reverse will not happen. 
+				
+			}else{
+				
+				if(layer.Layer.constructor === Array){
+					
+					json.nodes = [];
+					
+					json.selectable = false;
+					
+					for(var i=0; i<layer.Layer.length; i++){
+						
+						var newjson = edu.gmu.csiss.covali.wms.getLayerJSON(layer.Layer[i]);
+						
+						json.nodes.push(newjson);
+						
+					}
+					
+				}else{
+					
+					var newjson = edu.gmu.csiss.covali.wms.getLayerJSON(layer.Layer);
+					
+					json.nodes.push(newjson);
+					
+				}
+				
+			}
+			
+			return json;
+			
+		},
+		
+		getLayerList: function(layer){
+			
+			if(layer.constructor === Array){
+				
+				for(var i=0; i<layer.length; i++){
+					
+					if(layer[i].constructor != Array && layer[i].Layer==null){
+						
+						edu.gmu.csiss.covali.wms.layerlist.push(layer[i]);
+						
+					}else if(layer[i].constructor == Array){
+						
+						edu.gmu.csiss.covali.wms.getLayerList(layer[i]);
+						
+					}else{
+						
+						edu.gmu.csiss.covali.wms.getLayerList(layer[i].Layer);
+						
+					}
+					
+				}
+				
+				
+			}else{
+				
+				if(layer.Layer==null){
+					
+					edu.gmu.csiss.covali.wms.layerlist.push(layer);
+					
+				}else{
+					
+					edu.gmu.csiss.covali.wms.getLayerList(layer.Layer);
+					
+				}
+				
+			}
+			
+			//parse the nested layer
+			
+			
+			
+			return edu.gmu.csiss.covali.wms.layerlist;
+			
+		},
+		
 		
 		
 		/**
@@ -176,6 +361,26 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		getLayerByTitle: function(title){
+
+			var layer = null;
+			
+			for(var i=0;i<edu.gmu.csiss.covali.wms.layerlist.length;i++){
+				
+				if(edu.gmu.csiss.covali.wms.layerlist[i].Title==title){
+					
+					layer = edu.gmu.csiss.covali.wms.layerlist[i];
+					
+					break;
+					
+				}
+				
+			}
+			
+			return layer;
+			
+		},
+		
 		getLayerByName: function(name){
 			
 			var layer = null;
@@ -236,11 +441,11 @@ edu.gmu.csiss.covali.wms = {
 				
 				$layerselector += "	<a href=\"javascript:void(0)\" class=\"list-group-item wms-layer\">"+
 					
-					"		<div class=\"checkbox pull-right\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\"> </label> </div> "+
+					"		<div class=\"checkbox pull-right col-md-1\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\"> </label> </div> "+
 					
-					"       <div class=\"pull-left form-control-inline\">"+
+					"       <div class=\"pull-left form-control-inline col-md-11\">"+
 					
-					"			<h4 class=\"list-group-item-heading wms-layer-name\">"+layerlist[i].Name+"</h4> "+
+					"			<h4 class=\"list-group-item-heading wms-layer-name\" style=\"word-wrap:break-word;\">"+layerlist[i].Name+"</h4> "+
 					
 					$styles + 
 					
@@ -317,7 +522,51 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		getCurrentEndPoint:function(){
+			
+			return edu.gmu.csiss.covali.wms.currentWMSCapabilities
+				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
+			
+		},
 		
+		getDefaultStyle: function(){
+			
+			
+			
+		},
+		
+		getTimeDimension: function(dims){
+			
+			var dim = null;
+			
+			for(var i=0;i<dims.length;i++){
+				
+				if(dims[i].name == "time"){
+					
+					dim = dims[i];
+					
+					break;
+					
+				}
+				
+			}
+			
+			return dim;
+		},
+		
+		loadAnimation: function(layername, side, starttime, endtime, framerate){
+			
+			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+			var endpointurl = edu.gmu.csiss.covali.wms.getCurrentEndPoint();
+			
+			var stylename = "default";
+			
+			edu.gmu.csiss.covali.map.addWMSAnimationLayer(map, endpointurl, layername, starttime, endtime, framerate, stylename);
+			
+			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename);
+			
+		},
 		
 		loadLayer: function(side){
 			
@@ -380,51 +629,6 @@ edu.gmu.csiss.covali.wms = {
 			}
 			
 			return thelayer;
-			
-		},
-		
-		getLayerList: function(layer){
-			
-			if(layer.constructor === Array){
-				
-				for(var i=0; i<layer.length; i++){
-					
-					if(layer[i].constructor != Array && layer[i].Layer==null){
-						
-						edu.gmu.csiss.covali.wms.layerlist.push(layer[i]);
-						
-					}else if(layer[i].constructor == Array){
-						
-						edu.gmu.csiss.covali.wms.getLayerList(layer[i]);
-						
-					}else{
-						
-						edu.gmu.csiss.covali.wms.getLayerList(layer[i].Layer);
-						
-					}
-					
-				}
-				
-				
-			}else{
-				
-				if(layer.Layer==null){
-					
-					edu.gmu.csiss.covali.wms.layerlist.push(layer);
-					
-				}else{
-					
-					edu.gmu.csiss.covali.wms.getLayerList(layer.Layer);
-					
-				}
-				
-			}
-			
-			//parse the nested layer
-			
-			
-			
-			return edu.gmu.csiss.covali.wms.layerlist;
 			
 		},
 		

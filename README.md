@@ -43,7 +43,9 @@ We provide a ready-to-use cloud template for you to install on mainstream cloud 
 
 ### Docker Image
 
-We published a Docker image in DockerHub for docker users. 
+We published a Docker image in DockerHub for docker users. The pull command is:
+
+`docker pull csiss/cyberconnector`
 
 # Modules
 
@@ -92,13 +94,18 @@ COVALI provides a Settings menu to controll the two maps. It allows users to man
 
 ![settings](docs/cc-settings.gif)
 
-### Calculate Difference
+### Tools
+
+COVALI provides a number of tools to facilitate the comparison and validation among the data. 
+
+#### Calculate Difference
 
 
-### Statistic Report
+
+#### Statistic Report
 
 
-### Animation of changes
+#### Animation of changes
 
 
 

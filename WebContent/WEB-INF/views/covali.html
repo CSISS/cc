@@ -53,8 +53,6 @@
     
     <link rel="stylesheet" media="screen, projection" href="../css/dataTables.bootstrap.min.css"/>
 	
-	
-    
   </head>
 
   <body>
@@ -127,35 +125,33 @@
 		<!-- Content Here -->
 		<div class="row row-xs-11" style="height:100%;">
  				
-						<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers1">
-						
-							<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';" 
-							
-							onclick="edu.gmu.csiss.covali.map.legendclick(this, 'left')" id="legend1" ></div>
-							
-						</div>
-						
-						<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers2">
-						
-							<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';"
-							
-							onclick="edu.gmu.csiss.covali.map.legendclick(this, 'right')" id="legend2" ></div>
-						
-						</div>
+			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers1">
+			
+				<div id="toolbar1" ></div>
+			
+				<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';" 
+				
+				onclick="edu.gmu.csiss.covali.map.legendclick(this, 'left')" id="legend1" ></div>
+				
+			</div>
+			
+			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers2">
+			
+				<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';"
+				
+				onclick="edu.gmu.csiss.covali.map.legendclick(this, 'right')" id="legend2" ></div>
+			
+			</div>
 						
 	 	</div>
 		
 	</div>
     
-	<!--google map-->
-	<!-- <script type="text/javascript"  th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyCzpGK0E70yB5M5cJpYuXayG29X3YJghD0&nbsp;sensor=false&nbsp;libraries=drawing}" ></script> -->
 	<!--OpenLayers map-->
-	<!--<script type="text/javascript" src="js/example-behaviour.js"></script>-->
+	<script type="text/javascript" src="../covali/js/gifler.min.js"></script>
 	<script type="text/javascript" src="../covali/js/ol.js"></script>
 	<script type="text/javascript" src="../covali/js/inject_ol_cesium.js"></script>
 	<script type="text/javascript" src="../covali/js/ol3-layerswitcher.js"></script>
-	<!-- <script type="text/javascript" src="js/main.js"></script> -->
-	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
 
 <!-- 
@@ -172,6 +168,8 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/js/bootstrap-colorpicker.min.js" ></script>
     <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/moment.min.js"></script>
+	<script type="text/javascript" src="../covali/js/printThis.js"></script>
 	<!--wkx-->
 <!-- 	
 	<script type="text/javascript" src="js/wkx.js"></script>
@@ -202,6 +200,10 @@
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.search.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.add.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.settings.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.animation.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.statistics.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.difference.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.print.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.tools.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.share.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.menu.js"></script>

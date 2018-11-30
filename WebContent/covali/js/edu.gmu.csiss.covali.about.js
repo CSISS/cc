@@ -34,9 +34,9 @@ edu.gmu.csiss.covali.about = {
 
 	            	"<p>This system provides users with an entrance to access the virtual geospatial data products registered in CyberConnector's CSW. The products are not present until someone requests them. Once a request is received, CyberConnector will invoke the product generation processing model on the server side and execute the model by adopting appropriate geoprocessing Web services. When the execution is over, the outputted products will be sent back to the data consumers automatically. </p>"+
 	            	
-	            	"<h3>Major Contributors:</h3>"+
+	            	"<h3>Developers:</h3>"+
 	            	
-	            	"<ul><li>Liping Di <a href=\"mailto:ldi@gmu.edu\">ldi@gmu.edu</a></li><li>Ziheng Sun <a href=\"mailto:zsun@gmu.edu\">zsun@gmu.edu</a></li><li>Eugene Yu <a href=\"mailto:gyu@gmu.edu\">gyu@gmu.edu</a></li><li>Ben Cash <a href=\"mailto:bcash@gmu.edu\">bcash@gmu.edu</a></li><li>Sheng-hung Wang <a href=\"mailto:wang.446@osu.edu\">wang.446@osu.edu</a></li></ul>");
+	            	"<a href=\"https://github.com/CSISS/cc/blob/master/authors.md\">developer list</a>");
 	            	
 	            	return $content;
 	            	
