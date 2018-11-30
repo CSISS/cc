@@ -92,7 +92,6 @@ public class CovaliController {
     @RequestMapping(value = "/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String tableserver(@ModelAttribute("request") SearchRequest searchreq,  WebRequest request) {
 
-		SearchResponse sr = SearchTool.search(searchreq);
 
 
     	int start = Integer.parseInt(request.getParameter("start")) + 1;
@@ -101,9 +100,9 @@ public class CovaliController {
     	
     	searchreq.setPageno(pageNum);
 
-    	int pageno = start/length;
-    	
-    	searchreq.setPageno(pageno);
+		SearchResponse sr = SearchTool.search(searchreq);
+
+
 
     	//for JQuery DataTables
     	String draw = request.getParameter("draw");
