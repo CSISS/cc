@@ -353,6 +353,8 @@ edu.gmu.csiss.covali.wms = {
 		    		  
 		    	  }catch(error){
 		    		  
+		    		  	console.error(error);
+		    		  
 		    		  	alert("Something goes wrong. Please try again.");
 		    		  	
 		    	  }
@@ -403,15 +405,19 @@ edu.gmu.csiss.covali.wms = {
 		
 		getStyleByName: function(stylename, layer){
 			
-			var style = null;
+			var style = "default";
 			
-			for(var i=0;i<layer.Style.length;i++){
+			if(layer.Style!=null){
 				
-				if(layer.Style[i].Name==stylename){
+				for(var i=0;i<layer.Style.length;i++){
 					
-					style = layer.Style[i];
-					
-					break;
+					if(layer.Style[i].Name==stylename){
+						
+						style = layer.Style[i];
+						
+						break;
+						
+					}
 					
 				}
 				
@@ -431,9 +437,13 @@ edu.gmu.csiss.covali.wms = {
 				
 				$styles = " <p>Styles: <select name=\"styleselect_"+i+"\" class=\"js-example-basic-hide-search wms-layer-style\">";
 				
-				for(var j=0; j<layerlist[i].Style.length; j++){
+				if(layerlist[i].Style!=null){
 					
-					$styles += "<option value=\""+layerlist[i].Style[j].Name+"\">"+layerlist[i].Style[j].Name+"</option>";
+					for(var j=0; j<layerlist[i].Style.length; j++){
+						
+						$styles += "<option value=\""+layerlist[i].Style[j].Name+"\">"+layerlist[i].Style[j].Name+"</option>";
+						
+					}
 					
 				}
 				
