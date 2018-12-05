@@ -682,7 +682,7 @@ edu.gmu.csiss.covali.map = {
 			
 			var legendurl = null;
 			
-			var layer = edu.gmu.csiss.covali.wms.getLayerByName(layername); //get capabilities layer, not openlayer layer
+			var layer = edu.gmu.csiss.covali.wms.getLayerByName(layername); //get WMS capabilities layer, not openlayer layer
 			
 			var style = edu.gmu.csiss.covali.wms.getStyleByName(stylename, layer);
 			
@@ -793,7 +793,7 @@ edu.gmu.csiss.covali.map = {
 				    	
 				    	console.log(image.getImage());
 				    	
-				    	window.open(src,"_blank");
+//				    	window.open(src,"_blank");
 				    	
 				    	image.getImage().src = src;
 

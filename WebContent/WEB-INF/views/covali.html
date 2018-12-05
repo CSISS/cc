@@ -23,8 +23,10 @@
     <!-- <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet"> -->
 	
 	<!--OpenLayers style-->
-	<link href="../covali/css/ol.css" rel="stylesheet"/>
+	<!-- <link href="../covali/css/ol.css" rel="stylesheet"/> -->
+	<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" />
 	<link href="../covali/css/ol3-layerswitcher.css" rel="stylesheet"/>
+	<link href="../covali/css/ol-popup.css" rel="stylesheet"/>
 	
 	<!-- <link href="css/gmu.css" rel="stylesheet"> -->
 	
@@ -144,17 +146,18 @@
 				onclick="edu.gmu.csiss.covali.map.legendclick(this, 'right')" id="legend2" ></div>
 			
 			</div>
-						
+			
 	 	</div>
 		
 	</div>
     
 	<!--OpenLayers map-->
 	<script type="text/javascript" src="../covali/js/gifler.min.js"></script>
-	<script type="text/javascript" src="../covali/js/ol.js"></script>
+	<!-- <script type="text/javascript" src="../covali/js/ol.js"></script> -->
+	<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
 	<script type="text/javascript" src="../covali/js/inject_ol_cesium.js"></script>
 	<script type="text/javascript" src="../covali/js/ol3-layerswitcher.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
 
 <!-- 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.15.1/ol.js"></script>

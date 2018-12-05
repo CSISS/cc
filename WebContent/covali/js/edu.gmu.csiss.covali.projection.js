@@ -157,6 +157,8 @@ edu.gmu.csiss.covali.projection = {
 		var newProjCode = 'EPSG:' + code;
         
 		proj4.defs(newProjCode, proj4def);
+		
+		ol.proj.proj4.register(proj4);
         
         var newProj = ol.proj.get(newProjCode);
         

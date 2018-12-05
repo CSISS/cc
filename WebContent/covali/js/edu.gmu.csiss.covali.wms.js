@@ -101,6 +101,8 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		
+		
 		/**
 		 * add for the file uploading dialog
 		 */
@@ -355,7 +357,7 @@ edu.gmu.csiss.covali.wms = {
 		    		  
 		    		  	console.error(error);
 		    		  
-		    		  	alert("Something goes wrong. Please try again.");
+		    		  	alert("Please try again.");
 		    		  	
 		    	  }
 		    	  

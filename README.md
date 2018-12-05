@@ -15,7 +15,7 @@ JDK 1.8+
 
 Tomcat 8.0+ (web container)
 
-MySQL 5.5+ (database, initialize it with cc.empty.sql)
+MySQL 5.5+ (database, initialize it with db/cc.empty.sql)
 
 ncWMS 2.4.1+ (download ncWMS.war and deploy it into Tomcat webapps folder)
 
