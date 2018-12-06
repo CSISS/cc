@@ -228,19 +228,22 @@ edu.gmu.csiss.covali.statistics = {
 //        		  }
 //        		});
             },
-            buttons: [{
-                label: 'Download',
-                action: function(dialogRef){
-                	console.log("start to download the report");
-                	dialogRef.enableButtons(false);
-//                    dialogRef.setClosable(false);
-                	$("body").append("<a id='hiddenLink' href='" + req + "' style='display:none;' download>Download Image</a>");
-                	$("#hiddenLink")[0].click();
-                	$("#hiddenLink").remove();
-                	dialogRef.enableButtons(true);
-//                    dialogRef.setClosable(true);
-                }
-            }, {
+            buttons: [
+            	//since the image can be downloaded by right click, this button is not necessary.
+//            	{
+//                label: 'Download',
+//                action: function(dialogRef){
+//                	console.log("start to download the report");
+//                	dialogRef.enableButtons(false);
+////                    dialogRef.setClosable(false);
+//                	$("body").append("<a id='hiddenLink' href='" + req + "' style='display:none;' download>Download Image</a>");
+//                	$("#hiddenLink")[0].click();
+//                	$("#hiddenLink").remove();
+//                	dialogRef.enableButtons(true);
+////                    dialogRef.setClosable(true);
+//                }
+//            }, 
+            {
                 label: 'Close',
                 action: function(dialogRef){
                     dialogRef.close();

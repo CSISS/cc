@@ -19,6 +19,8 @@ edu.gmu.csiss.covali.search = {
 				
 				title: "Search Results",
 				
+				size: BootstrapDialog.SIZE_WIDE,
+				
 	            message: '<table id="producttable"'+
 	            	
 					'			class="table table-striped table-bordered table-list">'+
@@ -1240,6 +1242,8 @@ edu.gmu.csiss.covali.search = {
 	            message: edu.gmu.csiss.covali.search.searchForm(),
 	            
 	            title: "Search Dialog",
+	            
+	            size: BootstrapDialog.SIZE_WIDE,
 	            
 	            cssClass: 'dialog-vertical-center',
 	            
