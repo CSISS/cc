@@ -12,18 +12,22 @@ edu.gmu.csiss.covali.statistics = {
 	draw: null,
 	
 	popup: null, 
+	
+	side: null,
 		
 	showDialog: function(){
 		
 		BootstrapDialog.closeAll();
 		
-		var content = "<div class=\"row\" style=\"padding:10px;\"><select id=\"mapsideselect\">"+
+		var content = "<div class=\"row\" style=\"padding:10px;\"><div class=\"form-group\"> "+
+			"<label for=\"mapsideselect\">Select Map Side</label><select id=\"mapsideselect\">"+
 			"<option value=\"left\">left</option>"+
 			"<option value=\"right\">right</option>"+
-			"</select><select id=\"typeselect\">"+
+			"</select></div><div class=\"form-group\">"+
+			"<label for=\"typeselect\">Select Statistics Type</label><select id=\"typeselect\">"+
 			"<option value=\"point\">point</option>"+
 			"<option value=\"linestring\">linestring</option>"+
-			"</select></div>";
+			"</select></div></div><div class=\"row\" style=\"padding:10px;\">Note: Double click on the map to stop.</div>";
 		
 		//only support the build-in ncWMS
 		
@@ -42,6 +46,8 @@ edu.gmu.csiss.covali.statistics = {
 					var side = $("#mapsideselect").val();
 
 			        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+			        
+			        edu.gmu.csiss.covali.statistics.side = side;
 					
 					console.log("chosen map: " + side);
 					
@@ -58,9 +64,8 @@ edu.gmu.csiss.covali.statistics = {
 								'    </div>'); 
 						
 						var container = document.getElementById('popup');
+						
 						var closer = document.getElementById('popup-closer');
-						
-						
 						
 						edu.gmu.csiss.covali.statistics.popup = new ol.Overlay({
 					        element: container,
@@ -77,6 +82,8 @@ edu.gmu.csiss.covali.statistics = {
 					    };
 						
 					    map.addOverlay(edu.gmu.csiss.covali.statistics.popup);
+					    
+					    //add single click
 					    
 					    map.on('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
 					    
@@ -182,20 +189,61 @@ edu.gmu.csiss.covali.statistics = {
 	},
 	
 	singleClickListener: function(evt) {
+		
 		var coordinate = evt.coordinate;
-        var hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));
-        var content = document.getElementById('popup-content');
-        content.innerHTML = '<p>You clicked here:</p><code>' + hdms +
-            '</code>';
+        
+		var hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));
+        
+        
         edu.gmu.csiss.covali.statistics.popup.setPosition(coordinate);
+        
+        //http://localhost:8080/ncWMS2/wms?LAYERS=22kuuxf9%2FBand1&QUERY_LAYERS=22kuuxf9%2FBand1&STYLES=default-scalar%2Fdefault&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&BBOX=-180%2C-129.000522%2C180%2C158.999478&FEATURE_COUNT=5&HEIGHT=600&WIDTH=750&FORMAT=image%2Fpng&INFO_FORMAT=text%2Fxml&SRS=EPSG%3A4326&X=179&Y=251
+        
+        var map = edu.gmu.csiss.covali.map.getMapBySide(edu.gmu.csiss.covali.statistics.side);
+//        
+//        //send a GetFeatureInfo request
+//        
+        var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(edu.gmu.csiss.covali.statistics.side);
+//        
+//        var bbox = "-180%2C-129.000522%2C180%2C158.999478";
+//        
+//        var size = map.getSize();
+//        
+//        var pixel = map.getPixelFromCoordinate(coordinate);
+//        
+//        var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?LAYERS="+
+//        	layer.get('name') +
+//        	"&QUERY_LAYERS="+layer.get('name')+
+//        	"&STYLES=default-scalar%2Fdefault&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&BBOX="+
+//        	clickbbox+"&FEATURE_COUNT=5&HEIGHT=600&WIDTH=750&FORMAT=image%2Fpng&INFO_FORMAT=text%2Fxml&SRS=EPSG%3A4326&X=179&Y=251"
+        
+
+        var viewResolution = /** @type {number} */ (map.getView().getResolution());
+        
+        var wmssource = layer.getSource();
+        
+        var url = wmssource.getGetFeatureInfoUrl(
+        
+        	evt.coordinate, viewResolution, 'EPSG:3857',
+          
+        	{'INFO_FORMAT': 'text/html'});
+        
+        if (url) {
+        
+//        	document.getElementById('info').innerHTML =
+//            
+//        		'<iframe seamless src="' + url + '"></iframe>';
+
+            var content = document.getElementById('popup-content');
+            
+            content.innerHTML = '<p>You clicked here:</p><code>' + hdms +
+            
+                '</code><iframe seamless src="' + url + '"></iframe>';
+        	
+        }
+        
     },
 	
-	getPointStatistics:function(side){
-		
-		
-	},
-	
-
 	getLineStatistics: function(side, linestring){
 		
 //    	http://godiva.rdg.ac.uk/ncWMS2/wms?REQUEST=GetTransect&LAYERS=cci/analysed_sst&CRS=CRS:84&LINESTRING=62.04%2018,%2064.56%204.56,%2076.56%201.08&FORMAT=image/png&TIME=2010-12-31T12:00:00.000Z&COLORSCALERANGE=269,306&NUMCOLORBANDS=250&LOGSCALE=false&ABOVEMAXCOLOR=0x000000&BELOWMINCOLOR=0x000000&BGCOLOR=transparent&PALETTE=psu-inferno
