@@ -3,6 +3,8 @@ out/
 .idea/
 /cyberconnector-portal/src/main/webapp/images/psd
 *.iml
+*.ipr
+*.iws
 
 
 **/.DS_Store
