@@ -110,11 +110,12 @@
         
         <div class="col-md-3" style="position: absolute; right:10px; bottom:20px; z-index:100;">
 		    <select id="projectionselector" name="projectionselector" class="form-control">
+		      	<option value="3D">3D</option>
 		      	<option value="3857">Spherical Mercator (EPSG:3857)</option>
 	         	<option value="4326">WGS 84 (EPSG:4326)</option>
 	         	<option value="5041">North Polar Region (EPSG:5041)</option>
+	         	<!-- <option value="5042">South Polar Region (EPSG:5042)</option> -->
 		     	<option value="3395">WGS 84 / World Mercator (EPSG:3395)</option>
-		      	<option value="3D">3D</option>
 		      	<option value="900913">EPSG:900913</option>
 	         	<option value="54009">Mollweide (ESRI:54009)</option>
 	         	<option value="27700">British National Grid (EPSG:27700)</option>
@@ -122,9 +123,11 @@
 	         	<option value="2163">US National Atlas Equal Area (EPSG:2163)</option>
 	         	<option value="3413">NSIDC Polar Stereographic North (EPSG:3413)</option>
 	         	<option value="5479">RSRGD2000 / MSLC2000 (EPSG:5479)</option>
+	         	<!-- <option value="32761">WGS 84 / UPS South (N,E) (EPSG:32761)</option>
+	         	<option value="32661">WGS 84 / UPS North (N,E) (EPSG:32661)</option>-->
 		      	<option value="more">More</option>
 		    </select>
-		  </div>
+		</div>
 			
 		<!-- Content Here -->
 		<div class="row row-xs-11" style="height:100%;">
@@ -155,7 +158,8 @@
 	<script type="text/javascript" src="../covali/js/gifler.min.js"></script>
 	<!-- <script type="text/javascript" src="../covali/js/ol.js"></script> -->
 	<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4-src.js"></script>
+	
 	<script type="text/javascript" src="../covali/js/inject_ol_cesium.js"></script>
 	<script type="text/javascript" src="../covali/js/ol3-layerswitcher.js"></script>
 

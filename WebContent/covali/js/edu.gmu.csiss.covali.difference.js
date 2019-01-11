@@ -7,7 +7,7 @@
  */
 
 edu.gmu.csiss.covali.difference = {
-		
+	
 	showDialog: function(){
 		
 		BootstrapDialog.closeAll();
@@ -18,9 +18,7 @@ edu.gmu.csiss.covali.difference = {
 			
 			message: function(){
 				
-				var content = "";
-				
-				
+				var content = "under construction";
 				
 				return content;
 				
