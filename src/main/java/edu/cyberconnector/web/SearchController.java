@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,14 @@ import edu.cyberconnector.products.*;
 public class SearchController {
 
     private static Logger log = LoggerFactory.getLogger(SearchController.class);
+
+    @Autowired
+    Environment env;
+
+    @GetMapping(value="/testval")
+    public @ResponseBody String testval() {
+        return env.getProperty("edu.cyberconnector.testkey1") + " " + env.getProperty("edu.cyberconnector.testkey2") ;
+    }
 
 
     @GetMapping(value = "/productsearch")
@@ -98,10 +108,10 @@ public class SearchController {
 
 
     @GetMapping(value = "/search")
-    public String productsearch(@ModelAttribute SearchRequest request){
+    public String productsearch(@ModelAttribute SearchRequest request, ModelMap model){
 
         //int x = 1;
-        //model.addAttribute("request", searchreq);
+        model.addAttribute("request", request);
 
         return "searchresult";
     }
