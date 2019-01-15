@@ -8,4 +8,6 @@ COPY ${DEPENDENCY}/BOOT-INF/classes /app
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-cp","app:app/lib/*","edu.cyberconnector.Application"]
+ENTRYPOINT ["java","-cp","app:app/lib/*", \
+            "edu.cyberconnector.Application", \
+            "--spring.config.location=classpath:/,classpath:/config/,file:/run/"]
