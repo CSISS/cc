@@ -244,7 +244,7 @@ public class LocalFileTool {
 			SearchResponse resp2 = LocalFileTool.search(keywords, recordsperpage, pageno,
 					SysDir.covali_file_path, formats);
 			
-			resp1 = SearchTool.merge(resp1, resp2);
+			resp1 = (new SearchTool()).merge(resp1, resp2);
 			
 		}
 		

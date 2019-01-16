@@ -22,17 +22,19 @@ import edu.cyberconnector.database.DataBaseOperation;
 import edu.cyberconnector.products.Product;
 import edu.cyberconnector.tools.LocalFileTool;
 import edu.cyberconnector.utils.BaseTool;
-import edu.cyberconnector.utils.SysDir;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
-/**
-*Class SearchTool.java
-*@author Ziheng Sun
-*@time Feb 3, 2017 10:42:31 AM
-*Original aim is to support CyberConnector.
-*/
+@Component
 public class SearchTool {
 
-	private static Logger log = LoggerFactory.getLogger(SearchTool.class);
+    @Autowired
+    Environment env;
+
+    public SearchTool() {}
+
+	private Logger log = LoggerFactory.getLogger(SearchTool.class);
 	
 	static Map<String, String> map = new HashMap<String, String>();
 	
@@ -56,7 +58,7 @@ public class SearchTool {
 	 * @param req
 	 * @return
 	 */
-	public static SearchResponse searchVDP(SearchRequest req){
+	public SearchResponse searchVDP(SearchRequest req){
 		
 		SearchResponse resp = new SearchResponse();
 		
@@ -203,7 +205,7 @@ public class SearchTool {
 	 * @param req
 	 * @return
 	 */
-	public static String constructCSWRequest(SearchRequest req){
+	public String constructCSWRequest(SearchRequest req){
 		
 		int startpos = (req.pageno)*req.recordsperpage + 1;
 		
@@ -266,7 +268,7 @@ public class SearchTool {
 	 * @param id
 	 * @return
 	 */
-	public static String constructSingleCSWReq(String id){
+	public String constructSingleCSWReq(String id){
 		
 		StringBuffer getreq = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> ")
 				.append("	<GetRecords ")
@@ -296,7 +298,7 @@ public class SearchTool {
 	 * @param resp
 	 * @return
 	 */
-	public static String getSingleISOMetadata(String resp){		
+	public String getSingleISOMetadata(String resp){		
 		
 		Document document= BaseTool.parseString(resp);
 		
@@ -314,7 +316,7 @@ public class SearchTool {
 		
 	}
 
-	public static String getCurrentURLinISO(String md){
+	public String getCurrentURLinISO(String md){
 		
 		Document doc = BaseTool.parseString(md);
 		
@@ -349,7 +351,7 @@ public class SearchTool {
 	 * @param newurl
 	 * @return
 	 */
-	public static String replaceDownloadURLInISO(String md, String rawurl, String newurl){
+	public String replaceDownloadURLInISO(String md, String rawurl, String newurl){
 		
 		Document doc = BaseTool.parseString(md);
 		
@@ -382,7 +384,7 @@ public class SearchTool {
 	 * @param xml
 	 * @return
 	 */
-	public static String removeXMLDeclaration(String xml){
+	public String removeXMLDeclaration(String xml){
 		
 		return xml.substring(xml.indexOf('\n')+1);
 		
@@ -391,23 +393,25 @@ public class SearchTool {
 	/**
 	 * Update Existing Records with New Http Download URL
 	 */
-	public static boolean updatePyCSWDataURL(String id, String rawurl){
+	public boolean updatePyCSWDataURL(String id, String rawurl){
 		
 		boolean success  = false;
-		
-		if(!rawurl.startsWith(SysDir.CACHE_SERVICE_URL)){
+
+		String cache_service_url = env.getProperty("edu.cyberconnector.datacacheserviceaddress");
+
+		if(!rawurl.startsWith(cache_service_url)){
 			
 			//get the original ISO metadata
 			
 			String getreq = constructSingleCSWReq(id);
 			
-			String getresp = BaseTool.POST(getreq.toString(), SysDir.CSISS_CSW_URL);
+			String getresp = BaseTool.POST(getreq.toString(), env.getProperty("edu.cyberconnector.csw_url"));
 			
 			String single_md = getSingleISOMetadata(getresp);
 			
 			String currenturl = getCurrentURLinISO(single_md);
 			
-			if(!currenturl.startsWith(SysDir.CACHE_SERVICE_URL)){ //avoid duplicated caching
+			if(!currenturl.startsWith(cache_service_url)){ //avoid duplicated caching
 				
 				//download the data from external links to server
 		    	
@@ -426,7 +430,7 @@ public class SearchTool {
 						.append(" 	</csw:Update>")
 						.append("</csw:Transaction>");
 				
-				String cswresp = BaseTool.POST(req.toString(), SysDir.CSISS_CSW_URL);
+				String cswresp = BaseTool.POST(req.toString(), env.getProperty("edu.cyberconnector.csw_url"));
 				
 				log.debug(cswresp);
 				
@@ -457,7 +461,7 @@ public class SearchTool {
 	 * @param resp
 	 * @return
 	 */
-	public static boolean parseUpdateResponse(String resp){
+	public boolean parseUpdateResponse(String resp){
 		
 		Document doc = BaseTool.parseString(resp);
 		
@@ -501,17 +505,18 @@ public class SearchTool {
 	 * @param req
 	 * @return
 	 */
-	public static SearchResponse searchUCARCSW(SearchRequest req){
+	public SearchResponse searchUCARCSW(SearchRequest req){
 		
-		String cswreq = SearchTool.constructCSWRequest(req);
+		String cswreq = constructCSWRequest(req);
 		
 		log.debug(cswreq);
-		
-		String cswresp = BaseTool.POST(cswreq, SysDir.CSISS_CSW_URL);
-		
+
+		String url = env.getProperty("edu.cyberconnector.csw_url");
+		String cswresp = BaseTool.POST(cswreq, url);
+
 		log.debug(cswresp);
 		
-		SearchResponse resp = SearchTool.parseCSWResponse(cswresp);
+		SearchResponse resp = parseCSWResponse(cswresp);
 		
 		return resp;
 		
@@ -521,7 +526,7 @@ public class SearchTool {
 	 * @param resp
 	 * @return
 	 */
-	public static SearchResponse parseCSWResponse(String resp){
+	public SearchResponse parseCSWResponse(String resp){
 		
 		SearchResponse respobj = new SearchResponse();
 		
@@ -621,7 +626,9 @@ public class SearchTool {
 					String title = titlepath.selectSingleNode(ele).getText();
 					title = title.replaceAll("_", " ");
 					p.setTitle(title);
-				}
+				} else {
+				    p.setTitle(p.getName());
+                }
 				
 				if(begintimepath.selectSingleNode(ele)!=null){
 				
@@ -683,33 +690,40 @@ public class SearchTool {
 //					
 //				}
 
-				String level = hierarchylevel.selectSingleNode(ele).getText();
-				if(level.contains("series")) {
+                try {
 
-					String curl = collection_url.selectSingleNode(ele).getText();
-					p.setAccessurl(curl);
-					p.setIscollection("1");
+                    String level = hierarchylevel.selectSingleNode(ele).getText();
+                    if (level.contains("series")) {
 
-					String title = p.getTitle();
-					p.setTitle(title + " [COLLECTION]");
+                        String curl = collection_url.selectSingleNode(ele).getText();
+                        p.setAccessurl(curl);
+                        p.setIscollection("1");
 
-				} else {
+                        String title = p.getTitle();
+                        p.setTitle(title + " [COLLECTION]");
 
-					p.setIscollection("0");
+                    } else {
 
-					//for gmi
-					if (accessoptions.selectSingleNode(ele) == null) {
-						log.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
+                        p.setIscollection("0");
 
-						String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
-						p.setAccessurl(accessurl);
+                        //for gmi
+                        if (accessoptions.selectSingleNode(ele) == null) {
+                            log.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
 
-					} else {
+                            String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
+                            p.setAccessurl(accessurl);
 
-						String accessurl = accessoptions.selectSingleNode(ele).getText();
-						p.setAccessurl(accessurl);
-					}
-				}
+                        } else {
+
+                            String accessurl = accessoptions.selectSingleNode(ele).getText();
+                            p.setAccessurl(accessurl);
+                        }
+                    }
+                }
+                catch(org.dom4j.XPathException e)
+                {
+                    p.setAccessurl("unavailable");
+                }
 				
 				p.setIfvirtual("0");
 				
@@ -725,7 +739,7 @@ public class SearchTool {
 		
 	}
 	
-	public static SearchResponse searchBCube(SearchRequest req) {
+	public SearchResponse searchBCube(SearchRequest req) {
 		
 		SearchResponse resp = new SearchResponse();
 		
@@ -739,7 +753,7 @@ public class SearchTool {
 	 * @param resp2
 	 * @return
 	 */
-	public static SearchResponse merge(SearchResponse resp1, SearchResponse resp2) {
+	public SearchResponse merge(SearchResponse resp1, SearchResponse resp2) {
 		
 		resp1.setProduct_total_number(resp1.getProduct_total_number()+resp2.getProduct_total_number());
 		
@@ -780,7 +794,7 @@ public class SearchTool {
 	 * @param req
 	 * @return
 	 */
-	public static SearchResponse searchLocal(SearchRequest req) {
+	public SearchResponse searchLocal(SearchRequest req) {
 		
 		List formats = Arrays.asList(req.getFormats().split("\\s* \\s*"));
 		
@@ -788,11 +802,11 @@ public class SearchTool {
 		
 	}
 	
-	public static SearchResponse searchCWIC(SearchRequest req){
+	public SearchResponse searchCWIC(SearchRequest req){
 		
 		SearchResponse resp = new SearchResponse();
 		
-		String cswreq = SearchTool.constructCSWRequest(req);
+		String cswreq = constructCSWRequest(req);
 		
 		
 		
@@ -801,7 +815,7 @@ public class SearchTool {
 		
 	}
 	
-	public static SearchResponse searchRealData(SearchRequest req){
+	public SearchResponse searchRealData(SearchRequest req){
 		
 		SearchResponse resp = null;
 		
@@ -809,11 +823,11 @@ public class SearchTool {
 		
 		if("1".equals(req.csw)){
 			
-			resp = SearchTool.searchUCARCSW(req);
+			resp = searchUCARCSW(req);
 			
 		}else if("2".equals(req.csw)){
 			
-			resp = SearchTool.searchLocal(req);
+			resp = searchLocal(req);
 			
 		}else if("3".equals(req.csw)) {
 			
@@ -834,7 +848,7 @@ public class SearchTool {
 	 * @param req
 	 * @return
 	 */
-	public static SearchResponse search(SearchRequest req){
+	public SearchResponse search(SearchRequest req){
 		
 		log.debug("Request Name :" + req.name);
 		
@@ -852,13 +866,13 @@ public class SearchTool {
 			
 			log.debug("This is for VDP. Search in CyberConnector database..");
 			
-			resp = SearchTool.searchVDP(req);
+			resp = searchVDP(req);
 			
 		}else if(req.isvirtual.equals("0")){
 			
 			log.debug("This is for real data. Search in PyCSW for Unidata..");
 			
-			resp = SearchTool.searchRealData(req);
+			resp = searchRealData(req);
 			
 		}
 		
@@ -869,7 +883,7 @@ public class SearchTool {
 				
 				Product p = resp.getProducts().get(i);
 				
-				if(p.isCached()||p.getAccessurl().startsWith(SysDir.CACHE_DATA_URLPREFIX)){
+				if(p.isCached()||p.getAccessurl().startsWith(env.getProperty("edu.cyberconnector.datacacheprefix"))){
 					
 					p.setCached(true);
 					
@@ -889,19 +903,5 @@ public class SearchTool {
 		return resp;
 		
 	}
-	
-	public static void main(String[] args){
-		
-//		String testresponse = BaseTool.readStringFromFile(BaseTool.getClassPath() + "discovery.xml");
-//		
-//		SearchTool.parseCSWResponse(testresponse);
-		
-		boolean success = SearchTool.updatePyCSWDataURL("edu.ucar.unidata:grib/NCEP/NDFD/NWS/CONUS/CONDUIT/NDFD_NWS_CONUS_conduit_2p5km_20170613_1830.grib2", "http://cube.csiss.gmu.edu/cc_cache/NDFD_NWS_CONUS_conduit_2p5km_20170613_1700.grib2");
-//		
-//		System.out.println("Update: " + success);
-		
-		
-		
-	}
-	
+
 }

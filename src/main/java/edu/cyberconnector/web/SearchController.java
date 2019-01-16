@@ -27,14 +27,17 @@ import edu.cyberconnector.products.*;
 @RequestMapping("/web")
 public class SearchController {
 
-    private static Logger log = LoggerFactory.getLogger(SearchController.class);
+    private Logger log = LoggerFactory.getLogger(SearchController.class);
 
     @Autowired
     Environment env;
 
+    @Autowired
+    SearchTool searchTool;
+
     @GetMapping(value="/testval")
     public @ResponseBody String testval() {
-        return env.getProperty("edu.cyberconnector.testkey1") + " " + env.getProperty("edu.cyberconnector.testkey2") ;
+        return env.getProperty("edu.cyberconnector.csw.url");
     }
 
 
@@ -83,9 +86,6 @@ public class SearchController {
     @PostMapping(value = "/search", produces = "application/json")
     public @ResponseBody SearchResponse tableserver(@ModelAttribute SearchRequest request,  WebRequest webRequest) {
 
-        SearchResponse sr = SearchTool.search(request);
-
-
         int start = Integer.parseInt(webRequest.getParameter("start")) + 1;
         int length = Integer.parseInt(webRequest.getParameter("length"));
         int pageNum = start/length;
@@ -95,6 +95,9 @@ public class SearchController {
         int pageno = start/length;
 
         request.setPageno(pageno);
+
+        SearchResponse sr = searchTool.search(request);
+
 
         //for JQuery DataTables
         String draw = webRequest.getParameter("draw");
