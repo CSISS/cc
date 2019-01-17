@@ -16,13 +16,17 @@
     <link href="../covali/css/bootstrap.css" rel="stylesheet"/>
     <link href="../covali/css/bootstrap-dialog.min.css" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/css/bootstrap-colorpicker.min.css" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css" />
+	<link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-flat.css" />
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!-- <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet"> -->
 	
 	<!--OpenLayers style-->
-	<link href="../covali/css/ol.css" rel="stylesheet"/>
+	<!-- <link href="../covali/css/ol.css" rel="stylesheet"/> -->
+	<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" />
 	<link href="../covali/css/ol3-layerswitcher.css" rel="stylesheet"/>
+	<link href="../covali/css/ol-popup.css" rel="stylesheet"/>
 	
 	<!-- <link href="css/gmu.css" rel="stylesheet"> -->
 	
@@ -53,8 +57,6 @@
     
     <link rel="stylesheet" media="screen, projection" href="../css/dataTables.bootstrap.min.css"/>
 	
-	
-    
   </head>
 
   <body>
@@ -108,11 +110,12 @@
         
         <div class="col-md-3" style="position: absolute; right:10px; bottom:20px; z-index:100;">
 		    <select id="projectionselector" name="projectionselector" class="form-control">
+		      	<option value="3D">3D</option>
 		      	<option value="3857">Spherical Mercator (EPSG:3857)</option>
 	         	<option value="4326">WGS 84 (EPSG:4326)</option>
 	         	<option value="5041">North Polar Region (EPSG:5041)</option>
+	         	<!-- <option value="5042">South Polar Region (EPSG:5042)</option> -->
 		     	<option value="3395">WGS 84 / World Mercator (EPSG:3395)</option>
-		      	<option value="3D">3D</option>
 		      	<option value="900913">EPSG:900913</option>
 	         	<option value="54009">Mollweide (ESRI:54009)</option>
 	         	<option value="27700">British National Grid (EPSG:27700)</option>
@@ -120,43 +123,45 @@
 	         	<option value="2163">US National Atlas Equal Area (EPSG:2163)</option>
 	         	<option value="3413">NSIDC Polar Stereographic North (EPSG:3413)</option>
 	         	<option value="5479">RSRGD2000 / MSLC2000 (EPSG:5479)</option>
+	         	<!-- <option value="32761">WGS 84 / UPS South (N,E) (EPSG:32761)</option>
+	         	<option value="32661">WGS 84 / UPS North (N,E) (EPSG:32661)</option>-->
 		      	<option value="more">More</option>
 		    </select>
-		  </div>
+		</div>
 			
 		<!-- Content Here -->
 		<div class="row row-xs-11" style="height:100%;">
  				
-						<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers1">
-						
-							<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';" 
-							
-							onclick="edu.gmu.csiss.covali.map.legendclick(this, 'left')" id="legend1" ></div>
-							
-						</div>
-						
-						<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers2">
-						
-							<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';"
-							
-							onclick="edu.gmu.csiss.covali.map.legendclick(this, 'right')" id="legend2" ></div>
-						
-						</div>
-						
+			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers1">
+			
+				<div id="toolbar1" ></div>
+			
+				<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';" 
+				
+				onclick="edu.gmu.csiss.covali.map.legendclick(this, 'left')" id="legend1" ></div>
+				
+			</div>
+			
+			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers2">
+			
+				<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';"
+				
+				onclick="edu.gmu.csiss.covali.map.legendclick(this, 'right')" id="legend2" ></div>
+			
+			</div>
+			
 	 	</div>
 		
 	</div>
     
-	<!--google map-->
-	<!-- <script type="text/javascript"  th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyCzpGK0E70yB5M5cJpYuXayG29X3YJghD0&nbsp;sensor=false&nbsp;libraries=drawing}" ></script> -->
 	<!--OpenLayers map-->
-	<!--<script type="text/javascript" src="js/example-behaviour.js"></script>-->
-	<script type="text/javascript" src="../covali/js/ol.js"></script>
+	<script type="text/javascript" src="../covali/js/gifler.min.js"></script>
+	<!-- <script type="text/javascript" src="../covali/js/ol.js"></script> -->
+	<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4-src.js"></script>
+	
 	<script type="text/javascript" src="../covali/js/inject_ol_cesium.js"></script>
 	<script type="text/javascript" src="../covali/js/ol3-layerswitcher.js"></script>
-	<!-- <script type="text/javascript" src="js/main.js"></script> -->
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
 
 <!-- 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.15.1/ol.js"></script>
@@ -172,6 +177,9 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/js/bootstrap-colorpicker.min.js" ></script>
     <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript" src="../js/moment.min.js"></script>
+	<script type="text/javascript" src="../covali/js/printThis.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.min.js"></script>
 	<!--wkx-->
 <!-- 	
 	<script type="text/javascript" src="js/wkx.js"></script>
@@ -202,6 +210,10 @@
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.search.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.add.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.settings.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.animation.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.statistics.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.difference.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.print.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.tools.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.share.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.menu.js"></script>

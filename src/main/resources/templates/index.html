@@ -8,16 +8,16 @@
 
     <div class="page-header">
         <div class="container">
-            <h1 class="headline">EarthCube Building Blocks: CyberConnector</h1>
+            <h1 class="headline">EarthCube Building Block: CyberConnector</h1>
 
             <h2 class="tagline">
                 Bridging the Earth Observations and Earth Science Modeling for Supporting Model Validation, Verification, and Inter-comparison
             </h2>
 
             <div class="text-center">
-                <a role="button" class="btn-white" href="demo" th:href="@{demo}">Online DEMO</a>
+                <a role="button" class="btn-white" th:href="@{demo}">Online DEMO</a>
                 <br class="visible-xs-inline"/><br class="visible-xs-inline"/>
-                <a role="button" class="btn btn-lean" href="feature" th:href="@{feature}">More Features</a>
+                <a role="button" class="btn btn-lean" th:href="@{feature}">More Features</a>
             </div>
         </div>
     </div>
@@ -26,11 +26,11 @@
         <div class="container">
             <div class="col-xs-12 col-md-8">
                 <div class="panel panel-default">
-                    <p class="pull-right more"><a href="about" th:href="@{about}">MORE</a></p>
+                    <p class="pull-right more"><a th:href="@{about}">MORE</a></p>
                     <h2>What is CyberConnector</h2>
 
-                    <p>This project developes an EarthCube building block, called
-                        CyberConnector, for facilitating the automatic preparation and
+                    <p>CyberConnector is a NSF-funded open source project aiming to develop an EarthCube building block 
+                    	for facilitating the automatic preparation and
                         feeding of both historic and near-real time Earth Observation
                         customized data and on-demand derived products into Earth science
                         models.</p>
@@ -40,7 +40,7 @@
                         validation, and inter-comparison. It can support many different
                         ESMs through its standard interfaces under a unified framework.</p>
 
-                    <p><a href="about.html#para4" th:href="@{about.html#para4}"><img class="img-responsive center-block" th:attr="src=@{../images/pic_framework.png}"/></a></p>
+                    <p><a th:href="@{about.html#para4}"><img class="img-responsive center-block" th:src="@{/images/pic_framework.png}"/></a></p>
 
                     <p>CyberConnector can also automatically serve the model
                         outputs in interoperable forms through standard data services to
@@ -58,10 +58,31 @@
                 </div>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="panel panel-default panel-side">
+            
+            	<div class="panel panel-default panel-side">
+            	
+            		<h2>Documentation</h2>
+            		<dl>
+                        <dt>User Oriented</dt>
+                        <dd>- <a href="https://github.com/CSISS/cc">Wiki</a></dd>
+                        <dd>- <a href="https://github.com/CSISS/cc/releases">Downloads</a></dd>
+                        <dd>- <a href="productsearch">Search Thredds</a></dd>
+                        <dd>- <a href="demo">VDP (Virtual Data Product)</a></dd>
+                        <dd>- <a href="servicesearch">Supported Process</a></dd>
+                        <dd>- <a href="https://github.com/CSISS/cc/issues?q=is%3Aissue+is%3Aclosed">FAQ</a></dd>
+                    </dl>
+                    <dl>
+                        <dt>Developer Oriented</dt>
+                        <dd>- <a href="http://github.com/CSISS/cc">Building CyberConnector from Source</a></dd>
+                        <dd>- <a href="https://github.com/CSISS/cc/releases">Downloads (source code)</a></dd>
+                    </dl>
+            		
+            	
+            	</div>
+                <!-- <div class="panel panel-default panel-side">
                     <h2>Principle Investigator</h2>
 
-                    <div class="pull-left"><img th:attr="src=@{../images/photo_ldi-s.png}"/></div>
+                    <div class="pull-left"><img th:src="@{/images/photo_ldi-s.png}"/></div>
                     <dl class="side">
                         <dt><a href="people" th:href="@{people#pi-di}">Dr. Liping Di</a></dt>
                         <dd><b>Professor, Director</b></dd>
@@ -72,34 +93,34 @@
                 <div class="panel panel-default panel-side">
                     <h2>Co-Principle Investigators</h2>
                     <dl class="clearfix">
-                        <dt><img class="pull-left" th:attr="src=@{../images/photo_ben-s.png}"/></dt>
+                        <dt><img class="pull-left" th:src="@{/images/photo_ben-s.png}"/></dt>
                         <dt><a href="people#co-pi" th:href="@{people#co-pi}">Dr. Ben Domenico</a></dt>
                         <dd>Development and Outreach Manager Unidata</dd>
                         <dd>University Corporation for Atmospheric Research (UCAR)</dd>
                         <dd>Email: <a href="mailto:ben@ucar.edu">ben@ucar.edu</a></dd>
                     </dl>
                     <dl class="clearfix">
-                        <dt><img class="pull-left" th:attr="src=@{../images/photo_huang-s.png}"/></dt>
+                        <dt><img class="pull-left" th:src="@{/images/photo_huang-s.png}"/></dt>
                         <dt><a href="people#co-pi" th:href="@{people#co-pi-huang}">Dr. Haosheng Huang</a></dt>
                         <dd>Department of Oceanography and Coastal Science</dd>
                         <dd>Louisiana State University</dd>
                         <dd>Email: <a href="mailto:hhuang7@lsu.edu">hhuang7@lsu.edu</a></dd>
                     </dl>
                     <dl class="clearfix">
-                        <dt><img class="pull-left" th:attr="src=@{../images/photo_tong-s.png}"/></dt>
+                        <dt><img class="pull-left" th:src="@{/images/photo_tong-s.png}"/></dt>
                         <dt><a href="people#co-pi" th:href="@{people#co-pi-tong}">Dr. Daniel Tong</a></dt>
                         <dd>Center for Spatial Information Science and Systems</dd>
                         <dd>George Mason University</dd>
                         <dd>Email: <a href="mailto:qtong@gmu.edu">qtong@gmu.edu</a></dd>
                     </dl>
                     <dl>
-                        <dt><img class="pull-left" th:attr="src=@{../images/photo_wu-s.png}"/></dt>
+                        <dt><img class="pull-left" th:src="@{/images/photo_wu-s.png}"/></dt>
                         <dt><a href="people#co-pi" th:href="@{people#co-pi-wu}">Dr. Xiaoqing Wu</a></dt>
                         <dd>Department of Geological and Atmospheric Sciences</dd>
                         <dd>Iowa State University</dd>
                         <dd>Email: <a href="mailto:wuxq@iastate.edu">wuxq@iastate.edu</a></dd>
                     </dl>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
@@ -116,9 +137,8 @@
                                 <dt><a href="https://www.cmascenter.org/cmaq/" target="_blank">Community Multi-scale Air Quality Model</a></dt>
                                 <dd>&middot; open-source community-developed model for air &nbsp;&nbsp; quality simulations.</dd>
                                 <dd>&middot; estimates of ozone, particulates, toxics, acid, etc.</dd>
-                                <dd><img class="center-block" th:attr="src=@{../images/pic_mod_cmaq.png}"/></dd>
+                                <dd><img class="center-block" th:src="@{/images/pic_mod_cmaq.png}"/></dd>
                             </dl>
-                            <div class="seperator-line"/><br/>
                         </div>
                         <div class="col-xs-12 col-md-6">
                             <dl class="clearfix">
@@ -126,11 +146,11 @@
                                 <dd>&middot; a prognostic, unstructured-grid, finite-volume, free-surface, three-dimensional
                                     primitive equation coastal ocean circulation model
                                 </dd>
-                                <dd><img class="center-block" th:attr="src=@{../images/pic_mod_fvcom.jpg}"/></dd>
+                                <dd><img class="center-block" th:src="@{/images/pic_mod_fvcom.jpg}"/></dd>
                             </dl>
-                            <div class="seperator-line"/><br/>
                         </div>
                     </div>
+
 
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
@@ -147,7 +167,7 @@
                         <div class="col-xs-12 col-md-6">
                             <dl class="clearfix">
                                 <dt></dt>
-                                <dd><img class="center-block" th:attr="src=@{../images/pic_mod_century.png}"/></dd>
+                                <dd><img class="center-block" th:src="@{/images/pic_mod_century.png}"/></dd>
                             </dl>
                         </div>
                     </div>

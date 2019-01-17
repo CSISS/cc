@@ -12,24 +12,24 @@
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Cache-control" content="max-age=0"/>
     <meta http-equiv="Expires" content="Mon, 20 Jul 1970 23:00:00 GMT"/>
-    <link rel="shortcut icon" type="image/png" href="../favicon.ico"/>
+    <link rel="shortcut icon" type="image/png" th:href="@{/favicon.ico}"/>
     
-    <link rel="stylesheet" href="../lib/bootstrap-3.3.5/css/bootstrap.min.css" th:href="@{../lib/bootstrap-3.3.5/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" href="../lib/bootstrap-3.3.5/css/bootstrap-theme.min.css" th:href="@{../lib/bootstrap-3.3.5/css/bootstrap-theme.min.css}"/>
-    <link rel="stylesheet" href="../css/bootstrap-dialog.min.css" th:href="@{../css/bootstrap-dialog.min.css}"/>
-    <link rel="stylesheet" href="../css/style.css" th:href="@{../css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/lib/bootstrap-3.3.5/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/lib/bootstrap-3.3.5/css/bootstrap-theme.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-dialog.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
     
     
     
-    <script src="../js/jquery-1.11.3.min.js"></script>
-    <script src="../lib/bootstrap-3.3.5/js/bootstrap.min.js" th:src="@{../lib/bootstrap-3.3.5/js/bootstrap.min.js}"></script>
-    <script src="../js/bootstrap-dialog.min.js" th:src="@{../js/bootstrap-dialog.min.js}"></script>
+    <script th:src="@{/js/jquery-1.11.3.min.js}"></script>
+    <script th:src="@{/lib/bootstrap-3.3.5/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/bootstrap-dialog.min.js}"></script>
     
     <!-- General Library of CyberConnector -->
-    <script type="text/javascript" src="../js/cc.js" ></script>
-	<script type="text/javascript" src="../js/cc.util.js" ></script>
-	<script type="text/javascript" src="../js/cc.user.js" ></script>
-		
+    <script type="text/javascript" th:src="@{/js/cc.js}"></script>
+    <script type="text/javascript" th:src="@{/js/cc.util.js}"></script>
+    <script type="text/javascript" th:src="@{/js/cc.user.js}"></script>
+   
     
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!--script src="../../assets/js/ie10-viewport-bug-workaround.js"></script-->
@@ -43,50 +43,50 @@
         <div class="container">
             <div class="visible-md-block visible-lg-block">
             <div class="navbar-header">
-                <a href="http://csiss.gmu.edu/" target="_blank"><img class="img-responsive" src="../images/logo_cyberconnector.png" th:attr="src=@{../images/logo_cyberconnector.png}"/></a>
+                <a th:href="@{/}" target="_blank"><img class="img-responsive" th:src="@{/images/logo_cyberconnector.png}"/></a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" href="index" th:href="@{/web/index}">Home</a></li>
-                    <li><a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="feature" th:href="@{/web/productsearch}">Search</a></li>
-                    <li><a href="feature" th:href="@{/web/function}">Function</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="feature" th:href="@{/web/feature}">Feature</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="demo" th:href="@{/web/demo}">Demo</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="people" th:href="@{/web/people}">People</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="publication" th:href="@{/web/publication}">Publication</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="about" th:href="@{/web/about}">About</a></li>
+                    <li><a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/index}">Home</a></li>
+                    <li><a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/productsearch}">Search</a></li>
+                    <li><a  th:href="@{/web/function}">Function</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/feature}">Feature</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/demo}">Demo</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/people}">People</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/publication}">Publication</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/about}">About</a></li>
                     <li>
-                    	<a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="#" >Welcome, Friend</a>
-                    	<a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="user_profile" th:href="@{/web/user_profile}"  th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
-                   	</li>
+                        <a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" href="#" >Welcome, Friend</a>
+                        <a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/user_profile}" th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
+                    </li>
                     <li>
-                    	<a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="login" th:href="@{/web/login}" >Login</a>
-                    	<a th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  onclick="javascript:cc.user.logoutSubmit();" >Logout</a>
+                        <a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  th:href="@{/web/login}" >Login</a>
+                        <a th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  onclick="javascript:cc.user.logoutSubmit();" >Logout</a>
                     </li>
                 </ul>
             </div>
             </div>
             <div class="visible-xs-block visible-sm-block">
-                <img class="pull-left" src="../images/logo_cyberconnector.png" th:attr="src=@{../images/logo_cyberconnector.png}" style="width:64%; height:64%"/>
+                <img class="pull-left" th:src="@{/images/logo_cyberconnector.png}" style="width:64%; height:64%"/>
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle pull-right" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="index" th:href="@{/web/index}">Home</a></li>
-                            <li><a href="feature" th:href="@{/web/function}">Function</a></li>
-                            <li><a href="feature" th:href="@{/web/feature}">Feature</a></li>
-                            <li><a href="demo" th:href="@{/web/demo}">Demo</a></li>
-                            <li><a href="people" th:href="@{/web/people}">People</a></li>
-                            <li><a href="publication" th:href="@{/web/publication}">Publication</a></li>
-                            <li><a href="about" th:href="@{/web/about}">About</a></li>
+                            <li><a th:href="@{/web/index}">Home</a></li>
+                            <li><a th:href="@{/web/function}">Function</a></li>
+                            <li><a th:href="@{/web/feature}">Feature</a></li>
+                            <li><a th:href="@{/web/demo}">Demo</a></li>
+                            <li><a th:href="@{/web/people}">People</a></li>
+                            <li><a th:href="@{/web/publication}">Publication</a></li>
+                            <li><a th:href="@{/web/about}">About</a></li>
                             <li>
-		                    	<a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="#" >Welcome, Friend</a>
-		                    	<a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="user_profile" th:href="@{/web/user_profile}"  th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
-		                   	</li>
-		                    <li>
-		                    	<a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="login" th:href="@{/web/login}" >Login</a>
-		                    	<a th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  onclick="javascript:cc.user.logoutSubmit();" >Logout</a>
-		                    </li>
+                                <a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="#" >Welcome, Friend</a>
+                                <a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/user_profile}"  th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
+                            </li>
+                            <li>
+                                <a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  th:href="@{/web/login}" >Login</a>
+                                <a th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  onclick="javascript:cc.user.logoutSubmit();" >Logout</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -101,16 +101,16 @@
 
     <div class="container text-center">
         <div class="col-sm-3">
-            <a href="http://csiss.gmu.edu/" target="_blank"><img th:attr="src=@{../images/logo_gmucsiss.png}" style="width:80%; height:80%"/></a>
+            <a href="http://csiss.gmu.edu/" target="_blank"><img th:src="@{/images/logo_gmucsiss.png}" style="width:80%; height:80%"/></a>
         </div>
         <div class="col-sm-4">
-            <a href="http://www.unidata.ucar.edu/" target="_blank"><img th:attr="src=@{../images/logo_unidata.png}" style="width:82%; height:82%"/></a>
+            <a href="http://www.unidata.ucar.edu/" target="_blank"><img th:src="@{/images/logo_unidata.png}" style="width:82%; height:82%"/></a>
         </div>
         <div class="col-sm-2">
-            <a href="http://www.iastate.edu/" target="_blank"><img th:attr="src=@{../images/logo_iowa.png}" style="width:85%; height:85%"/></a>
+            <a href="http://www.iastate.edu/" target="_blank"><img th:src="@{/images/logo_iowa.png}" style="width:85%; height:85%"/></a>
         </div>
         <div class="col-sm-2">
-            <a href="http://www.lsu.edu/" target="_blank"><img th:attr="src=@{../images/logo_lsu.png}" style="width:85%; height:85%"/></a>
+            <a href="http://www.lsu.edu/" target="_blank"><img th:src="@{/images/logo_lsu.png}" style="width:85%; height:85%"/></a>
         </div>
 
     </div>
@@ -119,148 +119,148 @@
 
 <footer class="footer1  col-xs-12">
 
-	<div class="container">
-	
-		<div class="row"><!-- row -->
-		            
-		     <div class="col-lg-3 col-md-3"><!-- widgets column left -->
-		                <ul class="list-unstyled clear-margins"><!-- widgets -->
-		                        
-		                        	<li class="widget-container widget_nav_menu"><!-- widgets list -->
-		                    
-		                                <h1 class="title-widget">Useful links</h1>
-		                                
-		                                <ul>
-		                                	<li><a  href="people"><i class="fa fa-angle-double-right"></i> About Us</a></li>
-		                                    <li><a  href="mailto:zsun@gmu.edu"><i class="fa fa-angle-double-right"></i> Contact Us</a></li>
-		                                    <li><a  href="demo"><i class="fa fa-angle-double-right"></i> Success Stories</a></li>
-		                                    <li><a  href="fvcom"><i class="fa fa-angle-double-right"></i> Ocean Model</a></li>
-		                                    <li><a  href="cmaqm"><i class="fa fa-angle-double-right"></i> Atmospheric Model</a></li>
-		                                    <li><a  href="crm"><i class="fa fa-angle-double-right"></i> Cloud Model</a></li>
-		                                    <li><a  href="productsearch"><i class="fa fa-angle-double-right"></i> Search Model</a></li>
-		                                    <li><a  href="productsearch"><i class="fa fa-angle-double-right"></i> Order VDP</a></li>
-		                                    
-		                                </ul>
-		                    
-									</li>
-		                            
-		                        </ul>
-		                         
-		                      
-		                </div><!-- widgets column left end -->
-		                
-		                
-		                
-		                <div class="col-lg-3 col-md-3"><!-- widgets column left -->
-		            
-		                <ul class="list-unstyled clear-margins"><!-- widgets -->
-		                        
-		                        	<li class="widget-container widget_nav_menu"><!-- widgets list -->
-		                    
-		                                <h1 class="title-widget">Useful links</h1>
-		                                
-		                                <ul>
-		 									<li><a  href="publication"><i class="fa fa-angle-double-right"></i>  Journal Papers</a></li>
-		                                    <li><a  href="people"><i class="fa fa-angle-double-right"></i>  Principle Investigator</a></li>
-		                                    <li><a  href="chkorder"><i class="fa fa-angle-double-right"></i>  Order Status</a></li>
-		                                    <li><a  href="/geonetwork"><i class="fa fa-angle-double-right"></i>  Geonetwork for Unidata</a></li>
-		                                    <li><a  href="csw4unidata"><i class="fa fa-angle-double-right"></i>  PyCSW for Unidata</a></li>
-		                                    <li><a  href="regser"><i class="fa fa-angle-double-right"></i>  Register WSDL</a></li>
-		                                    <li><a  href="regser"><i class="fa fa-angle-double-right"></i>  Register WPS</a></li>
-		                                    <li><a  href="/VDP" target="_blank"><i class="fa fa-angle-double-right"></i> Design VDP</a></li>
-		                                    
-		                                </ul>
-		                    
-									</li>
-		                            
-		                        </ul>
-		                         
-		                      
-		                </div><!-- widgets column left end -->
-		                
-		                
-		                
-		                <div class="col-lg-3 col-md-3"><!-- widgets column left -->
-		            
-		                <ul class="list-unstyled clear-margins"><!-- widgets -->
-		                        
-		                        	<li class="widget-container widget_nav_menu"><!-- widgets list -->
-		                    
-		                                <h1 class="title-widget">Useful links</h1>
-		                                
-		                                <ul>
-		
-		
-							                <li><a href="login"><i class="fa fa-angle-double-right"></i> Log in</a></li>
-							 				<li><a href="user_forget"><i class="fa fa-angle-double-right"></i> Forget passwords</a></li>
-											<li><a href="user_edit"><i class="fa fa-angle-double-right"></i> Edit Account Information</a></li>
-											<li><a href="user_password"><i class="fa fa-angle-double-right"></i> Change passwords</a></li>
-											<li><a href="user_register"><i class="fa fa-angle-double-right"></i> Sign up</a></li>
-		
-		                                </ul>
-		                    
-									</li>
-		                            
-		                        </ul>
-		                         
-		                      
-		                </div><!-- widgets column left end -->
-		                
-		                <div class="col-lg-3 col-md-3"><!-- widgets column center -->
-		                
-		                        <ul class="list-unstyled clear-margins"><!-- widgets -->
-		                        
-		                        	<li class="widget-container widget_recent_news"><!-- widgets list -->
-		                    
-		                                <h1 class="title-widget">Contact Detail </h1>
-		                                
-		                                <div class="footerp"> 
-		                                
-			                                <h2 >CSISS GMU</h2>
-			                                <p ><b>Email id:</b> <a href="mailto:ldi@gmu.edu">ldi@gmu.edu</a></p>
-			                                <p ><b>Help Number </b>
-			
-										    <b style="color:#ffc106;">(9AM to 6PM):</b>  +1-703-993-6124  </p>
-										    
-										    <p><b>Office / Postal Address</b> 4400 University Dr MSE 6E1, Fairfax, VA, 22030, USA</p>
-										    <p ><b>Phone Numbers : </b>+1-703-993-6114, </p>
-										    <p> +1-703-993-6127 (Fax) </p>
-			    
-		                                </div>
-		                                
-		                                <div class="social-icons">
-		                                
-		                                	<ul class="nomargin">
-		                                    
-		               
-			            				<a href="mailto:zsun@gmu.edu">
-			            				
-			            					<i class="fa fa-envelope-square fa-3x social-em" id="social"></i>
-			            				
-			            				</a>
-			            				
+    <div class="container">
+    
+        <div class="row"><!-- row -->
+                    
+             <div class="col-lg-3 col-md-3"><!-- widgets column left -->
+                        <ul class="list-unstyled clear-margins"><!-- widgets -->
+                                
+                                    <li class="widget-container widget_nav_menu"><!-- widgets list -->
+                            
+                                        <h1 class="title-widget">Useful links</h1>
+                                        
+                                        <ul>
+                                            <li><a th:href="@{/people}"><i class="fa fa-angle-double-right"></i> About Us</a></li>
+                                            <li><a th:href="@{mailto:zsun@gmu.edu}"><i class="fa fa-angle-double-right"></i> Contact Us</a></li>
+                                            <li><a th:href="@{/demo}"><i class="fa fa-angle-double-right"></i> Success Stories</a></li>
+                                            <li><a th:href="@{/fvcom}"><i class="fa fa-angle-double-right"></i> Ocean Model</a></li>
+                                            <li><a th:href="@{/cmaqm}"><i class="fa fa-angle-double-right"></i> Atmospheric Model</a></li>
+                                            <li><a th:href="@{/crm}"><i class="fa fa-angle-double-right"></i> Cloud Model</a></li>
+                                            <li><a th:href="@{/web/productsearch}"><i class="fa fa-angle-double-right"></i> Search Model</a></li>
+                                            <li><a th:href="@{/web/productsearch}"><i class="fa fa-angle-double-right"></i> Order VDP</a></li>
+                                            
+                                        </ul>
+                            
+                                    </li>
+                                    
+                                </ul>
+                                 
+                              
+                        </div><!-- widgets column left end -->
+                        
+                        
+                        
+                        <div class="col-lg-3 col-md-3"><!-- widgets column left -->
+                    
+                        <ul class="list-unstyled clear-margins"><!-- widgets -->
+                                
+                                    <li class="widget-container widget_nav_menu"><!-- widgets list -->
+                            
+                                        <h1 class="title-widget">Useful links</h1>
+                                        
+                                        <ul>
+                                            <li><a th:href="@{/publication}"><i class="fa fa-angle-double-right"></i>  Journal Papers</a></li>
+                                            <li><a th:href="@{/people}"><i class="fa fa-angle-double-right"></i>  Principle Investigator</a></li>
+                                            <li><a th:href="@{/chkorder}"><i class="fa fa-angle-double-right"></i>  Order Status</a></li>
+                                            <li><a th:href="@{~/geonetwork}"><i class="fa fa-angle-double-right"></i>  Geonetwork for Unidata</a></li>
+                                            <li><a th:href="@{~/csw4unidata}"><i class="fa fa-angle-double-right"></i>  PyCSW for Unidata</a></li>
+                                            <li><a th:href="@{/regser}"><i class="fa fa-angle-double-right"></i>  Register WSDL</a></li>
+                                            <li><a th:href="@{/regser}"><i class="fa fa-angle-double-right"></i>  Register WPS</a></li>
+                                            <li><a th:href="@{/VDP}" target="_blank"><i class="fa fa-angle-double-right"></i> Design VDP</a></li>
+                                            
+                                        </ul>
+                            
+                                    </li>
+                                    
+                                </ul>
+                                 
+                              
+                        </div><!-- widgets column left end -->
+                        
+                        
+                        
+                        <div class="col-lg-3 col-md-3"><!-- widgets column left -->
+                    
+                        <ul class="list-unstyled clear-margins"><!-- widgets -->
+                                
+                                    <li class="widget-container widget_nav_menu"><!-- widgets list -->
+                            
+                                        <h1 class="title-widget">Useful links</h1>
+                                        
+                                        <ul>
+        
+        
+                                            <li><a href="login"><i class="fa fa-angle-double-right"></i> Log in</a></li>
+                                            <li><a href="user_forget"><i class="fa fa-angle-double-right"></i> Forget passwords</a></li>
+                                            <li><a href="user_edit"><i class="fa fa-angle-double-right"></i> Edit Account Information</a></li>
+                                            <li><a href="user_password"><i class="fa fa-angle-double-right"></i> Change passwords</a></li>
+                                            <li><a href="user_register"><i class="fa fa-angle-double-right"></i> Sign up</a></li>
+        
+                                        </ul>
+                            
+                                    </li>
+                                    
+                                </ul>
+                                 
+                              
+                        </div><!-- widgets column left end -->
+                        
+                        <div class="col-lg-3 col-md-3"><!-- widgets column center -->
+                        
+                                <ul class="list-unstyled clear-margins"><!-- widgets -->
+                                
+                                    <li class="widget-container widget_recent_news"><!-- widgets list -->
+                            
+                                        <h1 class="title-widget">Contact Detail </h1>
+                                        
+                                        <div class="footerp"> 
+                                        
+                                            <h2 >CSISS GMU</h2>
+                                            <p ><b>Email id:</b> <a href="mailto:ldi@gmu.edu">ldi@gmu.edu</a></p>
+                                            <p ><b>Help Number </b>
+            
+                                            <b style="color:#ffc106;">(9AM to 6PM):</b>  +1-703-993-6124  </p>
+                                            
+                                            <p><b>Office / Postal Address</b> 4400 University Dr MSE 6E1, Fairfax, VA, 22030, USA</p>
+                                            <p ><b>Phone Numbers : </b>+1-703-993-6114, </p>
+                                            <p> +1-703-993-6127 (Fax) </p>
+                
+                                        </div>
+                                        
+                                        <div class="social-icons">
+                                        
+                                            <ul class="nomargin">
+                                            
+                       
+                                        <a href="mailto:zsun@gmu.edu">
+                                        
+                                            <i class="fa fa-envelope-square fa-3x social-em" id="social"></i>
+                                        
+                                        </a>
+                                        
                            </ul>
                        </div>
-           		</li>
+                </li>
                  </ul>
               </div>
         </div>
-	</div>
+    </div>
 </footer>
 
 <footer class="footer-disclaimer col-xs-12">
-		<div class="container active">
-			&copy; 2014 - <span>2017</span> 
-			<a href="http://csiss.gmu.edu/" target="_blank" title="Center for Spatail Information Science &amp; System"> CSISS </a> All rights reserved. |
-			<a href="http://earthcube.org/" target="_blank" title="EarthCube Home Page"> EarthCube </a> |
-			<a href="http://www.nsf.gov/geo/earthcube/" target="_blank" title="Official NSF EarthCube content">
-				Funded by National Science Foundatation
-			</a>
-			<img style="width: 40px; height: 40px;" src="../images/logo_nsf.gif" />
-			
-			
-		</div>
-	</footer>
+        <div class="container active">
+            &copy; 2014 - <span>2017</span> 
+            <a href="http://csiss.gmu.edu/" target="_blank" title="Center for Spatail Information Science &amp; System"> CSISS </a> All rights reserved. |
+            <a href="http://earthcube.org/" target="_blank" title="EarthCube Home Page"> EarthCube </a> |
+            <a href="http://www.nsf.gov/geo/earthcube/" target="_blank" title="Official NSF EarthCube content">
+                Funded by National Science Foundatation
+            </a>
+            <img style="width: 40px; height: 40px;" th:src="@{/images/logo_nsf.gif}" />
+            
+            
+        </div>
+    </footer>
 <!-- <footer class="footer-disclaimer col-xs-12">
     <div class="container active">
         &copy; 2014 - <span th:text="${#dates.year(#calendars.createToday())}"></span> CyberConnector |
@@ -269,16 +269,16 @@
         <a href="http://www.nsf.gov/geo/earthcube/" target="_blank" title="Official NSF EarthCube content">
             Funded by National Science Foundatation
         </a>
-        <img th:attr="src=@{../images/logo_nsf.gif}" style="width: 40px; height: 40px;"/>
+        <img th:src="@{/images/logo_nsf.gif}" style="width: 40px; height: 40px;"/>
     </div>
 </footer> -->
 
-		<th:block layout:fragment="script"></th:block>
+        <th:block layout:fragment="script"></th:block>
 
-		<!-- Initialize CyberConnector -->
-		<script type="text/javascript" src="../js/cc.main.js" ></script>
+        <!-- Initialize CyberConnector -->
+        <script type="text/javascript" th:src="@{/js/cc.main.js}" ></script>
 
-	
+    
 
 </body>
 </html>

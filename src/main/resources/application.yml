@@ -4,6 +4,8 @@ logging:
     org.springframework.web.servlet.DispatcherServlet: INFO
     edu.cyberconnector: DEBUG
 
+#server.servlet.context-path: /CC
+
 edu.cyberconnector:
   csw_url: http://cube.csiss.gmu.edu/srv/csw
 
