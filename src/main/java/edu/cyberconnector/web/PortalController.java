@@ -16,28 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class PortalController {
 
     private static Logger log = LoggerFactory.getLogger(PortalController.class);
-	
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
-    @GetMapping("/web/index")
-    public String webIndex() {
-        return "index";
-    }
-
-
-    @GetMapping("/web/demo")
-    public String demo() {
-        return "demo";
-    }
-
-
-    @GetMapping("/web/function")
-    public String function() {
-        return "function";
-    }
 
     @GetMapping("{name}")
     public String view(@PathVariable String name, HttpSession session) {

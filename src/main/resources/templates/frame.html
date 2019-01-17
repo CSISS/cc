@@ -47,20 +47,20 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/index}">Home</a></li>
-                    <li><a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/productsearch}">Search</a></li>
-                    <li><a  th:href="@{/web/function}">Function</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/feature}">Feature</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/demo}">Demo</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/people}">People</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/publication}">Publication</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/about}">About</a></li>
+                    <li><a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/index}">Home</a></li>
+                    <li><a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/productsearch}">Search</a></li>
+                    <li><a  th:href="@{/function}">Function</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/feature}">Feature</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/demo}">Demo</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/people}">People</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/publication}">Publication</a></li>
+                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/about}">About</a></li>
                     <li>
                         <a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" href="#" >Welcome, Friend</a>
-                        <a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/user_profile}" th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
+                        <a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/user_profile}" th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
                     </li>
                     <li>
-                        <a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  th:href="@{/web/login}" >Login</a>
+                        <a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  th:href="@{/login}" >Login</a>
                         <a th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  onclick="javascript:cc.user.logoutSubmit();" >Logout</a>
                     </li>
                 </ul>
@@ -72,19 +72,19 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle pull-right" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a th:href="@{/web/index}">Home</a></li>
-                            <li><a th:href="@{/web/function}">Function</a></li>
-                            <li><a th:href="@{/web/feature}">Feature</a></li>
-                            <li><a th:href="@{/web/demo}">Demo</a></li>
-                            <li><a th:href="@{/web/people}">People</a></li>
-                            <li><a th:href="@{/web/publication}">Publication</a></li>
-                            <li><a th:href="@{/web/about}">About</a></li>
+                            <li><a th:href="@{/index}">Home</a></li>
+                            <li><a th:href="@{/function}">Function</a></li>
+                            <li><a th:href="@{/feature}">Feature</a></li>
+                            <li><a th:href="@{/demo}">Demo</a></li>
+                            <li><a th:href="@{/people}">People</a></li>
+                            <li><a th:href="@{/publication}">Publication</a></li>
+                            <li><a th:href="@{/about}">About</a></li>
                             <li>
                                 <a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="#" >Welcome, Friend</a>
-                                <a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/web/user_profile}"  th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
+                                <a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'" th:href="@{/user_profile}"  th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
                             </li>
                             <li>
-                                <a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  th:href="@{/web/login}" >Login</a>
+                                <a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  th:href="@{/login}" >Login</a>
                                 <a th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  onclick="javascript:cc.user.logoutSubmit();" >Logout</a>
                             </li>
                         </ul>
@@ -137,8 +137,8 @@
                                             <li><a th:href="@{/fvcom}"><i class="fa fa-angle-double-right"></i> Ocean Model</a></li>
                                             <li><a th:href="@{/cmaqm}"><i class="fa fa-angle-double-right"></i> Atmospheric Model</a></li>
                                             <li><a th:href="@{/crm}"><i class="fa fa-angle-double-right"></i> Cloud Model</a></li>
-                                            <li><a th:href="@{/web/productsearch}"><i class="fa fa-angle-double-right"></i> Search Model</a></li>
-                                            <li><a th:href="@{/web/productsearch}"><i class="fa fa-angle-double-right"></i> Order VDP</a></li>
+                                            <li><a th:href="@{/productsearch}"><i class="fa fa-angle-double-right"></i> Search Model</a></li>
+                                            <li><a th:href="@{/productsearch}"><i class="fa fa-angle-double-right"></i> Order VDP</a></li>
                                             
                                         </ul>
                             
