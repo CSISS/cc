@@ -23,11 +23,11 @@
     <title>Function Panel</title>
     
     
-	    <link rel="stylesheet" media="screen, projection" href="../css/demo.css" th:href="@{../css/demo.css}"/>
-	    <link rel="stylesheet" media="screen, projection" href="../css/common.css" th:href="@{../css/common.css}"/>
-	    <link rel="stylesheet" media="screen, projection" href="../css/style3.css" th:href="@{../css/style3.css}"/>
+	    <link rel="stylesheet" media="screen, projection" th:href="@{/css/demo.css}"/>
+	    <link rel="stylesheet" media="screen, projection"  th:href="@{/css/common.css}"/>
+	    <link rel="stylesheet" media="screen, projection" th:href="@{/css/style3.css}"/>
     
-    	<script src="../js/modernizr.custom.79639.js"  th:src="@{../js/modernizr.custom.79639.js}"></script>
+    	<script th:src="@{/js/modernizr.custom.79639.js}"></script>
     
 </head>
 
@@ -77,7 +77,7 @@
 									<div class="ch-item">	
 										<div class="ch-info">
 											<h3>Ocean</h3>
-											<p>FVCOM <a th:href="@{/web/fvcom}">View</a></p>
+											<p>FVCOM <a th:href="@{/fvcom}">View</a></p>
 										</div>
 										<div class="ch-thumb ch-img-1"></div>
 									</div>
@@ -86,7 +86,7 @@
 									<div class="ch-item">
 										<div class="ch-info">
 											<h3>Atmosphere</h3>
-											<p>CRM * CMAQ<a th:href="@{/web/crm}">View</a></p>
+											<p>CRM * CMAQ<a th:href="@{/crm}">View</a></p>
 										</div>
 										<div class="ch-thumb ch-img-2"></div>
 									</div>
@@ -115,7 +115,7 @@
 							<div class="col-lg-1"></div>
 							<div class="col-lg-3 ">
 							    <div class="hovereffect">
-							        <img class="img-responsive rounded" th:attr="src=@{../images/vdpsearch.jpg}" alt=""/>
+							        <img class="img-responsive rounded" th:src="@{/images/vdpsearch.jpg}" alt=""/>
 							            <div class="overlay">
 							                <h2>SEARCH VDP</h2>
 											<p> 
@@ -126,7 +126,7 @@
 							</div>
 							<div class="col-lg-3 ">
 							    <div class="hovereffect">
-							        <img class="img-responsive rounded" th:attr="src=@{../images/vdpcreate.jpg}" alt=""/>
+							        <img class="img-responsive rounded" th:src="@{/images/vdpcreate.jpg}" alt=""/>
 							            <div class="overlay">
 							                <h2>CREATE VDP</h2>
 											<p> 
@@ -137,7 +137,7 @@
 							</div>
 							<div class="col-lg-3">
 								 <div class="hovereffect">
-							        <img class="img-responsive rounded" th:attr="src=@{../images/ordercheck.jpg}" alt=""/>
+							        <img class="img-responsive rounded" th:src="@{/images/ordercheck.jpg}" alt=""/>
 							            <div class="overlay">
 							                <h2>ORDER STATUS</h2>
 											<p> 
@@ -158,7 +158,7 @@
 							<div class="col-lg-1"></div>
 							<div class="col-lg-3">
 								 <div class="hovereffect">
-							        <img class="img-responsive rounded" th:attr="src=@{../images/serviceregister.jpg}" alt=""/>
+							        <img class="img-responsive rounded" th:src="@{/images/serviceregister.jpg}" alt=""/>
 							            <div class="overlay">
 							                <h2>REGISTER SERVICE</h2>
 											<p> 
@@ -169,7 +169,7 @@
 							</div>
 							<div class="col-lg-3">
 								<div class="hovereffect">
-							        <img class="img-responsive rounded" th:attr="src=@{../images/servicesearch.jpg}" alt=""/>
+							        <img class="img-responsive rounded" th:src="@{/images/servicesearch.jpg}" alt=""/>
 							            <div class="overlay">
 							                <h2>SEARCH SERVICE</h2>
 											<p> 
@@ -185,7 +185,7 @@
 							
 								<div class="col-lg-3">
 									<div class="hovereffect">
-								        <img class="img-responsive rounded" th:attr="src=@{../images/servicecreate.jpg}" alt=""/>
+								        <img class="img-responsive rounded" th:src="@{/images/servicecreate.jpg}" alt=""/>
 								            
 								            <div class="overlay">
 								                
@@ -222,7 +222,7 @@
 								 
 								 <div class="hovereffect">
 							        
-							        <img class="img-responsive rounded" th:attr="src=@{../images/resultviewer.png}" alt=""/>
+							        <img class="img-responsive rounded" th:src="@{/images/resultviewer.png}" alt=""/>
 							            
 							            <div class="overlay">
 							                
@@ -245,7 +245,7 @@
 								 
 								 <div class="hovereffect">
 							        
-							        <img class="img-responsive rounded" th:attr="src=@{../images/onas.png}" alt=""/>
+							        <img class="img-responsive rounded" th:src="@{/images/onas.png}" alt=""/>
 							            
 							            <div class="overlay">
 							                
@@ -267,7 +267,7 @@
 								 
 								 <div class="hovereffect">
 							        
-							        <img class="img-responsive rounded" th:attr="src=@{../images/grassws.jpg}" alt=""/>
+							        <img class="img-responsive rounded" th:src="@{/images/grassws.jpg}" alt=""/>
 							            
 							            <div class="overlay">
 							                
