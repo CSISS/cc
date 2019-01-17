@@ -800,7 +800,7 @@ cc.search={
                     			
                     		}else{
                     			
-                    			content = '<a href="#"> <img src="../images/na.png"  class="img-responsive img-box img-thumbnail" /></a>';
+                    			content = '<a href="#"> <img src="images/na.png"  class="img-responsive img-box img-thumbnail" /></a>';
                     			
                     		}
                     		

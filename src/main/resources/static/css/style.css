@@ -318,7 +318,7 @@ footer.footer-disclaimer a {
 }
 
 .page-header {
-	background: transparent url("../images/bg_highlight.jpg") no-repeat
+	background: transparent url("/CC2/images/bg_highlight.jpg") no-repeat
 		scroll 0 0/cover;
 	padding-bottom: 2.4rem;
 	margin: 50px 0 0 0

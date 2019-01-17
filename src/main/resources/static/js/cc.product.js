@@ -102,7 +102,7 @@ cc.product = {
 				    	
 				    	$("#otherparams").empty();
 				    	
-				    	$("#otherparams").append("<img src=\"../images/loading.gif\" width=\"20\" height=\"20\" />");
+				    	$("#otherparams").append("<img src=\"images/loading.gif\" width=\"20\" height=\"20\" />");
 		            
 				    	cc.product.generateANewInputDialogForTheSelectedProduct(selected);
 		            	
