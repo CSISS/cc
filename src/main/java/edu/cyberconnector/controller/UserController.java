@@ -1,4 +1,4 @@
-package edu.cyberconnector.web;
+package edu.cyberconnector.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;

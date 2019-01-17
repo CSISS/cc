@@ -1,4 +1,4 @@
-package edu.cyberconnector.web;
+package edu.cyberconnector.controller;
 
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;

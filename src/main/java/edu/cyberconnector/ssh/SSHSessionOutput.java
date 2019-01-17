@@ -32,7 +32,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import edu.cyberconnector.utils.BaseTool;
-import edu.cyberconnector.web.GeoweaverController;
+import edu.cyberconnector.controller.GeoweaverController;
 
 public class SSHSessionOutput implements Runnable {
 

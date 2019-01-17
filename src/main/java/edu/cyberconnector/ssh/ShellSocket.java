@@ -14,7 +14,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import edu.cyberconnector.web.GeoweaverController;
+import edu.cyberconnector.controller.GeoweaverController;
 
 /**
  * Created by usta on 20.02.2015.

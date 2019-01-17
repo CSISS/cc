@@ -14,7 +14,7 @@ import edu.cyberconnector.user.User;
 import edu.cyberconnector.user.UserTool;
 import edu.cyberconnector.utils.Message;
 import edu.cyberconnector.utils.RandomString;
-import edu.cyberconnector.web.GeoweaverController;
+import edu.cyberconnector.controller.GeoweaverController;
 import net.schmizz.sshj.common.IOUtils;
 import net.schmizz.sshj.connection.channel.direct.Session;
 
