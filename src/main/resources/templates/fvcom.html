@@ -120,13 +120,13 @@
 			<ul>
 				<li class="largelinespace">Select begin date: 
 				<input type="text" id="bdtv"  name="bdtv" onchange="cc.fvcom.beginTimeTextChangeCallBack();" placeholder="2000-01-01"/>
-				&nbsp;<button type='button' id="selectdate1"  class="buttondate" ><img src="../images/calendar.png" height="16" width="16"/></button> <font style="color: red;">*</font></li>
+				&nbsp;<button type='button' id="selectdate1"  class="buttondate" ><img th:src="@{/images/calendar.png}" height="16" width="16"/></button> <font style="color: red;">*</font></li>
 				
 				<li class="largelinespace">Select end date:
 				<input type="text" id="edtv"  name="edtv" onchange="cc.fvcom.endTimeTextChangeCallBack();" placeholder="2000-01-01"/>
 				&nbsp;
 				<button type='button' id="selectdate2"  class="buttondate" >
-					<img src="../images/calendar.png" height="16" width="16"/>
+					<img th:src="@{/images/calendar.png}" height="16" width="16"/>
 				</button> <font style="color: red;">*</font></li>
 				
 				<li class="largelinespace">Provide an email address to receive the final product: 
