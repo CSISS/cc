@@ -1,285 +1,285 @@
 <!DOCTYPE html>
 <html   xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="frame">
-	<head>
+    <head>
 
-		<title>Sign Up</title>
+        <title>Sign Up</title>
 
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<link rel="stylesheet" media="screen, projection" href="../css/loginstyle.css" th:href="@{../css/loginstyle.css}" type="text/css"/>
-		<link rel="stylesheet" media="screen, projection" href="../css/font-awesome.css" th:href="@{../css/font-awesome.css}" type="text/css"/>
-		<!-- 	<link rel="stylesheet" media="screen, projection" href="../css/bootstrap.min.css" type="text/css"/> -->
-		<!-- 	<link rel='stylesheet' media="screen, projection" href='http://fonts.googleapis.com/css?family=Varela+Round' type='text/css'/> -->
-		<script src="../js/jquery.validate.min.js"></script>
-<!-- 		<script src="../js/jquery-1.11.1.3.min.js"></script>
-		<script src="../js/bootstrap.min.js"></script> -->
+        <link rel="stylesheet" media="screen, projection" href="../css/loginstyle.css" th:href="@{../css/loginstyle.css}" type="text/css"/>
+        <link rel="stylesheet" media="screen, projection" href="../css/font-awesome.css" th:href="@{../css/font-awesome.css}" type="text/css"/>
+        <!--    <link rel="stylesheet" media="screen, projection" href="../css/bootstrap.min.css" type="text/css"/> -->
+        <!--    <link rel='stylesheet' media="screen, projection" href='http://fonts.googleapis.com/css?family=Varela+Round' type='text/css'/> -->
+        <script src="../js/jquery.validate.min.js"></script>
+<!--        <script src="../js/jquery-1.11.1.3.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script> -->
 
-		<link rel="stylesheet" href="../css/user-register.css" th:href="@{../css/user-register.css}"/>
+        <link rel="stylesheet" href="../css/user-register.css" th:href="@{../css/user-register.css}"/>
 
-	</head>
-
-
-  	<body>
-	
-		<!--body-->
-	    <div class="clearfix" layout:fragment="content">
-	    	
-			<div class="sec-heading font-default">
-		        
-		    </div>
-		    
-			<section class="container font-default">
-		        
-		        <div class="row">
-		        
-			        <div class="col-lg-12">
-						
-						<!-- REGISTRATION FORM -->
-						<div class="text-center" style="padding:50px 0">
-							<div class="logo">Register</div>
-							<!-- Main Form -->
-
-							<div class="etc-login-form">
-								<p style="background-color:red; color:white;" th:text="${message.information}"></p>
-							</div>
+    </head>
 
 
-							<div class="login-form-1">
+    <body>
+    
+        <!--body-->
+        <div class="clearfix" layout:fragment="content">
+            
+            <div class="sec-heading font-default">
+                
+            </div>
+            
+            <section class="container font-default">
+                
+                <div class="row">
+                
+                    <div class="col-lg-12">
+                        
+                        <!-- REGISTRATION FORM -->
+                        <div class="text-center" style="padding:50px 0">
+                            <div class="logo">Register</div>
+                            <!-- Main Form -->
 
-								<form id="register-form" class="text-left"  th:action="@{/web/user_register}" th:object="${user}" method="post">
-									<div class="login-form-main-message"></div>
-									<div class="main-login-form">
-										<div class="login-group">
-
-											<div class="form-group">
-												<label for="reg_username" class="sr-only">Username</label>
-												<input type="text" class="form-control" id="reg_username" name="reg_username" th:field="*{name}" placeholder="username"/>
-											</div>
-
-											<div class="form-group">
-												<label for="reg_password" class="sr-only">Password</label>
-												<input type="password" class="form-control" id="reg_password" name="reg_password" th:field="*{password}" placeholder="password"/>
-											</div>
-
-											<div class="form-group">
-												<label for="reg_password_confirm" class="sr-only">Password Confirm</label>
-												<input type="password" class="form-control" id="reg_password_confirm" name="reg_password_confirm" placeholder="confirm password"/>
-											</div>
-
-											<div class="form-group">
-											  	<label for="address" class="sr-only">Address</label>
-											  	<input type="text" class="form-control" th:field="*{address}" placeholder="address"/>				  	
-											</div>
-											
-											<div class="form-group">
-												<label for="department" class="sr-only">Department</label>
-											  	<input type="text" class="form-control" th:field="*{department}" placeholder="department"/>		
-											</div>
-											
-											<div class="form-group">	
-												<label for="institute" class="sr-only">Institute</label>
-											  	<input type="text" class="form-control" th:field="*{institute}" placeholder="institute"/>
-											</div>
-											
-											<div class="form-group">
-												<label for="reg_email" class="sr-only">Email</label>
-												<input type="text" class="form-control" id="reg_email" name="reg_email" th:field="*{email}" placeholder="email"/>
-											</div>
-											
-											<div class="form-group">
-												<label for="reg_fullname" class="sr-only">Full Name</label>
-												<input type="text" class="form-control" id="reg_fullname" name="reg_fullname" th:field="*{fullname}" placeholder="full name"/>
-											</div>
-											
-											<div class="form-group login-group-checkbox">
-												<input type="radio" class="" style="display: none;" name="reg_gender" id="male"/>
-												<label for="male">male</label>
-												<input type="radio" class="" style="display: none;" name="reg_gender" id="female"/>
-												<label for="female">female</label>
-											</div>
-											
-											<div class="form-group login-group-checkbox">
-												<input type="checkbox" class="" style="display: none;" id="reg_agree" name="reg_agree"/>
-												<label for="reg_agree">i agree with <a href="#openModal">terms</a></label>
-												<div id="openModal" class="modalDialog">
-													<div>
-														<a href="#close" title="Close" class="close">X</a>
-														<h2>Terms</h2>
-<!-- 														<p>1. CyberConnector can only be used for approved projects.</p>
-														<p>2. User needs to follow the <a href="http://universitypolicy.gmu.edu/policies/responsible-use-of-computing/">University Policy</a></p> -->
-
-														<p>1. Scope</p>
-														<p>1.1. Any use of this web site provided by Center for Spatial Information Science and Systems, George Mason University ("CSISS"), "CyberConnector Web Site", is subject to these Terms of Use. These Terms of Use may be amended, modified or replaced by other terms and conditions, e.g . for the purchase of products and services. With log-in, or where a log-in is not required, in accessing or using the CyberConnector Web Site these Terms of Use are accepted in their then current version.</p>
-														<p>1.2. In the case of Web offers aimed at companies or public enterprises, such companies or enterprises are represented by the user and must assume that the user has appropriate knowledge and acts accordingly.</p>
-
-														<p>2. Services</p>
-														<p>2.1. This CyberConnector Web Site contains specific information and software, as well as - as the case may be - related documentation, for viewing or downloading.</p>
-														<p>2.2. CSISS may stop the operation of the CyberConnector Web Site in full or in part at any time. Due to the nature of the internet and computer systems, CSISS cannot accept any liability for the continuous availability of the CyberConnector Web Site.</p>
-
-														<p>3. Registration, Password</p>
-														<p>3.1. Some pages of the CyberConnector Web Site may be password protected. In the interest of safety and security of the business transactions, only registered Users may access said pages. CSISS reserves the right to deny registration to any User. CSISS particularly reserves the right to determine certain sites, which were previously freely accessible, subject to registration. CSISS is entitled, at any time and without obligation to give reasons, to deny the User the right to access the password-protected area by blocking its User Data (as defined below), in particular if the User </p>
-														<p>- uses false data for the purpose of registration;</p>
-														<p>- violates these Terms of Use or neglects its duty of care with regard to User Data; </p>
-														<p>- violates any applicable laws in the access to or use of the CyberConnector Web Site; or </p>
-														<p>- did not use the CyberConnector Web Site for a longer period.</p>
-														<p>3.2. For registration the User shall give accurate information and, where such information changes over time, update such information (to the extent possible: online) without undue delay. The User shall ensure that its e-mail address, as supplied to CSISS, is current at all times and an address at which the User can be contacted.</p>
-														<p>3.3. Upon registration the User will be provided with an access code, comprising a User ID and a password ("User Data"). On first access the User shall promptly change the password received from CSISS into a password known only to the User. The User Data allows the User to view or change its data or, as applicable, to withdraw its consent to data processing.</p>
-														<p>3.4. The User shall ensure that User Data is not accessible by third parties and is liable for all transactions and other activities carried out under its User Data. At the end of each online session, the User shall log-off from the password protected websites. If and to the extent the User becomes aware that third parties are misusing its User Data the User shall notify CSISS thereof without undue delay in writing, or, as the case may be, by e-mail.</p>
-														<p>3.5. After receipt of the notice under paragraph 3.4, CSISS will deny access to the password-protected area under such User Data. Access by the User will only be possible again upon the User's application to CSISS or upon new registration.</p>
-														<p>3.6. The User may at any time request termination of its registration in writing, provided that the deletion will not violate the proper performance of contractual relationships. In such event CSISS will remove all user data and other stored personally identifiable data of the User as soon as these data are no longer needed.</p>
-
-														<p>4. Rights of Use to Information, Software and Documentation</p>
-														<p>4.1. The use of any information, software and documentation made available on or via this CyberConnector Web Site is subject to these Terms of Use or, in case of updating information, software or documentation, subject to the applicable license terms previously agreed to with CSISS. Separately agreed to license terms, for example software downloads, shall prevail over these Terms of Use.</p>
-														<p>4.2. CSISS grants User a non-exclusive and non-transferable license, which may not be sublicensed, to use the information, software and documentation made available to the User on or via the CyberConnector Web Site to the extent agreed, or in the event of no such agreement to the extent of the purpose intended by CSISS in making same available.</p>
-														<p>4.3. Software shall be made available at no expense in object code. There shall be no right for the source code to be made available. This shall not apply to source code related to open source software, which license conditions take priority over these Terms of Use in the case of transfer of open source software and which conditions require the making available of the source code. In such case CSISS shall make the source code available in return for the payment of costs.</p>
-														<p>4.4. Information, software and documentation may not be distributed by the User to any third party at any time nor may it be rented or in any other way made available. Unless such is allowed by mandatory law, the User shall not modify the software or documentation nor shall it disassemble, reverse engineer or decompile the software or separate any part thereof. The User may make one backup copy of the software where necessary to secure further use in accordance with these Terms of Use.</p>
-														<p>4.5. The information, software and documentation are protected by copyright laws as well as international copyright treaties as well as other laws and conventions related to intellectual property. The User shall observe such laws and in particular shall not modify, conceal or remove any alphanumeric code, marks or copyright notices neither from the information nor from the software or documentation, or any copies thereof.</p>
-
-														<p>5. Intellectual Property</p>
-														<p>5.1. Notwithstanding the particular provisions in § 4 of these Terms of Use, information, brand names and other contents of the CyberConnector Web Site may not be changed, copied, reproduced, sold, rented, used, supplemented or otherwise used in any other way without the prior written permission of CSISS.</p>
-														<p>5.2. Except for the rights of use and other rights expressly granted herein, no other rights are granted to the User nor shall any obligation be implied requiring the grant of further rights. Any and all patent rights and licenses are expressly excluded.</p>
-														<p>5.3. CSISS may, without charge, use any ideas or proposals stored by a User on the CyberConnector Web Sites for the development, improvement and sale of its products.</p>
-
-														<p>6. Duties of the User</p>
-														<p>6.1. In accessing or using the CyberConnector Web Site the User shall not </p>
-														<p>- harm other persons, in particular minors, or infringe their personal rights; </p>
-														<p>- breach public morality in its manner of use; </p>
-														<p>- violate any intellectual property right or any other proprietary right; </p>
-														<p>- upload any contents containing a virus, so-called Trojan Horse, or any other program that could damage data; </p>
-														<p>- transmit, store or upload hyperlinks or contents to which the User is not entitled, in particular in cases where such hyperlinks or contents are in breach of confidentiality obligations or unlawful; or </p>
-														<p>- distribute advertising or unsolicited e-mails (so-called "spam") or inaccurate warnings of viruses, defects or similar material and the User shall not solicit or request the participation in any lottery, snowball system, chain letter, pyramid game or similar activity.</p>
-														<p>6.2. CSISS may deny access to the CyberConnector Web Site at any time, in particular if the User breaches any obligation arising from these Terms of Use.</p>
-
-														<p>7. Hyperlinks</p>
-														<p>The CyberConnector Web Site may contain hyperlinks to the web pages of third parties. CSISS shall have no liability for the contents of such web pages and does not make representations about or endorse such web pages or their contents as its own, as CSISS does not control the information on such web pages and is not responsible for the contents and information given thereon. The use of such web pages shall be at the sole risk of the User.</p>
-
-														<p>8. Liability for defects of title or quality</p>
-														<p>8.1. Insofar as any information, software or documentation is made available at no cost, any liability for defects as to quality or title of the information, software and documentation especially in relation to the correctness or absence of defects or the absence of claims or third party rights or in relation to completeness and/or fitness for purpose are excluded except for cases involving willful misconduct or fraud.</p>
-														<p>8.2. The information on the CyberConnector Web Site may contain specifications or general descriptions related to the technical possibilities of individual products which may not be available in certain cases (e.g. due to product changes). The required performance of the product shall therefore be mutually agreed in each case at the time of purchase.</p>
-
-														<p>9. Other Liability, Viruses</p>
-														<p>9.1. The liability of CSISS for defects in relation to quality and title shall be determined in accordance with the provisions of § 8 of these Terms of Use. Any further liability of CSISS is excluded unless required by law, e.g. under the Act on Product Liability or in cases of willful misconduct, gross negligence, personal injury or death, failure to meet guaranteed characteristics, fraudulent concealment of a defect or in case of breach of fundamental contractual obligations. The damages in case of breach of fundamental contractual obligations is limited to the contract-typical, foreseeable damage if there is no willful misconduct or gross negligence.</p>
-														<p>9.2. Although CSISS makes every endeavor to keep the CyberConnector Web Site free from viruses, CSISS cannot make any guarantee that it is virus-free. The User shall, for its own protection, take the necessary steps to ensure appropriate security measures and shall utilize a virus scanner before downloading any information, software or documentation.</p>
-														<p>9.3. §§ 9.1 and 9.2 do not intend nor imply any changes to the burden of proof to the User's disadvantage.</p>
-
-														<p>10. Compliance with Export Control Regulations</p>
-														<p>10.1. If the User transfers information, software and documentation provided by CSISS to a third party, the User shall comply with all applicable national and international (re-) export control regulations. In any event of such transfer the User shall comply with the (re-) export control regulations of the United States of America, of the European Union and of the United States of America.</p>
-														<p>10.2. Prior to any such transfer to a third party the User shall in particular check and guarantee by appropriate measures that </p>
-														<p>- There will be no infringement of an embargo imposed by the European Union, by the United States of America and/ or by the United Nations by such transfer or by provision of other economic resources in connection with information, software and documentation provided by CSISS, also considering the limitations of domestic business and prohibitions of by-passing those embargos; </p>
-														<p>- Such information, software and documentation provided by CSISS are not intended for use in connection with armaments, nuclear technology or weapons, if and to the extent such use is subject to prohibition or authorization, unless required authorization is provided; </p>
-														<p>- The regulations of all applicable Sanctioned Party Lists of the European Union and the United States of America concerning the trading with entities, persons and organizations listed therein are considered.</p>
-														<p>10.3. If required to enable authorities or CSISS to conduct export control checks, the User, upon request by CSISS, shall promptly provide CSISS with all information pertaining to the particular end-user, the particular destination and the particular intended use of information, software and documentation provided by CSISS, as well as any export control restrictions existing.</p>
-														<p>10.4. The User shall indemnify and hold harmless CSISS from and against any claim, proceeding, action, fine, loss, cost and damages arising out of or relating to any noncompliance with export control regulations by the User, and the User shall compensate CSISS for all losses and expenses resulting thereof, unless such noncompliance was not caused by fault of the User. This provision does not imply a change in burden of proof.</p>
-														<p>10.5. CSISS' obligation to fulfill an agreement is subject to the proviso that the fulfillment is not prevented by any impediments arising out of national and international foreign trade and customs requirements or any embargos or other sanctions.</p>
-
-														<p>11. Data Privacy Protection</p>
-														<p>For collection, use and processing of personally identifiable data of the User of the CyberConnector Web Site, CSISS shall comply with applicable laws on data privacy protection and the CyberConnector Web Site Data Protection Privacy Policy, which is available per hyperlink on the CyberConnector Web Site and/or on csiss.gmu.edu.</p>
-
-														<p>12. Supplementary Agreements, Place of Jurisdiction, Applicable Law</p>
-														<p>12.1. Any supplementary agreement requires the written form.</p>
-														<p>12.2. The individual pages of the CyberConnector Web Site are operated and administered by Center for Spatial Information Science and Systems. The pages comply with the law applicable in the country where the responsible company has its business residence. CSISS makes no representation that information, software and/or documentation on the CyberConnector Web Site are appropriate or available for viewing or downloading at locations outside such country. If Users access CyberConnector Web Site from outside such country, they are exclusively responsible for compliance with all applicable local laws. Access to CyberConnector Web Site's information, software and/or documentation from countries where such content is unlawful is prohibited. In this case and where User seeks to do business with CSISS, the User should contact the CSISS representative for the particular country for country specific business.</p>
-														<p>12.3. These Terms of Use shall be governed by - and all disputes relating to or in connection with these Terms of Use or their subject matter shall be resolved in accordance with - the laws of U.S.A, to the exclusion of its conflict of laws rules. The application of the United Nations Convention on Contracts for the International Sales of Goods (CISG) of 11 April 1980 is excluded.</p>
-
-													</div>
-												</div>
-											</div>
-										</div>
-										
-										<button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
-									</div>
-									<div class="etc-login-form">
-										<p>already have an account? <a th:href="@{/web/login}">login here</a></p>
-									</div>
-
-								</form>
-							</div>
-							<!-- end:Main Form -->
-						</div>					
-					</div>	        
-		        </div>       
-	        </section>       
-	    </div> <!-- /container -->
-	    
-		<th:block layout:fragment="script">
-
-			<script th:inline="javascript">
-
-				(function($) {
-					"use strict";
-
-					var options = {
-					  'btn-loading': '<i class="fa fa-spinner fa-pulse"></i>',
-					  'btn-success': '<i class="fa fa-check"></i>',
-					  'btn-error': '<i class="fa fa-remove"></i>',
-					  'msg-success': 'All Good! Redirecting...',
-					  'msg-error': 'Wrong login credentials!',
-					  'useAJAX': true,
-					};
-
-					$("#register-form").validate({
-
-						rules: {
-
-							name: {
-								required: true,
-								minlength: 5
-							},
-							password: {
-								required: true,
-								minlength: 5
-							},
-							reg_password_confirm: {
-								required: true,
-								minlength: 5,
-								equalTo: "#register-form [name=password]"
-							},
-							email: {
-						    	required: true,
-								email: true
-							},
-							fullname: {
-						    	required: true,
-								minlength: 5,
-							},
-							institute: {
-						    	required: true
-							},
-							department: {
-						    	required: true
-							},
-							reg_agree: "required",
-						},
-
-						errorClass: "form-invalid",
-
-						errorPlacement: function( label, element ) {
-
-							if( element.attr( "type" ) === "checkbox" || element.attr( "type" ) === "radio" ) {
-								element.parent().append( label ); 
-							}
-							else {
-							  	label.insertAfter( element ); 
-							}
-						}
-					});
-		 
-					$("#register-form").submit(function() {
-						remove_loading($(this));
-						
-						if(options['useAJAX'] == true)
-						{ 
-						  	  dummy_submit_form($(this)); 
-						  	  return false;
-						}
-					});
-
-				})(jQuery);
+                            <div class="etc-login-form">
+                                <p style="background-color:red; color:white;" th:text="${message.information}"></p>
+                            </div>
 
 
-			</script>
-		</th:block>
-	
- 	</body>
+                            <div class="login-form-1">
+
+                                <form id="register-form" class="text-left"  th:action="@{/user_register}" th:object="${user}" method="post">
+                                    <div class="login-form-main-message"></div>
+                                    <div class="main-login-form">
+                                        <div class="login-group">
+
+                                            <div class="form-group">
+                                                <label for="reg_username" class="sr-only">Username</label>
+                                                <input type="text" class="form-control" id="reg_username" name="reg_username" th:field="*{name}" placeholder="username"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="reg_password" class="sr-only">Password</label>
+                                                <input type="password" class="form-control" id="reg_password" name="reg_password" th:field="*{password}" placeholder="password"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="reg_password_confirm" class="sr-only">Password Confirm</label>
+                                                <input type="password" class="form-control" id="reg_password_confirm" name="reg_password_confirm" placeholder="confirm password"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="address" class="sr-only">Address</label>
+                                                <input type="text" class="form-control" th:field="*{address}" placeholder="address"/>                   
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="department" class="sr-only">Department</label>
+                                                <input type="text" class="form-control" th:field="*{department}" placeholder="department"/>     
+                                            </div>
+                                            
+                                            <div class="form-group">    
+                                                <label for="institute" class="sr-only">Institute</label>
+                                                <input type="text" class="form-control" th:field="*{institute}" placeholder="institute"/>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="reg_email" class="sr-only">Email</label>
+                                                <input type="text" class="form-control" id="reg_email" name="reg_email" th:field="*{email}" placeholder="email"/>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="reg_fullname" class="sr-only">Full Name</label>
+                                                <input type="text" class="form-control" id="reg_fullname" name="reg_fullname" th:field="*{fullname}" placeholder="full name"/>
+                                            </div>
+                                            
+                                            <div class="form-group login-group-checkbox">
+                                                <input type="radio" class="" style="display: none;" name="reg_gender" id="male"/>
+                                                <label for="male">male</label>
+                                                <input type="radio" class="" style="display: none;" name="reg_gender" id="female"/>
+                                                <label for="female">female</label>
+                                            </div>
+                                            
+                                            <div class="form-group login-group-checkbox">
+                                                <input type="checkbox" class="" style="display: none;" id="reg_agree" name="reg_agree"/>
+                                                <label for="reg_agree">i agree with <a href="#openModal">terms</a></label>
+                                                <div id="openModal" class="modalDialog">
+                                                    <div>
+                                                        <a href="#close" title="Close" class="close">X</a>
+                                                        <h2>Terms</h2>
+<!--                                                        <p>1. CyberConnector can only be used for approved projects.</p>
+                                                        <p>2. User needs to follow the <a href="http://universitypolicy.gmu.edu/policies/responsible-use-of-computing/">University Policy</a></p> -->
+
+                                                        <p>1. Scope</p>
+                                                        <p>1.1. Any use of this web site provided by Center for Spatial Information Science and Systems, George Mason University ("CSISS"), "CyberConnector Web Site", is subject to these Terms of Use. These Terms of Use may be amended, modified or replaced by other terms and conditions, e.g . for the purchase of products and services. With log-in, or where a log-in is not required, in accessing or using the CyberConnector Web Site these Terms of Use are accepted in their then current version.</p>
+                                                        <p>1.2. In the case of Web offers aimed at companies or public enterprises, such companies or enterprises are represented by the user and must assume that the user has appropriate knowledge and acts accordingly.</p>
+
+                                                        <p>2. Services</p>
+                                                        <p>2.1. This CyberConnector Web Site contains specific information and software, as well as - as the case may be - related documentation, for viewing or downloading.</p>
+                                                        <p>2.2. CSISS may stop the operation of the CyberConnector Web Site in full or in part at any time. Due to the nature of the internet and computer systems, CSISS cannot accept any liability for the continuous availability of the CyberConnector Web Site.</p>
+
+                                                        <p>3. Registration, Password</p>
+                                                        <p>3.1. Some pages of the CyberConnector Web Site may be password protected. In the interest of safety and security of the business transactions, only registered Users may access said pages. CSISS reserves the right to deny registration to any User. CSISS particularly reserves the right to determine certain sites, which were previously freely accessible, subject to registration. CSISS is entitled, at any time and without obligation to give reasons, to deny the User the right to access the password-protected area by blocking its User Data (as defined below), in particular if the User </p>
+                                                        <p>- uses false data for the purpose of registration;</p>
+                                                        <p>- violates these Terms of Use or neglects its duty of care with regard to User Data; </p>
+                                                        <p>- violates any applicable laws in the access to or use of the CyberConnector Web Site; or </p>
+                                                        <p>- did not use the CyberConnector Web Site for a longer period.</p>
+                                                        <p>3.2. For registration the User shall give accurate information and, where such information changes over time, update such information (to the extent possible: online) without undue delay. The User shall ensure that its e-mail address, as supplied to CSISS, is current at all times and an address at which the User can be contacted.</p>
+                                                        <p>3.3. Upon registration the User will be provided with an access code, comprising a User ID and a password ("User Data"). On first access the User shall promptly change the password received from CSISS into a password known only to the User. The User Data allows the User to view or change its data or, as applicable, to withdraw its consent to data processing.</p>
+                                                        <p>3.4. The User shall ensure that User Data is not accessible by third parties and is liable for all transactions and other activities carried out under its User Data. At the end of each online session, the User shall log-off from the password protected websites. If and to the extent the User becomes aware that third parties are misusing its User Data the User shall notify CSISS thereof without undue delay in writing, or, as the case may be, by e-mail.</p>
+                                                        <p>3.5. After receipt of the notice under paragraph 3.4, CSISS will deny access to the password-protected area under such User Data. Access by the User will only be possible again upon the User's application to CSISS or upon new registration.</p>
+                                                        <p>3.6. The User may at any time request termination of its registration in writing, provided that the deletion will not violate the proper performance of contractual relationships. In such event CSISS will remove all user data and other stored personally identifiable data of the User as soon as these data are no longer needed.</p>
+
+                                                        <p>4. Rights of Use to Information, Software and Documentation</p>
+                                                        <p>4.1. The use of any information, software and documentation made available on or via this CyberConnector Web Site is subject to these Terms of Use or, in case of updating information, software or documentation, subject to the applicable license terms previously agreed to with CSISS. Separately agreed to license terms, for example software downloads, shall prevail over these Terms of Use.</p>
+                                                        <p>4.2. CSISS grants User a non-exclusive and non-transferable license, which may not be sublicensed, to use the information, software and documentation made available to the User on or via the CyberConnector Web Site to the extent agreed, or in the event of no such agreement to the extent of the purpose intended by CSISS in making same available.</p>
+                                                        <p>4.3. Software shall be made available at no expense in object code. There shall be no right for the source code to be made available. This shall not apply to source code related to open source software, which license conditions take priority over these Terms of Use in the case of transfer of open source software and which conditions require the making available of the source code. In such case CSISS shall make the source code available in return for the payment of costs.</p>
+                                                        <p>4.4. Information, software and documentation may not be distributed by the User to any third party at any time nor may it be rented or in any other way made available. Unless such is allowed by mandatory law, the User shall not modify the software or documentation nor shall it disassemble, reverse engineer or decompile the software or separate any part thereof. The User may make one backup copy of the software where necessary to secure further use in accordance with these Terms of Use.</p>
+                                                        <p>4.5. The information, software and documentation are protected by copyright laws as well as international copyright treaties as well as other laws and conventions related to intellectual property. The User shall observe such laws and in particular shall not modify, conceal or remove any alphanumeric code, marks or copyright notices neither from the information nor from the software or documentation, or any copies thereof.</p>
+
+                                                        <p>5. Intellectual Property</p>
+                                                        <p>5.1. Notwithstanding the particular provisions in § 4 of these Terms of Use, information, brand names and other contents of the CyberConnector Web Site may not be changed, copied, reproduced, sold, rented, used, supplemented or otherwise used in any other way without the prior written permission of CSISS.</p>
+                                                        <p>5.2. Except for the rights of use and other rights expressly granted herein, no other rights are granted to the User nor shall any obligation be implied requiring the grant of further rights. Any and all patent rights and licenses are expressly excluded.</p>
+                                                        <p>5.3. CSISS may, without charge, use any ideas or proposals stored by a User on the CyberConnector Web Sites for the development, improvement and sale of its products.</p>
+
+                                                        <p>6. Duties of the User</p>
+                                                        <p>6.1. In accessing or using the CyberConnector Web Site the User shall not </p>
+                                                        <p>- harm other persons, in particular minors, or infringe their personal rights; </p>
+                                                        <p>- breach public morality in its manner of use; </p>
+                                                        <p>- violate any intellectual property right or any other proprietary right; </p>
+                                                        <p>- upload any contents containing a virus, so-called Trojan Horse, or any other program that could damage data; </p>
+                                                        <p>- transmit, store or upload hyperlinks or contents to which the User is not entitled, in particular in cases where such hyperlinks or contents are in breach of confidentiality obligations or unlawful; or </p>
+                                                        <p>- distribute advertising or unsolicited e-mails (so-called "spam") or inaccurate warnings of viruses, defects or similar material and the User shall not solicit or request the participation in any lottery, snowball system, chain letter, pyramid game or similar activity.</p>
+                                                        <p>6.2. CSISS may deny access to the CyberConnector Web Site at any time, in particular if the User breaches any obligation arising from these Terms of Use.</p>
+
+                                                        <p>7. Hyperlinks</p>
+                                                        <p>The CyberConnector Web Site may contain hyperlinks to the web pages of third parties. CSISS shall have no liability for the contents of such web pages and does not make representations about or endorse such web pages or their contents as its own, as CSISS does not control the information on such web pages and is not responsible for the contents and information given thereon. The use of such web pages shall be at the sole risk of the User.</p>
+
+                                                        <p>8. Liability for defects of title or quality</p>
+                                                        <p>8.1. Insofar as any information, software or documentation is made available at no cost, any liability for defects as to quality or title of the information, software and documentation especially in relation to the correctness or absence of defects or the absence of claims or third party rights or in relation to completeness and/or fitness for purpose are excluded except for cases involving willful misconduct or fraud.</p>
+                                                        <p>8.2. The information on the CyberConnector Web Site may contain specifications or general descriptions related to the technical possibilities of individual products which may not be available in certain cases (e.g. due to product changes). The required performance of the product shall therefore be mutually agreed in each case at the time of purchase.</p>
+
+                                                        <p>9. Other Liability, Viruses</p>
+                                                        <p>9.1. The liability of CSISS for defects in relation to quality and title shall be determined in accordance with the provisions of § 8 of these Terms of Use. Any further liability of CSISS is excluded unless required by law, e.g. under the Act on Product Liability or in cases of willful misconduct, gross negligence, personal injury or death, failure to meet guaranteed characteristics, fraudulent concealment of a defect or in case of breach of fundamental contractual obligations. The damages in case of breach of fundamental contractual obligations is limited to the contract-typical, foreseeable damage if there is no willful misconduct or gross negligence.</p>
+                                                        <p>9.2. Although CSISS makes every endeavor to keep the CyberConnector Web Site free from viruses, CSISS cannot make any guarantee that it is virus-free. The User shall, for its own protection, take the necessary steps to ensure appropriate security measures and shall utilize a virus scanner before downloading any information, software or documentation.</p>
+                                                        <p>9.3. §§ 9.1 and 9.2 do not intend nor imply any changes to the burden of proof to the User's disadvantage.</p>
+
+                                                        <p>10. Compliance with Export Control Regulations</p>
+                                                        <p>10.1. If the User transfers information, software and documentation provided by CSISS to a third party, the User shall comply with all applicable national and international (re-) export control regulations. In any event of such transfer the User shall comply with the (re-) export control regulations of the United States of America, of the European Union and of the United States of America.</p>
+                                                        <p>10.2. Prior to any such transfer to a third party the User shall in particular check and guarantee by appropriate measures that </p>
+                                                        <p>- There will be no infringement of an embargo imposed by the European Union, by the United States of America and/ or by the United Nations by such transfer or by provision of other economic resources in connection with information, software and documentation provided by CSISS, also considering the limitations of domestic business and prohibitions of by-passing those embargos; </p>
+                                                        <p>- Such information, software and documentation provided by CSISS are not intended for use in connection with armaments, nuclear technology or weapons, if and to the extent such use is subject to prohibition or authorization, unless required authorization is provided; </p>
+                                                        <p>- The regulations of all applicable Sanctioned Party Lists of the European Union and the United States of America concerning the trading with entities, persons and organizations listed therein are considered.</p>
+                                                        <p>10.3. If required to enable authorities or CSISS to conduct export control checks, the User, upon request by CSISS, shall promptly provide CSISS with all information pertaining to the particular end-user, the particular destination and the particular intended use of information, software and documentation provided by CSISS, as well as any export control restrictions existing.</p>
+                                                        <p>10.4. The User shall indemnify and hold harmless CSISS from and against any claim, proceeding, action, fine, loss, cost and damages arising out of or relating to any noncompliance with export control regulations by the User, and the User shall compensate CSISS for all losses and expenses resulting thereof, unless such noncompliance was not caused by fault of the User. This provision does not imply a change in burden of proof.</p>
+                                                        <p>10.5. CSISS' obligation to fulfill an agreement is subject to the proviso that the fulfillment is not prevented by any impediments arising out of national and international foreign trade and customs requirements or any embargos or other sanctions.</p>
+
+                                                        <p>11. Data Privacy Protection</p>
+                                                        <p>For collection, use and processing of personally identifiable data of the User of the CyberConnector Web Site, CSISS shall comply with applicable laws on data privacy protection and the CyberConnector Web Site Data Protection Privacy Policy, which is available per hyperlink on the CyberConnector Web Site and/or on csiss.gmu.edu.</p>
+
+                                                        <p>12. Supplementary Agreements, Place of Jurisdiction, Applicable Law</p>
+                                                        <p>12.1. Any supplementary agreement requires the written form.</p>
+                                                        <p>12.2. The individual pages of the CyberConnector Web Site are operated and administered by Center for Spatial Information Science and Systems. The pages comply with the law applicable in the country where the responsible company has its business residence. CSISS makes no representation that information, software and/or documentation on the CyberConnector Web Site are appropriate or available for viewing or downloading at locations outside such country. If Users access CyberConnector Web Site from outside such country, they are exclusively responsible for compliance with all applicable local laws. Access to CyberConnector Web Site's information, software and/or documentation from countries where such content is unlawful is prohibited. In this case and where User seeks to do business with CSISS, the User should contact the CSISS representative for the particular country for country specific business.</p>
+                                                        <p>12.3. These Terms of Use shall be governed by - and all disputes relating to or in connection with these Terms of Use or their subject matter shall be resolved in accordance with - the laws of U.S.A, to the exclusion of its conflict of laws rules. The application of the United Nations Convention on Contracts for the International Sales of Goods (CISG) of 11 April 1980 is excluded.</p>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
+                                    </div>
+                                    <div class="etc-login-form">
+                                        <p>already have an account? <a th:href="@{/login}">login here</a></p>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <!-- end:Main Form -->
+                        </div>                  
+                    </div>          
+                </div>       
+            </section>       
+        </div> <!-- /container -->
+        
+        <th:block layout:fragment="script">
+
+            <script th:inline="javascript">
+
+                (function($) {
+                    "use strict";
+
+                    var options = {
+                      'btn-loading': '<i class="fa fa-spinner fa-pulse"></i>',
+                      'btn-success': '<i class="fa fa-check"></i>',
+                      'btn-error': '<i class="fa fa-remove"></i>',
+                      'msg-success': 'All Good! Redirecting...',
+                      'msg-error': 'Wrong login credentials!',
+                      'useAJAX': true,
+                    };
+
+                    $("#register-form").validate({
+
+                        rules: {
+
+                            name: {
+                                required: true,
+                                minlength: 5
+                            },
+                            password: {
+                                required: true,
+                                minlength: 5
+                            },
+                            reg_password_confirm: {
+                                required: true,
+                                minlength: 5,
+                                equalTo: "#register-form [name=password]"
+                            },
+                            email: {
+                                required: true,
+                                email: true
+                            },
+                            fullname: {
+                                required: true,
+                                minlength: 5,
+                            },
+                            institute: {
+                                required: true
+                            },
+                            department: {
+                                required: true
+                            },
+                            reg_agree: "required",
+                        },
+
+                        errorClass: "form-invalid",
+
+                        errorPlacement: function( label, element ) {
+
+                            if( element.attr( "type" ) === "checkbox" || element.attr( "type" ) === "radio" ) {
+                                element.parent().append( label ); 
+                            }
+                            else {
+                                label.insertAfter( element ); 
+                            }
+                        }
+                    });
+         
+                    $("#register-form").submit(function() {
+                        remove_loading($(this));
+                        
+                        if(options['useAJAX'] == true)
+                        { 
+                              dummy_submit_form($(this)); 
+                              return false;
+                        }
+                    });
+
+                })(jQuery);
+
+
+            </script>
+        </th:block>
+    
+    </body>
 
 </html>

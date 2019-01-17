@@ -13,10 +13,10 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/js/jquery.terminal.min.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/css/jquery.terminal.min.css" rel="stylesheet"/> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/1.23.2/css/jquery.terminal.min.css" rel="stylesheet"/> -->
     <script src="../geoweaver/ssh/jquery.terminal/js/jquery.terminal.min.js"></script>
-	<link href="../geoweaver/ssh/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
-	<script src="../geoweaver/ssh/jquery.terminal/js/unix_formatting.js"></script>
+    <link href="../geoweaver/ssh/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
+    <script src="../geoweaver/ssh/jquery.terminal/js/unix_formatting.js"></script>
     <!-- <script src="jquery.min.js"></script>
     
     <script src="jquery.terminal/js/jquery.mousewheel-min.js"></script>
@@ -32,25 +32,25 @@
         }
         
         #content.terminal {
-        	
-	        font-size: calc(var(--size, 1) * 15px) !important;
-	        
-	        --background: #222 !important;
-	        
-	        --color: white !important;
-	        
-	        font-family: monospace, courier, fixed, swiss, sans-serif !important;
-	        
-	        font-variant-ligatures: none !important;
-	        
-	        font-weight:400 !important;
-	        
-	        line-height: 18px !important;
-	        
-	        white-space: nowrap !important;
-	        
-	    }
-	    
+            
+            font-size: calc(var(--size, 1) * 15px) !important;
+            
+            --background: #222 !important;
+            
+            --color: white !important;
+            
+            font-family: monospace, courier, fixed, swiss, sans-serif !important;
+            
+            font-variant-ligatures: none !important;
+            
+            font-weight:400 !important;
+            
+            line-height: 18px !important;
+            
+            white-space: nowrap !important;
+            
+        }
+        
     </style>
 </head>
 
@@ -61,7 +61,7 @@
 <div id="content"></div>
 
 <form name="logout" action="geoweaver-ssh-login" method="GET" style="display:none;">
-	<!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"></input> -->
+    <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"></input> -->
 </form>
 
 <script th:inline="javascript">
@@ -72,19 +72,19 @@
     var sshConnected = false;
     var passwordPhase = false;
     var user = [[${username}]], 
-    	host = [[${host}]], 
-    	port = [[${port}]], 
-    	token = [[${token}]];
+        host = [[${host}]], 
+        port = [[${port}]], 
+        token = [[${token}]];
     var ws;
     var last_prompt = null;
     var password_cout = 0;
-	/* var host = window.location.hostname;
-	var port = window.location.port;
-	var pcol = window.location.protocol; */
-	var root = getContextURLPath();
-	var key = '${key}';
-	var username = '<sec:authentication property="principal" />';
-	//alert('ID:' + key + ',USERNAME:' + username);
+    /* var host = window.location.hostname;
+    var port = window.location.port;
+    var pcol = window.location.protocol; */
+    var root = getContextURLPath();
+    var key = '${key}';
+    var username = '<sec:authentication property="principal" />';
+    //alert('ID:' + key + ',USERNAME:' + username);
     var special = {
       black:   "\x1b[1;30m",
       red:     "\x1b[1;31m",
@@ -98,7 +98,7 @@
       ready:   "]0;", 
       prompt:  "$"
     };
-    	  
+          
     function ws_onopen(e) {
       
       //shell.echo(special.white + "connected" + special.reset);
@@ -109,40 +109,40 @@
     }
     
     function send(data) {
-    	
+        
         shell.pause();
         
         if(ws != null){
-      	
-        	ws.send(data);
+        
+            ws.send(data);
         
         } else {
         
-        	shell.error('not connected!');
+            shell.error('not connected!');
         
         }
     }
 
     function ws_onclose(e) {
-    	
+        
         try{
         
-        	shell.echo(special.white + "disconnected" + special.reset);
+            shell.echo(special.white + "disconnected" + special.reset);
             
-        	shell.destroy();
+            shell.destroy();
             
-        	shell.purge();
+            shell.purge();
             
         }catch(e){
-        	
-        	console.error(e);
+            
+            console.error(e);
         }
         
-    	document.forms['logout'].submit();
+        document.forms['logout'].submit();
     }
 
     function ws_onerror(e) {
-    	
+        
         shell.echo(special.red + e + special.reset);
         
         shell.resume();
@@ -152,36 +152,36 @@
     function ws_onmessage(e) {
       
       try {
-    	
+        
         if(e.data.indexOf(special.prompt) == -1 && e.data.indexOf(special.ready) == -1) {
             
-        	shell.echo(e.data);
-        	
+            shell.echo(e.data);
+            
         }
         
         //if (e.data.indexOf(special.ready) != -1) {
         
-        //	shell.resume();
-		
+        //  shell.resume();
+        
         //}
         
       } catch(err) {
       
-    	shell.error("** Invalid server response : " + e.data); 
+        shell.error("** Invalid server response : " + e.data); 
         
-    	if(last_prompt) {
+        if(last_prompt) {
         
-    		shell.set_prompt(last_prompt);
+            shell.set_prompt(last_prompt);
         
-    	}
-    	
+        }
+        
       }
       
       shell.resume();
       
     }
 
-	function getContextURLPath() {
+    function getContextURLPath() {
         var rootUrl = location.protocol;
         rootUrl = rootUrl+"//"+location.host;
         var path = location.pathname;
@@ -191,8 +191,8 @@
     }
 
     $(document).ready(function ($) {
-		
-        ws = new SockJS("http://" + location.host + "/CyberConnector/web/shell");
+        
+        ws = new SockJS("http://" + location.host + "/CyberConnector/shell");
         
         ws.onopen = function(e) { ws_onopen(e) };
         
@@ -201,13 +201,13 @@
         ws.onmessage = function(e) { ws_onmessage(e) };
         
         ws.onerror = function(e) { ws_onerror(e) };
-		
+        
         shell = $('#content').terminal(function (command, term) {
-        		
-        		send(command);
-        		
+                
+                send(command);
+                
             }, {
-            	
+                
                 prompt: '['+user+'@'+host+': ~]# ',
                 
                 name: 'Geoweaver SSH on Web',
@@ -219,7 +219,7 @@
             }
             
         );
-		
+        
     });
       
     /*]]>*/

@@ -22,7 +22,6 @@ import edu.cyberconnector.utils.*;
 import edu.cyberconnector.user.*;
 
 @Controller
-@RequestMapping("/web")
 public class ServiceController {
 
     private static Logger log = LoggerFactory.getLogger(ServiceController.class);

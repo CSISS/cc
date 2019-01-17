@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <!-- 
 
-	saved from url=(0041)http://www3.csiss.gmu.edu/CyberConnector/
-	
-	Author: Z. S.
-	
-	Date: 20170125 
-	
-	 Responsibility Disclaimer: 
-	 
-	 vdpsearch.jpg, modernizr.custom.79639.js, demo.css, common.css,style3.css come from the Internet. 
-	 
-	 The copyrights of these materials belongs to their owners. The authors of CyberConnector take no responsibility
-	 
-	 for the loss to any entity by using these materials. 
+    saved from url=(0041)http://www3.csiss.gmu.edu/CyberConnector/
+    
+    Author: Z. S.
+    
+    Date: 20170125 
+    
+     Responsibility Disclaimer: 
+     
+     vdpsearch.jpg, modernizr.custom.79639.js, demo.css, common.css,style3.css come from the Internet. 
+     
+     The copyrights of these materials belongs to their owners. The authors of CyberConnector take no responsibility
+     
+     for the loss to any entity by using these materials. 
 
 -->
 <html  xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="frame">
@@ -23,284 +23,284 @@
     <title>Function Panel</title>
     
     
-	    <link rel="stylesheet" media="screen, projection" th:href="@{/css/demo.css}"/>
-	    <link rel="stylesheet" media="screen, projection"  th:href="@{/css/common.css}"/>
-	    <link rel="stylesheet" media="screen, projection" th:href="@{/css/style3.css}"/>
+        <link rel="stylesheet" media="screen, projection" th:href="@{/css/demo.css}"/>
+        <link rel="stylesheet" media="screen, projection"  th:href="@{/css/common.css}"/>
+        <link rel="stylesheet" media="screen, projection" th:href="@{/css/style3.css}"/>
     
-    	<script th:src="@{/js/modernizr.custom.79639.js}"></script>
+        <script th:src="@{/js/modernizr.custom.79639.js}"></script>
     
 </head>
 
 <body>
-	
-	<!--body-->
+    
+    <!--body-->
     <div class="clearfix" layout:fragment="content">
-		<!-- Main component for a primary marketing message or call to action -->
-		
-			<div class="sec-heading font-default">
-	        <div class="container">
-	            <h1 class="pull-left">Function Panel</h1>
-	            <div class="detail-text pull-right">This page contains all the function that CyberConnector supports now. Modelers can customize data products for their models from here. </div>
-	        </div>
-	    </div>
+        <!-- Main component for a primary marketing message or call to action -->
+        
+            <div class="sec-heading font-default">
+            <div class="container">
+                <h1 class="pull-left">Function Panel</h1>
+                <div class="detail-text pull-right">This page contains all the function that CyberConnector supports now. Modelers can customize data products for their models from here. </div>
+            </div>
+        </div>
 
-		<section class="container font-default">
-	        <div class="row">
-	            <div class="visible-lg-block visible-md-block col-md-2 menu">
-	                <dl id="menu">
-	                    <dd><a href="productsearch">Data</a></dd>
-	                    <dd><a href="servicesearch">Service</a></dd>
-	                    <dd><a href="http://cube.csiss.gmu.edu/VDP">VDP</a></dd>
-	                    <dd><a href="covali">COVALI</a></dd>
-	                    <dd><a href="javascript:alert('not ready yet')">Geoweaver</a></dd>
-	                </dl>
-	            </div>
-	            
-	            <div class="col-xs-12 col-md-10">
-	                
-	                <div class="panel panel-default">
-	                	
-	                	<!-- Model Panel -->
-	                	
-	                	<h2>Download</h2>
-	                	<div class="detail-text">CyberConnector is an open source project with source code on <a href="http://github.com/CSISS/cc">Github</a>. Use <mark>git clone https://github.com/CSISS/cc.git</mark> to download the latest source code to your local. The release file is a war, which you need a tomcat to run it. </div>
-	                	
-	                	
-						
-	                	
-	                	<h2>Earth Science Models</h2>
-	                	<div class="detail-text">We have already used CyberConnector to feed Earth Observation to several models including FVCOM (ocean), CRM (cloud), CMAQ (air quality) and VCI (vegetation condition). See more details by clicking the below links.</div>
-						
-						<section class="main">
-							<ul class="ch-grid">
-								<li>
-									<div class="ch-item">	
-										<div class="ch-info">
-											<h3>Ocean</h3>
-											<p>FVCOM <a th:href="@{/fvcom}">View</a></p>
-										</div>
-										<div class="ch-thumb ch-img-1"></div>
-									</div>
-								</li>
-								<li>
-									<div class="ch-item">
-										<div class="ch-info">
-											<h3>Atmosphere</h3>
-											<p>CRM * CMAQ<a th:href="@{/crm}">View</a></p>
-										</div>
-										<div class="ch-thumb ch-img-2"></div>
-									</div>
-								</li>
-								
-								<!-- VCI is not ready -->
-								<!-- <li>
-									<div class="ch-item">
-										<div class="ch-info">
-											<h3>Vegetation</h3>
-											<p>VCI <a th:href="@{/web/vci}">View</a></p>
-										</div>
-										<div class="ch-thumb ch-img-3"></div>
-									</div>
-								</li> -->
-							</ul>
-						</section>
-						
-						
-						<!-- Other Products (VDP) -->
-						
-						<h2>VDP Customization and Production</h2>
-						<div class="detail-text">VDP is short for virtual data product. In the registry, VDP is the same as physical data product. In the reality, VDP doesn't exist. Once a VDP is requested, a corresponding production workflow will be invoked and dynamically generate a physical data product. VDP is more flexible than traditional data products and allows modelers to customize all sorts of data to fit their models. </div>
-						
-						<div class="row mt-1 mb-1">
-							<div class="col-lg-1"></div>
-							<div class="col-lg-3 ">
-							    <div class="hovereffect">
-							        <img class="img-responsive rounded" th:src="@{/images/vdpsearch.jpg}" alt=""/>
-							            <div class="overlay">
-							                <h2>SEARCH VDP</h2>
-											<p> 
-												<a th:href="@{/web/productsearch}">ENTER HERE</a>
-											</p> 
-							            </div>
-							    </div>
-							</div>
-							<div class="col-lg-3 ">
-							    <div class="hovereffect">
-							        <img class="img-responsive rounded" th:src="@{/images/vdpcreate.jpg}" alt=""/>
-							            <div class="overlay">
-							                <h2>CREATE VDP</h2>
-											<p> 
-												<a href="/VDP">ENTER HERE</a>
-											</p> 
-							            </div>
-							    </div>
-							</div>
-							<div class="col-lg-3">
-								 <div class="hovereffect">
-							        <img class="img-responsive rounded" th:src="@{/images/ordercheck.jpg}" alt=""/>
-							            <div class="overlay">
-							                <h2>ORDER STATUS</h2>
-											<p> 
-												<a th:href="@{/web/chkorder}">ENTER HERE</a>
-											</p> 
-							            </div>
-							    </div>
-							</div>
-						</div>
-						
-						
-						<!-- Service Panel -->
-						
-						<h2>Geospatial Web Services</h2>
-						<div class="detail-text">CyberConnector depends on web services. Most processes in generating VDP are conducted by web services. CyberConnector provides a registry to archive service metadata and enable users to search and use them in designing a new VDP. </div>
-						
-						<div class="row mt-1 mb-1">
-							<div class="col-lg-1"></div>
-							<div class="col-lg-3">
-								 <div class="hovereffect">
-							        <img class="img-responsive rounded" th:src="@{/images/serviceregister.jpg}" alt=""/>
-							            <div class="overlay">
-							                <h2>REGISTER SERVICE</h2>
-											<p> 
-												<a th:href="@{/web/servicetypeselect}">ENTER HERE</a>
-											</p> 
-							            </div>
-							    </div>
-							</div>
-							<div class="col-lg-3">
-								<div class="hovereffect">
-							        <img class="img-responsive rounded" th:src="@{/images/servicesearch.jpg}" alt=""/>
-							            <div class="overlay">
-							                <h2>SEARCH SERVICE</h2>
-											<p> 
-												<a th:href="@{/web/servicesearch}">ENTER HERE</a>
-											</p> 
-							            </div>
-							    </div>
-							</div>
-							
-							<!-- Service self creation is not ready -->
-							
-							<!-- 
-							
-								<div class="col-lg-3">
-									<div class="hovereffect">
-								        <img class="img-responsive rounded" th:src="@{/images/servicecreate.jpg}" alt=""/>
-								            
-								            <div class="overlay">
-								                
-								                <h2>CREATE SERVICE</h2>
-												
-												<p> 
-													
-													<a>PENDING</a>
-												
-												</p> 
-								            
-								            </div>
-								    
-								    </div>
-								
-								</div>
-							
-							 -->
-							
-						</div>
-						
-						<!-- Tool Panel -->
-						
-						<h2>Other Useful Links</h2>
-						
-						<div class="detail-text">CyberConnector provides some other tools to facilitate the overall modeling and visualization process for Earth science data analysis. </div>
-						
-						<div class="row mt-1 mb-1">
-							
-							<div class="col-lg-1"></div>
-							
-							<!-- Data Viewer is not ready -->
-							<div class="col-lg-3">
-								 
-								 <div class="hovereffect">
-							        
-							        <img class="img-responsive rounded" th:src="@{/images/resultviewer.png}" alt=""/>
-							            
-							            <div class="overlay">
-							                
-							                <h2>COVALI</h2>
-											
-											<p> 
-												
-												<a th:href="@{/web/covali}">ENTER HERE</a>
-											
-											</p> 
-							            
-							            </div>
-							    
-							    </div>
-							
-							</div>
-							
-							
-							<div class="col-lg-3">
-								 
-								 <div class="hovereffect">
-							        
-							        <img class="img-responsive rounded" th:src="@{/images/onas.png}" alt=""/>
-							            
-							            <div class="overlay">
-							                
-							                <h2>GeOnAS</h2>
-											
-											<p> 
-												
-												<a th:href="@{http://www3.csiss.gmu.edu/OnAS}">ENTER HERE</a>
-											
-											</p> 
-							            
-							            </div>
-							    
-							    </div>
-							    
-							</div>
-							
-							<div class="col-lg-3">
-								 
-								 <div class="hovereffect">
-							        
-							        <img class="img-responsive rounded" th:src="@{/images/grassws.jpg}" alt=""/>
-							            
-							            <div class="overlay">
-							                
-							                <h2>GRASS Web Service</h2>
-											
-											<p> 
-												
-												<a th:href="@{http://cube.csiss.gmu.edu/grassweb/manuals}">ENTER HERE</a>
-											
-											</p> 
-							            
-							            </div>
-							    
-							    </div>
-							    
-							</div>
-							
-						</div>
-						
-						
-						
-						
-	                </div>
-	            </div>
-	        </div>
-	        
+        <section class="container font-default">
+            <div class="row">
+                <div class="visible-lg-block visible-md-block col-md-2 menu">
+                    <dl id="menu">
+                        <dd><a href="productsearch">Data</a></dd>
+                        <dd><a href="servicesearch">Service</a></dd>
+                        <dd><a href="http://cube.csiss.gmu.edu/VDP">VDP</a></dd>
+                        <dd><a href="covali">COVALI</a></dd>
+                        <dd><a href="javascript:alert('not ready yet')">Geoweaver</a></dd>
+                    </dl>
+                </div>
+                
+                <div class="col-xs-12 col-md-10">
+                    
+                    <div class="panel panel-default">
+                        
+                        <!-- Model Panel -->
+                        
+                        <h2>Download</h2>
+                        <div class="detail-text">CyberConnector is an open source project with source code on <a href="http://github.com/CSISS/cc">Github</a>. Use <mark>git clone https://github.com/CSISS/cc.git</mark> to download the latest source code to your local. The release file is a war, which you need a tomcat to run it. </div>
+                        
+                        
+                        
+                        
+                        <h2>Earth Science Models</h2>
+                        <div class="detail-text">We have already used CyberConnector to feed Earth Observation to several models including FVCOM (ocean), CRM (cloud), CMAQ (air quality) and VCI (vegetation condition). See more details by clicking the below links.</div>
+                        
+                        <section class="main">
+                            <ul class="ch-grid">
+                                <li>
+                                    <div class="ch-item">   
+                                        <div class="ch-info">
+                                            <h3>Ocean</h3>
+                                            <p>FVCOM <a th:href="@{/fvcom}">View</a></p>
+                                        </div>
+                                        <div class="ch-thumb ch-img-1"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="ch-item">
+                                        <div class="ch-info">
+                                            <h3>Atmosphere</h3>
+                                            <p>CRM * CMAQ<a th:href="@{/crm}">View</a></p>
+                                        </div>
+                                        <div class="ch-thumb ch-img-2"></div>
+                                    </div>
+                                </li>
+                                
+                                <!-- VCI is not ready -->
+                                <!-- <li>
+                                    <div class="ch-item">
+                                        <div class="ch-info">
+                                            <h3>Vegetation</h3>
+                                            <p>VCI <a th:href="@{/vci}">View</a></p>
+                                        </div>
+                                        <div class="ch-thumb ch-img-3"></div>
+                                    </div>
+                                </li> -->
+                            </ul>
+                        </section>
+                        
+                        
+                        <!-- Other Products (VDP) -->
+                        
+                        <h2>VDP Customization and Production</h2>
+                        <div class="detail-text">VDP is short for virtual data product. In the registry, VDP is the same as physical data product. In the reality, VDP doesn't exist. Once a VDP is requested, a corresponding production workflow will be invoked and dynamically generate a physical data product. VDP is more flexible than traditional data products and allows modelers to customize all sorts of data to fit their models. </div>
+                        
+                        <div class="row mt-1 mb-1">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-3 ">
+                                <div class="hovereffect">
+                                    <img class="img-responsive rounded" th:src="@{/images/vdpsearch.jpg}" alt=""/>
+                                        <div class="overlay">
+                                            <h2>SEARCH VDP</h2>
+                                            <p> 
+                                                <a th:href="@{/productsearch}">ENTER HERE</a>
+                                            </p> 
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 ">
+                                <div class="hovereffect">
+                                    <img class="img-responsive rounded" th:src="@{/images/vdpcreate.jpg}" alt=""/>
+                                        <div class="overlay">
+                                            <h2>CREATE VDP</h2>
+                                            <p> 
+                                                <a href="/VDP">ENTER HERE</a>
+                                            </p> 
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                 <div class="hovereffect">
+                                    <img class="img-responsive rounded" th:src="@{/images/ordercheck.jpg}" alt=""/>
+                                        <div class="overlay">
+                                            <h2>ORDER STATUS</h2>
+                                            <p> 
+                                                <a th:href="@{/chkorder}">ENTER HERE</a>
+                                            </p> 
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <!-- Service Panel -->
+                        
+                        <h2>Geospatial Web Services</h2>
+                        <div class="detail-text">CyberConnector depends on web services. Most processes in generating VDP are conducted by web services. CyberConnector provides a registry to archive service metadata and enable users to search and use them in designing a new VDP. </div>
+                        
+                        <div class="row mt-1 mb-1">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-3">
+                                 <div class="hovereffect">
+                                    <img class="img-responsive rounded" th:src="@{/images/serviceregister.jpg}" alt=""/>
+                                        <div class="overlay">
+                                            <h2>REGISTER SERVICE</h2>
+                                            <p> 
+                                                <a th:href="@{/servicetypeselect}">ENTER HERE</a>
+                                            </p> 
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="hovereffect">
+                                    <img class="img-responsive rounded" th:src="@{/images/servicesearch.jpg}" alt=""/>
+                                        <div class="overlay">
+                                            <h2>SEARCH SERVICE</h2>
+                                            <p> 
+                                                <a th:href="@{/servicesearch}">ENTER HERE</a>
+                                            </p> 
+                                        </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Service self creation is not ready -->
+                            
+                            <!-- 
+                            
+                                <div class="col-lg-3">
+                                    <div class="hovereffect">
+                                        <img class="img-responsive rounded" th:src="@{/images/servicecreate.jpg}" alt=""/>
+                                            
+                                            <div class="overlay">
+                                                
+                                                <h2>CREATE SERVICE</h2>
+                                                
+                                                <p> 
+                                                    
+                                                    <a>PENDING</a>
+                                                
+                                                </p> 
+                                            
+                                            </div>
+                                    
+                                    </div>
+                                
+                                </div>
+                            
+                             -->
+                            
+                        </div>
+                        
+                        <!-- Tool Panel -->
+                        
+                        <h2>Other Useful Links</h2>
+                        
+                        <div class="detail-text">CyberConnector provides some other tools to facilitate the overall modeling and visualization process for Earth science data analysis. </div>
+                        
+                        <div class="row mt-1 mb-1">
+                            
+                            <div class="col-lg-1"></div>
+                            
+                            <!-- Data Viewer is not ready -->
+                            <div class="col-lg-3">
+                                 
+                                 <div class="hovereffect">
+                                    
+                                    <img class="img-responsive rounded" th:src="@{/images/resultviewer.png}" alt=""/>
+                                        
+                                        <div class="overlay">
+                                            
+                                            <h2>COVALI</h2>
+                                            
+                                            <p> 
+                                                
+                                                <a th:href="@{/covali}">ENTER HERE</a>
+                                            
+                                            </p> 
+                                        
+                                        </div>
+                                
+                                </div>
+                            
+                            </div>
+                            
+                            
+                            <div class="col-lg-3">
+                                 
+                                 <div class="hovereffect">
+                                    
+                                    <img class="img-responsive rounded" th:src="@{/images/onas.png}" alt=""/>
+                                        
+                                        <div class="overlay">
+                                            
+                                            <h2>GeOnAS</h2>
+                                            
+                                            <p> 
+                                                
+                                                <a th:href="@{http://www3.csiss.gmu.edu/OnAS}">ENTER HERE</a>
+                                            
+                                            </p> 
+                                        
+                                        </div>
+                                
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="col-lg-3">
+                                 
+                                 <div class="hovereffect">
+                                    
+                                    <img class="img-responsive rounded" th:src="@{/images/grassws.jpg}" alt=""/>
+                                        
+                                        <div class="overlay">
+                                            
+                                            <h2>GRASS Web Service</h2>
+                                            
+                                            <p> 
+                                                
+                                                <a th:href="@{http://cube.csiss.gmu.edu/grassweb/manuals}">ENTER HERE</a>
+                                            
+                                            </p> 
+                                        
+                                        </div>
+                                
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            
         </section>
-		
+        
     </div>
     
     
-	
-	
+    
+    
 </body>
 
 </html>

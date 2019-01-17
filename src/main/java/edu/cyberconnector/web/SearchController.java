@@ -24,7 +24,6 @@ import edu.cyberconnector.utils.*;
 import edu.cyberconnector.products.*;
 
 @Controller
-@RequestMapping("/web")
 public class SearchController {
 
     private Logger log = LoggerFactory.getLogger(SearchController.class);

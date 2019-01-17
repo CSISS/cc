@@ -21,7 +21,6 @@ import edu.cyberconnector.user.*;
 import edu.cyberconnector.products.*;
 
 @RestController
-@RequestMapping("/web")
 public class OrderController {
 
     private static Logger log = LoggerFactory.getLogger(GeoweaverController.class);
