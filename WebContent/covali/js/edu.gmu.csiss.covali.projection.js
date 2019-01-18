@@ -179,6 +179,15 @@ edu.gmu.csiss.covali.projection = {
         	
         	center = fromLonLat([0, 89.1], newProj);
         	
+        }else if(code == "5042"){
+        	
+        	var destLoc = [-3965419,-3965419]; //need update - wrong
+        	var currentLoc = [7893955,7865419];
+        	
+        	extent = ol.extent.boundingExtent([destLoc,currentLoc]);
+        	
+        	center = fromLonLat([0, -89.1], newProj);
+        	
         }
         
         newProj.setExtent(extent);
