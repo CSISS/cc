@@ -157,6 +157,8 @@ edu.gmu.csiss.covali.projection = {
 		var newProjCode = 'EPSG:' + code;
         
 		proj4.defs(newProjCode, proj4def);
+		
+		ol.proj.proj4.register(proj4);
         
         var newProj = ol.proj.get(newProjCode);
         
@@ -166,11 +168,35 @@ edu.gmu.csiss.covali.projection = {
         var extent = ol.extent.applyTransform(
             [bbox[1], bbox[2], bbox[3], bbox[0]], fromLonLat);
         
+        var center = fromLonLat([0, 0], newProj);
+        
+        if(code == "5041"){
+        	
+        	var destLoc = [-3965419,-3965419];
+        	var currentLoc = [7893955,7865419];
+        	
+        	extent = ol.extent.boundingExtent([destLoc,currentLoc]);
+        	
+        	center = fromLonLat([0, 89.1], newProj);
+        	
+        }else if(code == "5042"){
+        	
+        	var destLoc = [-3965419,-3965419]; //need update - wrong
+        	var currentLoc = [7893955,7865419];
+        	
+        	extent = ol.extent.boundingExtent([destLoc,currentLoc]);
+        	
+        	center = fromLonLat([0, -89.1], newProj);
+        	
+        }
+        
         newProj.setExtent(extent);
         
         var newView = new ol.View({
         
-        	projection: newProj
+        	projection: newProj,
+        	
+        	center: center
         
         });
         
@@ -179,6 +205,8 @@ edu.gmu.csiss.covali.projection = {
         edu.gmu.csiss.covali.projection.rightmap.setView(newView);
         
         var size = edu.gmu.csiss.covali.projection.leftmap.getSize();
+        
+        
         
         if (size) {
         

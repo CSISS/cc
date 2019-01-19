@@ -387,7 +387,13 @@ edu.gmu.csiss.covali.map = {
 			
 			var ac = abovecolor.slice(-6);
 			
-			$content = "<div class=\"row\">" +
+			$content = "<div class=\"row\" style=\"padding: 10px;\">" +
+			
+			"<p>Layer: "+edu.gmu.csiss.covali.map.legend_layername+"</p>"+
+			
+			"</div>"+
+				
+			"<div class=\"row\">" +
 			
 			"	<div class=\"col-md-1\">  " +
 			
@@ -676,7 +682,7 @@ edu.gmu.csiss.covali.map = {
 			
 			var legendurl = null;
 			
-			var layer = edu.gmu.csiss.covali.wms.getLayerByName(layername); //get capabilities layer, not openlayer layer
+			var layer = edu.gmu.csiss.covali.wms.getLayerByName(layername); //get WMS capabilities layer, not openlayer layer
 			
 			var style = edu.gmu.csiss.covali.wms.getStyleByName(stylename, layer);
 			
@@ -747,6 +753,115 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
+		addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerate, stylename){
+			
+			//add code to check if the WMS has already been added
+			
+			var mapid = map.get('target');
+			
+			var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
+			
+			var legendurl = edu.gmu.csiss.covali.map.getWMSLegend(side, layername, stylename);
+			
+			console.log(url);
+			
+			var myLayer1303 = new ol.layer.Image({
+				  //extent: [2033814, 6414547, 2037302, 6420952],
+				  //preload: Infinity,
+				  name: layername,
+				  title: layername,
+				  visible: true,
+				  source: new ol.source.ImageWMS({
+//					  LAYERS=IR&ELEVATION=0&TIME=2018-05-31T02%3A00%3A19.000Z&TRANSPARENT=true&STYLES=boxfill%2Frainbow&COLORSCALERANGE=-50%2C50&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A4326&BBOX=-101.47971029369,19.92840558883,-85.775652352431,35.632463530092&WIDTH=256&HEIGHT=256
+//				    url: 'http://thredds.ucar.edu/thredds/wms/grib/NCEP/GEFS/Global_1p0deg_Ensemble/members-analysis/GEFS_Global_1p0deg_Ensemble_ana_20180520_0600.grib2',
+					url: url,
+				    params: {
+				    	'LAYERS': layername, 
+				    	'TILED': false, 
+				    	'FORMAT': 'image/gif',
+				    	'VERSION': '1.3.0',
+				    	'STYLES':stylename,
+				    	'FRAMERATE': framerate,
+				    	'LEGEND': legendurl,
+				    	'ANIMATION': true,
+				    	'TIME': starttime + "/" + endtime
+				    },
+				    
+				    imageLoadFunction: function (image, src) {
+				    	
+				    	console.log(image);
+				    	
+				    	console.log(image.getImage());
+				    	
+//				    	window.open(src,"_blank");
+				    	
+				    	image.getImage().src = src;
+
+//			            var client = new XMLHttpRequest();
+//			            client.open('GET', src, true);
+//			            client.setRequestHeader('Authorization', "Basic " + btoa("login:password"));
+//			            client.responseType = "arraybuffer";
+//
+//			            client.onload = function () {
+//
+//			                var byteArray = new Uint8Array(this.response);
+//			                var blob = new Blob([byteArray], {type: "image/png"});
+//			                var urlCreator = window.URL || window.webkitURL;
+//			                var imageUrl = urlCreator.createObjectURL(blob);
+//
+//			                gifler(imageUrl)
+//			                    .get()
+//			                    .then(function(animator) {
+//			                        var BufferCanvas = animator.constructor.createBufferCanvas(animator._frames[0], animator.width, animator.height);
+//			                        animator.animateInCanvas(BufferCanvas);
+//			                        image.setImage(BufferCanvas);
+//			                        image.load();
+//			                    });
+//			            };
+//
+//			            client.send();
+			            
+			        }
+				    
+				  })
+			});
+			
+			console.log(myLayer1303.getSource());
+			
+			myLayer1303.on("change:visible", function(event){
+				
+				//change the legend accordingly
+				
+				var layer = event.target;
+				
+				var parentmapid = map.get('target');
+				
+				console.log("this layer belongs to map " + parentmapid);
+				
+				var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(parentmapid);
+				
+				if(layer.getVisible()){
+					
+					console.log("The layer " + layer.get('name') + " is visible.");
+					
+					edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null);
+					
+				}else{
+					
+					console.log("The layer " + layer.get('name') + " is invisible.");
+					
+					console.log("show the current top layer's legend");
+					
+					edu.gmu.csiss.covali.map.showNextAvailableLegend(side);
+					
+				}
+				
+			});
+			
+			map.addLayer(myLayer1303);
+			
+		},
+		
 		addWMSLayer: function(map, url, layername, stylename){
 			
 			//add code to check if the WMS has already been added
@@ -804,8 +919,6 @@ edu.gmu.csiss.covali.map = {
 				}
 				
 			});
-			
-			
 			
 			map.addLayer(myLayer1303);
 			

@@ -114,10 +114,10 @@ edu.gmu.csiss.covali.settings = {
         						side+
         						"', '"+
         						layer.get("name")+
-        						"', this.checked)\" value=\"\">"+
+        						"', this.checked)\" value=\"\"><span style=\"word-wrap:break-word;\">"+
         						layer.get("name")+
         						//delete button
-        						"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.delLayer('"+
+        						"</span><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.delLayer('"+
         						side+
         						"', '"+
         						layer.get("name")+

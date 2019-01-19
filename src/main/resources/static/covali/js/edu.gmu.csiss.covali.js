@@ -4,7 +4,7 @@
  */
 edu.gmu.csiss.covali = {
 		
-		version: "0.8.1",
+		version: "0.8.2",
 		
 		author: "Ziheng Sun, Liping Di",
 		
@@ -12,6 +12,6 @@ edu.gmu.csiss.covali = {
 		
 		department: "Center for Spatial Information Science and Systems",
 		
-		contact: "ldi@gmu.edu; zsun@gmu.edu"
+		contact: "zsun@gmu.edu;ldi@gmu.edu"
 		
 }

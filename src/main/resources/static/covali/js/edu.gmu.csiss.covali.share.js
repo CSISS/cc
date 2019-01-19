@@ -12,18 +12,8 @@ edu.gmu.csiss.covali.share = {
 		
 		init: function(){
 			
-
 			var content = "<div class=\"row\">"+
-			"	<div class=\"col-md-10\">"+
-			"	  <a href=\"javascript::;\"><div class=\"twitter-hover social-slide\"></div></a>"+
-			"	  <a href=\"javascript::;\"><div class=\"facebook-hover social-slide\"></div></a>"+
-			"	  <a href=\"javascript::;\"><div class=\"google-hover social-slide\"></div></a>"+
-			"	  <a href=\"javascript::;\"><div class=\"linkedin-hover social-slide\"></div></a>"+
-			"	  <a href=\"javascript::;\"><div class=\"pinterest-hover social-slide\"></div></a>"+
-			"	  <a href=\"javascript::;\"><div class=\"instagram-hover social-slide\"></div></a>"+
-			"	  <a href=\"javascript::;\"><div class=\"tumblr-hover social-slide\"></div></a>"+
-			"	  <a href=\"javascript::;\"><div class=\"reddit-hover social-slide\"></div></a>"+
-			"	  <a href=\"javascript::;\"><div class=\"stumbleupon-hover social-slide\"></div></a>"+
+			"	<div class=\"col-md-10\" id=\"social-btns\">"+
 			"	</div>"+
 			"</div>";
 			
@@ -35,15 +25,22 @@ edu.gmu.csiss.covali.share = {
 	            
 	            cssClass: 'dialog-vertical-center',
 	            
-	            buttons: [{
-	                icon: 'glyphicon glyphicon-ok',
-	                label: 'Share',
-	                title: 'Place the request',
-	                cssClass: 'btn-warning'
+	            onshown: function(){
+	            	
+	            	$("#social-btns").jsSocials({
+	                    shares: ["email", "twitter", "facebook", "googleplus", "linkedin", "pinterest", "stumbleupon", "whatsapp"],
+	                    text: "COVALI: a web system for comparison and validation of atmospheric models",
+	                    showLabel: true,
+	                    showCount: true,
+	                    shareIn: "popup"
+	                });
+	            	
+	            },
 	            
-	            }, {
+	            buttons: [{
 	            
 	            	label: 'Close',
+	            	
 	                action: function(dialogItself){
 	                	
 	                    dialogItself.close();
