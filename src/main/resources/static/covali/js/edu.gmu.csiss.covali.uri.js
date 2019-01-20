@@ -38,7 +38,7 @@ edu.gmu.csiss.covali.uri = {
 				
 				type: "POST",
 				
-				url: "../web/cachecasual",
+				url: "../cachecasual",
 				
 				data: "data=" + $("#file_url").val(), 
 				

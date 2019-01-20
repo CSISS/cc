@@ -52,7 +52,7 @@ edu.gmu.csiss.covali.local = {
 				
 				type: "POST",
 				
-				url: "../web/adddata",
+				url: "../adddata",
 				
 				data: "location="+file_path, 
 				
@@ -136,7 +136,7 @@ edu.gmu.csiss.covali.local = {
 				
 				type: "POST",
 				
-				url: "../web/localfilelist",
+				url: "../localfilelist",
 				
 				data: "root="+relativepath, 
 				

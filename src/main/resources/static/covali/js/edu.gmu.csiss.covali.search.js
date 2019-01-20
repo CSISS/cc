@@ -120,7 +120,7 @@ edu.gmu.csiss.covali.search = {
                 	
                 	//{'begindatetime':'1900-01-01T00:00:00','csw':'1','desc':false,'distime':false,'east':-16.875,'enddatetime':'2017-06-15T00:00:00','formats':null,'isvirtual':'0','keywords':false,'name':true,'north':57.326521225217064,'pageno':1,'recordsperpage':5,'searchtext':'bufr','south':7.013667927566642,'west':-154.3359375};
                 	
-                	"url": "../web/search",
+                	"url": "../search",
                     
                 	"type": "POST",
                 	
@@ -502,7 +502,7 @@ edu.gmu.csiss.covali.search = {
 				
 				type: "POST",
 				
-				url: "../web/cachecasual",
+				url: "../cachecasual",
 				
 				data: "id="+name+"&data="+ accessurl, 
 				

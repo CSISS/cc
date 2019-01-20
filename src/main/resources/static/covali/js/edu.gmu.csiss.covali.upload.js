@@ -32,7 +32,7 @@ edu.gmu.csiss.covali.upload = {
 				
 				type: "POST",
 				
-				url: "../web/adddata",
+				url: "../adddata",
 				
 				data: req, 
 				
@@ -160,7 +160,7 @@ edu.gmu.csiss.covali.upload = {
 				
 	            message: function(dialog){
 	            	
-	            	$content = $("<p class=\"text-danger\">Checking the box below means you agree our terms and conditions for this service. If you haven't read them, please go to <a href=\"../web/terms\" target=\"_blank\">here</a> to read through them and make sure you agree with them before proceed. </p> <p><input class=\"agreebtn\" type=\"checkbox\" value=\"\"> Agree </p> <p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.upload.popUpWindow()\" >Open Upload Window</span></p>");
+	            	$content = $("<p class=\"text-danger\">Checking the box below means you agree our terms and conditions for this service. If you haven't read them, please go to <a href=\"../terms\" target=\"_blank\">here</a> to read through them and make sure you agree with them before proceed. </p> <p><input class=\"agreebtn\" type=\"checkbox\" value=\"\"> Agree </p> <p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.upload.popUpWindow()\" >Open Upload Window</span></p>");
 	            	
 	            	return $content;
 	            	
