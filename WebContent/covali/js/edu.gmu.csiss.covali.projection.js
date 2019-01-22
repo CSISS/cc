@@ -172,8 +172,11 @@ edu.gmu.csiss.covali.projection = {
         
         if(code == "5041"){
         	
-        	var destLoc = [-3965419,-3965419];
-        	var currentLoc = [7893955,7865419];
+//        	var destLoc = [-3965419,-3965419];
+//        	var currentLoc = [7893955,7865419];
+        	
+        	var destLoc = [-4000000,-4000000];
+        	var currentLoc = [8000000,8000000];
         	
         	extent = ol.extent.boundingExtent([destLoc,currentLoc]);
         	
@@ -181,8 +184,8 @@ edu.gmu.csiss.covali.projection = {
         	
         }else if(code == "5042"){
         	
-        	var destLoc = [-3965419,-3965419]; //need update - wrong
-        	var currentLoc = [7893955,7865419];
+        	var destLoc = [-4000000,-4000000];
+        	var currentLoc = [8000000,8000000];
         	
         	extent = ol.extent.boundingExtent([destLoc,currentLoc]);
         	
