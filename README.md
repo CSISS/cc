@@ -108,6 +108,10 @@ COVALI provides a number of tools to facilitate the comparison and validation am
 #### Animation of changes
 
 
+#### Map rotation
+
+Use `Alt+Shift+Drag` to rotate the map.
+
 
 
 # Demo Site

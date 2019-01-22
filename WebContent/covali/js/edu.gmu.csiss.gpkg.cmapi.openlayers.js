@@ -97,19 +97,19 @@ edu.gmu.csiss.gpkg.cmapi.openlayers = {
 //          type: 'base'
         });
         
-        var bingmaplayer = new ol.layer.Tile({
-//            visible: false,
-//            preload: Infinity,
-        	name: "bing aerial",
-        	title: "bing aerial",
-            source: new ol.source.BingMaps({
-              key: 'AkGbxXx6tDWf1swIhPJyoAVp06H0s0gDTYslNWWHZ6RoPqMpB9ld5FY1WutX8UoF',
-              imagerySet: "Aerial"
-              // use maxZoom 19 to see stretched tiles instead of the BingMaps
-              // "no photos at this zoom level" tiles
-              // maxZoom: 19
-            })
-        })
+//        var bingmaplayer = new ol.layer.Tile({
+////            visible: false,
+////            preload: Infinity,
+//        	name: "bing aerial",
+//        	title: "bing aerial",
+//            source: new ol.source.BingMaps({
+//              key: 'AkGbxXx6tDWf1swIhPJyoAVp06H0s0gDTYslNWWHZ6RoPqMpB9ld5FY1WutX8UoF',
+//              imagerySet: "Aerial"
+//              // use maxZoom 19 to see stretched tiles instead of the BingMaps
+//              // "no photos at this zoom level" tiles
+//              // maxZoom: 19
+//            })
+//        })
         
         // Create latitude and longitude and convert them to default projection
 //        var birmingham = ol.proj.transform([-1.81185, 52.44314], 'EPSG:4326', 'EPSG:3857');
@@ -156,7 +156,7 @@ edu.gmu.csiss.gpkg.cmapi.openlayers = {
         // Add the created layer to the Map
         this.map.addLayer(osmLayer);
         
-        this.map.addLayer(bingmaplayer);
+//        this.map.addLayer(bingmaplayer);
         
         // Set the view for the map
         this.map.setView(view);

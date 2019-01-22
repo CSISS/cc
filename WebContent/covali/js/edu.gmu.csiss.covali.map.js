@@ -940,6 +940,45 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
+		refreshWMSOneMap: function(map){
+			
+			for(var i=map.getLayers().getLength()-1;i>=0;i--){
+				
+				var l = map.getLayers().item(i);
+				
+				var source  = l.getSource();
+				
+				if(source instanceof ol.source.TileWMS){
+					
+					console.log("layer " + l.get('name') + " is reloaded");
+					
+//					source.setTileLoadFunction(source.getTileLoadFunction());
+					
+//					l.redraw(true);
+//					l.load();
+					source.tileCache.expireCache({});
+				    source.tileCache.clear();
+				    source.refresh();
+					
+				}
+				
+				
+			}
+			
+		},
+		
+		refreshAllWMSLayers: function(){
+			
+			var leftmap = edu.gmu.csiss.gpkg.cmapi.openlayers.getMap("openlayers1");
+			
+			var rightmap = edu.gmu.csiss.gpkg.cmapi.openlayers.getMap("openlayers2");
+			
+			this.refreshWMSOneMap(leftmap);
+			
+			this.refreshWMSOneMap(rightmap);
+			
+		},
+		
 		addBoundaryWMS: function(){
 			
 			var leftmap = edu.gmu.csiss.gpkg.cmapi.openlayers.getMap("openlayers1");

@@ -120,7 +120,8 @@ edu.gmu.csiss.covali.projection = {
 						}
 					}
 				}
-          }
+				
+			}
           
 			edu.gmu.csiss.covali.projection.setProjection(null, null, null, null);
 		  
@@ -172,11 +173,11 @@ edu.gmu.csiss.covali.projection = {
         
         if(code == "5041"){
         	
-//        	var destLoc = [-3965419,-3965419];
-//        	var currentLoc = [7893955,7865419];
+        	var destLoc = [-3965419,-3965419];
+        	var currentLoc = [7893955,7865419];
         	
-        	var destLoc = [-4000000,-4000000];
-        	var currentLoc = [8000000,8000000];
+//        	var destLoc = [-3980000,-3980000];
+//        	var currentLoc = [79800000,79890000];
         	
         	extent = ol.extent.boundingExtent([destLoc,currentLoc]);
         	
@@ -184,8 +185,11 @@ edu.gmu.csiss.covali.projection = {
         	
         }else if(code == "5042"){
         	
-        	var destLoc = [-4000000,-4000000];
-        	var currentLoc = [8000000,8000000];
+//        	var destLoc = [-4000000,-4000000];
+//        	var currentLoc = [8000000,8000000];
+        	
+        	var destLoc = [-3965419,-3965419];
+        	var currentLoc = [7893955,7865419];
         	
         	extent = ol.extent.boundingExtent([destLoc,currentLoc]);
         	
@@ -209,13 +213,13 @@ edu.gmu.csiss.covali.projection = {
         
         var size = edu.gmu.csiss.covali.projection.leftmap.getSize();
         
-        
-        
         if (size) {
         
         	newView.fit(extent, size);
         
         }
+        
+        edu.gmu.csiss.covali.map.refreshAllWMSLayers();
         
       }
 		
