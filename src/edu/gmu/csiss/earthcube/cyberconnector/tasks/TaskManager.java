@@ -66,13 +66,13 @@ public class TaskManager {
 		
 		for(int i=0;i<waitinglist.size();i++) {
 			
-			if(historyid.equals(((GeoweaverWorkflowTask)waitinglist.get(i)).getHistory_id())) {
-				
-				t = waitinglist.get(i);
-				
-				break;
-				
-			}
+//			if(historyid.equals(((Task)waitinglist.get(i)).getHistory_id())) {
+//				
+//				t = waitinglist.get(i);
+//				
+//				break;
+//				
+//			}
 			
 		}
 		
@@ -80,13 +80,13 @@ public class TaskManager {
 			
 			for(int i=0;i<runninglist.size();i++) {
 				
-				if(historyid.equals(((GeoweaverWorkflowTask)runninglist.get(i)).getHistory_id())) {
-					
-					t = runninglist.get(i);
-					
-					break;
-					
-				}
+//				if(historyid.equals(((GeoweaverWorkflowTask)runninglist.get(i)).getHistory_id())) {
+//					
+//					t = runninglist.get(i);
+//					
+//					break;
+//					
+//				}
 				
 			}
 			
@@ -107,9 +107,9 @@ public class TaskManager {
 		
 		Task t = searchByHistoryId(historyid);
 		
-		GeoweaverWorkflowTask gt = (GeoweaverWorkflowTask) t;
+//		GeoweaverWorkflowTask gt = (GeoweaverWorkflowTask) t;
 		
-		gt.startMonitor(session);
+//		gt.startMonitor(session);
 		
 	}
 	
