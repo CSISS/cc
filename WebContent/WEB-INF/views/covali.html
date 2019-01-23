@@ -45,6 +45,8 @@
 		.treeview .node-disabled{color:silver;cursor:not-allowed}
 		.node-treeview-checkable{}
 		.node-treeview-checkable:not(.node-disabled):hover{background-color:#F5F5F5;} 
+		
+		 .toolbar-btn {background-color: black; color: white;}
 	</style>
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -127,13 +129,21 @@
 		      	<option value="more">More</option>
 		    </select>
 		</div>
-			
+		
 		<!-- Content Here -->
 		<div class="row row-xs-11" style="height:100%;">
  				
 			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers1">
 			
-				<div id="toolbar1" ></div>
+				<div id="toolbar-left" style="position: absolute; top: 10px; left: 30px; height: 50px; z-index:101;" >
+					
+					<button class="btn btn-default toolbar-btn" id="toolbar-search"><i class="fa fa-home"></i></button>
+					<button class="btn toolbar-btn" id="toolbar-add"><i class="fa fa-bars"></i></button>
+					<button class="btn toolbar-btn" id="toolbar-layer"><i class="fa fa-trash"></i></button>
+					<button class="btn toolbar-btn" id="toolbar-statistics"><i class="fa fa-close"></i></button>
+					<button class="btn toolbar-btn" id="toolbar-difference"><i class="fa fa-folder"></i></button>
+					
+				</div>
 			
 				<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';" 
 				
@@ -142,6 +152,16 @@
 			</div>
 			
 			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers2">
+			
+				<!-- <div id="toolbar-right" style="position: absolute; top: 10px; left: 30px; height: 50px; z-index:101;" >
+				
+					<button class="btn toolbar-btn"><i class="fa fa-home"></i></button>
+					<button class="btn toolbar-btn"><i class="fa fa-bars"></i></button>
+					<button class="btn toolbar-btn"><i class="fa fa-trash"></i></button>
+					<button class="btn toolbar-btn"><i class="fa fa-close"></i></button>
+					<button class="btn toolbar-btn"><i class="fa fa-folder"></i></button>
+				
+				</div> -->
 			
 				<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';"
 				
@@ -216,6 +236,7 @@
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.tools.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.share.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.menu.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.toolbar.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.about.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.main.js"></script>
     
