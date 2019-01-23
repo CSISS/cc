@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -398,7 +399,7 @@ public class SearchTool {
 	 * @param newurl
 	 * @return
 	 */
-	public static boolean updatePyCSWDataURL(String id, String rawurl){
+	public static boolean updatePyCSWDataURL(String id, String rawurl) throws Exception {
 		
 		boolean success  = false;
 		
@@ -419,8 +420,11 @@ public class SearchTool {
 				//download the data from external links to server
 		    	
 //		    	String newurl = BaseTool.cacheData(rawurl);
-				
-				String newurl = BaseTool.cacheDataLocally(rawurl);
+
+				ProductCache cache = new ProductCache(id, rawurl);
+				cache.doCache();
+
+				String newurl = cache.getCacheUrl();
 				
 				single_md = replaceDownloadURLInISO(single_md, rawurl, newurl);
 				
@@ -875,30 +879,6 @@ public class SearchTool {
 			
 		}
 		
-		//check the caching status
-		if(resp!=null){
-			
-			for(int i=0, len=resp.getProducts().size(); i<len; i++){
-				
-				Product p = resp.getProducts().get(i);
-				
-				if(p.isCached()||p.getAccessurl().startsWith(SysDir.CACHE_DATA_URLPREFIX)){
-					
-					p.setCached(true);
-					
-				}else{
-					
-					p.setCached(false);
-					
-				}
-				
-				resp.getProducts().set(i, p);
-				
-			}
-			
-		}
-		
-		
 		return resp;
 		
 	}
@@ -909,7 +889,7 @@ public class SearchTool {
 //		
 //		SearchTool.parseCSWResponse(testresponse);
 		
-		boolean success = SearchTool.updatePyCSWDataURL("edu.ucar.unidata:grib/NCEP/NDFD/NWS/CONUS/CONDUIT/NDFD_NWS_CONUS_conduit_2p5km_20170613_1830.grib2", "http://cube.csiss.gmu.edu/cc_cache/NDFD_NWS_CONUS_conduit_2p5km_20170613_1700.grib2");
+//		boolean success = SearchTool.updatePyCSWDataURL("edu.ucar.unidata:grib/NCEP/NDFD/NWS/CONUS/CONDUIT/NDFD_NWS_CONUS_conduit_2p5km_20170613_1830.grib2", "http://cube.csiss.gmu.edu/cc_cache/NDFD_NWS_CONUS_conduit_2p5km_20170613_1700.grib2");
 //		
 //		System.out.println("Update: " + success);
 		

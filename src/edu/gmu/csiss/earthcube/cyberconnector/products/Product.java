@@ -108,13 +108,13 @@ public class Product {
 	public void setIscollection(String iscollection) { this.iscollection = iscollection; }
 
 	public boolean isCached() {
-		return cached;
+		return new ProductCache(id, accessurl).cacheExists() || this.cached;
 	}
-	
+
 	public void setCached(boolean cached) {
 		this.cached = cached;
 	}
-	
+
 	public int getLikes() {
 		return likes;
 	}

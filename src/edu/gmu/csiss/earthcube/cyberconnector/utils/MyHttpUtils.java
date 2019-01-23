@@ -13,6 +13,9 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Administrator
@@ -383,7 +386,7 @@ public class MyHttpUtils
 		if(code == 401){
 			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
 		}
-		
+
 		// Read Response
 		InputStream in = huc.getInputStream();
 
@@ -396,6 +399,68 @@ public class MyHttpUtils
 		in.close();
 
 		return buf.toString();
+	}
+
+	public static void downloadFile(String resourceUrl, String destinationPath) throws Exception
+	{
+		downloadFile(resourceUrl, destinationPath, null);
+	}
+
+	public static void downloadFile(String resourceUrl, String destinationPath, String cookie) throws Exception
+	{
+		URL url = new URL(resourceUrl);
+
+		URLConnection uc = url.openConnection();
+		HttpURLConnection huc = (HttpURLConnection)uc;
+
+		if(cookie != null) {
+			huc.setRequestProperty("Cookie", cookie);
+		}
+
+		BufferedInputStream in = new BufferedInputStream(huc.getInputStream());
+
+		FileOutputStream fileOutputStream = new FileOutputStream(destinationPath);
+		byte dataBuffer[] = new byte[1024];
+		int bytesRead;
+
+		while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+			fileOutputStream.write(dataBuffer, 0, bytesRead);
+		}
+
+		fileOutputStream.close();
+	}
+
+	public static void downloadFileSessionAuth(String loginUrl, String loginFormData, String resourceUrl, String destinationPath) throws Exception
+	{
+		CookieManager cookieManager = new CookieManager();
+		CookieHandler.setDefault(cookieManager);
+
+		URL u = new URL(loginUrl);
+
+		// Open the connection and prepare to POST
+		URLConnection uc = u.openConnection();
+		HttpURLConnection huc = (HttpURLConnection)uc;
+
+		huc.setRequestProperty("Content-Type", "text/xml;charset=UTF-8");
+		huc.setDoOutput(true);
+		huc.setDoInput(true);
+		huc.setAllowUserInteraction(false);
+
+		DataOutputStream dstream = new DataOutputStream(huc.getOutputStream());
+
+		dstream.writeBytes(loginFormData);
+		dstream.close();
+
+
+		uc.getContent();
+
+		List <String> cookies = new ArrayList<String>();
+		for (HttpCookie c : cookieManager.getCookieStore().getCookies()) {
+			cookies.add(c.toString());
+		}
+
+		String cookiesStr = String.join(";", cookies);
+		downloadFile(resourceUrl, destinationPath, cookiesStr);
 	}
 	
 	

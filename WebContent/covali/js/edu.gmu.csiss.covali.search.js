@@ -504,9 +504,8 @@ edu.gmu.csiss.covali.search = {
 				
 				url: "../web/cachecasual",
 				
-				data: "id="+name+"&data="+ accessurl, 
-				
-				success: function(obj, text, jxhr){
+				data: "id="+id+"&accessurl="+accessurl+"&name="+name
+        	}).success(function(obj, text, jxhr){
 					
 					var resp = $.parseJSON(obj);
 					
@@ -536,18 +535,14 @@ edu.gmu.csiss.covali.search = {
 	
 				    }, 200);
 					
-				},
-				
-				fail: function(jxhr, status, error){
+				}).fail(function(jxhr, status, error){
 					
 					alert("Cache failed." + error);
 					
 					$("#cachebtn_"+id).button("reset");
 					
-				}
-        			
-        	});
-        	
+				});
+
         	
         },
         /**

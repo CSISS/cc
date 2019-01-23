@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import org.apache.log4j.Logger;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -203,14 +205,23 @@ public class CovaliController {
     	
     	String resp = null;
     	
-    	String dataurl = request.getParameter("data");
-    	
-    	String fileurl = BaseTool.cacheDataLocally(dataurl);
-    	
-    	resp = "{\"output\":\"success\", \"file_url\": \""+fileurl+"\"}";
-    	
+    	String dataurl = request.getParameter("accessurl");
+		String id = request.getParameter("id");
+
+
+		try {
+			ProductCache cache = new ProductCache(id, dataurl);
+			if (!cache.cacheExists()) {
+				cache.doCache();
+			}
+			resp = "{\"output\":\"success\", \"file_url\": \""+cache.getCacheUrl()+"\"}";
+
+		} catch(Exception e) {
+			resp = "{\"output\":\"failure\"}";
+
+		}
+
     	return resp;
-    	
     }
     
 	
@@ -228,18 +239,18 @@ public class CovaliController {
     	//the updating function is disabled for now, as the transaction function in PyCSW is disabled. 
     	
 //    	if(SearchTool.updatePyCSWDataURL(id, dataurl)){
-    	
-    	String fileurl = BaseTool.cacheDataLocally(dataurl);
-    	
-    	if(!BaseTool.isNull(fileurl)) {
-    		
-    		resp = "{\"output\":\"success\"}";
-    		
-    	}else{
-    		
-    		resp = "{\"output\":\"failure\"}";
-    		
-    	}
+
+		try {
+			ProductCache cache = new ProductCache(id, dataurl);
+			if (!cache.cacheExists()) {
+				cache.doCache();
+			}
+			resp = "{\"output\":\"success\"}";
+
+		} catch(Exception e) {
+			resp = "{\"output\":\"failure\"}";
+
+		}
     	
     	return resp;
     	
