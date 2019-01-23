@@ -64,6 +64,10 @@ public class SysDir {
 
 	public static String database_password = null;
 
+	public static String ucar_rda_username = null;
+
+	public static String ucar_rda_password = null;
+
 	static Properties readProperties(String path) {
 		Properties p = new Properties();
 
@@ -155,6 +159,10 @@ public class SysDir {
 			database_user = secrets.getProperty("database_user");
 
 			database_password = secrets.getProperty("database_password");
+
+			ucar_rda_username = secrets.getProperty("ucar_rda_username");
+
+			ucar_rda_password = secrets.getProperty("ucar_rda_password");
 			
 		} catch (Exception e) {
 			
