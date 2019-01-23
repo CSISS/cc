@@ -608,14 +608,14 @@ public class SearchTool {
 				
 				Element ele = (Element)it.next();
 				
-				String identifier = identifierpath.selectSingleNode(ele).getText();
+				String iso_id = identifierpath.selectSingleNode(ele).getText();
 
-				p.setName(identifier);
-				p.setDesc(identifier);
+				p.setName(iso_id);
+				p.setDesc(iso_id);
 				
 				//identifier must be escaped : and /
 
-				identifier = identifier.replaceAll(":", "__y__");
+				String identifier = iso_id.replaceAll(":", "__y__");
 				
 				identifier = identifier.replaceAll("/", "__x__");
 				
@@ -627,6 +627,12 @@ public class SearchTool {
 					
 					String title = titlepath.selectSingleNode(ele).getText();
 					title = title.replaceAll("_", " ");
+					p.setTitle(title);
+				}
+				else {
+
+					String[] parts = iso_id.split("/");
+					String title = parts[parts.length - 1];
 					p.setTitle(title);
 				}
 				
