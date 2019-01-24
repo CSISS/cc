@@ -420,10 +420,10 @@ public class MyHttpUtils
 		BufferedInputStream in = new BufferedInputStream(huc.getInputStream());
 
 		FileOutputStream fileOutputStream = new FileOutputStream(destinationPath);
-		byte dataBuffer[] = new byte[1024];
+		byte dataBuffer[] = new byte[1048576];
 		int bytesRead;
 
-		while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+		while ((bytesRead = in.read(dataBuffer, 0, 1048576)) != -1) {
 			fileOutputStream.write(dataBuffer, 0, bytesRead);
 		}
 

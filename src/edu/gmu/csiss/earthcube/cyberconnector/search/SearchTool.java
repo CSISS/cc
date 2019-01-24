@@ -727,6 +727,12 @@ public class SearchTool {
 						p.setAccessurl(accessurl);
 					}
 				}
+
+				ProductCache cache = new ProductCache(p.getId(), p.getAccessurl());
+				if(cache.cacheExists()) {
+					p.setAccessurl(cache.getCacheUrl());
+					p.setCached(true);
+				}
 				
 				p.setIfvirtual("0");
 				

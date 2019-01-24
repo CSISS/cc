@@ -199,7 +199,7 @@ public class CovaliController {
     	
     }
     
-
+	// cache remote data in the local filesystem
     @RequestMapping(value = "/cachecasual", method = RequestMethod.POST)
     public @ResponseBody String cachecasualdata(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
     	
@@ -224,7 +224,7 @@ public class CovaliController {
     	return resp;
     }
     
-	
+	// cache remote data in the local filesystem and update the CSW record
 	@RequestMapping(value = "/cache", method = RequestMethod.POST)
     public @ResponseBody String cachedata(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
     	

@@ -206,15 +206,14 @@ edu.gmu.csiss.covali.search = {
         							' id="downbtn_'+escapeid+'"> <span '+
         							'			class="glyphicon glyphicon-download-alt pull-left" title="Download"></span> '+
         							'		</button>';
-    								
     							}
     							
     							//add a button to load map
     							
     							if(edu.gmu.csiss.covali.search.checkfileformat(full.accessurl)){
     								
-    								content += '		<button onclick="edu.gmu.csiss.covali.search.load(\''+escapeid+'\', \''+
-        							escape(full.accessurl)+
+    								content += '		<button onclick="edu.gmu.csiss.covali.search.load(\''+full.id+'\', \''+
+        							full.accessurl+
         							'\')" class="btn btn-default" id="loadbtn_'+escapeid+'"> <span '+
         							'			class="glyphicon glyphicon-film pull-left" title="Load Map"></span> '+
         							'		</button> ';
@@ -223,7 +222,7 @@ edu.gmu.csiss.covali.search = {
     							
     							if(!full.cached){
     								
-    								content += '<button onclick="edu.gmu.csiss.covali.search.cache(\''+escapeid+'\', \''+full.name+'\', \''+full.accessurl+'\')" id="cachebtn_'+escapeid+'" class="btn btn-default" > '+
+    								content += '<button onclick="edu.gmu.csiss.covali.search.cache(\''+full.id+'\', \''+full.name+'\', \''+full.accessurl+'\')" id="cachebtn_'+escapeid+'" class="btn btn-default" > '+
         							'			<span class="glyphicon glyphicon-save-file pull-left" title="Cache Data"></span> '+
 //        							'			DataCache '+
         							'		</button> ';
@@ -493,8 +492,9 @@ edu.gmu.csiss.covali.search = {
         },
         
         cache: function(id, name, accessurl){
-        	
-        	$("#cachebtn_"+id).button("loading");
+            var escapeid = id.replace(/\./g, '_');
+
+        	$("#cachebtn_"+escapeid).button("loading");
         	
         	$.ajax({
 				
@@ -511,27 +511,27 @@ edu.gmu.csiss.covali.search = {
 					
 					if(resp.output=="success"){
 						
-						alert("Cached.");
+						alert("Cached " + resp.file_url);
 						
 						console.log("cached url is:" + resp.file_url);
 						
 						//change the link of the download and loading map to the new link. 
 						
-						var escapeid = id.replace(/\./g, '_');
+
 						
 						$('#loadbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.load(\''+
-								escapeid+'\',\''+
-    							escape(resp.file_url)+'\')');
+								id+'\',\''+
+    							resp.file_url+'\')');
 						
 						$('#downbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.goto(\''+
-								escape(resp.file_url)+'\')');
+								resp.file_url+'\')');
 					}					
 					
-					$("#cachebtn_"+id).button('reset');
+					$("#cachebtn_"+escapeid).button('reset');
 				    
 					setTimeout(function() {//  short delay after reset
 				    	
-				    	$("#cachebtn_"+id).prop('disabled', true);
+				    	$("#cachebtn_"+escapeid).prop('disabled', true);
 	
 				    }, 200);
 					
@@ -539,7 +539,7 @@ edu.gmu.csiss.covali.search = {
 					
 					alert("Cache failed." + error);
 					
-					$("#cachebtn_"+id).button("reset");
+					$("#cachebtn_"+escapeid).button("reset");
 					
 				});
 
@@ -911,11 +911,13 @@ edu.gmu.csiss.covali.search = {
 //			'				  	  <option value="-1" disabled="disabled" selected="selected" style="display:none"> -- select an option --</option>'+
 			
 //			'				      <option value="0">VDP</option>'+
+
+            '				      <option value="1">CSISS Catalogue for UCAR Thredds Data Server</option>'+
+
+
+                '				      <option value="2">Public & Uploaded Files</option>'+
 			
-			'				      <option value="2">Public & Uploaded Files</option>'+
-			
-			'				      <option value="1">CSISS Catalogue for UCAR Thredds Data Server</option>'+
-			
+
 //			'				      <option value="4">CSISS Catalogue for Landsat 4/5/7 images (incomplete)</option>'+
 			
 			'				      <option value="3">BCube Broker</option>'+

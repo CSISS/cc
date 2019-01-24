@@ -44,8 +44,11 @@ public class ProductCache {
         this.id = id;
         this.url = url;
 
+        String dir =  BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path ;
+        (new File(dir)).mkdirs();
+
         this.cacheUrl = SysDir.PREFIXURL + "/CyberConnector/" + SysDir.upload_file_path + "/" + id;
-        this.cachePath = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path + "/" + id;
+        this.cachePath = dir  + "/" + id;
         this.cacheTmpPath = this.cachePath + ".tmp";
     }
 
@@ -56,7 +59,12 @@ public class ProductCache {
 
     public void doCache() throws Exception {
 
+
         logger.info("Cache " + url + " to " + cachePath + " as " + cacheUrl);
+
+//        new FileOutputStream(cachePath).close();
+//        return;
+
         if(url.startsWith("https://rda.ucar.edu/data")) {
             String formData = "remember=on&do=login&url=%2F";
             formData = formData + "&email=" + SysDir.ucar_rda_username;
