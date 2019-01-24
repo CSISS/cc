@@ -12,8 +12,9 @@ edu.gmu.csiss.covali.toolbar = {
 		$("#toolbar-search").click(edu.gmu.csiss.covali.search.init);
 		$("#toolbar-add").click(edu.gmu.csiss.covali.add.init);
 		$("#toolbar-layer").click(edu.gmu.csiss.covali.settings.init);
-		$("#toolbar-statistics").click(edu.gmu.csiss.covali.tools.init);
-		$("#toolbar-difference").click(edu.gmu.csiss.covali.tools.init);
+		$("#toolbar-statistics").click(edu.gmu.csiss.covali.statistics.showDialog);
+		$("#toolbar-animation").click(edu.gmu.csiss.covali.animation.showDialog);
+		$("#toolbar-difference").click(edu.gmu.csiss.covali.difference.showDialog);
 		$("#toolbar-print").click(edu.gmu.csiss.covali.print.showDialog);
 		
 	}	

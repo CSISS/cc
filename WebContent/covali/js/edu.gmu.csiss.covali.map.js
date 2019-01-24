@@ -777,7 +777,7 @@ edu.gmu.csiss.covali.map = {
 					url: url,
 				    params: {
 				    	'LAYERS': layername, 
-				    	'TILED': false, 
+				    	'TILED': true,  
 				    	'FORMAT': 'image/gif',
 				    	'VERSION': '1.3.0',
 				    	'STYLES':stylename,

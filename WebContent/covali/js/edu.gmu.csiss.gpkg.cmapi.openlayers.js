@@ -162,7 +162,7 @@ edu.gmu.csiss.gpkg.cmapi.openlayers = {
         this.map.setView(view);
         
         // Add control
-        this.map.addControl(new ol.control.LayerSwitcher()); //add layer control
+//        this.map.addControl(new ol.control.LayerSwitcher()); //add layer control
         
         // Add map to the map list
         this.addMap(this.map);

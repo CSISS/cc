@@ -23,6 +23,8 @@ edu.gmu.csiss.covali.main = {
 		
 		edu.gmu.csiss.covali.menu.init();
 		
+		edu.gmu.csiss.covali.toolbar.init();
+		
 		edu.gmu.csiss.covali.about.init();
 		
 	},
