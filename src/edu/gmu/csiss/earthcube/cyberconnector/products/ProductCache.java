@@ -39,16 +39,16 @@ public class ProductCache {
     private String cacheUrl;
     private String cachePath;
     private String cacheTmpPath;
+    private String cacheDir;
 
     public ProductCache(String id, String url) {
         this.id = id;
         this.url = url;
 
-        String dir =  BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path ;
-        (new File(dir)).mkdirs();
+        this.cacheDir = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path ;
 
         this.cacheUrl = SysDir.PREFIXURL + "/CyberConnector/" + SysDir.upload_file_path + "/" + id;
-        this.cachePath = dir  + "/" + id;
+        this.cachePath = cacheDir  + "/" + id;
         this.cacheTmpPath = this.cachePath + ".tmp";
     }
 
@@ -58,7 +58,7 @@ public class ProductCache {
     }
 
     public void doCache() throws Exception {
-
+        (new File(cacheDir)).mkdirs();
 
         logger.info("Cache " + url + " to " + cachePath + " as " + cacheUrl);
 
