@@ -35,8 +35,21 @@ edu.gmu.csiss.covali.local = {
 			return support;
 			
 		},
-		
+
 		loadlocalfile: function(file_path){
+			if(file_path.toLowerCase().endsWith('.geojson')) {
+                loadlocalfileGeoJSON(file_path)
+			} else {
+                loadlocalfileWMS(file_path)
+			}
+
+		},
+
+		loadlocalfileGeoJSON: function(file_path) {
+
+		},
+		
+		loadlocalfileWMS: function(file_path){
 			
 			if(!edu.gmu.csiss.covali.local.filterFormats(file_path)){
 				
