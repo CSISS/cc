@@ -158,7 +158,7 @@ edu.gmu.csiss.covali.search = {
                         	
                     		var idcolcontent = "<h4> "+
     						"	<a href=\"#\" id=\"name_"+full.id+"\" "+
-    						"		 style=\"word-wrap: break-word;word-break: break-all;\">"+full.title+"</a>"+
+    						"		 style=\"word-wrap: break-word;word-break: break-all;\">"+(full.title||full.name)+"</a>"+
     						"</h4>"+
     						"<p>"+desc+"</p>"+
     						"<p>"+
