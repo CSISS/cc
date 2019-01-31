@@ -11,10 +11,10 @@ edu.gmu.csiss.covali.about = {
 		init: function(){
 			
 			$("#about").click(function(){
-				
+
 				edu.gmu.csiss.covali.about.dialog();
-				
-			});
+
+            });
 			
 		},
 		
