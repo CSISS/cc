@@ -35,8 +35,23 @@ edu.gmu.csiss.covali.local = {
 			return support;
 			
 		},
-		
+
 		loadlocalfile: function(file_path){
+			if(file_path.toLowerCase().endsWith('.geojson')) {
+                edu.gmu.csiss.covali.local.loadGeoJSON(file_path);
+			} else {
+                edu.gmu.csiss.covali.local.loadWMSFile(file_path);
+			}
+
+		},
+
+		loadGeoJSON: function(file_path) {
+			var url = '../uploadFile' + file_path;
+            edu.gmu.csiss.covali.geojson.addGeoJSONFeature(url);
+
+		},
+		
+		loadWMSFile: function(file_path){
 			
 			if(!edu.gmu.csiss.covali.local.filterFormats(file_path)){
 				

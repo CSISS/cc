@@ -7,27 +7,26 @@ edu.gmu.csiss.covali.main = {
 	
 	init: function(){
 		
-		$("#menuheader").val("Geoweaver v" + edu.gmu.csiss.covali.version);
-		
-		this.initheight();
-		
-		edu.gmu.csiss.gpkg.cmapi.openlayers.init("openlayers1"); //left
-		
-		edu.gmu.csiss.gpkg.cmapi.openlayers.init("openlayers2"); //right
-		
-		edu.gmu.csiss.gpkg.cmapi.initialize.init();
-		
-		edu.gmu.csiss.covali.map.init();
-		
-		edu.gmu.csiss.covali.projection.init();
-		
-		edu.gmu.csiss.covali.menu.init();
-		
-		edu.gmu.csiss.covali.toolbar.init();
-		
-		edu.gmu.csiss.covali.about.init();
-		
-	},
+		$("#menuheader").val("Covali v" + edu.gmu.csiss.covali.version);
+
+        this.initheight();
+
+        edu.gmu.csiss.gpkg.cmapi.openlayers.init("openlayers1"); //left
+
+        edu.gmu.csiss.gpkg.cmapi.openlayers.init("openlayers2"); //right
+
+        edu.gmu.csiss.gpkg.cmapi.initialize.init();
+
+        edu.gmu.csiss.covali.map.init();
+
+        edu.gmu.csiss.covali.projection.init();
+
+        edu.gmu.csiss.covali.menu.init();
+
+        edu.gmu.csiss.covali.toolbar.init();
+
+        edu.gmu.csiss.covali.about.init();
+    },
 	
 	
 	initheight: function(){
