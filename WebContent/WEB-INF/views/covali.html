@@ -55,7 +55,7 @@
 
     <!-- Appended by Gil Heo 6/17/2016  -->            
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../covali/css/geopackage-js-app.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="../covali/css/geopackage-js-app.css"/> -->
     
     <link rel="stylesheet" media="screen, projection" href="../css/dataTables.bootstrap.min.css"/>
 	
@@ -110,7 +110,7 @@
             </div>
         </div> -->
         
-        <div class="col-md-3" style="position: absolute; right:10px; bottom:20px; z-index:100;">
+        <div class="col-md-3" style="position: absolute; right:10px; bottom:60px; z-index:100;">
 		    <select id="projectionselector" name="projectionselector" class="form-control">
 		      	<option value="3857">Spherical Mercator (EPSG:3857)</option>
 	         	<option value="4326">WGS 84 (EPSG:4326)</option>
@@ -134,7 +134,7 @@
 		<div class="row row-xs-11" style="height:100%;">
  				
 			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;border-right: 5px solid gray; " id="openlayers1">
-			
+				
 				<div id="toolbar-left" style="position: absolute; top: 10px; left: 30px; height: 50px; z-index:101;" >
 					
 					<button class="btn btn-default toolbar-btn" id="toolbar-search"><i class="fa fa-search"></i></button>
@@ -146,10 +146,20 @@
 					<button class="btn btn-default toolbar-btn" id="toolbar-print"><i class="fa fa-print"></i></button>
 					
 				</div>
-			
-				<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';" 
+				
+				<div id="scaleline-openlayers1" style="position:absolute; top:40px; right: 160px; z-index:200;"></div>
+				
+				<div style="position: absolute; z-index:100; width: 100%; bottom: 0px;background-image: '';" id="left_bottom_area">
+				
+					<div style="z-index:100; height:20px; width:100%;background-image: '';" 
 				
 				onclick="edu.gmu.csiss.covali.map.legendclick(this, 'left')" id="legend1" ></div>
+				
+					<div id="title-openlayers1" style="text-align:center; font-family:Courier New, Courier, monospace;background-color: white; ">
+						Layer Caption
+					</div>
+					
+				</div>
 				
 			</div>
 			
@@ -164,10 +174,20 @@
 					<button class="btn toolbar-btn"><i class="fa fa-folder"></i></button>
 				
 				</div> -->
-			
-				<div class="pull-left" style="position:absolute; z-index:100; width:20px; height:100%;background-image: '';"
 				
-				onclick="edu.gmu.csiss.covali.map.legendclick(this, 'right')" id="legend2" ></div>
+				<div id="scaleline-openlayers2" style="position:absolute; top:40px; right: 160px; z-index:200;"></div>
+				
+				<div id="loc-indicator" style="position: absolute; width:250px; background-color:white; right: 30px; top:40px; z-index:200;"></div>
+				
+				<div style="position: absolute; background-color: white; z-index:100; width: 100%; bottom: 0px;" id="left_bottom_area">
+				
+					<div style="z-index:100; height:20px; width:100%;background-image: '';"
+				
+						onclick="edu.gmu.csiss.covali.map.legendclick(this, 'right')" id="legend2" ></div>
+				
+					<div id="title-openlayers2" class="text-center" style="font-family:Courier New, Courier, monospace;">Layer Caption Region</div>
+					
+				</div>
 			
 			</div>
 			
@@ -227,6 +247,7 @@
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.local.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.wms.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.geojson.js"></script>
+	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.chords.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.upload.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.uri.js"></script>
 	<script type="text/javascript" src="../covali/js/edu.gmu.csiss.covali.search.js"></script>

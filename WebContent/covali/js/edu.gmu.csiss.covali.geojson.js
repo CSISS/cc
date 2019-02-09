@@ -1,4 +1,8 @@
+/**
+ * Juozas
+ */
 edu.gmu.csiss.covali.geojson = {
+	
     showGeoJSONFeatureData: function(feature) {
         var ps = feature.getProperties();
 
@@ -7,9 +11,7 @@ edu.gmu.csiss.covali.geojson = {
         var date_end = ps.geojson.data.slice(-1)[0].time
 
         var variable_names = ps.geojson.data[0].vars.map(a => a.variable_name);
-
-
-
+        
         BootstrapDialog.closeAll();
 
         BootstrapDialog.show({
@@ -36,6 +38,7 @@ edu.gmu.csiss.covali.geojson = {
     },
 
     addGeoJSONFeature: function(url) {
+    	
         $.ajax({
 
             contentType: "application/json",
@@ -48,34 +51,42 @@ edu.gmu.csiss.covali.geojson = {
             {
                 // var gs = JSON.parse(obj);
                 var gs = (new ol.format.GeoJSON()).readFeatures(obj)
-                var feature = gs[0];
-                var point = feature.getGeometry();
-
-                var coords = ol.proj.fromLonLat(point.getCoordinates().map(parseFloat));
-                point.setCoordinates(coords);
-
-                var name = feature.getProperties().site;
-
-                var feature = new ol.Feature({
-                    geometry: point,
-                    name: feature.getProperties().site,
-                    geojson: feature.getProperties(),
-                    url: url
-                });
-
+                var features = [];
+                
                 var style = new ol.style.Style({
                     image: new ol.style.Icon(/** @type {module:ol/style/Icon~Options} */ ({
                         anchor: [40, 52],
                         anchorXUnits: 'pixels',
                         anchorYUnits: 'pixels',
-                        src: 'http://localhost:8080/CyberConnector/covali/img/chords-marker.png'
+                        src: 'covali/img/chords-marker.png'
                     }))
                 });
+                
+                for(var i=0;i<gs.length;i+=1){
+                	
+                	var feature = gs[0];
+                    var point = feature.getGeometry();
 
-                feature.setStyle(style);
+                    var coords = ol.proj.fromLonLat(point.getCoordinates().map(parseFloat));
+                    point.setCoordinates(coords);
 
+                    var name = feature.getProperties().site;
+
+                    var feature = new ol.Feature({
+                        geometry: point,
+                        name: feature.getProperties().site,
+                        geojson: feature.getProperties(),
+                        url: url
+                    });
+                    
+                    feature.setStyle(style);
+                    
+                    features.push(feature);
+                	
+                }
+                
                 var vectorSource = new ol.source.Vector({
-                    features: [feature]
+                    features: features
                 });
 
                 var vectorLayer = new ol.layer.Vector({
@@ -84,8 +95,7 @@ edu.gmu.csiss.covali.geojson = {
                 });
 
                 var select = new ol.interaction.Select();
-
-
+                
                 var selectedFeatures = select.getFeatures();
                 selectedFeatures.on('add', function(){
                     var feature = selectedFeatures.pop();

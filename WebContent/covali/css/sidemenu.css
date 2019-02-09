@@ -295,4 +295,11 @@ section{
     background: #4CAF50;
     cursor: pointer;
 }
+
+.custom-mouse-position {
+    top: 8px;
+    right: 8px;
+    position: absolute;
+    background-color: white;
+}
 	

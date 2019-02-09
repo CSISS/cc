@@ -172,6 +172,14 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
+		updateCaption: function(side,layername){
+			
+			var caption_id = "title-" + this.getMapContainerIdBySide(side) ;
+			
+			$("#caption_id").val(layername);
+			
+		},
+		
 		/**
 		 * only used for updating the legend div element and the current legend layer variable
 		 */
@@ -199,15 +207,15 @@ edu.gmu.csiss.covali.map = {
 					
 				}
 				
-				var height = 100;
+				var width = 100;
 				
-				if($("#"+lid).height()!=0){
+				if($("#"+lid).width()!=0){
 					
-					height = $("#"+lid).height();
+					width = $("#"+lid).width();
 					
 				}
 			
-				$('#'+lid).css("background-image", "url(" + legendurl + "&COLORBARONLY=true&width=20&height=" + height + ")");  
+				$('#'+lid).css("background-image", "url(" + legendurl + "&VERTICAL=false&COLORBARONLY=true&height=20&width=" + width + ")");  
 				
 				$('#'+lid).attr("legendurl", legendurl);
 				
@@ -704,6 +712,8 @@ edu.gmu.csiss.covali.map = {
 			var legendurl = edu.gmu.csiss.covali.map.getWMSLegend(side, layername, stylename);
 			
 			edu.gmu.csiss.covali.map.updateLegend(side, layername, legendurl);
+			
+			edu.gmu.csiss.covali.map.updateCaption(side, layername, legendurl);
 			
 		},
 		

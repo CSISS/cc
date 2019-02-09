@@ -12,6 +12,8 @@ edu.gmu.csiss.gpkg.cmapi.openlayers = {
 	
 	maplist: [],
 	
+	loc_indicator: null,
+	
 	getMap: function(divid){
 		
 		var map = null;
@@ -122,7 +124,11 @@ edu.gmu.csiss.gpkg.cmapi.openlayers = {
           zoom: 4
         });
         
-        var scaleLineControl = new ol.control.ScaleLine();
+        var scaleLineControl = new ol.control.ScaleLine({
+        	
+        	target: "scaleline-" + divid
+        	
+        });
         
         // Instanciate a Map, set the object target to the map DOM id
         this.map = new ol.Map({
@@ -138,10 +144,11 @@ edu.gmu.csiss.gpkg.cmapi.openlayers = {
         });
         
         this.map.addControl(new ol.control.MousePosition({
-            	coordinateFormat: ol.coordinate.createStringXY(4),
-                projection: 'EPSG:4326'
-           })
-        );
+        	coordinateFormat: ol.coordinate.createStringXY(4),
+            projection: 'EPSG:4326',
+            className: 'custom-mouse-position',
+            target: 'loc-indicator'
+        }));
         
         if(divid=="openlayers2"){
         	
