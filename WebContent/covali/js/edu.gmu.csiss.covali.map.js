@@ -176,7 +176,7 @@ edu.gmu.csiss.covali.map = {
 			
 			var caption_id = "title-" + this.getMapContainerIdBySide(side) ;
 			
-			$("#caption_id").val(layername);
+			$("#"+caption_id).html(layername);
 			
 		},
 		
@@ -185,7 +185,7 @@ edu.gmu.csiss.covali.map = {
 		 */
 		updateLegend: function(side,layername, legendurl, palette, style){
 			
-			var lid = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
+			var lid = this.getLegendIdBySide(side);
 			
 //			var mapid = edu.gmu.csiss.covali.map.getMapContainerIdBySide(side);
 			
@@ -193,15 +193,15 @@ edu.gmu.csiss.covali.map = {
 			
 //			if(edu.gmu.csiss.covali.map.isValue(layername))
 			
-			edu.gmu.csiss.covali.map.legend_layername = layername;
+			this.legend_layername = layername;
 			
 //			var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
 			
-			if(edu.gmu.csiss.covali.map.isValue(legendurl)){
+			if(this.isValue(legendurl)){
 				
-				if(edu.gmu.csiss.covali.map.isValue(palette)){
+				if(this.isValue(palette)){
 					
-					legendurl = edu.gmu.csiss.covali.map.setParameterByName("PALETTE", palette, legendurl);
+					legendurl = this.setParameterByName("PALETTE", palette, legendurl);
 					
 //					$('#'+lid).attr("palette", palette);
 					
@@ -229,7 +229,8 @@ edu.gmu.csiss.covali.map = {
 				
 			}
 			
-			console.log("the legend div height: " + $("#"+lid).height());
+			this.updateCaption(side, layername);
+//			console.log("the legend div height: " + $("#"+lid).height());
 			
 		},
 		
@@ -713,7 +714,7 @@ edu.gmu.csiss.covali.map = {
 			
 			edu.gmu.csiss.covali.map.updateLegend(side, layername, legendurl);
 			
-			edu.gmu.csiss.covali.map.updateCaption(side, layername, legendurl);
+			
 			
 		},
 		
