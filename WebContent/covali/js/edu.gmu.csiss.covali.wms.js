@@ -161,6 +161,8 @@ edu.gmu.csiss.covali.wms = {
 				
 				this.parse(null, capability_url);
 				
+//				this.parseAll(capability_url, this.selectCallback);
+				
 			}else{
 				
 				BootstrapDialog.alert('The inputted WMS capabilities URL is invalid!');
@@ -168,6 +170,12 @@ edu.gmu.csiss.covali.wms = {
 			}
 			
 		},
+		
+//		selectCallback: function(layerlist){
+//			
+//			
+//			
+//		},
 		
 		parseAll: function(capa_url, callback){
 
@@ -339,7 +347,9 @@ edu.gmu.csiss.covali.wms = {
 				        
 				        edu.gmu.csiss.covali.wms.layerlist = [];
 				        
-				        var layerlist = edu.gmu.csiss.covali.wms.getLayerList(layer);
+//				        var layerlist = edu.gmu.csiss.covali.wms.getLayerList(layer);
+				        
+				        var layerlist = edu.gmu.csiss.covali.wms.getLayerJSON(layer);
 				        
 				        console.log(layerlist);
 				        
@@ -429,21 +439,55 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
-		showLayerDialog: function(layerlist){
+		makeid: function() {
 			
-			BootstrapDialog.closeAll();
+			var text = "";
+			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+			for (var i = 0; i < 5; i++)
+				text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+			return text;
 			
-			$layerselector = "";
+		},
+		
+		getLayerHierarchyDiv: function(layerlist){
 			
-			for(var i=0; i<layerlist.length; i++){
+			var divcont = "";
+			
+			if(typeof layerlist.nodes != 'undefined' && layerlist.nodes.length != 0){
 				
-				$styles = " <p>Styles: <select name=\"styleselect_"+i+"\" class=\"js-example-basic-hide-search wms-layer-style\">";
+				var id = this.makeid();
 				
-				if(layerlist[i].Style!=null){
+				divcont += "<div class=\"panel-group\"> "+
+		           " 		<div class=\"panel panel-default\"> "+
+		           "       	<div class=\"panel-heading\"> "+
+		           "       		<h4 class=\"panel-title\"> "+
+		           "        	  <a data-toggle=\"collapse\" href=\"#"+id+"\">"+layerlist.text+"</a> "+
+		           "       		</h4> "+
+		           "    	</div>"+
+		           "	<div id=\""+id+"\" class=\"panel-collapse collapse\"> "+
+		           "		<ul class=\"list-group\"> ";
+				
+				for(var i=0;i<layerlist.nodes.length;i+=1){
 					
-					for(var j=0; j<layerlist[i].Style.length; j++){
+					divcont += "<li class=\"list-group-item\"> " + this.getLayerHierarchyDiv(layerlist.nodes[i]) + "</li>";
+					
+				}
+				
+				divcont += "</ul></div></div></div>";
+				
+			}else{
+				
+				var id = this.makeid();
+				
+				$styles = " <p>Styles: <select name=\"styleselect_"+id+"\" class=\"js-example-basic-hide-search wms-layer-style\">";
+				
+				if(layerlist.Style!=null){
+					
+					for(var j=0; j<layerlist.Style.length; j++){
 						
-						$styles += "<option value=\""+layerlist[i].Style[j].Name+"\">"+layerlist[i].Style[j].Name+"</option>";
+						$styles += "<option value=\""+layerlist.Style[j].Name+"\">"+layerlist.Style[j].Name+"</option>";
 						
 					}
 					
@@ -451,25 +495,90 @@ edu.gmu.csiss.covali.wms = {
 				
 				$styles += "</select></p>";
 				
-				$layerselector += "	<a href=\"javascript:void(0)\" class=\"list-group-item wms-layer\">"+
+				$layerselector = "	<a href=\"javascript:void(0)\" class=\"list-group-item wms-layer\">"+
 					
 					"		<div class=\"checkbox pull-right col-md-1\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\"> </label> </div> "+
 					
 					"       <div class=\"pull-left form-control-inline col-md-11\">"+
 					
-					"			<h4 class=\"list-group-item-heading wms-layer-name\" style=\"word-wrap:break-word;\">"+layerlist[i].Name+"</h4> "+
+					"			<h4 class=\"list-group-item-heading wms-layer-name\" style=\"word-wrap:break-word;\" id=\""+
+					
+					layerlist.Name +
+					
+					"\" >"+layerlist.text+"</h4> "+
 					
 					$styles + 
 					
 					"		</div><div class=\"clearfix\"></div>            </a>";
 				
+				divcont += $layerselector;
+				
 			}
 			
-			$content = $("<div class=\"list-group\">"+
-					
-					$layerselector + 
-					
-					"</div>");
+			return divcont;
+//			<div class="panel-group">
+//            <div class="panel panel-default">
+//               <div class="panel-heading">
+//                  <h4 class="panel-title">
+//                     <a data-toggle="collapse" href="#test">Info</a>
+//                  </h4>
+//               </div>
+//               <div id="test" class="panel-collapse collapse">
+//                  <ul class="list-group">
+//                     <li class="list-group-item">Java</li>
+//                     <li class="list-group-item">PHP</li>
+//                     <li class="list-group-item">C++</li>
+//                     <li class="list-group-item">HTML5</li>
+//                     <li class="list-group-item">jQuery</li>
+//                  </ul>
+//               </div>
+//            </div>
+//         </div>
+			
+		},
+		
+		showLayerDialog: function(layerlist){
+			
+			BootstrapDialog.closeAll();
+			
+//			$layerselector = "";
+//			
+//			for(var i=0; i<layerlist.length; i++){
+//				
+//				$styles = " <p>Styles: <select name=\"styleselect_"+i+"\" class=\"js-example-basic-hide-search wms-layer-style\">";
+//				
+//				if(layerlist[i].Style!=null){
+//					
+//					for(var j=0; j<layerlist[i].Style.length; j++){
+//						
+//						$styles += "<option value=\""+layerlist[i].Style[j].Name+"\">"+layerlist[i].Style[j].Name+"</option>";
+//						
+//					}
+//					
+//				}
+//				
+//				$styles += "</select></p>";
+//				
+//				$layerselector += "	<a href=\"javascript:void(0)\" class=\"list-group-item wms-layer\">"+
+//					
+//					"		<div class=\"checkbox pull-right col-md-1\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\"> </label> </div> "+
+//					
+//					"       <div class=\"pull-left form-control-inline col-md-11\">"+
+//					
+//					"			<h4 class=\"list-group-item-heading wms-layer-name\" style=\"word-wrap:break-word;\">"+layerlist[i].Name+"</h4> "+
+//					
+//					$styles + 
+//					
+//					"		</div><div class=\"clearfix\"></div>            </a>";
+//				
+//			}
+//			
+//			$content = $("<div class=\"list-group\">"+
+//					
+//					$layerselector + 
+//					
+//					"</div>");
+			$content = this.getLayerHierarchyDiv(layerlist);
 			
 			BootstrapDialog.show({
 				
@@ -580,6 +689,19 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		addLayer: function(side, layername, stylename){
+			
+			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+			var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
+				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
+			
+			edu.gmu.csiss.covali.map.addWMSLayer(map, endpointurl, layername, stylename);
+			
+			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename);
+			
+		},
+		
 		loadLayer: function(side){
 			
 			var checknum = 0;
@@ -592,7 +714,8 @@ edu.gmu.csiss.covali.wms = {
     				
     				//get layer name and style name
     				
-    				var layername = $(obj).find(".wms-layer-name").text();
+//    				var layername = $(obj).find(".wms-layer-name").text();
+    				var layername = $(obj).find(".wms-layer-name").attr('id');
     				
     				console.log("checked layer: " + layername);
     				
@@ -600,14 +723,7 @@ edu.gmu.csiss.covali.wms = {
     				
     				console.log("checked layer style: " + stylename);
     				
-    				var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-    				
-    				var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
-    					.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
-    				
-    				edu.gmu.csiss.covali.map.addWMSLayer(map, endpointurl, layername, stylename);
-    				
-    				edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename);
+    				edu.gmu.csiss.covali.wms.addLayer(side, layername, stylename);
     				
     			}
     			

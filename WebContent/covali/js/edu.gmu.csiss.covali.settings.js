@@ -52,9 +52,9 @@ edu.gmu.csiss.covali.settings = {
 			
 		},
 		
-		delLayer: function(side, layername){
+		delLayer: function(side, layername, noquestion){
 			
-			if(confirm("You really want to delete this layer?")){
+			if(noquestion||confirm("You really want to delete this layer?")){
 				
 				var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
 				
@@ -72,11 +72,11 @@ edu.gmu.csiss.covali.settings = {
 				
 				var len = layersToRemove.length;
 				
-				for(var i = 0; i < len; i++) {
+//				for(var i = 0; i < len; i++) {
 					
-					olmap.removeLayer(layersToRemove[i]);
+					olmap.removeLayer(layersToRemove[len-1]);
 				
-				}
+//				}
 				
 				edu.gmu.csiss.covali.map.showNextAvailableLegend(side);
 				
@@ -89,6 +89,74 @@ edu.gmu.csiss.covali.settings = {
 			var layername = $(ele);
 			
 			layername.parent().parent().remove();
+			
+		},
+		
+		addLayerName: function(side, layername, opacity){
+			
+			var id = side + "-settings";
+			
+			$("#" + id).append(this.getOneLayerControl(side, layername, opacity));
+			
+		},
+		
+		getOneLayerControl: function(side, layername, opacity){
+			
+			var opaval = Number(opacity);
+    		
+    		var onecontrol = "<div class=\"checkbox\">"+
+					"<label>"+
+					//check/uncheck layer
+					"<input type=\"checkbox\" checked=\"checked\" onchange=\"edu.gmu.csiss.covali.settings.checkLayer('"+
+					side + "', '"+ layername + "', this.checked)\" value=\"\" />" + 
+					//layer name
+					"<span style=\"word-wrap:break-word;\">" + layername + "</span>" +
+					//delete button
+					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.delLayer('"+
+					side + "', '" + layername + 
+					"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-trash\"></i></a>"+
+					//switch button
+					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.switchMap('"+
+					side + "', '" + layername + 
+					"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-transfer\"></i></a>"+
+					//opacity slider bar
+					"<input oninput=\"edu.gmu.csiss.covali.settings.changeOpacity(this, '"+
+					side + "', '" + layername +
+					"');\" type=\"range\" class=\"slider\" min=\"0\" max=\"100\" value=\""+opaval*100+"\" /><p>Opacity: <span class=\"opacity-value\">"+opaval+"</span></p>"+
+				"</label> "+
+			"</div>";
+    		
+    		return onecontrol;
+    		
+		},
+		
+		switchMap: function(side, layername){
+			
+			var target_side = null;
+			
+			if(side=="left"){
+			
+				target_side = "right";
+				
+			}else{
+				
+				target_side = "left";
+				
+			}
+			
+			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+			var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, layername);
+			
+			var othermap = edu.gmu.csiss.covali.map.getMapBySide(target_side);
+			
+			othermap.addLayer(layer);
+			
+			edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null);
+			
+			this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
+			
+			this.delLayer(side, layername, true);
 			
 		},
 		
@@ -105,30 +173,9 @@ edu.gmu.csiss.covali.settings = {
         	
         	olmap.getLayers().forEach(function(layer,idx){
         		
-        		var opaval = Number(layer.getOpacity());
+        		var onecontrol = edu.gmu.csiss.covali.settings.getOneLayerControl(side, layer.get("name"), layer.getOpacity());
         		
-        		$tree.append("<div class=\"checkbox\">"+
-        					"<label>"+
-        						//check/uncheck layer
-        						"<input type=\"checkbox\" checked=\"checked\" onchange=\"edu.gmu.csiss.covali.settings.checkLayer('"+
-        						side+
-        						"', '"+
-        						layer.get("name")+
-        						"', this.checked)\" value=\"\"><span style=\"word-wrap:break-word;\">"+
-        						layer.get("name")+
-        						//delete button
-        						"</span><a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.delLayer('"+
-        						side+
-        						"', '"+
-        						layer.get("name")+
-        						"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-trash\"></i></a>"+
-        						//opacity slider bar
-								"<input oninput=\"edu.gmu.csiss.covali.settings.changeOpacity(this, '"+
-        						side+
-        						"', '"+
-        						layer.get("name")+"');\" type=\"range\" class=\"slider\" min=\"0\" max=\"100\" value=\""+opaval*100+"\"/><p>Opacity: <span class=\"opacity-value\">"+opaval+"</span></p>"+
-        					"</label> "+
-        				"</div>");
+        		$tree.append(onecontrol);
         		
         	});
         	
