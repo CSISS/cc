@@ -100,6 +100,102 @@ edu.gmu.csiss.covali.settings = {
 			
 		},
 		
+		/**
+		 * Move back
+		 */
+		moveBack: function(side,layername){
+			
+			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+			zIndex = 1;
+			
+			olmap.getLayers().forEach(function (layer) {
+				
+				if(isNaN(layer.getZIndex())||layer.getZIndex()==99){
+					layer.setZIndex(zIndex);
+					layer.set("id", side + zIndex);
+					zIndex++;
+				}
+				
+			});
+			
+			var previous_layer = null;
+			
+			olmap.getLayers().forEach(function (layer){
+				
+				if (layer.get('name') == layername)  {
+			    	
+					layernum = layer.getZIndex();
+					
+					console.log("the zindex :" + layer.getZIndex());
+					
+					layer.setZIndex(layer.getZIndex()-1);
+					
+					previous_layer.setZIndex(layer.getZIndex()+1);
+					
+					layer.getSource().changed();
+					
+					previous_layer.getSource().changed();
+					
+			    }else{
+			    	
+			    	previous_layer = layer;
+			    	
+			    }
+				
+			});
+			
+			
+			
+		},
+		
+		/**
+		 * Move front
+		 */
+		moveFront: function(side, layername){
+
+			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+			zIndex = 1;
+			
+			olmap.getLayers().forEach(function (layer) {
+				
+				if(isNaN(layer.getZIndex())||layer.getZIndex()==99){
+					layer.setZIndex(zIndex);
+					layer.set("id", side + zIndex);
+					zIndex++;
+				}
+				
+			});
+			
+			var previous_layer = null;
+			
+			olmap.getLayers().forEach(function (layer){
+				
+				if (layer.get('name') == layername)  {
+			    	
+					layernum = layer.getZIndex();
+					
+					console.log("the zindex :" + layer.getZIndex());
+					
+					layer.setZIndex(layer.getZIndex()+1);
+					
+					previous_layer.setZIndex(layer.getZIndex()-1);
+					
+					layer.getSource().changed();
+					
+					previous_layer.getSource().changed();
+					
+			    }else{
+			    	
+			    	previous_layer = layer;
+			    	
+			    }
+				
+			});
+			
+		},
+		
 		getOneLayerControl: function(side, layername, opacity){
 			
 			var opaval = Number(opacity);
@@ -119,6 +215,14 @@ edu.gmu.csiss.covali.settings = {
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.switchMap('"+
 					side + "', '" + layername + 
 					"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-transfer\"></i></a>"+
+					//up button
+					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveBack('"+
+					side + "', '" + layername + 
+					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-up\"></i></a>"+
+					//down button
+					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveFront('"+
+					side + "', '" + layername + 
+					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-down\"></i></a>"+
 					//opacity slider bar
 					"<input oninput=\"edu.gmu.csiss.covali.settings.changeOpacity(this, '"+
 					side + "', '" + layername +

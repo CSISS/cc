@@ -30,6 +30,8 @@ edu.gmu.csiss.covali.chords = {
 			BootstrapDialog.show({
 				
 	            title: "Instrument Details",
+	            
+	            size: BootstrapDialog.SIZE_WIDE,
 
 	            message: function (dialog) {
 	            	
