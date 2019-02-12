@@ -1,5 +1,6 @@
 package edu.gmu.csiss.earthcube.cyberconnector.ncwms;
 
+import edu.gmu.csiss.earthcube.cyberconnector.tools.LocalFileTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.MyHttpUtils;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
@@ -17,6 +18,24 @@ public class ncWMSTool {
 			throw new RuntimeException("Fail to add data into ncWMS. " + resp);
 			
 		}
+		
+	}
+	
+	public static String getLocationByWMSLayerId(String id) {
+		
+		String resp = MyHttpUtils.doGet_BasicAuth(SysDir.ncWMSURL+"/"+SysDir.ncUsername, SysDir.ncUsername, SysDir.ncPassword);
+		
+		String prefix = "<input type=\"text\" name=\"dataset."+id+".location\" value=\"";
+		
+		int startidx = resp.indexOf(prefix) + prefix.length();
+		
+		resp = resp.substring(startidx);
+		
+		resp = resp.substring(0, resp.indexOf("\""));
+
+		System.out.println(resp);
+		
+		return resp;
 		
 	}
 	
@@ -40,6 +59,8 @@ public class ncWMSTool {
 		
 		String resp = MyHttpUtils.doGet_BasicAuth(target_url, SysDir.ncUsername, SysDir.ncPassword);
 		
+		
+		
 		System.out.println(resp);
 		
 	}
@@ -60,7 +81,12 @@ public class ncWMSTool {
 //			
 //		}
 		
-		ncWMSTool.checkDatasetStatus("dataset=22kuuxf9");
+//		ncWMSTool.checkDatasetStatus("dataset=22kuuxf9");
+		
+		String location = ncWMSTool.getLocationByWMSLayerId("FC82j");
+		String url = LocalFileTool.turnLocalFile2Downloadable(location);
+		
+		System.out.println(url);
 		
 	}
 	

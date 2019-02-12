@@ -171,12 +171,6 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
-//		selectCallback: function(layerlist){
-//			
-//			
-//			
-//		},
-		
 		parseAll: function(capa_url, callback){
 
 			var parser = new ol.format.WMSCapabilities();
@@ -300,8 +294,6 @@ edu.gmu.csiss.covali.wms = {
 			}
 			
 			//parse the nested layer
-			
-			
 			
 			return edu.gmu.csiss.covali.wms.layerlist;
 			
@@ -451,6 +443,25 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		download_path: function(filepath, filename){
+			
+			var url = filepath;
+			
+			var element = document.createElement('a');
+			
+			element.setAttribute('href', url);
+		  
+			element.setAttribute('download', filename);
+
+			element.style.display = 'none';
+		  
+			document.body.appendChild(element);
+
+			element.click();
+
+			document.body.removeChild(element);
+		},
+		
 		download: function(id){
 			
 			console.log("try to download the related file " + id);
@@ -459,15 +470,30 @@ edu.gmu.csiss.covali.wms = {
 				
 				url: "downloadWMSFile",
 				
+				type: "POST",
+				
 				data: "id=" + id
 				
 			}).success(function(data){
 				
 				data = $.parseJSON(data);
 				
+				if(data.output=="success"){
+					
+					var url = data.url;
+					
+					var filename = data.filename;
+					
+					edu.gmu.csiss.covali.wms.download_path(url, filename);
+					
+				}
 				
+			}).fail(function(data){
+				
+				alert("Unable to download " + data);
 				
 			});
+			
 			
 		},
 		
@@ -482,7 +508,7 @@ edu.gmu.csiss.covali.wms = {
 				var downloadbtn = "";
 				
 				if(layerlist.text.indexOf("ncWMS")==-1) //skip the first layer
-					downloadbtn = "<a onclick=\"edu.gmu.csiss.covali.wms.download('"+id+"')\" class=\"btn\"><span class=\"glyphicon glyphicon-download\" ></span> </a> ";
+					downloadbtn = "<a onclick=\"edu.gmu.csiss.covali.wms.download('"+layerlist.text+"')\" class=\"btn\"><span class=\"glyphicon glyphicon-download\" ></span> </a> ";
 				
 				divcont += "<div class=\"panel-group\"> "+
 		           " 		<div class=\"panel panel-default\"> "+
@@ -675,6 +701,17 @@ edu.gmu.csiss.covali.wms = {
 			edu.gmu.csiss.covali.map.addWMSAnimationLayer(map, endpointurl, layername, starttime, endtime, framerate, stylename);
 			
 			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename);
+			
+		},
+		
+		/**
+		 * add more variables from the same file
+		 */
+		addMore: function(side, layername){
+			
+			var datasetid = layername.split("/")[0];
+			
+			this.showLayerSelector(datasetid);
 			
 		},
 		

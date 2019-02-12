@@ -223,6 +223,10 @@ edu.gmu.csiss.covali.settings = {
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveFront('"+
 					side + "', '" + layername + 
 					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-down\"></i></a>"+
+					//add more button
+					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.wms.addMore('"+
+					side + "', '" + layername + 
+					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-plus\"></i></a>"+
 					//opacity slider bar
 					"<input oninput=\"edu.gmu.csiss.covali.settings.changeOpacity(this, '"+
 					side + "', '" + layername +

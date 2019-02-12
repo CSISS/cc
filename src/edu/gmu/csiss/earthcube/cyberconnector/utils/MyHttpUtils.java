@@ -127,7 +127,7 @@ public class MyHttpUtils
 				       br = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream()));
 				       String readLine = null;
 					   while(((readLine = br.readLine()) != null)) {
-						      System.err.println(readLine);
+//						      System.err.println(readLine);
 						      resp += readLine + "\n";
 					   }
 					   
@@ -136,7 +136,7 @@ public class MyHttpUtils
 				// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    theLogger.info("Response: " + resp);
+//	    theLogger.info("Response: " + resp);
 		return resp;
 		
 	}
