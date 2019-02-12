@@ -22,7 +22,7 @@ public class ncWMSTool {
 	
 	public static void removeDataset(String querystr) {
 		
-		String resp = MyHttpUtils.doPost_BasicAuth(SysDir.ncWMSURL, querystr, SysDir.ncUsername, SysDir.ncPassword);
+		String resp = MyHttpUtils.doPost_BasicAuth(SysDir.ncWMSURL+"/"+SysDir.ncUsername+"/removeDataset", querystr, SysDir.ncUsername, SysDir.ncPassword);
 		
 		if(resp.indexOf("has been removed")==-1) {
 			
@@ -32,21 +32,35 @@ public class ncWMSTool {
 		
 	}
 	
+	public static void checkDatasetStatus(String querystr) {
+		
+		String target_url = SysDir.ncWMSURL+"/"+SysDir.ncUsername+"/datasetStatus?" + querystr;
+		
+		System.out.println(target_url);
+		
+		String resp = MyHttpUtils.doGet_BasicAuth(target_url, SysDir.ncUsername, SysDir.ncPassword);
+		
+		System.out.println(resp);
+		
+	}
+	
 	public static void main(String[] args) {
 		
 //		ncWMSTool.addDataset("id=hmgrid");
 		
 //		ncWMSTool.addDataset("id=hmgrid&location=D:/work/TESTDATA/earthcube/archv.2009_092_00_3z.nc");
 		
-		String location = "http://localhost:8080/CyberConnector/uploadFile/archv.2009_099_00_3z.nc";
+//		String location = "http://localhost:8080/CyberConnector/uploadFile/archv.2009_099_00_3z.nc";
+//		
+//		if(location.startsWith(SysDir.PREFIXURL)) {
+//			
+//			location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
+//			
+//			System.out.println("the new location is : " + location);
+//			
+//		}
 		
-		if(location.startsWith(SysDir.PREFIXURL)) {
-			
-			location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
-			
-			System.out.println("the new location is : " + location);
-			
-		}
+		ncWMSTool.checkDatasetStatus("dataset=22kuuxf9");
 		
 	}
 	

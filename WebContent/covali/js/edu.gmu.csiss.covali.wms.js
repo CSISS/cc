@@ -451,6 +451,26 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		download: function(id){
+			
+			console.log("try to download the related file " + id);
+			
+			$.ajax({
+				
+				url: "downloadWMSFile",
+				
+				data: "id=" + id
+				
+			}).success(function(data){
+				
+				data = $.parseJSON(data);
+				
+				
+				
+			});
+			
+		},
+		
 		getLayerHierarchyDiv: function(layerlist){
 			
 			var divcont = "";
@@ -459,11 +479,17 @@ edu.gmu.csiss.covali.wms = {
 				
 				var id = this.makeid();
 				
+				var downloadbtn = "";
+				
+				if(layerlist.text.indexOf("ncWMS")==-1) //skip the first layer
+					downloadbtn = "<a onclick=\"edu.gmu.csiss.covali.wms.download('"+id+"')\" class=\"btn\"><span class=\"glyphicon glyphicon-download\" ></span> </a> ";
+				
 				divcont += "<div class=\"panel-group\"> "+
 		           " 		<div class=\"panel panel-default\"> "+
 		           "       	<div class=\"panel-heading\"> "+
 		           "       		<h4 class=\"panel-title\"> "+
 		           "        	  <a data-toggle=\"collapse\" href=\"#"+id+"\">"+layerlist.text+"</a> "+
+		           downloadbtn +
 		           "       		</h4> "+
 		           "    	</div>"+
 		           "	<div id=\""+id+"\" class=\"panel-collapse collapse\"> "+
@@ -541,43 +567,6 @@ edu.gmu.csiss.covali.wms = {
 			
 			BootstrapDialog.closeAll();
 			
-//			$layerselector = "";
-//			
-//			for(var i=0; i<layerlist.length; i++){
-//				
-//				$styles = " <p>Styles: <select name=\"styleselect_"+i+"\" class=\"js-example-basic-hide-search wms-layer-style\">";
-//				
-//				if(layerlist[i].Style!=null){
-//					
-//					for(var j=0; j<layerlist[i].Style.length; j++){
-//						
-//						$styles += "<option value=\""+layerlist[i].Style[j].Name+"\">"+layerlist[i].Style[j].Name+"</option>";
-//						
-//					}
-//					
-//				}
-//				
-//				$styles += "</select></p>";
-//				
-//				$layerselector += "	<a href=\"javascript:void(0)\" class=\"list-group-item wms-layer\">"+
-//					
-//					"		<div class=\"checkbox pull-right col-md-1\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\"> </label> </div> "+
-//					
-//					"       <div class=\"pull-left form-control-inline col-md-11\">"+
-//					
-//					"			<h4 class=\"list-group-item-heading wms-layer-name\" style=\"word-wrap:break-word;\">"+layerlist[i].Name+"</h4> "+
-//					
-//					$styles + 
-//					
-//					"		</div><div class=\"clearfix\"></div>            </a>";
-//				
-//			}
-//			
-//			$content = $("<div class=\"list-group\">"+
-//					
-//					$layerselector + 
-//					
-//					"</div>");
 			$content = this.getLayerHierarchyDiv(layerlist);
 			
 			BootstrapDialog.show({

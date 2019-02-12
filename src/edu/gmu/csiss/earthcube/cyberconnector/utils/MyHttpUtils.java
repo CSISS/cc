@@ -8,6 +8,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.log4j.Logger;
@@ -93,6 +94,53 @@ public class MyHttpUtils
 	    
 		return resp;
 	}
+	
+	/**
+	 * do GET
+	 * @param url
+	 * @param postContent
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public static String doGet_BasicAuth(String url, String username, String password) {
+		String resp = "";
+	    try {
+				HttpClient client = new HttpClient(); //or any method to get a client instance
+				Credentials credentials = new UsernamePasswordCredentials(username, password);
+				client.getState().setCredentials(AuthScope.ANY, credentials);
+				GetMethod post = new GetMethod(url);
+//		        post.setRequestEntity(new StringRequestEntity(postContent));
+		        int returnCode = client.executeMethod(post);
+		        theLogger.info("ReturnCode: " + returnCode);
+		      //add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
+				if(returnCode == 401){
+					throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
+				}
+		        // execute method and handle any error responses.
+		        BufferedReader br = null;
+		        if(returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
+				       System.err.println("The Post method is not implemented by this URI");
+				       // still consume the response body
+				       resp = post.getResponseBodyAsString();
+			    } else {
+				       br = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream()));
+				       String readLine = null;
+					   while(((readLine = br.readLine()) != null)) {
+						      System.err.println(readLine);
+						      resp += readLine + "\n";
+					   }
+					   
+			    }
+		} catch (Exception e) {
+				// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    theLogger.info("Response: " + resp);
+		return resp;
+		
+	}
+	
 	
 	/**
 	 * 

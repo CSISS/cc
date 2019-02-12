@@ -3,8 +3,6 @@
  */
 edu.gmu.csiss.covali.geojson = {
 	
-    
-    
     testAddIcon: function(){
     
 //    	var style = new ol.style.Style({
@@ -111,21 +109,6 @@ edu.gmu.csiss.covali.geojson = {
 	          format: new ol.format.GeoJSON()
 	        }),
 	        style: styleFunction
-	        	
-//	        	function(feature) {
-//	        	
-//	        	style.getText().setText(feature.get('name'));
-//	            return style;
-//	            
-//	//          return new ol.style.Style({
-//	//              image: new ol.style.Icon(/** @type {module:ol/style/Icon~Options} */ ({
-//	//                  anchor: [40, 52],
-//	//                  anchorXUnits: 'pixels',
-//	//                  anchorYUnits: 'pixels',
-//	//                  src: 'covali/img/chords-marker.png'
-//	//              }))
-//	//          });
-//	        }
 	    });
       
       
@@ -242,7 +225,7 @@ edu.gmu.csiss.covali.geojson = {
                 	projection: 'EPSG:4326',
                 	name: layertitle,
                 	title: layertitle
-//                    features: features[0]
+//                  features: features[0]
 //                	features: gs
 //                	url: url,
                 });
@@ -272,7 +255,7 @@ edu.gmu.csiss.covali.geojson = {
                 var vectorLayer = new ol.layer.Vector({
                     source: vectorSource,
                     style: style,
-                    name: name,
+                    name: layertitle,
                     title: layertitle
                 });
 
