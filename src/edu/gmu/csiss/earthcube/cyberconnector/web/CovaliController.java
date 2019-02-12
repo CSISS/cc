@@ -334,7 +334,7 @@ public class CovaliController {
 			
 			id = f.getName() + "-" + id; //id should contain the file name so people know which file they are looking at
     		
-    		ncWMSTool.addDataset("id="+id + "&location=" + location);
+    		ncWMSTool.addDataset(id, location);
     		
     		resp = "{\"output\":\"success\",\"id\":\""+id+"\"}";
     		
