@@ -1,6 +1,7 @@
 package edu.gmu.csiss.earthcube.cyberconnector.tools;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,7 +9,6 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.Product;
@@ -222,6 +222,54 @@ public class LocalFileTool {
 		return resp;
 		
 	}
+	
+	/**
+	 * Turn local file to download URL
+	 * @param location
+	 * @return
+	 */
+	public static String turnLocalFile2Downloadable(String location) {
+		
+		String url = null;
+		
+		if(location.startsWith(SysDir.covali_file_path)) {
+
+			//move the file to covali file path
+			
+			File file = new File(location); 
+			
+			String newlocation = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path + "/" + file.getName();
+			
+			System.out.println(newlocation);
+	        
+			File targetfile = new File(newlocation);
+			
+			try {
+				
+				FileUtils.copyFile(file, targetfile);
+				
+				url = "../" + SysDir.upload_file_path + "/" + file.getName();
+				
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+				
+				throw new RuntimeException(e.getLocalizedMessage());
+				
+			}
+	        
+		}else if(location.startsWith(BaseTool.getCyberConnectorRootPath())){
+			
+			url = "../" + location.substring(BaseTool.getCyberConnectorRootPath().length());
+			
+		}
+		
+		
+		return url;
+		
+	}
+	
+	
 	
 	/**
 	 * Search by keywords, maximum 100 count

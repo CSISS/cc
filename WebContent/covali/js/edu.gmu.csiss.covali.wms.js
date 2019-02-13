@@ -171,12 +171,6 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
-//		selectCallback: function(layerlist){
-//			
-//			
-//			
-//		},
-		
 		parseAll: function(capa_url, callback){
 
 			var parser = new ol.format.WMSCapabilities();
@@ -300,8 +294,6 @@ edu.gmu.csiss.covali.wms = {
 			}
 			
 			//parse the nested layer
-			
-			
 			
 			return edu.gmu.csiss.covali.wms.layerlist;
 			
@@ -451,6 +443,60 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		download_path: function(filepath, filename){
+			
+			var url = filepath;
+			
+			var element = document.createElement('a');
+			
+			element.setAttribute('href', url);
+		  
+			element.setAttribute('download', filename);
+
+			element.style.display = 'none';
+		  
+			document.body.appendChild(element);
+
+			element.click();
+
+			document.body.removeChild(element);
+		},
+		
+		download: function(id){
+			
+			console.log("try to download the related file " + id);
+			
+			$.ajax({
+				
+				url: "downloadWMSFile",
+				
+				type: "POST",
+				
+				data: "id=" + id
+				
+			}).success(function(data){
+				
+				data = $.parseJSON(data);
+				
+				if(data.output=="success"){
+					
+					var url = data.url;
+					
+					var filename = data.filename;
+					
+					edu.gmu.csiss.covali.wms.download_path(url, filename);
+					
+				}
+				
+			}).fail(function(data){
+				
+				alert("Unable to download " + data);
+				
+			});
+			
+			
+		},
+		
 		getLayerHierarchyDiv: function(layerlist){
 			
 			var divcont = "";
@@ -459,11 +505,17 @@ edu.gmu.csiss.covali.wms = {
 				
 				var id = this.makeid();
 				
+				var downloadbtn = "";
+				
+				if(layerlist.text.indexOf("ncWMS")==-1) //skip the first layer
+					downloadbtn = "<a onclick=\"edu.gmu.csiss.covali.wms.download('"+layerlist.text+"')\" class=\"btn\"><span class=\"glyphicon glyphicon-download\" ></span> </a> ";
+				
 				divcont += "<div class=\"panel-group\"> "+
 		           " 		<div class=\"panel panel-default\"> "+
 		           "       	<div class=\"panel-heading\"> "+
 		           "       		<h4 class=\"panel-title\"> "+
 		           "        	  <a data-toggle=\"collapse\" href=\"#"+id+"\">"+layerlist.text+"</a> "+
+		           downloadbtn +
 		           "       		</h4> "+
 		           "    	</div>"+
 		           "	<div id=\""+id+"\" class=\"panel-collapse collapse\"> "+
@@ -541,43 +593,6 @@ edu.gmu.csiss.covali.wms = {
 			
 			BootstrapDialog.closeAll();
 			
-//			$layerselector = "";
-//			
-//			for(var i=0; i<layerlist.length; i++){
-//				
-//				$styles = " <p>Styles: <select name=\"styleselect_"+i+"\" class=\"js-example-basic-hide-search wms-layer-style\">";
-//				
-//				if(layerlist[i].Style!=null){
-//					
-//					for(var j=0; j<layerlist[i].Style.length; j++){
-//						
-//						$styles += "<option value=\""+layerlist[i].Style[j].Name+"\">"+layerlist[i].Style[j].Name+"</option>";
-//						
-//					}
-//					
-//				}
-//				
-//				$styles += "</select></p>";
-//				
-//				$layerselector += "	<a href=\"javascript:void(0)\" class=\"list-group-item wms-layer\">"+
-//					
-//					"		<div class=\"checkbox pull-right col-md-1\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\"> </label> </div> "+
-//					
-//					"       <div class=\"pull-left form-control-inline col-md-11\">"+
-//					
-//					"			<h4 class=\"list-group-item-heading wms-layer-name\" style=\"word-wrap:break-word;\">"+layerlist[i].Name+"</h4> "+
-//					
-//					$styles + 
-//					
-//					"		</div><div class=\"clearfix\"></div>            </a>";
-//				
-//			}
-//			
-//			$content = $("<div class=\"list-group\">"+
-//					
-//					$layerselector + 
-//					
-//					"</div>");
 			$content = this.getLayerHierarchyDiv(layerlist);
 			
 			BootstrapDialog.show({
@@ -686,6 +701,17 @@ edu.gmu.csiss.covali.wms = {
 			edu.gmu.csiss.covali.map.addWMSAnimationLayer(map, endpointurl, layername, starttime, endtime, framerate, stylename);
 			
 			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename);
+			
+		},
+		
+		/**
+		 * add more variables from the same file
+		 */
+		addMore: function(side, layername){
+			
+			var datasetid = layername.split("/")[0];
+			
+			this.showLayerSelector(datasetid);
 			
 		},
 		

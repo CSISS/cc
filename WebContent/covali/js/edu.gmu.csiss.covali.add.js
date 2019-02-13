@@ -28,7 +28,6 @@ edu.gmu.csiss.covali.add= {
 	            	
 	            	return $content;
 	            	
-
 	            },
 	            
 	            title: "Select Your Data",

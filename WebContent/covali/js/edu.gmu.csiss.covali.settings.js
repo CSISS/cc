@@ -211,10 +211,7 @@ edu.gmu.csiss.covali.settings = {
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.delLayer('"+
 					side + "', '" + layername + 
 					"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-trash\"></i></a>"+
-					//switch button
-					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.switchMap('"+
-					side + "', '" + layername + 
-					"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-transfer\"></i></a>"+
+					
 					//up button
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveBack('"+
 					side + "', '" + layername + 
@@ -222,9 +219,23 @@ edu.gmu.csiss.covali.settings = {
 					//down button
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveFront('"+
 					side + "', '" + layername + 
-					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-down\"></i></a>"+
+					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-down\"></i></a>";
+					
+					if(layername!="osm-basemap" && layername != "World Boundary"){
+						
+						//switch button
+						onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.switchMap('"+
+						side + "', '" + layername + 
+						"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-transfer\"></i></a>"+
+						//add more button
+						"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.wms.addMore('"+
+						side + "', '" + layername + 
+						"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-plus\"></i></a>";
+						
+					}
+					
 					//opacity slider bar
-					"<input oninput=\"edu.gmu.csiss.covali.settings.changeOpacity(this, '"+
+					onecontrol += "<input oninput=\"edu.gmu.csiss.covali.settings.changeOpacity(this, '"+
 					side + "', '" + layername +
 					"');\" type=\"range\" class=\"slider\" min=\"0\" max=\"100\" value=\""+opaval*100+"\" /><p>Opacity: <span class=\"opacity-value\">"+opaval+"</span></p>"+
 				"</label> "+

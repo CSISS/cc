@@ -84,9 +84,9 @@ edu.gmu.csiss.covali.upload = {
 			        });
 					
 				}, //success(result,status,xhr)
-				error: function(){
+				error: function(xhr, status, error){
 				
-					alert("Fail to send the request.");
+					alert("Fail to display the file " + error);
 					
 				} //error(xhr,status,error)
 			});

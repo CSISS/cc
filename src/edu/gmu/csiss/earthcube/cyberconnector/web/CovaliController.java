@@ -1,5 +1,6 @@
 package edu.gmu.csiss.earthcube.cyberconnector.web;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -256,6 +257,41 @@ public class CovaliController {
     	
     }
 	
+	@RequestMapping(value = "/downloadWMSFile", method = RequestMethod.POST)
+    public @ResponseBody String downloadWMSFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
+    	
+    	String resp = null;
+    	
+//    	String querystr = request.getQueryString();
+    	
+    	String id = request.getParameter("id");
+    	
+    	try {
+    		
+    		String location = ncWMSTool.getLocationByWMSLayerId(id);
+    		
+    		String url = LocalFileTool.turnLocalFile2Downloadable(location);
+    		
+    		File f = new File(location);
+    		
+    		resp = "{\"output\":\"success\",\"url\":\""+url+"\", \"filename\": \""+f.getName()+"\"}";
+    		
+    	}catch(Exception e) {
+    		
+    		e.printStackTrace();
+    		
+    		resp = "{\"output\":\"failure\",\"reason\": \""+
+    				
+    				e.getLocalizedMessage() +
+    				
+    				"\"}";
+    				
+    	}
+    	
+    	return resp;
+    	
+    }
+	
 	/**
      * Add dataset into ncWMS
      * add by Z.S. on 7/6/2018
@@ -272,7 +308,7 @@ public class CovaliController {
     	
 //    	String querystr = request.getQueryString();
     	
-    	String id = RandomString.get(8);
+    	String id = RandomString.get(3);
     	
     	String location = request.getParameter("location");
     	
@@ -293,8 +329,12 @@ public class CovaliController {
     			location = SysDir.covali_file_path + location;
     			
     		}
+
+			File f = new File(location);
+			
+			id = f.getName() + "-" + id; //id should contain the file name so people know which file they are looking at
     		
-    		ncWMSTool.addDataset("id="+id + "&location=" + location);
+    		ncWMSTool.addDataset(id, location);
     		
     		resp = "{\"output\":\"success\",\"id\":\""+id+"\"}";
     		
