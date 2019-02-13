@@ -187,18 +187,12 @@ edu.gmu.csiss.covali.geojson = {
     	
         $.ajax({
 
-//            contentType: "application/json",
         	dataType: 'json',
-
-//            type: "GET",
 
             url: url,
 
             success: function(obj, text, jxhr)
             {
-                // var gs = JSON.parse(obj);
-//            	obj = $.parseJSON(obj);
-            	
                 var gs = (new ol.format.GeoJSON()).readFeatures(obj);
                 var features = [];
                 
@@ -207,7 +201,6 @@ edu.gmu.csiss.covali.geojson = {
                         anchor: [40, 52],
                         anchorXUnits: 'pixels',
                         anchorYUnits: 'pixels',
-//                    	color: "#4271AE",
                         crossOrigin: 'anonymous',
                         src: '../images/chords-marker.png'
                     }))
@@ -219,16 +212,7 @@ edu.gmu.csiss.covali.geojson = {
                     var point = feature.getGeometry();
 
                     var coords = ol.proj.fromLonLat(point.getCoordinates().map(parseFloat));
-//                    var coords = ol.proj.fromLonLat(point.getCoordinates());
                     point.setCoordinates(coords);
-
-//                    var name = feature.getProperties().name;
-//                    
-//                    var feature = new ol.Feature({
-//                        geometry: point,
-//                        name: feature.getProperties().name,
-//                        url: url
-//                    });
                     
                     feature.setStyle(style);
                     
@@ -242,32 +226,8 @@ edu.gmu.csiss.covali.geojson = {
                 	projection: 'EPSG:4326',
                 	name: layertitle,
                 	title: layertitle
-//                    features: features[0]
-//                	features: gs
-//                	url: url,
                 });
-                
-//                var vectorLayer = new ol.layer.Vector({
-//                	title: layertitle,
-//                    source: new ol.source.Vector({
-//                      url: url,
-//                      format: new ol.format.GeoJSON()
-//                    }),
-//                    style: function(feature) {
-//                    	
-//                    	style.getText().setText(feature.get('name'));
-//                        return style;
-//                        
-////                      return new ol.style.Style({
-////                          image: new ol.style.Icon(/** @type {module:ol/style/Icon~Options} */ ({
-////                              anchor: [40, 52],
-////                              anchorXUnits: 'pixels',
-////                              anchorYUnits: 'pixels',
-////                              src: 'covali/img/chords-marker.png'
-////                          }))
-////                      });
-//                    }
-//                });
+
 
                 var vectorLayer = new ol.layer.Vector({
                     source: vectorSource,
@@ -276,19 +236,28 @@ edu.gmu.csiss.covali.geojson = {
                     title: layertitle
                 });
 
-                var select = new ol.interaction.Select();
-                
-                var selectedFeatures = select.getFeatures();
-                selectedFeatures.on('add', function(){
-                    var feature = selectedFeatures.pop();
-                    edu.gmu.csiss.covali.chords.showSiteDetails(feature);
-                });
-
                 var map1 = edu.gmu.csiss.covali.map.getMapBySide('left');
                 var map2 = edu.gmu.csiss.covali.map.getMapBySide('right');
 
-                map1.addInteraction(select);
-                map2.addInteraction(select);
+                var select1 = new ol.interaction.Select();
+                var select2 = new ol.interaction.Select();
+
+                var selectedFeatures1 = select1.getFeatures();
+                var selectedFeatures2 = select2.getFeatures();
+
+                selectedFeatures1.on('add', function(){
+                    var feature = selectedFeatures1.pop();
+                    edu.gmu.csiss.covali.chords.showSitePopup(feature, 'left');
+                });
+
+                selectedFeatures2.on('add', function(){
+                    var feature = selectedFeatures2.pop();
+                    edu.gmu.csiss.covali.chords.showSitePopup(feature, 'right');
+                });
+
+
+                map1.addInteraction(select1);
+                map2.addInteraction(select2);
 
 
                 map1.addLayer(vectorLayer);
