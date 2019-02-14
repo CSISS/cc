@@ -27,12 +27,30 @@ public class ncWMSTool {
 		
 		try {
 			
-			TimeUnit.SECONDS.sleep(2);
+			boolean isready = false;
 			
-//			Dataset asr15km.anl.2D.200001.mon.nc-qn6 (D:/work/TESTDATA/earthcube/asr15km.anl.2D.200001.mon.nc) is being added.
-//			Check the status at http://localhost:8080/ncWMS2/admin/datasetStatus?dataset=asr15km.anl.2D.200001.mon.nc-qn6
+			for(int i=0;i<3;i++) {
+				
+				TimeUnit.SECONDS.sleep(3);
+				
+//				Dataset asr15km.anl.2D.200001.mon.nc-qn6 (D:/work/TESTDATA/earthcube/asr15km.anl.2D.200001.mon.nc) is being added.
+//				Check the status at http://localhost:8080/ncWMS2/admin/datasetStatus?dataset=asr15km.anl.2D.200001.mon.nc-qn6
+				
+				if(!checkDatasetStatus(id)) {
+					
+					continue;
+					
+				}else {
+					
+					isready = true;
+					
+					break;
+					
+				}
+				
+			}
 			
-			if(!checkDatasetStatus(id)) {
+			if(!isready) {
 				
 				throw new RuntimeException("fail to read the file into ncWMS");
 				
