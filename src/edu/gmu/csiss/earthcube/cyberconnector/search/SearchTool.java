@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
+import edu.gmu.csiss.earthcube.cyberconnector.products.ProductVariable;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -134,9 +135,9 @@ public class SearchTool {
 				p.setOntology(rs.getString("ontology_reference"));
 				
 				p.setLikes(rs.getInt("likes"));
-				
+
+
 				ps.add(p);
-				
 			}
 			
 			resp.setProducts(ps);
@@ -595,7 +596,9 @@ public class SearchTool {
 			XPath accessinfo = DocumentHelper.createXPath("gmd:CI_OnlineResource/gmd:name/gco:CharacterString");
 
 			XPath collection_url = DocumentHelper.createXPath("gmd:identificationInfo/gmd:MD_DataIdentification[@id = 'DataIdentification']/gmd:aggregationInfo[1]/gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString");
-			
+
+//			X
+
 			xpath.setNamespaceURIs(map);
 			
 			List list = xpath.selectNodes(document);
@@ -735,7 +738,13 @@ public class SearchTool {
 				}
 				
 				p.setIfvirtual("0");
-				
+
+				ProductVariable pv1 = new ProductVariable("id1", "float", "desc1");
+				ProductVariable pv2 = new ProductVariable("id2", "int", null);
+
+				p.addVariable(pv1);
+				p.addVariable(pv2);
+
 				products.add(p);
 				
 			}

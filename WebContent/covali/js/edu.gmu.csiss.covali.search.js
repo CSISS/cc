@@ -8,11 +8,7 @@
 */
 
 edu.gmu.csiss.covali.search = {
-		
-		searchdialog: null,
-		
-		resultdialog: null,
-		
+
 		resultDialog: function(request){
 			
 			this.resultdialog = BootstrapDialog.show({
@@ -151,7 +147,6 @@ edu.gmu.csiss.covali.search = {
                     		var desc = " ", btime = " ", etime = " ";
                             var escapeid = full.id.replace(/\./g, '_');
 
-
                             if(full.desc!=null) desc = full.desc;
                     		
                     		if(full.begintime!=null) btime = full.begintime;
@@ -229,8 +224,9 @@ edu.gmu.csiss.covali.search = {
                     	"data": "accessurl",
                         
                     	"render": function ( data, type, full, meta ) {
+                            var escapeid = full.id.replace(/\./g, '_');
 
-                    		return "";
+                    		return '<a href="#" id="viewvars_'+ escapeid +'">' + full.variables.length + ' variables</a>';
                         
                     	},
                     	
@@ -268,7 +264,8 @@ edu.gmu.csiss.covali.search = {
                 "drawCallback": function( settings ) {
                 	
                 	var api = new $.fn.dataTable.Api( settings );
-                	
+
+
                     console.log( 'this is a call on drawcallback' );
                     
                     //the use of aoData is dangerous and is not supported. Watch out!
@@ -276,20 +273,23 @@ edu.gmu.csiss.covali.search = {
                     for(var i=0; i< settings.aoData.length; i++){
     	        		
     	        		var full = settings.aoData[i]._aData;
-    	        		
-    	        		if ( $( "#recordmap_" + full.id ).length ) {
+                        var escapeid = full.id.replace(/\./g, '_');
+
+                        if ( $( "#recordmap_" + full.id ).length ) {
     	        			
     	        			edu.gmu.csiss.covali.search.initializeResultMap("recordmap_" + full.id, full.west, full.east, full.south, full.north);
     	        			
     	        		}
-    	        		
-    	        		var escapeid = full.id.replace(/\./g, '\\.');
-    	        		
+
     	        		$("#viewbtn_" + escapeid + ", #name_" + escapeid ).click(function(){
     	        			
     	        			edu.gmu.csiss.covali.search.view(full);
     	        			
     	        		});
+
+    	        		$("#viewvars_" + escapeid).click(function(){
+                            edu.gmu.csiss.covali.search.variablesTable(full);
+						});
     	        		
 //    	        		$("#likebtn_" + escapeid).click(function(){
 //    	        		
@@ -307,7 +307,53 @@ edu.gmu.csiss.covali.search = {
             
             })
         },
-        
+
+		variablesTable: function(product) {
+			var content = '<div><table class="table table-striped table-bordered table-list dataTable no-footer">';
+
+			content += '<thead><tr role="row"><th>Variable</th><th>Type</th><th>Description</th></tr></thead>';
+
+			content += '<tbody>';
+			product.variables.forEach(function (v) {
+                content += '<tr role="row">';
+
+                content += '<td>' + v.id + '</td>';
+                content += '<td>' + v.type + '</td>';
+                content += '<td>' + v.desc + '</td>';
+
+                content += '</tr>';
+            });
+			content += '</tbody></table></div>';
+
+            BootstrapDialog.show({
+
+                title: product.name + ' Variables',
+
+                message: $(content),
+
+                buttons: [{
+
+                    id: 'btn-ok',
+
+                    icon: 'glyphicon glyphicon-check',
+
+                    label: 'Ok',
+
+                    cssClass: 'btn-primary',
+
+                    autospin: false,
+
+                    action: function(dialogRef){
+
+                        dialogRef.close();
+
+                    }
+
+                }]
+
+            });
+
+		},
 
     	view: function (theproduct){
 			
@@ -436,30 +482,12 @@ edu.gmu.csiss.covali.search = {
 				message: $(tablecontent),
 			    
 				buttons: [{
-			        
-			    	id: 'btn-cancel',   
-			        
-			        icon: 'glyphicon glyphicon-remove',       
-			        
-			        label: 'CANCEL',
-			        
-			        cssClass: 'btn-primary', 
-			        
-			        autospin: false,
-			        
-			        action: function(dialogRef){    
-			        
-			        	dialogRef.close();
-			        
-			        }
-			    
-			    },{
 			    
 					id: 'btn-ok',   
 			        
 					icon: 'glyphicon glyphicon-check',       
 			        
-					label: 'OK',
+					label: 'Ok',
 			        
 					cssClass: 'btn-primary', 
 			        

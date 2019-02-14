@@ -1,5 +1,6 @@
 package edu.gmu.csiss.earthcube.cyberconnector.products;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,10 +41,10 @@ public class Product {
 	double east, south, west, north;
 
 	List<Input> inputlist;
+	List <ProductVariable> variables;
 
 	public Product(){
-
-
+		this.variables = new ArrayList<ProductVariable>();
 	}
 	/**
 	 *
@@ -72,7 +73,7 @@ public class Product {
 	 */
 	public Product(String id, String abbr, String desc, String keywords, String name, String srs, String parentmodel, String begintime,
 			String endtime, String ifvirtual, String isspatial, String iscollection, String modelid, String format, String accessurl, String ontology,
-			String lastupdate, String userid, double east, double south, double west, double north, List<Input> inputlist, int likes, String title) {
+			String lastupdate, String userid, double east, double south, double west, double north, List<Input> inputlist, List<ProductVariable> variables, int likes, String title) {
 		super();
 		this.id = id;
 		this.parentmodel = parentmodel;
@@ -99,6 +100,7 @@ public class Product {
 		this.likes = likes;
 		this.iscollection = iscollection;
 		this.title = title;
+		this.variables = variables;
 	}
 
 	public String getTitle() { return title; }
@@ -297,11 +299,21 @@ public class Product {
 
 	public void setNorth(double north) {
 		this.north = north;
-	} 
-	
-	
-	
-//	CREATE TABLE `products` (
+	}
+
+	public List<ProductVariable> getVariables() {
+		return variables;
+	}
+
+	public void setVariables(List<ProductVariable> variables) {
+		this.variables = variables;
+	}
+
+	public void addVariable(ProductVariable pv) {
+		this.variables.add(pv);
+	}
+
+	//	CREATE TABLE `products` (
 //			`identifier` VARCHAR(50) NOT NULL DEFAULT '',
 //			`abbreviation` VARCHAR(50) NULL DEFAULT NULL,
 //			`description` TINYTEXT NULL,
