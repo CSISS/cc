@@ -106,6 +106,34 @@ edu.gmu.csiss.covali.search = {
 			
 		},
 		
+		download: function(filepath){
+			
+			$.ajax({
+				
+				"url": "downloadLocalFile",
+				
+				"type": "POST",
+				
+				"data": "path=" + filepath
+				
+			}).success(function(data){
+				
+				data = $.parseJSON(data);
+				
+				if(data.output=="success"){
+					
+					edu.gmu.csiss.covali.search.goto(data.url);
+					
+				}else{
+					
+					alert("Fail to download the data: + filepath");
+					
+				}
+				
+			});
+			
+		},
+		
 		initTable: function(request){
         	
         	//var currentRecList = [];
@@ -206,6 +234,13 @@ edu.gmu.csiss.covali.search = {
         							' id="downbtn_'+escapeid+'"> <span '+
         							'			class="glyphicon glyphicon-download-alt pull-left" title="Download"></span> '+
         							'		</button>';
+    							}else{
+    								
+    								content += '		<button onclick="edu.gmu.csiss.covali.search.download(\''+full.accessurl+'\')" class="btn btn-default" '+
+        							' id="downbtn_'+escapeid+'"> <span '+
+        							'			class="glyphicon glyphicon-download-alt pull-left" title="Download"></span> '+
+        							'		</button>';
+    								
     							}
     							
     							//add a button to load map
@@ -507,41 +542,43 @@ edu.gmu.csiss.covali.search = {
 				data: "id="+id+"&accessurl="+accessurl+"&name="+name
         	}).success(function(obj, text, jxhr){
 					
-					var resp = $.parseJSON(obj);
+				var resp = $.parseJSON(obj);
+				
+				if(resp.output=="success"){
 					
-					if(resp.output=="success"){
-						
-						alert("Cached " + resp.file_url);
-						
-						console.log("cached url is:" + resp.file_url);
-						
-						//change the link of the download and loading map to the new link. 
-						
+					alert("Cached " + resp.file_url);
+					
+					console.log("cached url is:" + resp.file_url);
+					
+					//change the link of the download and loading map to the new link. 
+					
 
-						
-						$('#loadbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.load(\''+
-								id+'\',\''+
-    							resp.file_url+'\')');
-						
-						$('#downbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.goto(\''+
-								resp.file_url+'\')');
-					}					
 					
-					$("#cachebtn_"+escapeid).button('reset');
-				    
-					setTimeout(function() {//  short delay after reset
-				    	
-				    	$("#cachebtn_"+escapeid).prop('disabled', true);
-	
-				    }, 200);
+					$('#loadbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.load(\''+
+							id+'\',\''+
+							resp.file_url+'\')');
 					
-				}).fail(function(jxhr, status, error){
-					
-					alert("Cache failed." + error);
-					
-					$("#cachebtn_"+escapeid).button("reset");
-					
-				});
+					$('#downbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.goto(\''+
+							resp.file_url+'\')');
+				}					
+				
+				$("#cachebtn_"+escapeid).button('reset');
+			    
+				setTimeout(function() {//  short delay after reset
+			    	
+			    	$("#cachebtn_"+escapeid).prop('disabled', true);
+
+			    }, 200);
+				
+			}).fail(function(jxhr, status, error){
+				
+				alert("Cache failed." + error);
+				
+				$("#cachebtn_"+escapeid).button("reset");
+				
+			});
+        	
+        	alert("It may take a while depending on the file size. You can leave this dialog and find the cached file later in the search Public&Upload category.");
 
         	
         },
@@ -549,7 +586,6 @@ edu.gmu.csiss.covali.search = {
          * Jump to advanced order page
          */
         advancedOrder: function(){
-        	
         	
         	if(cc.product.fileinputnum==0){
         		

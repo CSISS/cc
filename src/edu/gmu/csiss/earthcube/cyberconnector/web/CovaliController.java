@@ -104,9 +104,7 @@ public class CovaliController {
     	searchreq.setPageno(pageNum);
 
 		SearchResponse sr = SearchTool.search(searchreq);
-
-
-
+		
     	//for JQuery DataTables
     	String draw = request.getParameter("draw");
 
@@ -115,6 +113,7 @@ public class CovaliController {
     	sr.setRecordsTotal(sr.getProduct_total_number());
 
 		return BaseTool.toJSONString(sr);
+		
     }
 
 	@RequestMapping(value = "/listgranules", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -257,6 +256,39 @@ public class CovaliController {
     	
     }
 	
+	@RequestMapping(value = "/downloadLocalFile", method = RequestMethod.POST)
+    public @ResponseBody String downloadLocalFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
+    	
+    	String resp = null;
+    	
+//    	String querystr = request.getQueryString();
+    	
+    	String path = request.getParameter("path");
+    	
+    	try {
+    		
+    		String url = LocalFileTool.turnLocalFile2Downloadable(path);
+    		
+    		File f = new File(path);
+    		
+    		resp = "{\"output\":\"success\",\"url\":\""+url+"\", \"filename\": \""+f.getName()+"\"}";
+    		
+    	}catch(Exception e) {
+    		
+    		e.printStackTrace();
+    		
+    		resp = "{\"output\":\"failure\",\"reason\": \""+
+    				
+    				e.getLocalizedMessage() +
+    				
+    				"\"}";
+    				
+    	}
+    	
+    	return resp;
+    	
+    }
+	
 	@RequestMapping(value = "/downloadWMSFile", method = RequestMethod.POST)
     public @ResponseBody String downloadWMSFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
     	
@@ -320,13 +352,25 @@ public class CovaliController {
     			
     			logger.debug("the new location is : " + location);
     			
-    		}else if(location.startsWith(SysDir.covali_file_path)){
+    		}else if(location.startsWith(SysDir.getCovali_file_path())){
     			
 //    			location = location;
     			
-    		}else {    			
+    		}else {
     			
-    			location = SysDir.covali_file_path + location;
+    			File f = new File(location);
+    			
+    			File folder = new File(BaseTool.getCyberConnectorRootPath());
+    			
+    			if(f.getAbsolutePath().indexOf(folder.getPath())!=-1){
+        			
+        			//do nothing
+        			
+        		}else {
+        			
+        			location = SysDir.getCovali_file_path() + location;
+        			
+        		} 
     			
     		}
 

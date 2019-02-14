@@ -40,48 +40,58 @@ edu.gmu.csiss.covali.upload = {
 					
 					var obj = jQuery.parseJSON( obj );
 					
-					console.info("the new WMS layer name is : " + obj.id);
-					
-					BootstrapDialog.closeAll();
-					
-					BootstrapDialog.show({
+					if(obj.output!="failure"){
 						
-			            message: function(dialog){
-			            	
-			            	$content = $("<p class=\"text-success\">Your file has been uploaded. You can find it via the search function. Do you want to load it onto the map now?</p>");
-			            	
-			            	return $content;
-			            	
-			            },
-			            
-			            title: "Data Uploader",
-			            
-			            cssClass: 'dialog-vertical-center',
-			            
-			            buttons: [{
-				                
-			            		label: 'Load',
-				                
-				                action: function(dialogItself){
-				                	
-				                	//open the WMS loading dialog to add a specific layer
-				                	
-				                	var id = obj.id; //the wms layer name
-				                	
-				                	edu.gmu.csiss.covali.wms.showLayerSelector(id);
-				                    
-				                }
-			            	},{
-				                
-			            		label: 'Close',
-				                
-				                action: function(dialogItself){
-				                	
-				                    dialogItself.close();
-				                    
-				                }
-			            }]
-			        });
+						console.info("the new WMS layer name is : " + obj.id);
+						
+						BootstrapDialog.closeAll();
+						
+						BootstrapDialog.show({
+							
+				            message: function(dialog){
+				            	
+				            	$content = $("<p class=\"text-success\">Your file has been uploaded. You can find it via the search function. Do you want to load it onto the map now?</p>");
+				            	
+				            	return $content;
+				            	
+				            },
+				            
+				            title: "Data Uploader",
+				            
+				            cssClass: 'dialog-vertical-center',
+				            
+				            buttons: [{
+					                
+				            		label: 'Load',
+					                
+					                action: function(dialogItself){
+					                	
+					                	//open the WMS loading dialog to add a specific layer
+					                	
+					                	var id = obj.id; //the wms layer name
+					                	
+					                	edu.gmu.csiss.covali.wms.showLayerSelector(id);
+					                    
+					                }
+				            	},{
+					                
+				            		label: 'Close',
+					                
+					                action: function(dialogItself){
+					                	
+					                    dialogItself.close();
+					                    
+					                }
+				            }]
+				        });
+						
+					}else{
+						
+						alert("Fail to load the file into map. Check if it is CF-compliant netcdf." + obj.reason );
+						
+					}
+					
+					
 					
 				}, //success(result,status,xhr)
 				error: function(xhr, status, error){

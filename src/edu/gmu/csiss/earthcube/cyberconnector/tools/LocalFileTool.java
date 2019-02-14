@@ -176,7 +176,7 @@ public class LocalFileTool {
 	                		if(file.getAbsolutePath().startsWith(BaseTool.getCyberConnectorRootPath()+
 	                				SysDir.upload_file_path)) {
 	                			
-	                			accessurl = SysDir.PREFIXURL+"/CyberConnector/"+SysDir.upload_file_path+"/";
+	                			accessurl = SysDir.PREFIXURL+"/CyberConnector/"+SysDir.upload_file_path+"/" + file.getName();
 	                			
 	                		}else  {
 	                			
@@ -232,7 +232,7 @@ public class LocalFileTool {
 		
 		String url = null;
 		
-		if(location.startsWith(SysDir.covali_file_path)) {
+		if(location.startsWith(SysDir.getCovali_file_path())) {
 
 			//move the file to covali file path
 			
@@ -258,12 +258,21 @@ public class LocalFileTool {
 				
 			}
 	        
-		}else if(location.startsWith(BaseTool.getCyberConnectorRootPath())){
+		}else{
 			
-			url = "../" + location.substring(BaseTool.getCyberConnectorRootPath().length());
+			File f = new File(location);
+			
+			File folder = new File(BaseTool.getCyberConnectorRootPath());
+			
+			 if(f.getAbsolutePath().startsWith(folder.getPath())) {
+				 
+				 url = "../" + location.substring(location.indexOf(BaseTool.getCyberConnectorRootPath()) + BaseTool.getCyberConnectorRootPath().length());
+				 
+			 }
+			
+			
 			
 		}
-		
 		
 		return url;
 		
@@ -288,7 +297,7 @@ public class LocalFileTool {
 			pageno = pageno - resp1.getProduct_total_number()/recordsperpage;
 			
 			SearchResponse resp2 = LocalFileTool.search(keywords, recordsperpage, pageno,
-					SysDir.covali_file_path, formats);
+					SysDir.getCovali_file_path(), formats);
 			
 			resp1 = SearchTool.merge(resp1, resp2);
 			
@@ -307,7 +316,7 @@ public class LocalFileTool {
 		
 		StringBuffer filelist = new StringBuffer("[") ;
 		
-		String file_loc = SysDir.covali_file_path+ rootlocation;
+		String file_loc = SysDir.getCovali_file_path()+ rootlocation;
 
 		logger.debug(file_loc);
 		
@@ -349,11 +358,15 @@ public class LocalFileTool {
 		
 //		logger.debug("fuzzy distance: " + distance);
 		
-		SearchResponse resp = LocalFileTool.search("", 5, 16, null);
+//		SearchResponse resp = LocalFileTool.search("", 5, 16, null);
+//		
+//		logger.debug("total number " + resp.getProduct_total_number() + 
+//				" recordsperpage: " + resp.getRecordsperpage() + 
+//				" start position: " + resp.getStartposition());
 		
-		logger.debug("total number " + resp.getProduct_total_number() + 
-				" recordsperpage: " + resp.getRecordsperpage() + 
-				" start position: " + resp.getStartposition());
+		String url = LocalFileTool.turnLocalFile2Downloadable("D:/Program Files/apache-tomcat-8.5.31/webapps/CyberConnector/uploadFile/data.nc");
+		
+		System.out.println("cached URL: " + url);
 		
 	}
 

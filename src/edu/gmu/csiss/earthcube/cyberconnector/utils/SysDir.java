@@ -67,7 +67,15 @@ public class SysDir {
 	public static String ucar_rda_username = null;
 
 	public static String ucar_rda_password = null;
-
+	
+	public static String getCovali_file_path() {
+		
+		init();
+		
+		return covali_file_path;
+		
+	}
+	
 	static Properties readProperties(String path) {
 		Properties p = new Properties();
 
@@ -83,10 +91,9 @@ public class SysDir {
 
 		return p;
 	}
-
-	static{
+	
+	static void init() {
 		
-		//initialize from config file
 		try {
 			
 			BaseTool t = new BaseTool();
@@ -169,6 +176,13 @@ public class SysDir {
 			e.printStackTrace();
 			
 		}
+		
+	}
+
+	static{
+		
+		//initialize from config file
+		init();
 		
 	}
 

@@ -71,17 +71,20 @@ public class ProductCache {
             formData = formData + "&passwd=" + SysDir.ucar_rda_password;
 
             MyHttpUtils.downloadFileSessionAuth("https://rda.ucar.edu/cgi-bin/login", formData, url, cacheTmpPath);
+            
         } else {
-            MyHttpUtils.downloadFile(url, cacheTmpPath);
+            
+        	MyHttpUtils.downloadFile(url, cacheTmpPath);
+        	
         }
 
         File cachedFile = new File(cacheTmpPath);
+        
         cachedFile.renameTo(new File(cachePath));
+        
     }
     
-
-
-
+    
 //    public static void down(String savedir, String imgUrl) {
 //        File f = new File(savedir);
 //        byte[] buffer = new byte[8 * 1024];
@@ -128,7 +131,7 @@ public class ProductCache {
 ////        buffer = null;
 //        // System.gc();
 //    }
-
+    
     /**
      * Download file through URI
      * @param uri
