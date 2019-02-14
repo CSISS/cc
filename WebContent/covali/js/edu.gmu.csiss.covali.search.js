@@ -254,20 +254,20 @@ edu.gmu.csiss.covali.search = {
                     	
                     },
                     
-                    {
-                    	
-                    	"data": "accessurl",
-                        
-                    	"render": function ( data, type, full, meta ) {
-                            var escapeid = full.id.replace(/\./g, '_');
-
-                    		return '<a href="#" id="viewvars_'+ escapeid +'">' + full.variables.length + ' variables</a>';
-                        
-                    	},
-                    	
-                    	"target" : 1 
-                    
-                    },
+//                    {
+//                    	
+//                    	"data": "accessurl",
+//                        
+//                    	"render": function ( data, type, full, meta ) {
+//                            var escapeid = full.id.replace(/\./g, '_');
+//
+//                    		return '<a href="#" id="viewvars_'+ escapeid +'">' + full.variables.length + ' variables</a>';
+//                        
+//                    	},
+//                    	
+//                    	"target" : 1 
+//                    
+//                    },
 					
                     { 
     					"data": "east",
