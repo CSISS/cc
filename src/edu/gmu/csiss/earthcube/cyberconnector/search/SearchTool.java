@@ -21,6 +21,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
 import edu.gmu.csiss.earthcube.cyberconnector.products.Product;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.LocalFileTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 
 /**
@@ -619,13 +620,11 @@ public class SearchTool {
 				
 				//identifier must be escaped : and /
 
-				String identifier = iso_id.replaceAll(":", "__y__");
+//				String identifier = iso_id.replaceAll(":", "__y__");
+//				
+//				identifier = identifier.replaceAll("/", "__x__");
 				
-				identifier = identifier.replaceAll("/", "__x__");
 				
-				p.setId(identifier);
-				
-				logger.debug("identifier : " + identifier);
 				
 				if(titlepath.selectSingleNode(ele)!=null){
 					
@@ -639,6 +638,12 @@ public class SearchTool {
 					String title = parts[parts.length - 1];
 					p.setTitle(title);
 				}
+				
+				String identifier = p.getTitle().replaceAll("\\.", "-").replaceAll("\\ ", "-") + "-" + new RandomString(3).nextString();
+				
+				p.setId(identifier);
+				
+				logger.debug("identifier : " + identifier);
 				
 				if(begintimepath.selectSingleNode(ele)!=null){
 				
@@ -899,7 +904,11 @@ public class SearchTool {
 //		
 //		System.out.println("Update: " + success);
 		
+		String title = "asr15km.fct.3D.20141229.nc";
 		
+		String identifier = title.replaceAll("\\.", "-").replaceAll("\\ ", "-") + "-" + new RandomString(3).nextString();
+		
+		System.out.println(identifier);
 		
 	}
 	

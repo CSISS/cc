@@ -94,11 +94,11 @@ public class CovaliController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String tableserver(@ModelAttribute("request") SearchRequest searchreq,  WebRequest request) {
-
-
-
+    	
     	int start = Integer.parseInt(request.getParameter("start")) + 1;
+    	
     	int length = Integer.parseInt(request.getParameter("length"));
+    	
     	int pageNum = start/length;
     	
     	searchreq.setPageno(pageNum);
@@ -109,7 +109,9 @@ public class CovaliController {
     	String draw = request.getParameter("draw");
 
     	sr.setDraw(Integer.parseInt(draw));
+    	
     	sr.setRecordsFiltered(sr.getProduct_total_number());
+    	
     	sr.setRecordsTotal(sr.getProduct_total_number());
 
 		return BaseTool.toJSONString(sr);
