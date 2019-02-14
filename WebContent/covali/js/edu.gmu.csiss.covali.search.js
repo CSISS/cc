@@ -31,7 +31,7 @@ edu.gmu.csiss.covali.search = {
 			
 					'				<th class="hidden-xs col-md-7" style="word-wrap: break-word; word-break: break-all;">Product</th>'+
 			
-					'				<th class="col-text">Operation</th>'+
+					'				<th class="col-text">Information</th>'+
 			
 					'				<th class="col-text col-sm-3">Map</th>'+
 			
@@ -134,9 +134,9 @@ edu.gmu.csiss.covali.search = {
                  
                          { "width": "60%", "targets": 0 },
                          
-                         { "width": "20%", "targets": 1 },
+                         { "width": "20%", "targets": 1, "orderable": false },
                          
-                         { "width": "20%", "targets": 2 }
+                         { "width": "20%", "targets": 2, "orderable": false }
                          
                 ],
                 
@@ -149,29 +149,74 @@ edu.gmu.csiss.covali.search = {
                     	"render": function ( data, type, full, meta ) {
                     		
                     		var desc = " ", btime = " ", etime = " ";
-                    		
-                    		if(full.desc!=null) desc = full.desc;
+                            var escapeid = full.id.replace(/\./g, '_');
+
+
+                            if(full.desc!=null) desc = full.desc;
                     		
                     		if(full.begintime!=null) btime = full.begintime;
                     		
                     		if(full.endtime!=null) etime = full.endtime;
                         	
-                    		var idcolcontent = "<h4> "+
+                    		var content = "<h4> "+
     						"	<a href=\"#\" id=\"name_"+full.id+"\" "+
     						"		 style=\"word-wrap: break-word;word-break: break-all;\">"+(full.title||full.name)+"</a>"+
     						"</h4>"+
     						"<p>"+desc+"</p>"+
     						"<p>"+
     						"	<span text=\"\">"+btime+"</span> - <span>"+etime+"</span>"+
-    						"</p>"+
-    						"<p>"+
-    						"	<button type=\"button\" id=\"viewbtn_"+full.id+"\""+
+    						"</p>";
+
+                    		content += '	<div class="btn-group-horizontal"> ';
+
+                            content += "	<button type=\"button\" id=\"viewbtn_"+full.id+"\""+
     						"		class=\"btn btn-primary btn-circle\">"+
     						"		<i class=\"glyphicon glyphicon-list\" title=\"View Details\"></i>"+
-    						"	</button>"+
-    						"</p>";
-                    		
-                        	return idcolcontent;
+    						"	</button>";
+
+
+                            if(full.accessurl.startsWith("http")||full.accessurl.startsWith("HTTP")){
+
+                                content += '		<button onclick="edu.gmu.csiss.covali.search.goto(\''+full.accessurl+'\')" class="btn btn-default" '+
+                                    ' id="downbtn_'+escapeid+'"> <span '+
+                                    '			class="glyphicon glyphicon-download-alt" title="Download"></span> '+
+                                    '		</button>';
+                            }
+
+                            //add a button to load map
+
+                            if(edu.gmu.csiss.covali.search.checkfileformat(full.accessurl)){
+
+                                content += '		<button onclick="edu.gmu.csiss.covali.search.load(\''+full.id+'\', \''+
+                                    full.accessurl+
+                                    '\')" class="btn btn-default" id="loadbtn_'+escapeid+'"> <span '+
+                                    '			class="glyphicon glyphicon-film" title="Load Map"></span> '+
+                                    '		</button> ';
+
+                            }
+
+                            if(!full.cached){
+
+                                content += '<button onclick="edu.gmu.csiss.covali.search.cache(\''+full.id+'\', \''+full.name+'\', \''+full.accessurl+'\')" id="cachebtn_'+escapeid+'" class="btn btn-default" > '+
+                                    '			<span class="glyphicon glyphicon-save-file" title="Cache Data"></span> '+
+                                    //        							'			DataCache '+
+                                    '		</button> ';
+
+                            }
+
+                            content += '	</div> ';
+
+                            //disabled for now, will be enabled later when Geoweaver is online.
+
+//    							content +='<button onclick="edu.gmu.csiss.covali.search.transform(\''+full.name+'\', \''+full.accessurl+'\')" class="btn btn-default"> '+
+//    							'			<span class="glyphicon glyphicon-wrench pull-left"></span> '+
+//    						  //'			Transform '+
+//    							'		</button> '+
+//    							'	</div> '+
+//    							'</p>';
+
+
+                        	return content;
                         	
                         },
                         
@@ -184,67 +229,8 @@ edu.gmu.csiss.covali.search = {
                     	"data": "accessurl",
                         
                     	"render": function ( data, type, full, meta ) {
-                        	
-                    		var content =  '<p>';
-    						
-                    		if(full.ifvirtual=="1"){
-    							
-    							content += '	<a href="productorder?pid='+full.id+'" class="btn btn-default"> <span '+
-    							'		class="glyphicon glyphicon-shopping-cart pull-left" title="Order"></span> '+
-//    							'		Order '+
-    							'	</a> ';
-    							
-    						}else{
-    							
-    							var escapeid = full.id.replace(/\./g, '_');
-    							
-								content += '	<div class="btn-group-vertical"> ';
-    							
-    							if(full.accessurl.startsWith("http")||full.accessurl.startsWith("HTTP")){
-    								
-        							content += '		<button onclick="edu.gmu.csiss.covali.search.goto(\''+full.accessurl+'\')" class="btn btn-default" '+
-        							' id="downbtn_'+escapeid+'"> <span '+
-        							'			class="glyphicon glyphicon-download-alt pull-left" title="Download"></span> '+
-        							'		</button>';
-    							}
-    							
-    							//add a button to load map
-    							
-    							if(edu.gmu.csiss.covali.search.checkfileformat(full.accessurl)){
-    								
-    								content += '		<button onclick="edu.gmu.csiss.covali.search.load(\''+full.id+'\', \''+
-        							full.accessurl+
-        							'\')" class="btn btn-default" id="loadbtn_'+escapeid+'"> <span '+
-        							'			class="glyphicon glyphicon-film pull-left" title="Load Map"></span> '+
-        							'		</button> ';
-    								
-    							}
-    							
-    							if(!full.cached){
-    								
-    								content += '<button onclick="edu.gmu.csiss.covali.search.cache(\''+full.id+'\', \''+full.name+'\', \''+full.accessurl+'\')" id="cachebtn_'+escapeid+'" class="btn btn-default" > '+
-        							'			<span class="glyphicon glyphicon-save-file pull-left" title="Cache Data"></span> '+
-//        							'			DataCache '+
-        							'		</button> ';
-    								
-    							}
-    							
-    							content += '	</div> ';
-    							
-    							//disabled for now, will be enabled later when Geoweaver is online.
-    							
-//    							content +='<button onclick="edu.gmu.csiss.covali.search.transform(\''+full.name+'\', \''+full.accessurl+'\')" class="btn btn-default"> '+
-//    							'			<span class="glyphicon glyphicon-wrench pull-left"></span> '+
-//    						  //'			Transform '+
-//    							'		</button> '+
-//    							'	</div> '+	
-//    							'</p>';
-    							
-    						}
-                    		
-                    		content += '</p>';
-    						
-                    		return content;
+
+                    		return "";
                         
                     	},
                     	
@@ -1381,7 +1367,7 @@ edu.gmu.csiss.covali.search = {
 	                
 	                title: 'Search Data',
 	                
-	                cssClass: 'btn-warning',
+	                cssClass: 'btn-warning btn-search',
 	                
 	                action: function(dialogItself){
 	                	
