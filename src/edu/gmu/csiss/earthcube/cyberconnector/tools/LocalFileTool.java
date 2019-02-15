@@ -22,7 +22,7 @@ public class LocalFileTool {
 	final static public String[] FORMATS = {"tif", "tiff", "grb", "grib", "grib2", "nc", "nc4", "nc3", 
 			"tiff", "shp", "h5", "hdf", "hdfeos", "hdf4", "hdf5"}; 
 	
-	static int num = 0;
+	int num = 0;
 	
 	static Logger logger = Logger.getLogger(LocalFileTool.class);
 	
@@ -102,7 +102,7 @@ public class LocalFileTool {
 	 * @param formats
 	 * @return
 	 */
-	private static List<Product> findFileByKeywords(String keywords, int recordsperpage, int start, String folder, List formats) {
+	private List<Product> findFileByKeywords(String keywords, int recordsperpage, int start, String folder, List formats) {
 		
 		List<Product> products = new ArrayList();
 		
@@ -258,7 +258,7 @@ public class LocalFileTool {
 	 * @param folder
 	 * @return
 	 */
-	public static SearchResponse search(String keywords, int recordsperpage, int pageno, String folder, List formats) {	
+	public SearchResponse search(String keywords, int recordsperpage, int pageno, String folder, List formats) {	
 		
         int start = recordsperpage*pageno;
 		
@@ -342,18 +342,18 @@ public class LocalFileTool {
 	 * @param keywords
 	 * @return
 	 */
-	public static SearchResponse search(String keywords, int recordsperpage, int pageno, List formats) {
+	public SearchResponse search(String keywords, int recordsperpage, int pageno, List formats) {
 		
 		logger.debug("upload folder: " + BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path);
 		
-		SearchResponse resp1 = LocalFileTool.search(keywords, recordsperpage, pageno,
+		SearchResponse resp1 = search(keywords, recordsperpage, pageno,
 				BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path, formats);
 		
 		if(resp1.getProducts().size()<recordsperpage) {
 			
 			pageno = pageno - resp1.getProduct_total_number()/recordsperpage;
 			
-			SearchResponse resp2 = LocalFileTool.search(keywords, recordsperpage, pageno,
+			SearchResponse resp2 = search(keywords, recordsperpage, pageno,
 					SysDir.getCovali_file_path(), formats);
 			
 			resp1 = SearchTool.merge(resp1, resp2);
@@ -415,7 +415,9 @@ public class LocalFileTool {
 		
 //		logger.debug("fuzzy distance: " + distance);
 		
-		SearchResponse resp = LocalFileTool.search("", 1, 16, null);
+		LocalFileTool tool = new LocalFileTool();
+		
+		SearchResponse resp = tool.search("", 1, 16, null);
 //		
 		logger.info("total number " + resp.getProduct_total_number() + 
 				"\n recordsperpage: " + resp.getRecordsperpage() + 
