@@ -196,12 +196,15 @@ public class LocalFileTool {
 			            			Product p = new Product();
 			                		
 			                		p.setName(file.getName());
-			                		
+			                		p.setFilepath(file.getAbsolutePath());
+			                		p.updateFileSize();
+
 			                		p.setCached(true);
 			                		
 			                		p.setIfvirtual("0");
-			                		
-			                		p.setId(file.getName());
+
+			                		String identifier = Product.generateSafeRandomId(file.getName());
+									p.setId(identifier);
 			                		
 			                		if(file.getAbsolutePath().startsWith(BaseTool.getCyberConnectorRootPath()+
 			                				SysDir.upload_file_path)) {

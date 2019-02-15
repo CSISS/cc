@@ -157,9 +157,6 @@ edu.gmu.csiss.covali.search = {
                 "columnDefs": [
                  
                          { "width": "70%", "targets": 0 },
-                         
-//                         { "width": "0%", "targets": 1, "orderable": false },
-                         
                          { "width": "30%", "targets": 1, "orderable": false }
                          
                 ],
@@ -301,9 +298,9 @@ edu.gmu.csiss.covali.search = {
     	        			
     	        		}
 
-    	        		$("#viewbtn_" + full.id + ", #name_" + full.id ).click(function(){
+    	        		$("#viewbtn_" + full.id + ", #name_" + full.id ).click(full, function(event){
     	        			
-    	        			edu.gmu.csiss.covali.search.view(full);
+    	        			edu.gmu.csiss.covali.search.view(event.data);
     	        			
     	        		});
 
@@ -372,141 +369,135 @@ edu.gmu.csiss.covali.search = {
 
 		},
 
-    	view: function (theproduct){
+    	view: function (product){
 			
 			var tablecontent = "<div>";
-			
-			tablecontent += "  <div class=\"form-group\">\n";
+
+
+			if(product.name) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Name</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\" >" + product.name + "</label>";
+                tablecontent += "  </div>";
+            }
+
+            if(product.desc && product.name != product.desc) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Description</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >" + product.desc + "</label>";
+                tablecontent += "  </div>";
+            }
+
+            // tablecontent += "  <div class=\"form-group\">\n";
+            // tablecontent += "    <label class=\"col-md-4 control-label\" >Identifier</label>";
+            // tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >" + product.id + "</label>";
+            // tablecontent += "  </div>";
+
+
+            if(product.keywords) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Keywords</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\"  >" + product.keywords + "</label>";
+                tablecontent += "  </div>";
+            }
+
+
+            if(product.begintime) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Begin Time</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >" + product.begintime + "</label>";
+                tablecontent += "  </div>";
+            }
+
+			if(product.endtime) {
+				tablecontent += "  <div class=\"form-group\">\n";
+				tablecontent += "    <label class=\"col-md-4 control-label\" >End Time</label>";
+				tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >" + product.endtime + "</label>";
+				tablecontent += "  </div>";
+			}
 		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >Name</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\" >"+theproduct.name+"</label>";
-		    
-		    tablecontent += "  </div>";
-		    
-			tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >Description</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+theproduct.desc+"</label>";
-		    
-		    tablecontent += "  </div>";
-		    
-            tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >Keywords</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\"  >"+theproduct.keywords+"</label>";
-		    
-		    tablecontent += "  </div>";
-		    
-            tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >Identifier</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+theproduct.id+"</label>";
-		    
-			tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >Begin Time</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+theproduct.begintime+"</label>";
-		    
-		    tablecontent += "  </div>";
-		    
-			tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >End Time</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+theproduct.endtime+"</label>";
-		    
-		    tablecontent += "  </div>";
-		    
-		    if(theproduct.isspatial == "1"){
+		    if(product.isspatial == "1" && product.east){
 		    	
 		    	tablecontent += "  <div class=\"form-group\">\n";
-			    
 			    tablecontent += "    <label class=\"col-md-4 control-label\" >East</label>";
-			    
-			    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+theproduct.east+"</label>";
-			    
+			    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+product.east+"</label>";
 			    tablecontent += "  </div>";
-			    
+
 				tablecontent += "  <div class=\"form-group\">\n";
-			    
 			    tablecontent += "    <label class=\"col-md-4 control-label\" >West</label>";
-			    
-			    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+theproduct.west+"</label>";
-			    
+			    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+product.west+"</label>";
 			    tablecontent += "  </div>";
-			    
+
 				tablecontent += "  <div class=\"form-group\">\n";
-			    
 			    tablecontent += "    <label class=\"col-md-4 control-label\" >North</label>";
-			    
-			    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+theproduct.north+"</label>";
-			    
+			    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+product.north+"</label>";
 			    tablecontent += "  </div>";
-			    
+
 			    tablecontent += "  <div class=\"form-group\">\n";
-			    
 			    tablecontent += "    <label class=\"col-md-4 control-label\" >South</label>";
-			    
-			    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+theproduct.south+"</label>";
-			    
+			    tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >"+product.south+"</label>";
 			    tablecontent += "  </div>";
 		    	
 		    }
-		    
-            tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >Projection</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" >"+theproduct.srs+"</label>";
-		    
-		    tablecontent += "  </div>";
-		    
-            tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >If Virtual</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" >"+theproduct.ifvirtual+"</label>";
-		    
-		    tablecontent += "  </div>";
-		    
-            tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >Format</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" >"+theproduct.format+"</label>";
-		    
-		    tablecontent += "  </div>";
-		    
-            tablecontent += "  <div class=\"form-group\">\n";
-		    
-		    tablecontent += "    <label class=\"col-md-4 control-label\" >Last Update</label>";
-		    
-		    tablecontent += "    <label class=\"col-md-8 control-content\" >"+theproduct.lastupdate+"</label>";
-		    
-		    tablecontent += "  </div>";
 
-		    // Show variables List
-			var variableNames = [];
-			theproduct.variables.forEach(function (v){ variableNames.push(v.id)});
+			if(product.srs) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Projection</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" >" + product.srs + "</label>";
+                tablecontent += "  </div>";
+            }
 
-            tablecontent += "  <div class=\"form-group\">\n";
+			if(product.ifvirtual != 0) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Is Virtual</label>";
+                tablecontent += "  </div>";
+            }
 
-            tablecontent += "    <label class=\"col-md-4 control-label\" >Variables</label>";
+		    if(product.format) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Format</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" >" + product.format + "</label>";
+                tablecontent += "  </div>";
+            }
 
-            tablecontent += "    <label class=\"col-md-8 control-content\" >"+variableNames.join(', ');
-            tablecontent += ' <a href="#" id="viewvars_'+ theproduct.id +'">details</a>';
-            tablecontent += "</label>";
+		    if(product.lastupdate) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Last Update</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" >" + product.lastupdate + "</label>";
+                tablecontent += "  </div>";
+            }
 
-            tablecontent += "  </div>";
+            if(product.filepath) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >File Path</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\">" + product.filepath + "</label>";
+                tablecontent += "  </div>";
+            }
+
+            if(product.filesize) {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >File Size</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" >" + product.filesize + "</label>";
+                tablecontent += "  </div>";
+            }
+
+			if(product.variables.length > 0) {
+                // Show variables List
+                var variableNames = [];
+                product.variables.forEach(function (v) {
+                    variableNames.push(v.id)
+                });
+
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Variables</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" >" + variableNames.join(', ');
+                tablecontent += ' 	 	<a href="#" id="viewvars_' + product.id + '">details</a>';
+                tablecontent += "	 </label>";
+                tablecontent += "  </div>";
+            }
+
 
 			tablecontent += "</div>";
-
-
 
 			BootstrapDialog.show({
 				
@@ -515,9 +506,8 @@ edu.gmu.csiss.covali.search = {
 				message: $(tablecontent),
 
 				onshown: function(dialog) {
-                    $("#viewvars_" + theproduct.id).click(function(){
-                        console.log("cliiick");
-                        edu.gmu.csiss.covali.search.variablesTable(theproduct);
+                    $("#viewvars_" + product.id).click(function(){
+                        edu.gmu.csiss.covali.search.variablesTable(product);
                     });
 				},
 			    

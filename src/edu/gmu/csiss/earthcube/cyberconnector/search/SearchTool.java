@@ -644,7 +644,7 @@ public class SearchTool {
 					p.setTitle(title);
 				}
 				
-				String identifier = p.getTitle().replaceAll("\\.", "-").replaceAll("\\ ", "-") + "-" + new RandomString(3).nextString();
+				String identifier = Product.generateSafeRandomId(p.getTitle());
 				
 				p.setId(identifier);
 				
