@@ -29,7 +29,7 @@ public class ncWMSTool {
 			
 			boolean isready = false;
 			
-			for(int i=0;i<3;i++) {
+			for(int i=0;i<10;i++) {
 				
 				TimeUnit.SECONDS.sleep(3);
 				
@@ -43,6 +43,8 @@ public class ncWMSTool {
 				}else {
 					
 					isready = true;
+					
+					System.out.println("the dataset is successfully set up");
 					
 					break;
 					
@@ -137,7 +139,7 @@ public class ncWMSTool {
 //			
 //		}
 		
-		System.out.println(ncWMSTool.checkDatasetStatus("22kuuxf9"));;
+		System.out.println(ncWMSTool.checkDatasetStatus("asr15km-anl-2D-20000103-nc-1s7-tvi"));;
 		
 //		String location = ncWMSTool.getLocationByWMSLayerId("FC82j");
 //		String url = LocalFileTool.turnLocalFile2Downloadable(location);

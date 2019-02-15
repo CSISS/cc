@@ -627,8 +627,6 @@ public class SearchTool {
 //				
 //				identifier = identifier.replaceAll("/", "__x__");
 				
-				
-				
 				if(titlepath.selectSingleNode(ele)!=null){
 					
 					String title = titlepath.selectSingleNode(ele).getText();
