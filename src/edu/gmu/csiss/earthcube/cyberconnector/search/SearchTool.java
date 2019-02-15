@@ -598,7 +598,11 @@ public class SearchTool {
 
 			XPath collection_url = DocumentHelper.createXPath("gmd:identificationInfo/gmd:MD_DataIdentification[@id = 'DataIdentification']/gmd:aggregationInfo[1]/gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString");
 
-//			X
+			XPath band = DocumentHelper.createXPath("gmd:contentInfo/gmi:MI_CoverageDescription/gmd:dimension/gmd:MD_Band");
+			XPath bandName = DocumentHelper.createXPath("gmd:sequenceIdentifier/gco:MemberName/gco:aName/gco:CharacterString");
+			XPath bandType = DocumentHelper.createXPath("gmd:sequenceIdentifier/gco:MemberName/gco:attributeType/gco:TypeName/gco:aName/gco:CharacterString");
+			XPath bandDesc = DocumentHelper.createXPath("gmd:descriptor/gco:CharacterString");
+
 
 			xpath.setNamespaceURIs(map);
 			
@@ -742,11 +746,32 @@ public class SearchTool {
 				
 				p.setIfvirtual("0");
 
-				ProductVariable pv1 = new ProductVariable("id1", "float", "desc1");
-				ProductVariable pv2 = new ProductVariable("id2", "int", null);
+				// parse variables (bands)
+				Iterator bandsIter = band.selectNodes(ele).iterator();
 
-				p.addVariable(pv1);
-				p.addVariable(pv2);
+				while(bandsIter.hasNext()) {
+					Element bandEl = (Element)bandsIter.next();
+
+					Node bandNameNode = bandName.selectSingleNode(bandEl);
+					Node bandTypeNode = bandType.selectSingleNode(bandEl);
+					Node bandDescNode = bandDesc.selectSingleNode(bandEl);
+
+					String bName = "";
+					String bType = "";
+					String bDesc = "";
+
+					if(bandNameNode != null)
+						bName = bandNameNode.getText();
+
+					if(bandNameNode != null)
+						bType = bandTypeNode.getText();
+
+					if(bandNameNode != null)
+						bDesc = bandDescNode.getText();
+
+					ProductVariable pv = new ProductVariable(bName, bType, bDesc);
+					p.addVariable(pv);
+				}
 
 				products.add(p);
 				
