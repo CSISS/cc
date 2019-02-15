@@ -253,21 +253,7 @@ edu.gmu.csiss.covali.search = {
                     	"target" : 0
                     	
                     },
-                    
-//                    {
-//                    	
-//                    	"data": "accessurl",
-//                        
-//                    	"render": function ( data, type, full, meta ) {
-//                            var escapeid = full.id.replace(/\./g, '_');
-//
-//                    		return '<a href="#" id="viewvars_'+ escapeid +'">' + full.variables.length + ' variables</a>';
-//                        
-//                    	},
-//                    	
-//                    	"target" : 1 
-//                    
-//                    },
+
 					
                     { 
     					"data": "east",
@@ -308,7 +294,6 @@ edu.gmu.csiss.covali.search = {
                     for(var i=0; i< settings.aoData.length; i++){
     	        		
     	        		var full = settings.aoData[i]._aData;
-                        var escapeid = full.id.replace(/\./g, '_');
 
                         if ( $( "#recordmap_" + full.id ).length ) {
     	        			
@@ -316,17 +301,14 @@ edu.gmu.csiss.covali.search = {
     	        			
     	        		}
 
-    	        		$("#viewbtn_" + escapeid + ", #name_" + escapeid ).click(function(){
+    	        		$("#viewbtn_" + full.id + ", #name_" + full.id ).click(function(){
     	        			
     	        			edu.gmu.csiss.covali.search.view(full);
     	        			
     	        		});
 
-    	        		$("#viewvars_" + escapeid).click(function(){
-                            edu.gmu.csiss.covali.search.variablesTable(full);
-						});
     	        		
-//    	        		$("#likebtn_" + escapeid).click(function(){
+//    	        		$("#likebtn_" + full.id).click(function(){
 //    	        		
 //    	        			edu.gmu.csiss.covali.search.like(this.id);
 //    	        			
@@ -507,14 +489,37 @@ edu.gmu.csiss.covali.search = {
 		    tablecontent += "    <label class=\"col-md-8 control-content\" >"+theproduct.lastupdate+"</label>";
 		    
 		    tablecontent += "  </div>";
-			
+
+		    // Show variables List
+			var variableNames = [];
+			theproduct.variables.forEach(function (v){ variableNames.push(v.id)});
+
+            tablecontent += "  <div class=\"form-group\">\n";
+
+            tablecontent += "    <label class=\"col-md-4 control-label\" >Variables</label>";
+
+            tablecontent += "    <label class=\"col-md-8 control-content\" >"+variableNames.join(', ');
+            tablecontent += ' <a href="#" id="viewvars_'+ theproduct.id +'">details</a>';
+            tablecontent += "</label>";
+
+            tablecontent += "  </div>";
+
 			tablecontent += "</div>";
-			
+
+
+
 			BootstrapDialog.show({
 				
 				title: 'Information',
 			    
 				message: $(tablecontent),
+
+				onshown: function(dialog) {
+                    $("#viewvars_" + theproduct.id).click(function(){
+                        console.log("cliiick");
+                        edu.gmu.csiss.covali.search.variablesTable(theproduct);
+                    });
+				},
 			    
 				buttons: [{
 			    
