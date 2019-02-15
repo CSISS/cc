@@ -844,7 +844,9 @@ public class SearchTool {
 		
 		List formats = Arrays.asList(req.getFormats().split("\\s* \\s*"));
 		
-		return LocalFileTool.search(req.searchtext, req.recordsperpage, req.pageno, formats);
+		LocalFileTool tool = new LocalFileTool();
+		
+		return tool.search(req.searchtext, req.recordsperpage, req.pageno, formats);
 		
 	}
 	
