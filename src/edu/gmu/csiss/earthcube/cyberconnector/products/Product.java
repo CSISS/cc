@@ -53,64 +53,7 @@ public class Product {
 		this.variables = new ArrayList<ProductVariable>();
 		this.inputlist = new ArrayList<Input>();
 	}
-//	/**
-//	 *
-//	 * @param id
-//	 * @param abbr
-//	 * @param desc
-//	 * @param keywords
-//	 * @param name
-//	 * @param srs
-//	 * @param parentmodel
-//	 * @param begintime
-//	 * @param endtime
-//	 * @param ifvirtual
-//	 * @param isspatial
-//	 * @param modelid
-//	 * @param format
-//	 * @param accessurl
-//	 * @param ontology
-//	 * @param lastupdate
-//	 * @param userid
-//	 * @param east
-//	 * @param south
-//	 * @param west
-//	 * @param north
-//	 * @param inputmap
-//	 */
-//	public Product(String id, String abbr, String desc, String keywords, String name, String srs, String parentmodel, String begintime,
-//			String endtime, String ifvirtual, String isspatial, String iscollection, String modelid, String format, String accessurl, String ontology,
-//			String lastupdate, String userid, double east, double south, double west, double north,
-//				   List<Input> inputlist, List<ProductVariable> variables, int likes, String title) {
-//		super();
-//		this.id = id;
-//		this.parentmodel = parentmodel;
-//		this.abbr = abbr;
-//		this.desc = desc;
-//		this.keywords = keywords;
-//		this.name = name;
-//		this.srs = srs;
-//		this.begintime = begintime;
-//		this.endtime = endtime;
-//		this.ifvirtual = ifvirtual;
-//		this.isspatial = isspatial;
-//		this.modelid = modelid;
-//		this.format = format;
-//		this.accessurl = accessurl;
-//		this.ontology = ontology;
-//		this.lastupdate = lastupdate;
-//		this.userid = userid;
-//		this.east = east;
-//		this.south = south;
-//		this.west = west;
-//		this.north = north;
-//		this.inputlist = inputlist;
-//		this.likes = likes;
-//		this.iscollection = iscollection;
-//		this.title = title;
-//		this.variables = variables;
-//	}
-
+	
 	public String getTitle() { return title; }
 	public void setTitle(String title) { this.title = title; }
 
