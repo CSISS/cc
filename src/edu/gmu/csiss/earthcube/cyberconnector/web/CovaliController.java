@@ -155,6 +155,8 @@ public class CovaliController {
 
 		return "listgranules";
 	}
+	
+	
 
     /**
      * List local files in the shared folder
@@ -175,15 +177,27 @@ public class CovaliController {
     	
     	try {
     		
-    		//have some potential threats. Restrict the folder that COVALI can publish later
+    		String name = (String)session.getAttribute("sessionUser");
     		
-    		if(rootlocation==null) {
-    			
-    			resp = LocalFileTool.getLocalFileList("/");
-    			
-    		}else
+    		logger.debug("Recognized user of the incoming traffic: " + name);
     		
-    			resp = LocalFileTool.getLocalFileList(rootlocation);
+    		if(SysDir.login_required && name == null) {
+    			
+    			resp = "{\"ret\": \"login\", \"reason\": \"Login is required to access the public files.\"}";
+    			
+    		}else {
+    			
+        		//have some potential threats. Restrict the folder that COVALI can publish later
+        		
+        		if(rootlocation==null) {
+        			
+        			resp = LocalFileTool.getLocalFileList("/tmp/");
+        			
+        		}else
+        		
+        			resp = LocalFileTool.getLocalFileList(rootlocation);
+        		
+    		}
     		
     	}catch(Exception e) {
     		

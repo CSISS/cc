@@ -2,7 +2,6 @@ package edu.gmu.csiss.earthcube.cyberconnector.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -67,6 +66,8 @@ public class SysDir {
 	public static String ucar_rda_username = null;
 
 	public static String ucar_rda_password = null;
+	
+	public static boolean login_required = false;
 	
 	public static String getCovali_file_path() {
 		
@@ -150,13 +151,15 @@ public class SysDir {
 			temp_file_path = p.getProperty("temp_file_path");
 
 			thredds_harvester_path = p.getProperty("thredds_harvester_path");
-
+			
 			database_driver = p.getProperty("database_driver");
 
 			database_url = p.getProperty("database_url");
 
 			database_docker_url = p.getProperty("database_docker_url");
-
+			
+			login_required = Boolean.parseBoolean(p.getProperty("login_required"));
+			
 			// SECRET PROPERTIES
 
 			ncUsername = secrets.getProperty("ncwms_username");

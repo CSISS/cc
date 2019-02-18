@@ -380,6 +380,8 @@ public class UserController {
     	
     	if(msg.isIsdone()){
     		
+    		session.setAttribute("sessionUser", user.getName());
+    		
     		String uid = UserTool.getUserIDByName(username);
     		
     		resp = "{ \"ret\" : \"true\", \"uid\":\""+uid+"\" }";
@@ -394,8 +396,35 @@ public class UserController {
     	
     }
     	
-    
-    
+    /**
+     * Check login requirement
+     * @param model
+     * @param request
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/checkLoginRequirement", method = RequestMethod.POST)
+    public @ResponseBody String checkLoginRequirement( ModelMap model, WebRequest request,   HttpSession session) {
+    	
+    	String resp = "{ \"ret\" : \"false\" }";
+    	
+    	String action = request.getParameter("action");
+    	
+    	String name = (String)session.getAttribute("sessionUser");
+    	
+    	if(SysDir.login_required && name == null) {
+    		
+    		if("localfilesearch".equals(action)){
+        		
+        		resp = "{ \"ret\" : \"true\" }";
+        		
+        	}
+    		
+    	}
+    	
+    	return resp;
+    	
+    }
     /**
      * User Login Post Process
      * @param user

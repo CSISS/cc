@@ -164,76 +164,85 @@ edu.gmu.csiss.covali.local = {
 					
 					BootstrapDialog.closeAll();
 					
-					BootstrapDialog.show({
+					if(obj.ret == "login"){
 						
-			            message: function(dialog){
-			            	
-			            	var filelist = " <ul class=\"list-group\">";
-			            	
-			            	filelist += "<li class=\"list-group-item\">"+
-	            			"<span class=\"glyphicon glyphicon-file text-primary\"></span>"+
-	            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('/')\">..</a>"+
-	            			"</li>";
-			            	
-			            	for(var i=0;i<obj.length;i++){
-			            		
-			            		if(obj[i].type=="file"){
-			            			
-			            			filelist += "<li class=\"list-group-item\">"+
-			            			" <span class=\"glyphicon glyphicon-file text-primary\"></span> "+
-			            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.loadlocalfile('"+relativepath+obj[i].name+"')\">"+obj[i].name+"</a> "+
-			            			"</li>";
-			            			
-			            		}else if(obj[i].type=="directory"){
-			            			
-			            			filelist += "<li class=\"list-group-item\">"+
-			            			" <span class=\"glyphicon glyphicon-folder-close text-primary\"></span> "+
-			            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+obj[i].name+"')\">"+obj[i].name+"</a> "+
-			            			"</li>";
-			            			
-			            		}
-			            		
-			            	}
-			            	
-			            	filelist += "</ul> ";
-			            	
-			            	$content = $(filelist);
-			            	
-			            	return $content;
-			            	
-			            },
-			            
-			            title: "Local Files",
-			            
-			            cssClass: 'dialog-vertical-center',
-			            
-			            buttons: [
-			            	//right now, one file a time only.
-//			            	{
-//				                
-//			            		label: 'Load',
-//				                
-//				                action: function(dialogItself){
-//				                	
-//				                	//Register the file to the ncWMS  
-//				                	
-////				                	var id = obj.id; //the wms layer name
-//				                	
-//				                	edu.gmu.csiss.covali.wms.showLayerSelector(id);
-//				                    
-//				                }
-//			            	},
-			            	{
-				                
-			            		label: 'Close',
-				                
-				                action: function(dialogItself){
-				                	
-				                    dialogItself.close();
-				                    
-				                }
-			            }]
-			        });
+						edu.gmu.csiss.covali.login.loginDialog(edu.gmu.csiss.covali.local.dialog, relativepath);
+						
+					}else{
+						
+						BootstrapDialog.show({
+							
+				            message: function(dialog){
+				            	
+				            	var filelist = " <ul class=\"list-group\">";
+				            	
+				            	filelist += "<li class=\"list-group-item\">"+
+		            			"<span class=\"glyphicon glyphicon-file text-primary\"></span>"+
+		            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('/')\">..</a>"+
+		            			"</li>";
+				            	
+				            	for(var i=0;i<obj.length;i++){
+				            		
+				            		if(obj[i].type=="file"){
+				            			
+				            			filelist += "<li class=\"list-group-item\">"+
+				            			" <span class=\"glyphicon glyphicon-file text-primary\"></span> "+
+				            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.loadlocalfile('"+relativepath+obj[i].name+"')\">"+obj[i].name+"</a> "+
+				            			"</li>";
+				            			
+				            		}else if(obj[i].type=="directory"){
+				            			
+				            			filelist += "<li class=\"list-group-item\">"+
+				            			" <span class=\"glyphicon glyphicon-folder-close text-primary\"></span> "+
+				            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+obj[i].name+"')\">"+obj[i].name+"</a> "+
+				            			"</li>";
+				            			
+				            		}
+				            		
+				            	}
+				            	
+				            	filelist += "</ul> ";
+				            	
+				            	$content = $(filelist);
+				            	
+				            	return $content;
+				            	
+				            },
+				            
+				            title: "Local Files",
+				            
+				            cssClass: 'dialog-vertical-center',
+				            
+				            buttons: [
+				            	//right now, one file a time only.
+//				            	{
+//					                
+//				            		label: 'Load',
+//					                
+//					                action: function(dialogItself){
+//					                	
+//					                	//Register the file to the ncWMS  
+//					                	
+////					                	var id = obj.id; //the wms layer name
+//					                	
+//					                	edu.gmu.csiss.covali.wms.showLayerSelector(id);
+//					                    
+//					                }
+//				            	},
+				            	{
+					                
+				            		label: 'Close',
+					                
+					                action: function(dialogItself){
+					                	
+					                    dialogItself.close();
+					                    
+					                }
+				            }]
+				        });
+						
+					}
+					
 					
 				}, //success(result,status,xhr)
 				error: function(){

@@ -860,7 +860,6 @@ public class SearchTool {
 		
 		return resp;
 		
-		
 	}
 	
 	public static SearchResponse searchRealData(SearchRequest req){

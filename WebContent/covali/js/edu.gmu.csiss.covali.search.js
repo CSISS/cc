@@ -157,6 +157,7 @@ edu.gmu.csiss.covali.search = {
                 "columnDefs": [
                  
                          { "width": "70%", "targets": 0 },
+                         
                          { "width": "30%", "targets": 1, "orderable": false }
                          
                 ],
@@ -250,8 +251,7 @@ edu.gmu.csiss.covali.search = {
                     	"target" : 0
                     	
                     },
-
-					
+                    
                     { 
     					"data": "east",
                         
@@ -909,14 +909,11 @@ edu.gmu.csiss.covali.search = {
 			'				  		<input type="text" id="searchtext" placeholder="type something.." class="form-control input-md" />'+
 							  
 //			'				  		<br/>'+
-							  
 //			'					  	<span class="button-checkbox"><button type="button" class="btn btn-primary active" data-color="primary">Name</button><input type="checkbox" class="hidden"  id="name" checked="checked" /></span>'+
-//								
 //			'					    <span class="button-checkbox">'+
 //			'					        <button type="button" class="btn btn-primary active" data-color="primary">Description</button>'+
 //			'					        <input type="checkbox" class="hidden" id="desc" checked="checked" />'+
 //			'					    </span>'+
-//								
 //			'					    <span class="button-checkbox">'+
 //			'					        <button type="button" class="btn btn-primary active" data-color="primary">Keywords</button>'+
 //			'					        <input type="checkbox" class="hidden"  id="keywords" checked="checked"  />'+
@@ -1275,6 +1272,12 @@ edu.gmu.csiss.covali.search = {
 			});
 	  		
 	  	},
+	  	
+	  	switchLocalOn: function(){
+	  		
+	  		$("#csw").val(2);
+	  		
+	  	},
 		
 		init: function(){
 			
@@ -1378,6 +1381,45 @@ edu.gmu.csiss.covali.search = {
 	    	    		$('#csw').prop('disabled', false);
 	    	    	else	
 	    	    		$("#csw").val($("#csw option:eq(0)").val());
+	    	    	
+	    	    	$("#csw").on('change', function(){
+	    	    		
+	    	    		if(this.value == "2"){
+	    	    			
+	    	    			//local file need check if login is required
+	    	    			
+	    	    			$.ajax({
+	    	    				
+	    	    				url: "checkLoginRequirement",
+	    	    				
+	    	    				type: "POST",
+	    	    				
+	    	    				data: "action=localfilesearch"
+	    	    				
+	    	    			}).success(function(data){
+	    	    				
+	    	    				data = $.parseJSON(data);
+	    	    				
+	    	    				if(data.ret == "true"){
+	    	    					
+	    	    					//require login permission
+	    	    					
+	    	    					$("#csw").val(1); //first switch to 1 until the login requirement is met
+	    	    					
+	    	    					edu.gmu.csiss.covali.login.loginDialog(edu.gmu.csiss.covali.search.switchLocalOn);
+	    	    					
+	    	    				}else{
+	    	    					
+	    	    					//do nothing, it is fine. go ahead
+	    	    					
+	    	    				}
+	    	    				
+	    	    			});
+	    	    			
+	    	    			
+	    	    		}
+	    	    		
+	    	    	});
 	    	    	
 	    	    	//add listener to virtual box
 	    	    	
