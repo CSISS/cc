@@ -89,7 +89,7 @@ edu.gmu.csiss.covali.projection = {
 	search: function (query) {
 //        resultSpan.innerHTML = 'Searching ...';
         
-		fetch('http://epsg.io/?format=json&q=' + query).then(function(response) {
+		fetch('https://epsg.io/?format=json&q=' + query).then(function(response) {
          
 			return response.json();
         

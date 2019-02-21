@@ -44,6 +44,85 @@ import org.apache.http.util.EntityUtils;
  */
 public class MyHttpsUtils {
 	
+	/**
+	 * 
+	 * @param querystr
+	 * @return
+	 */
+	public static List<BasicNameValuePair> turnStr2NVPs(String querystr) {
+		
+		String[] ss = querystr.split("&");
+		
+		List<BasicNameValuePair> nvps = new ArrayList();
+		
+		for(int i=0;i<ss.length;i++) {
+			
+			String[] kv = ss[i].split("=");
+			
+			nvps.add(new BasicNameValuePair(kv[0], kv[1]));
+			
+		}
+		
+		return nvps;
+		
+	}
+	
+	public static String doPostSSLBA_URLEncode(String url, String content, String username, String password) {
+
+		// The underlying HTTP connection is still held by the response object
+		// to allow the response content to be streamed directly from the network socket.
+		// In order to ensure correct deallocation of system resources
+		// the user MUST call CloseableHttpResponse#close() from a finally clause.
+		// Please note that if response content is not fully consumed the underlying
+		// connection cannot be safely re-used and will be shut down and discarded
+		// by the connection manager. 
+		String resp = "";
+		try {
+			
+			CredentialsProvider provider = new BasicCredentialsProvider();
+			UsernamePasswordCredentials credentials
+			 = new UsernamePasswordCredentials(username, password);
+			provider.setCredentials(AuthScope.ANY, credentials);
+			
+			SSLContext sslContext = new SSLContextBuilder()
+		            .loadTrustMaterial(null, (certificate, authType) -> true).build();
+			
+			CloseableHttpClient httpclient = HttpClients.custom().setSSLContext(sslContext)
+		            .setSSLHostnameVerifier(new NoopHostnameVerifier())
+		            .setDefaultCredentialsProvider(provider)
+		            .build();
+			
+			HttpPost httpPost = new HttpPost(url);
+			
+			List <BasicNameValuePair> nvps = turnStr2NVPs(content);
+			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+			
+//			httpPost.setEntity(new StringEntity(content));
+			CloseableHttpResponse response1 = httpclient.execute(httpPost);
+		    System.out.println(response1.getStatusLine());
+		    
+		    // Get the response
+            BufferedReader br = new BufferedReader(new InputStreamReader(response1
+                        .getEntity().getContent()));
+             
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+                resp += line + "\n";
+            }
+            response1.close();
+            
+		}catch(Exception e) {
+			
+			e.printStackTrace();
+			
+		} finally {
+		    
+		}
+		return resp;
+		
+	}
+	
 	public static String doPostSSLBA(String url, String content, String username, String password) {
 
 		// The underlying HTTP connection is still held by the response object
@@ -137,7 +216,7 @@ public class MyHttpsUtils {
 			
 		}
 		
-		return null;
+		return resp.toString();
 	}
    
 	public static String doPostSSL(String url, String content) {

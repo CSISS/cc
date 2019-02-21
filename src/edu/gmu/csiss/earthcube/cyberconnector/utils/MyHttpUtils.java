@@ -68,7 +68,7 @@ public class MyHttpUtils
 	    	
 	    	if(url.toLowerCase().startsWith("https:")) {
 	    		
-	    		resp = MyHttpsUtils.doPostSSLBA(url, postContent, username, password);
+	    		resp = MyHttpsUtils.doPostSSLBA_URLEncode(url, postContent, username, password);
 	    		
 	    	}else {
 	    		
