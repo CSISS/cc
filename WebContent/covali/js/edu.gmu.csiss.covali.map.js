@@ -699,6 +699,17 @@ edu.gmu.csiss.covali.map = {
 				
 				legendurl = style.LegendURL[0].OnlineResource;
 				
+				String.prototype.replaceAll = function(search, replacement) {
+				    var target = this;
+				    return target.replace(new RegExp(search, 'g'), replacement);
+				};
+				
+				if(window.location.protocol=="https:"){
+					
+					legendurl = legendurl.replaceAll("http://", "https://").replaceAll("HTTP://", "https://");
+					
+				}
+				
 				console.log("legendurl:" + legendurl);
 				
 			}

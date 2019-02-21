@@ -8,6 +8,8 @@ edu.gmu.csiss.covali.local = {
 		
 		formats: ["tif", "tiff", "shp", "grb", "grib", "grib2", "h5","hdf", "hdfeos", "hdf4", "hdf5", "nc", "nc4",  "nc3", "ncf"],
 		
+		root_directory: null,
+		
 		init: function(){
 		
 			this.dialog();
@@ -76,51 +78,59 @@ edu.gmu.csiss.covali.local = {
 					
 					var obj = jQuery.parseJSON( obj );
 					
-					console.info("the new WMS layer name is : " + obj.id);
-					
-					BootstrapDialog.closeAll();
-					
-					BootstrapDialog.show({
+					if(obj.output=="failure"){
 						
-						title: "Add data from server public folder",
+						alert("Fail to parse the file: " + obj.reason);
 						
-			            message: function(dialog){
-			            	
-			            	$content = $("<p class=\"text-success\">The file is parsed. Do you want to load it into the map now?</p>" +
-			            			"<p class=\"text-warning\">Warning: For netCDF format, only files compliant to CF convention are supported.</p>");
-			            	
-			            	return $content;
-			            	
-			            },
-			            
-			            title: "Data Uploader",
-			            
-			            cssClass: 'dialog-vertical-center',
-			            
-			            buttons: [{
-				                
-			            		label: 'Load',
-				                
-				                action: function(dialogItself){
-				                	
-				                	//open the WMS loading dialog to add a specific layer
-				                	
-				                	var id = obj.id; //the wms layer name
-				                	
-				                	edu.gmu.csiss.covali.wms.showLayerSelector(id);
-				                    
-				                }
-			            	},{
-				                
-			            		label: 'Close',
-				                
-				                action: function(dialogItself){
-				                	
-				                    dialogItself.close();
-				                    
-				                }
-			            }]
-			        });
+					}else{
+						
+						console.info("the new WMS layer name is : " + obj.id);
+						
+						BootstrapDialog.closeAll();
+						
+						BootstrapDialog.show({
+							
+							title: "Add data from server public folder",
+							
+				            message: function(dialog){
+				            	
+				            	$content = $("<p class=\"text-success\">The file is parsed. Do you want to load it into the map now?</p>" +
+				            			"<p class=\"text-warning\">Warning: For netCDF format, only files compliant to CF convention are supported.</p>");
+				            	
+				            	return $content;
+				            	
+				            },
+				            
+				            title: "Data Uploader",
+				            
+				            cssClass: 'dialog-vertical-center',
+				            
+				            buttons: [{
+					                
+				            		label: 'Load',
+					                
+					                action: function(dialogItself){
+					                	
+					                	//open the WMS loading dialog to add a specific layer
+					                	
+					                	var id = obj.id; //the wms layer name
+					                	
+					                	edu.gmu.csiss.covali.wms.showLayerSelector(id);
+					                    
+					                }
+				            	},{
+					                
+				            		label: 'Close',
+					                
+					                action: function(dialogItself){
+					                	
+					                    dialogItself.close();
+					                    
+					                }
+				            }]
+				        });
+						
+					}
 					
 				}, //success(result,status,xhr)
 				error: function(){
@@ -142,9 +152,12 @@ edu.gmu.csiss.covali.local = {
 			
 			if(typeof(relativepath) == "undefined" || relativepath == null){
 				
-				relativepath = "/";
+				relativepath = "";
 				
 			}
+			console.log("relative path is:" + relativepath);
+
+			edu.gmu.csiss.covali.local.root_directory = relativepath;
 			
 			var posting = $.ajax({
 				
@@ -175,10 +188,18 @@ edu.gmu.csiss.covali.local = {
 				            message: function(dialog){
 				            	
 				            	var filelist = " <ul class=\"list-group\">";
+				            	var parentpath = "/";
+				            	if(edu.gmu.csiss.covali.local.root_directory!=""){
+				            		var pathes = edu.gmu.csiss.covali.local.root_directory.split("/");
+				            		pathes.splice(-1,1);
+				            		parentpath = pathes.join("/");
+				            	}
 				            	
 				            	filelist += "<li class=\"list-group-item\">"+
 		            			"<span class=\"glyphicon glyphicon-file text-primary\"></span>"+
-		            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('/')\">..</a>"+
+		            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+
+		            			parentpath + 
+		            			"')\">..</a>"+
 		            			"</li>";
 				            	
 				            	for(var i=0;i<obj.length;i++){
@@ -187,14 +208,15 @@ edu.gmu.csiss.covali.local = {
 				            			
 				            			filelist += "<li class=\"list-group-item\">"+
 				            			" <span class=\"glyphicon glyphicon-file text-primary\"></span> "+
-				            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.loadlocalfile('"+relativepath+obj[i].name+"')\">"+obj[i].name+"</a> "+
+				            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.loadlocalfile('"+edu.gmu.csiss.covali.local.root_directory +"/"+obj[i].name+"')\">"+obj[i].name+"</a> "+
 				            			"</li>";
 				            			
 				            		}else if(obj[i].type=="directory"){
 				            			
 				            			filelist += "<li class=\"list-group-item\">"+
 				            			" <span class=\"glyphicon glyphicon-folder-close text-primary\"></span> "+
-				            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+obj[i].name+"')\">"+obj[i].name+"</a> "+
+				            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+ 
+				            			edu.gmu.csiss.covali.local.root_directory + "/" + obj[i].name+"')\">"+obj[i].name+"</a> "+
 				            			"</li>";
 				            			
 				            		}

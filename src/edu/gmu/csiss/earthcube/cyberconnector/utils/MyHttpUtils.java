@@ -1,7 +1,20 @@
 package edu.gmu.csiss.earthcube.cyberconnector.utils;
 
-import java.net.*;
-import org.apache.commons.codec.binary.Base64;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -12,10 +25,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.log4j.Logger;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -56,6 +65,13 @@ public class MyHttpUtils
 		
 		String resp = "";
 	    try {
+	    	
+	    	if(url.toLowerCase().startsWith("https:")) {
+	    		
+	    		resp = MyHttpsUtils.doPostSSLBA(url, postContent, username, password);
+	    		
+	    	}else {
+	    		
 				HttpClient client = new HttpClient(); //or any method to get a client instance
 				Credentials credentials = new UsernamePasswordCredentials(username, password);
 				client.getState().setCredentials(AuthScope.ANY, credentials);
@@ -67,7 +83,7 @@ public class MyHttpUtils
 				post.addParameters(turnStr2NVPs(postContent));
 		        int returnCode = client.executeMethod(post);
 		        theLogger.info("ReturnCode: " + returnCode);
-		      //add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
+		        //add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
 				if(returnCode == 401){
 					throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
 				}
@@ -86,10 +102,14 @@ public class MyHttpUtils
 					   }
 					   
 			    }
+	    	}
+	    	
 		} catch (Exception e) {
-				// TODO Auto-generated catch block
+			
 			e.printStackTrace();
+			
 		}
+	    
 	    theLogger.info("Response: " + resp);
 	    
 		return resp;
@@ -106,11 +126,19 @@ public class MyHttpUtils
 	public static String doGet_BasicAuth(String url, String username, String password) {
 		String resp = "";
 	    try {
+	    	
+	    	if(url.toLowerCase().startsWith("https:")) {
+	    		
+	    		resp = MyHttpsUtils.doGetSSLBA(url, username, password);
+	    		
+	    	}else {
+
 				HttpClient client = new HttpClient(); //or any method to get a client instance
+				
 				Credentials credentials = new UsernamePasswordCredentials(username, password);
 				client.getState().setCredentials(AuthScope.ANY, credentials);
 				GetMethod post = new GetMethod(url);
-//		        post.setRequestEntity(new StringRequestEntity(postContent));
+				
 		        int returnCode = client.executeMethod(post);
 		        theLogger.info("ReturnCode: " + returnCode);
 		      //add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
@@ -127,11 +155,14 @@ public class MyHttpUtils
 				       br = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream()));
 				       String readLine = null;
 					   while(((readLine = br.readLine()) != null)) {
-//						      System.err.println(readLine);
+//							      System.err.println(readLine);
 						      resp += readLine + "\n";
 					   }
 					   
 			    }
+	    		
+	    	}
+	    	
 		} catch (Exception e) {
 				// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -154,7 +185,14 @@ public class MyHttpUtils
 	public static String doPost_BasicAuth(String url, String postContent, String username, String password){
 		String resp = "";
 	    try {
-				HttpClient client = new HttpClient(); //or any method to get a client instance
+	    	
+	    	if(url.toLowerCase().startsWith("https:")) {
+	    		
+	    		resp = MyHttpsUtils.doPostSSLBA(url, postContent, username, password);
+	    		
+	    	}else {
+	    		
+	    		HttpClient client = new HttpClient(); //or any method to get a client instance
 				Credentials credentials = new UsernamePasswordCredentials(username, password);
 				client.getState().setCredentials(AuthScope.ANY, credentials);
 				PostMethod post = new PostMethod(url);
@@ -180,35 +218,18 @@ public class MyHttpUtils
 					   }
 					   
 			    }
+	    		
+	    	}
+			
 		} catch (Exception e) {
 				// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	    
 	    theLogger.info("Response: " + resp);
-//		try {
-////            URL url = new URL ("http://ip:port/login");
-//			URL u = new URL(url);
-////            String encoding = Base64Encoder.encode ((username+ ":" + password).getBytes());
-//			byte[] encodedBytes = Base64.encodeBase64("Test".getBytes());
-//			String encoding = new String(encodedBytes);
-//			theLogger.info("encodedBytes " + encoding);
-//
-//            HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-//            connection.setRequestMethod("POST");
-//            connection.setDoOutput(true);
-//            String userpass = username + ":" + password;
-//            String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-//            connection.setRequestProperty ("Authorization", basicAuth);
-//            InputStream content = (InputStream)connection.getInputStream();
-//            BufferedReader in   = new BufferedReader (new InputStreamReader (content));
-//            String line;
-//            while ((line = in.readLine()) != null) {
-//                theLogger.info(line);
-//            }
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
+	    
 		return resp;
+		
 	}
 	/**
 	 * 
@@ -217,45 +238,45 @@ public class MyHttpUtils
 	 * @return
 	 * @throws Exception
 	 */
-	public static String doPost2(String url, String postContent) throws Exception {
-		URL u = new URL(url);
-
-		// Open the connection and prepare to POST
-		URLConnection uc = u.openConnection();
-		HttpURLConnection huc = (HttpURLConnection)uc;
-//		Fri Sep 02 23:37:24 EDT 2016:DEBUG:>> "Content-Type: text/xml;charset=UTF-8[\r][\n]"
-
-		huc.setRequestProperty("Content-Type", "text/xml;charset=UTF-8");
-		huc.setDoOutput(true);
-		huc.setDoInput(true);
-		huc.setAllowUserInteraction(false);
-		
-		DataOutputStream dstream = new DataOutputStream(huc.getOutputStream());
-		
-		// POST it
-		dstream.writeBytes(postContent);
-		dstream.close();
-
-		//add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
-		int code = huc.getResponseCode();
-		if(code == 401){
-			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
-		}
-		
-		// Read Response
-		InputStream in = huc.getInputStream();
-
-		BufferedReader r = new BufferedReader(new InputStreamReader(in));
-		StringBuffer buf = new StringBuffer();
-		String line;
-		while ((line = r.readLine())!=null)
-			buf.append(line);
-
-		in.close();
-		
-
-		return buf.toString();
-	}
+//	public static String doPost2(String url, String postContent) throws Exception {
+//		URL u = new URL(url);
+//
+//		// Open the connection and prepare to POST
+//		URLConnection uc = u.openConnection();
+//		HttpURLConnection huc = (HttpURLConnection)uc;
+////		Fri Sep 02 23:37:24 EDT 2016:DEBUG:>> "Content-Type: text/xml;charset=UTF-8[\r][\n]"
+//
+//		huc.setRequestProperty("Content-Type", "text/xml;charset=UTF-8");
+//		huc.setDoOutput(true);
+//		huc.setDoInput(true);
+//		huc.setAllowUserInteraction(false);
+//		
+//		DataOutputStream dstream = new DataOutputStream(huc.getOutputStream());
+//		
+//		// POST it
+//		dstream.writeBytes(postContent);
+//		dstream.close();
+//
+//		//add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
+//		int code = huc.getResponseCode();
+//		if(code == 401){
+//			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
+//		}
+//		
+//		// Read Response
+//		InputStream in = huc.getInputStream();
+//
+//		BufferedReader r = new BufferedReader(new InputStreamReader(in));
+//		StringBuffer buf = new StringBuffer();
+//		String line;
+//		while ((line = r.readLine())!=null)
+//			buf.append(line);
+//
+//		in.close();
+//		
+//
+//		return buf.toString();
+//	}
 	/**
 	 * 
 	 * doPost
@@ -268,59 +289,59 @@ public class MyHttpUtils
 	 * @return
 	 * @throws Exception
 	 */
-	public static String doPost(String url, String postContent, String contenttype) throws Exception {
-		
-		URL u = new URL(url);
-		
-		// Open the connection and prepare to POST
-		
-		URLConnection uc = u.openConnection();
-		
-		HttpURLConnection huc = (HttpURLConnection)uc;
-//		Fri Sep 02 23:37:24 EDT 2016:DEBUG:>> "Content-Type: text/xml;charset=UTF-8[\r][\n]"
-
-		huc.setRequestProperty("Content-Type", contenttype);
-		
-		huc.setDoOutput(true);
-		
-		huc.setDoInput(true);
-		
-		huc.setAllowUserInteraction(false);
-		
-		DataOutputStream dstream = new DataOutputStream(huc.getOutputStream());
-		
-		// POST it
-		dstream.writeBytes(postContent);
-		
-		dstream.close();
-
-		//add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
-		int code = huc.getResponseCode();
-		
-		if(code == 401){
-		
-			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
-		
-		}
-		
-		// Read Response
-		InputStream in = huc.getInputStream();
-
-		BufferedReader r = new BufferedReader(new InputStreamReader(in));
-		
-		StringBuffer buf = new StringBuffer();
-		
-		String line;
-		
-		while ((line = r.readLine())!=null)
-			
-			buf.append(line);
-
-		in.close();
-		
-		return buf.toString();
-		
-	}
+//	public static String doPost(String url, String postContent, String contenttype) throws Exception {
+//		
+//		URL u = new URL(url);
+//		
+//		// Open the connection and prepare to POST
+//		
+//		URLConnection uc = u.openConnection();
+//		
+//		HttpURLConnection huc = (HttpURLConnection)uc;
+////		Fri Sep 02 23:37:24 EDT 2016:DEBUG:>> "Content-Type: text/xml;charset=UTF-8[\r][\n]"
+//
+//		huc.setRequestProperty("Content-Type", contenttype);
+//		
+//		huc.setDoOutput(true);
+//		
+//		huc.setDoInput(true);
+//		
+//		huc.setAllowUserInteraction(false);
+//		
+//		DataOutputStream dstream = new DataOutputStream(huc.getOutputStream());
+//		
+//		// POST it
+//		dstream.writeBytes(postContent);
+//		
+//		dstream.close();
+//
+//		//add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
+//		int code = huc.getResponseCode();
+//		
+//		if(code == 401){
+//		
+//			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
+//		
+//		}
+//		
+//		// Read Response
+//		InputStream in = huc.getInputStream();
+//
+//		BufferedReader r = new BufferedReader(new InputStreamReader(in));
+//		
+//		StringBuffer buf = new StringBuffer();
+//		
+//		String line;
+//		
+//		while ((line = r.readLine())!=null)
+//			
+//			buf.append(line);
+//
+//		in.close();
+//		
+//		return buf.toString();
+//		
+//	}
 	
 	
 	
@@ -332,42 +353,42 @@ public class MyHttpUtils
 	 * @return
 	 * @throws Exception
 	 */
-	public static String doPost(String url, String postContent) throws Exception {
-		URL u = new URL(url);
-
-		// Open the connection and prepare to POST
-		URLConnection uc = u.openConnection();
-		HttpURLConnection huc = (HttpURLConnection)uc;
-		huc.setDoOutput(true);
-		huc.setDoInput(true);
-		huc.setAllowUserInteraction(false);
-		
-		DataOutputStream dstream = new DataOutputStream(huc.getOutputStream());
-		
-		// POST it
-		dstream.writeBytes(postContent);
-		dstream.close();
-
-		//add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
-		int code = huc.getResponseCode();
-		if(code == 401){
-			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
-		}
-		
-		// Read Response
-		InputStream in = huc.getInputStream();
-
-		BufferedReader r = new BufferedReader(new InputStreamReader(in));
-		StringBuffer buf = new StringBuffer();
-		String line;
-		while ((line = r.readLine())!=null)
-			buf.append(line);
-
-		in.close();
-		
-
-		return buf.toString();
-	}
+//	public static String doPost(String url, String postContent) throws Exception {
+//		URL u = new URL(url);
+//
+//		// Open the connection and prepare to POST
+//		URLConnection uc = u.openConnection();
+//		HttpURLConnection huc = (HttpURLConnection)uc;
+//		huc.setDoOutput(true);
+//		huc.setDoInput(true);
+//		huc.setAllowUserInteraction(false);
+//		
+//		DataOutputStream dstream = new DataOutputStream(huc.getOutputStream());
+//		
+//		// POST it
+//		dstream.writeBytes(postContent);
+//		dstream.close();
+//
+//		//add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
+//		int code = huc.getResponseCode();
+//		if(code == 401){
+//			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
+//		}
+//		
+//		// Read Response
+//		InputStream in = huc.getInputStream();
+//
+//		BufferedReader r = new BufferedReader(new InputStreamReader(in));
+//		StringBuffer buf = new StringBuffer();
+//		String line;
+//		while ((line = r.readLine())!=null)
+//			buf.append(line);
+//
+//		in.close();
+//		
+//
+//		return buf.toString();
+//	}
 	
 	/**
 	 * HTTP GET
@@ -417,37 +438,37 @@ public class MyHttpUtils
 	 * @return
 	 * @throws Exception
 	 */
-	public static String doGetWithCookies(String url, String cookie_str) throws Exception
-	{
-		URL u = new URL(url);
-
-		// Open the connection and prepare to POST
-		URLConnection uc = u.openConnection();
-		HttpURLConnection huc = (HttpURLConnection)uc;
-		huc.setDoOutput(false);
-		huc.setDoInput(true);
-		huc.setAllowUserInteraction(false);
-		huc.setRequestProperty("Cookie", cookie_str);
-
-		//add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
-		int code = huc.getResponseCode();
-		if(code == 401){
-			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
-		}
-
-		// Read Response
-		InputStream in = huc.getInputStream();
-
-		BufferedReader r = new BufferedReader(new InputStreamReader(in));
-		StringBuffer buf = new StringBuffer();
-		String line;
-		while ((line = r.readLine())!=null)
-			buf.append(line);
-
-		in.close();
-
-		return buf.toString();
-	}
+//	public static String doGetWithCookies(String url, String cookie_str) throws Exception
+//	{
+//		URL u = new URL(url);
+//
+//		// Open the connection and prepare to POST
+//		URLConnection uc = u.openConnection();
+//		HttpURLConnection huc = (HttpURLConnection)uc;
+//		huc.setDoOutput(false);
+//		huc.setDoInput(true);
+//		huc.setAllowUserInteraction(false);
+//		huc.setRequestProperty("Cookie", cookie_str);
+//
+//		//add by Ziheng Sun on 5/3/2016 - to judge if the URL is secured
+//		int code = huc.getResponseCode();
+//		if(code == 401){
+//			throw new RuntimeException("HTTP Code 401 Unauthorized visit. This URL is secured.");
+//		}
+//
+//		// Read Response
+//		InputStream in = huc.getInputStream();
+//
+//		BufferedReader r = new BufferedReader(new InputStreamReader(in));
+//		StringBuffer buf = new StringBuffer();
+//		String line;
+//		while ((line = r.readLine())!=null)
+//			buf.append(line);
+//
+//		in.close();
+//
+//		return buf.toString();
+//	}
 
 	public static void downloadFile(String resourceUrl, String destinationPath) throws Exception
 	{
@@ -512,24 +533,6 @@ public class MyHttpUtils
 	}
 	
 	
-	public static void main(String[] args){
-		
-//		String url = "http://test.webdav.org/auth-basic/";
-//		String postContent = "test";
-//		String username = "user1";
-//		String password = "user1";
-//		theLogger.info("Request: " + postContent);
-//		String resp = MyHttpUtils.doPost_BasicAuth(url, postContent, username, password);
-//		theLogger.info("Response: " + resp);
-		
-		try {
-			String resp = MyHttpUtils.doGet("http://ows.dev.52north.org:8080/wps/WebProcessingService?request=GetCapabilities&service=WPS&version=2.0.0");
-			
-			System.out.println("Response:" + resp);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	
 }

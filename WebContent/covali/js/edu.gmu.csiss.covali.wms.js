@@ -658,12 +658,6 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
-		getCurrentEndPoint:function(){
-			
-			return edu.gmu.csiss.covali.wms.currentWMSCapabilities
-				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
-			
-		},
 		
 		getDefaultStyle: function(){
 			
@@ -715,12 +709,34 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+
+		getCurrentEndPoint:function(){
+
+			var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
+					.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
+			
+			String.prototype.replaceAll = function(search, replacement) {
+			    var target = this;
+			    return target.replace(new RegExp(search, 'g'), replacement);
+			};
+			
+			if(window.location.protocol=="https:"){
+				
+				endpointurl = endpointurl.replaceAll("http://", "https://").replaceAll("HTTP://", "https://");
+				
+			}
+			
+			return endpointurl;
+			
+		},
+		
 		addLayer: function(side, layername, stylename){
 			
 			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 			
-			var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
-				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
+//			var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
+//				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
+			endpointurl = this.getCurrentEndPoint();
 			
 			edu.gmu.csiss.covali.map.addWMSLayer(map, endpointurl, layername, stylename);
 			
