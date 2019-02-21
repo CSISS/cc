@@ -763,10 +763,10 @@ public class SearchTool {
 					if(bandNameNode != null)
 						bName = bandNameNode.getText();
 
-					if(bandNameNode != null)
+					if(bandTypeNode != null)
 						bType = bandTypeNode.getText();
 
-					if(bandNameNode != null)
+					if(bandDescNode != null)
 						bDesc = bandDescNode.getText();
 
 					ProductVariable pv = new ProductVariable(bName, bType, bDesc);
