@@ -12,20 +12,11 @@ import java.util.List;
 *Original aim is to support CyberConnector.
 */
 public class SearchRequest {
-	
 	String searchtext;
 	
 	boolean name = true;
 	boolean desc = false;
 	boolean keywords = false;
-
-	public boolean isCollectiongranules() {
-		return collectiongranules;
-	}
-
-	public void setCollectiongranules(boolean collectiongranules) {
-		this.collectiongranules = collectiongranules;
-	}
 
 	boolean collectiongranules = false; //name, desc, keywords
 	
@@ -39,36 +30,35 @@ public class SearchRequest {
 	
 	String begindatetime = "1900-01-01T00:00:00", enddatetime = "2019-06-05T00:00:00"; //begin, end. Default: No restriction.
 	
-	int recordsperpage = 5; //default = 5
-	
-	int pageno = 1;
-	
+	int start = 0;
+
+	int length = 5;//default = 5
+
 	String formats;
 	
 	public SearchRequest(){
 		
 	}
 	
-	public SearchRequest(String searchtext, boolean name, boolean desc, boolean keywords, String isvirtual, double west,
-			double east, double south, double north, String begindatetime, String enddatetime, int recordsperpage, int pageno, String csw) {
-		
-		this.searchtext = searchtext;
-		this.name = name;
-		this.desc = desc;
-		this.keywords = keywords;
-		this.isvirtual = isvirtual;
-		this.west = west;
-		this.east = east;
-		this.south = south;
-		this.north = north;
-		this.begindatetime = begindatetime;
-		this.enddatetime = enddatetime;
-		this.recordsperpage = recordsperpage;
-		this.pageno = pageno;
-		this.csw = csw;
-	}
-	
-	
+//	public SearchRequest(String searchtext, boolean name, boolean desc, boolean keywords, String isvirtual, double west,
+//			double east, double south, double north, String begindatetime, String enddatetime, int start, int length, String csw) {
+//
+//		this.searchtext = searchtext;
+//		this.name = name;
+//		this.desc = desc;
+//		this.keywords = keywords;
+//		this.isvirtual = isvirtual;
+//		this.west = west;
+//		this.east = east;
+//		this.south = south;
+//		this.north = north;
+//		this.begindatetime = begindatetime;
+//		this.enddatetime = enddatetime;
+//		this.start = start;
+//		this.length = length;
+//		this.csw = csw;
+//	}
+
 	
 	public boolean isDistime() {
 		return distime;
@@ -86,70 +76,41 @@ public class SearchRequest {
 		this.csw = csw;
 	}
 
-	public int getPageno() {
-		return pageno;
-	}
-
-
-
-	public void setPageno(int pageno) {
-		this.pageno = pageno;
-	}
-
-
-
 	public String getFormats() {
 		return formats;
 	}
-
-
 
 	public void setFormats(String formats) {
 		this.formats = formats;
 	}
 
-
-
 	public double getWest() {
 		return west;
 	}
-
-
 
 	public void setWest(double west) {
 		this.west = west;
 	}
 
-
-
 	public double getEast() {
 		return east;
 	}
-
-
 
 	public void setEast(double east) {
 		this.east = east;
 	}
 
-
-
 	public double getSouth() {
 		return south;
 	}
-
-
 
 	public void setSouth(double south) {
 		this.south = south;
 	}
 
-
-
 	public double getNorth() {
 		return north;
 	}
-
 
 
 	public void setNorth(double north) {
@@ -157,11 +118,9 @@ public class SearchRequest {
 	}
 
 
-
 	public String getBegindatetime() {
 		return begindatetime;
 	}
-
 
 
 	public void setBegindatetime(String begindatetime) {
@@ -169,17 +128,14 @@ public class SearchRequest {
 	}
 
 
-
 	public String getEnddatetime() {
 		return enddatetime;
 	}
 
 
-
 	public void setEnddatetime(String enddatetime) {
 		this.enddatetime = enddatetime;
 	}
-
 
 
 	public String getSearchtext() {
@@ -189,8 +145,6 @@ public class SearchRequest {
 	public void setSearchtext(String searchtext) {
 		this.searchtext = searchtext;
 	}
-	
-	
 
 	public boolean isName() {
 		return name;
@@ -224,14 +178,36 @@ public class SearchRequest {
 		this.isvirtual = isvirtual;
 	}
 
-	public int getRecordsperpage() {
-		return recordsperpage;
+	public boolean isCollectiongranules() {
+		return collectiongranules;
 	}
 
-	public void setRecordsperpage(int recordsperpage) {
-		this.recordsperpage = recordsperpage;
+	public void setCollectiongranules(boolean collectiongranules) {
+		this.collectiongranules = collectiongranules;
 	}
-	
-	
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public int getPageNumber() {
+		return 0;
+	}
+
+	public int getRecordsPerPage() {
+		return this.getLength();
+	}
 
 }

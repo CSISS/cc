@@ -75,9 +75,9 @@ public class SearchTool {
 		
 		sql.append(" ORDER BY lastUpdateDate DESC");
 
-		sql.append(" LIMIT ").append(req.recordsperpage);
+		sql.append(" LIMIT ").append(req.getRecordsPerPage());
 		
-		int offset = (req.getPageno()-1)*req.getRecordsperpage();
+		int offset = (req.getPageNumber())*req.getRecordsPerPage();
 		
 		sql.append(" OFFSET ").append(offset).append(";");
 		
@@ -177,9 +177,9 @@ public class SearchTool {
 			
 			if(rs.next()){
 				
-				resp.setProduct_total_number(rs.getInt("total"));
+				resp.setRecordsTotal(rs.getInt("total"));
 				
-				resp.setRecordsperpage(req.getRecordsperpage());
+//				resp.setRecordsperpage(req.getRecordsPerPage());
 				
 			}
 			
@@ -206,7 +206,7 @@ public class SearchTool {
 	 */
 	public static String constructCSWRequest(SearchRequest req){
 		
-		int startpos = (req.pageno)*req.recordsperpage + 1;
+		int startpos = req.getStart() + 1; // CSW first record = 1
 		
 		StringBuffer cswreq = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> ")
 			.append("	<GetRecords ")
@@ -217,7 +217,7 @@ public class SearchTool {
 			.append("	    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd\" service=\"CSW\" version=\"2.0.2\" resultType=\"results\" outputFormat=\"application/xml\" outputSchema=\"http://www.isotc211.org/2005/gmd\" startPosition=\"")
 			.append(startpos)
 			.append("\" maxRecords=\"")
-			.append(req.recordsperpage)
+			.append(req.getRecordsPerPage())
 			.append("\"> ")
 			.append("	    <Query typeNames=\"gmd:MD_Metadata\"> ")
 			.append("	        <ElementSetName>full</ElementSetName> ")
@@ -317,8 +317,6 @@ public class SearchTool {
 	/**
 	 * Get current url in ISO metadata
 	 * @param md
-	 * @param rawurl
-	 * @param newurl
 	 * @return
 	 */
 	public static String getCurrentURLinISO(String md){
@@ -558,11 +556,8 @@ public class SearchTool {
 			
 			logger.debug("NextRecord:" + nextrecordindex + "\nNumber of Records Matched :" + numberOfRecordsMatched + "\nNumber of Records Returned : " + numberOfRecordsReturned);
 			
-			respobj.setProduct_total_number(numberOfRecordsMatched);
-			
-			respobj.setStartposition(nextrecordindex-numberOfRecordsReturned);
-			
-			respobj.setRecordsperpage(numberOfRecordsReturned);
+			respobj.setRecordsTotal(numberOfRecordsMatched);
+			respobj.setRecordsFiltered(numberOfRecordsMatched);
 			
 			XPath xpath = DocumentHelper.createXPath("//csw:GetRecordsResponse/csw:SearchResults/gmi:MI_Metadata"); //list all the records
 			
@@ -799,41 +794,41 @@ public class SearchTool {
 	 * @param resp2
 	 * @return
 	 */
-	public static SearchResponse merge(SearchResponse resp1, SearchResponse resp2) {
-		
-		resp1.setProduct_total_number(resp1.getProduct_total_number()+resp2.getProduct_total_number());
-		
-		if(resp1.getProduct_total_number()!=0) {
-			
-			for(Product p : resp2.getProducts()) {
-				
-				if(resp1.getProducts().size()<resp1.getRecordsperpage()) {
-					
-					resp1.getProducts().add(p);
-					
-				}else {
-					
-					break;
-					
-				}
-				
-			}
-			
-		}else {
-			
-			resp1.setProducts(resp2.getProducts());
-			
-		}
-		
-		
-		
-		resp1.setRecordsFiltered(resp1.getProduct_total_number());
-		
-		resp1.setRecordsTotal(resp1.getProduct_total_number());
-		
-		
-		return resp1;
-	}
+//	public static SearchResponse merge(SearchResponse resp1, SearchResponse resp2) {
+//
+//		resp1.setProduct_total_number(resp1.getProduct_total_number()+resp2.getProduct_total_number());
+//
+//		if(resp1.getProduct_total_number()!=0) {
+//
+//			for(Product p : resp2.getProducts()) {
+//
+//				if(resp1.getProducts().size()<resp1.getRecordsperpage()) {
+//
+//					resp1.getProducts().add(p);
+//
+//				}else {
+//
+//					break;
+//
+//				}
+//
+//			}
+//
+//		}else {
+//
+//			resp1.setProducts(resp2.getProducts());
+//
+//		}
+//
+//
+//
+//		resp1.setRecordsFiltered(resp1.getProduct_total_number());
+//
+//		resp1.setRecordsTotal(resp1.getProduct_total_number());
+//
+//
+//		return resp1;
+//	}
 	/**
 	 * Search two folders: the uploaded folder and the public folder. 
 	 * The uploaded folder is the first one.
@@ -846,7 +841,7 @@ public class SearchTool {
 		
 		LocalFileTool tool = new LocalFileTool();
 		
-		return tool.search(req.searchtext, req.recordsperpage, req.pageno, formats);
+		return tool.search(req.searchtext, req.getPageNumber(), req.getRecordsPerPage(), formats);
 		
 	}
 	
@@ -908,8 +903,11 @@ public class SearchTool {
 		logger.debug("Disable time: " + req.distime);
 		
 		SearchResponse resp = null;
-		
-		if(req.isvirtual.equals("1")){
+
+		if(req.collectiongranules) {
+			resp = searchGranulesIndex(req);
+		}
+		else if(req.isvirtual.equals("1")){
 			
 			logger.debug("This is for VDP. Search in CyberConnector database..");
 			
@@ -925,6 +923,42 @@ public class SearchTool {
 		
 		return resp;
 		
+	}
+
+	public static SearchResponse searchGranulesIndex(SearchRequest req){
+
+		// first find the collection
+		String cswreq = SearchTool.constructSingleCSWReq(req.getSearchtext());
+		logger.debug(cswreq);
+		String cswresp = BaseTool.POST(cswreq, SysDir.CSISS_CSW_URL);
+		logger.debug(cswresp);
+
+		SearchResponse resp = SearchTool.parseCSWResponse(cswresp);
+
+		Product collectionRecord = resp.products.get(0);
+
+
+		// next get the granules
+		List<Granule> granules = GranulesTool.getCollectionGranules(req);
+
+
+		SearchResponse sr = new SearchResponse();
+
+		List products = new ArrayList();
+
+		for(int i = req.start; (i - req.start) < req.length && i < granules.size(); i++) {
+
+			Granule g = granules.get(i);
+			Product p = g.toProduct(collectionRecord, i, granules.size());
+
+			products.add(p);
+		}
+
+		sr.setProducts(products);
+		sr.setRecordsFiltered(granules.size());
+		sr.setRecordsTotal(granules.size());
+
+		return sr;
 	}
 	
 	public static void main(String[] args){

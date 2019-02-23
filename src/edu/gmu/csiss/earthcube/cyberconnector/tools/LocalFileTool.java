@@ -270,15 +270,7 @@ public class LocalFileTool {
 		List products  = findFileByKeywords( keywords,  recordsperpage, start,  folder,  formats);
 
         resp.setProducts(products);
-        
-        resp.setProduct_total_number(num);
-        
-        resp.setStartposition(start);
-        
-        resp.setRecordsperpage(recordsperpage);
-        
-        num=0;
-        
+
 		return resp;
 		
 	}
@@ -352,16 +344,16 @@ public class LocalFileTool {
 		SearchResponse resp1 = search(keywords, recordsperpage, pageno,
 				BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path, formats);
 		
-		if(resp1.getProducts().size()<recordsperpage) {
-			
-			pageno = pageno - resp1.getProduct_total_number()/recordsperpage;
-			
-			SearchResponse resp2 = search(keywords, recordsperpage, pageno,
-					SysDir.getCovali_file_path(), formats);
-			
-			resp1 = SearchTool.merge(resp1, resp2);
-			
-		}
+//		if(resp1.getProducts().size()<recordsperpage) {
+//
+//			pageno = pageno - resp1.getProduct_total_number()/recordsperpage;
+//
+//			SearchResponse resp2 = search(keywords, recordsperpage, pageno,
+//					SysDir.getCovali_file_path(), formats);
+//
+//			resp1 = SearchTool.merge(resp1, resp2);
+//
+//		}
 		
 		return resp1;
 		
@@ -422,11 +414,11 @@ public class LocalFileTool {
 		
 		SearchResponse resp = tool.search("", 1, 16, null);
 //		
-		logger.info("total number " + resp.getProduct_total_number() + 
-				"\n recordsperpage: " + resp.getRecordsperpage() + 
-				"\n start position: " + resp.getStartposition() + 
-				"\n records: " + resp.getProducts().get(0).getId());
-		
+//		logger.info("total number " + resp.getProduct_total_number() +
+//				"\n recordsperpage: " + resp.getRecordsperpage() +
+//				"\n start position: " + resp.getStartposition() +
+//				"\n records: " + resp.getProducts().get(0).getId());
+//
 //		String url = LocalFileTool.turnLocalFile2Downloadable("D:/Program Files/apache-tomcat-8.5.31/webapps/CyberConnector/uploadFile/data.nc");
 //		
 //		System.out.println("cached URL: " + url);

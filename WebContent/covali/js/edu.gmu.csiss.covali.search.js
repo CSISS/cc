@@ -9,11 +9,11 @@
 
 edu.gmu.csiss.covali.search = {
 
-		resultDialog: function(request){
-			
+		resultDialog: function(request, title){
+
 			this.resultdialog = BootstrapDialog.show({
 				
-				title: "Search Results",
+				title: title,
 				
 				size: BootstrapDialog.SIZE_WIDE,
 				
@@ -129,22 +129,40 @@ edu.gmu.csiss.covali.search = {
 			});
 			
 		},
+
+		granules: function(name){
+            api =  $('#producttable').DataTable();
+			request = api.ajax.params();
+
+			delete(request.start);
+			delete(request.draw);
+			request.collectiongranules = true;
+			request.searchtext = name;
+
+            $('#producttable').DataTable().destroy();
+            $('#producttable').remove();
+            BootstrapDialog.closeAll();
+
+            edu.gmu.csiss.covali.search.resultDialog(request, "Granules for " + name);
+        },
 		
 		initTable: function(request){
         	
         	//var currentRecList = [];
-            
+
             $('#producttable').DataTable({
             	
                 "processing": true,
                 
                 "serverSide": true,
+
+				"pageLength": request.length,
                 
                 "ajax": {
                 	
                 	//{'begindatetime':'1900-01-01T00:00:00','csw':'1','desc':false,'distime':false,'east':-16.875,'enddatetime':'2017-06-15T00:00:00','formats':null,'isvirtual':'0','keywords':false,'name':true,'north':57.326521225217064,'pageno':1,'recordsperpage':5,'searchtext':'bufr','south':7.013667927566642,'west':-154.3359375};
                 	
-                	"url": "../web/search",
+                	"url": '../web/search',
                     
                 	"type": "POST",
                 	
@@ -192,44 +210,53 @@ edu.gmu.csiss.covali.search = {
 
                             content += "	<button type=\"button\" id=\"viewbtn_"+full.id+"\""+
     						"		class=\"btn btn-primary btn-circle\">"+
-    						"		<i class=\"glyphicon glyphicon-list\" title=\"View Details\"></i>"+
+    						"		<i class=\"glyphicon glyphicon-info-sign\" title=\"View Details\"></i>"+
     						"	</button>";
 
-
-                            if(full.accessurl.startsWith("http")||full.accessurl.startsWith("HTTP")){
-
-                                content += '		<button onclick="edu.gmu.csiss.covali.search.goto(\''+full.accessurl+'\')" class="btn btn-default" '+
-                                    ' id="downbtn_'+escapeid+'"> <span '+
-                                    '			class="glyphicon glyphicon-download-alt" title="Download"></span> '+
+                            if(full.iscollection) {
+                                content += '		<button onclick="edu.gmu.csiss.covali.search.granules('
+									+ "'" + full.name + "'" + ')"'
+                                    + ' class="btn btn-default" ' +
+                                    ' id="downbtn_' + escapeid + '"> <span ' +
+                                    '			class="glyphicon glyphicon-th" title="List Granules"></span> ' +
                                     '		</button>';
-                            }else{
-								
-								content += '		<button onclick="edu.gmu.csiss.covali.search.download(\''+full.accessurl+'\')" class="btn btn-default" '+
-    							' id="downbtn_'+escapeid+'"> <span '+
-    							'			class="glyphicon glyphicon-download-alt pull-left" title="Download"></span> '+
-    							'		</button>';
-								
-							}
-
-                            //add a button to load map
-
-                            if(edu.gmu.csiss.covali.search.checkfileformat(full.accessurl)){
-
-                                content += '		<button onclick="edu.gmu.csiss.covali.search.load(\''+full.id+'\', \''+
-                                    full.accessurl+
-                                    '\')" class="btn btn-default" id="loadbtn_'+escapeid+'"> <span '+
-                                    '			class="glyphicon glyphicon-film" title="Load Map"></span> '+
-                                    '		</button> ';
-
                             }
+                            else {
+                                if (full.accessurl.startsWith("http") || full.accessurl.startsWith("HTTP")) {
 
-                            if(!full.cached){
+                                    content += '		<button onclick="edu.gmu.csiss.covali.search.goto(\'' + full.accessurl + '\')" class="btn btn-default" ' +
+                                        ' id="downbtn_' + escapeid + '"> <span ' +
+                                        '			class="glyphicon glyphicon-download-alt" title="Download"></span> ' +
+                                        '		</button>';
+                                } else {
 
-                                content += '<button onclick="edu.gmu.csiss.covali.search.cache(\''+full.id+'\', \''+full.name+'\', \''+full.accessurl+'\')" id="cachebtn_'+escapeid+'" class="btn btn-default" > '+
-                                    '			<span class="glyphicon glyphicon-save-file" title="Cache Data"></span> '+
-                                    //        							'			DataCache '+
-                                    '		</button> ';
+                                    content += '		<button onclick="edu.gmu.csiss.covali.search.download(\'' + full.accessurl + '\')" class="btn btn-default" ' +
+                                        ' id="downbtn_' + escapeid + '"> <span ' +
+                                        '			class="glyphicon glyphicon-download-alt pull-left" title="Download"></span> ' +
+                                        '		</button>';
 
+                                }
+
+                                //add a button to load map
+
+                                if (edu.gmu.csiss.covali.search.checkfileformat(full.accessurl)) {
+
+                                    content += '		<button onclick="edu.gmu.csiss.covali.search.load(\'' + full.id + '\', \'' +
+                                        full.accessurl +
+                                        '\')" class="btn btn-default" id="loadbtn_' + escapeid + '"> <span ' +
+                                        '			class="glyphicon glyphicon-film" title="Load Map"></span> ' +
+                                        '		</button> ';
+
+                                }
+
+                                if (!full.cached) {
+
+                                    content += '<button onclick="edu.gmu.csiss.covali.search.cache(\'' + full.id + '\', \'' + full.name + '\', \'' + full.accessurl + '\')" id="cachebtn_' + escapeid + '" class="btn btn-default" > ' +
+                                        '			<span class="glyphicon glyphicon-save-file" title="Cache Data"></span> ' +
+                                        //        							'			DataCache '+
+                                        '		</button> ';
+
+                                }
                             }
 
                             content += '	</div> ';
@@ -315,7 +342,7 @@ edu.gmu.csiss.covali.search = {
     	        	
                 },
                 
-                "iDisplayLength": request.recordsperpage,
+                "iDisplayLength": request.length,
                 
                 "bLengthChange": false
             
@@ -1280,8 +1307,9 @@ edu.gmu.csiss.covali.search = {
 	  	},
 		
 		init: function(){
-			
-			edu.gmu.csiss.covali.search.searchdialog = new BootstrapDialog({
+        	BootstrapDialog.closeAll();
+
+            edu.gmu.csiss.covali.search.searchdialog = new BootstrapDialog({
 				
 	            message: edu.gmu.csiss.covali.search.searchForm(),
 	            
@@ -1517,16 +1545,14 @@ edu.gmu.csiss.covali.search = {
 	                		"begindatetime":$("#bdtv").val(),
 	                		
 	                		"enddatetime":$("#edtv").val(),
-	                		
-	                		"recordsperpage":$("#recordsperpage  option:selected").text(),
-	                		
-	                		"pageno":0,
-	                		
+
+	                		"length":$("#recordsperpage  option:selected").text(),
+
 	                		"formats": formatlist
 	                		
 	                	};
 	                	
-	                	edu.gmu.csiss.covali.search.resultDialog(request);
+	                	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
 	                	
 	                	dialogItself.close();
 	                	
