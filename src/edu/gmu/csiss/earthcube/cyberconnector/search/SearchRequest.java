@@ -203,7 +203,7 @@ public class SearchRequest {
 	}
 
 	public int getPageNumber() {
-		return 0;
+		return this.getStart()/this.getLength();
 	}
 
 	public int getRecordsPerPage() {

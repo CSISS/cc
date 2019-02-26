@@ -787,48 +787,7 @@ public class SearchTool {
 		return resp;
 		
 	}
-	
-	/**
-	 * Merge two responses into one
-	 * @param resp1
-	 * @param resp2
-	 * @return
-	 */
-//	public static SearchResponse merge(SearchResponse resp1, SearchResponse resp2) {
-//
-//		resp1.setProduct_total_number(resp1.getProduct_total_number()+resp2.getProduct_total_number());
-//
-//		if(resp1.getProduct_total_number()!=0) {
-//
-//			for(Product p : resp2.getProducts()) {
-//
-//				if(resp1.getProducts().size()<resp1.getRecordsperpage()) {
-//
-//					resp1.getProducts().add(p);
-//
-//				}else {
-//
-//					break;
-//
-//				}
-//
-//			}
-//
-//		}else {
-//
-//			resp1.setProducts(resp2.getProducts());
-//
-//		}
-//
-//
-//
-//		resp1.setRecordsFiltered(resp1.getProduct_total_number());
-//
-//		resp1.setRecordsTotal(resp1.getProduct_total_number());
-//
-//
-//		return resp1;
-//	}
+
 	/**
 	 * Search two folders: the uploaded folder and the public folder. 
 	 * The uploaded folder is the first one.
@@ -841,8 +800,7 @@ public class SearchTool {
 		
 		LocalFileTool tool = new LocalFileTool();
 		
-		return tool.search(req.searchtext, req.getPageNumber(), req.getRecordsPerPage(), formats);
-		
+		return tool.search(req.searchtext, req.getRecordsPerPage(), req.getPageNumber(), formats);
 	}
 	
 	public static SearchResponse searchCWIC(SearchRequest req){
