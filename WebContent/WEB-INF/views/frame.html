@@ -52,7 +52,7 @@
                     <li><a href="feature" th:href="@{/web/function}">Function</a></li>
                     <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="feature" th:href="@{/web/feature}">Feature</a></li>
                     <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="demo" th:href="@{/web/demo}">Demo</a></li>
-                    <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="people" th:href="@{/web/people}">People</a></li>
+                    <!-- <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="people" th:href="@{/web/people}">People</a></li> -->
                     <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="publication" th:href="@{/web/publication}">Publication</a></li>
                     <li><a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="about" th:href="@{/web/about}">About</a></li>
                     <li>
@@ -76,12 +76,12 @@
                             <li><a href="feature" th:href="@{/web/function}">Function</a></li>
                             <li><a href="feature" th:href="@{/web/feature}">Feature</a></li>
                             <li><a href="demo" th:href="@{/web/demo}">Demo</a></li>
-                            <li><a href="people" th:href="@{/web/people}">People</a></li>
+                            <!-- <li><a href="people" th:href="@{/web/people}">People</a></li> -->
                             <li><a href="publication" th:href="@{/web/publication}">Publication</a></li>
                             <li><a href="about" th:href="@{/web/about}">About</a></li>
                             <li>
-		                    	<a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="#" >Welcome, Friend</a>
-		                    	<a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="user_profile" th:href="@{/web/user_profile}"  th:text="'Welcome, '+${session.sessionUser}" >Welcome, Friend</a>
+		                    	<a  th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="#" >Welcome</a>
+		                    	<a  th:unless="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="user_profile" th:href="@{/web/user_profile}"  th:text="'Welcome, '+${session.sessionUser}" >Welcome</a>
 		                   	</li>
 		                    <li>
 		                    	<a th:if="${session.sessionUser == null}  or ${session.sessionUser} eq 'Friend'"  href="login" th:href="@{/web/login}" >Login</a>

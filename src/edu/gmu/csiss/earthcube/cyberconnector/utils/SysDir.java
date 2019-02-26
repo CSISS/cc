@@ -3,6 +3,8 @@ package edu.gmu.csiss.earthcube.cyberconnector.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -69,6 +71,8 @@ public class SysDir {
 	
 	public static boolean login_required = false;
 	
+	public static List whiteusers = new ArrayList();
+	
 	public static String getCovali_file_path() {
 		
 		init();
@@ -98,11 +102,14 @@ public class SysDir {
 		try {
 			
 			BaseTool t = new BaseTool();
+			
 			String configFile = t.getClassPath()+File.separator+"config.properties";
 			
 			Properties p = readProperties(configFile);
 
 			String secretConfigFile = p.getProperty("secret_properties_path");
+			
+			
 
 			Properties secrets = null;
 			
@@ -173,6 +180,26 @@ public class SysDir {
 			ucar_rda_username = secrets.getProperty("ucar_rda_username");
 
 			ucar_rda_password = secrets.getProperty("ucar_rda_password");
+			
+			String whitelist = t.readStringFromFile(t.getClassPath()+File.separator+"whitelist.user");
+			
+			if(!t.isNull(whitelist.trim())) {
+			
+				String[] emails = whitelist.trim().split("\n");
+				
+				for(String email: emails) {
+					
+					email = email.trim();
+					
+					if(!t.isNull(email)) {
+						
+						whiteusers.add(email);
+						
+					}
+					
+				}
+				
+			}
 			
 		} catch (Exception e) {
 			
