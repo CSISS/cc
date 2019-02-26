@@ -24,6 +24,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.products.Product;
 import edu.gmu.csiss.earthcube.cyberconnector.services.Service;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.Message;
+import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 
 /**
 *Class UserTool.java
@@ -487,7 +488,40 @@ public class UserTool {
 	    return generatedPassword;
 	}
 	
+	/**
+	 * Check if the user exists in the white list
+	 * @param email
+	 * @return
+	 */
+	public static boolean checkWhiteList(String email) {
+		
+		boolean allowed = false;
+		
+		for(int i=0;i<SysDir.whiteusers.size();i++) {
+			
+			if(email.equals(SysDir.whiteusers.get(i))) {
+				
+				allowed = true;
+				
+				break;
+				
+			}
+			
+		}
+		
+		return allowed;
+		
+	}
+	
 	public static Message registerNewUser(User user){
+		
+		if(!checkWhiteList(user.getEmail())) {
+			
+			Message msg = new Message("configuration", "user_login", "the email is not allowed for registration", false );
+			
+			return msg;
+			
+		}
 		
 		BaseTool tool = new BaseTool();
 		
@@ -630,7 +664,9 @@ public class UserTool {
 		t.setExpireDate(timestamp.getTime()+5*60*1000);
 		
 		String emailContent = "Please click the following link to reset password of your CyberConnector account. To ensure your account safety, do NOT share or let other people get this email. The link will be expired in 5 minutes.";
-		emailContent += "\nhttp://localhost:8081/CyberConnector/web/user_setpassword?token=" + t.getToken();
+		emailContent += "\n"+SysDir.PREFIXURL+"/CyberConnector/web/user_setpassword?token=" + t.getToken();
+		
+		logger.info(emailContent);
 		
 		BaseTool tool = new BaseTool();
 		
