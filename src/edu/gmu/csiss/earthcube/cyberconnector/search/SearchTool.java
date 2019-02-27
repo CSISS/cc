@@ -714,17 +714,22 @@ public class SearchTool {
 
 					p.setIscollection("0");
 
-					//for gmi
-					if (accessoptions.selectSingleNode(ele) == null) {
-						logger.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
+					try {
+						//for gmi
+						if (accessoptions.selectSingleNode(ele) == null) {
+							logger.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
 
-						String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
-						p.setAccessurl(accessurl);
+							String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
+							p.setAccessurl(accessurl);
 
-					} else {
+						} else {
 
-						String accessurl = accessoptions.selectSingleNode(ele).getText();
-						p.setAccessurl(accessurl);
+							String accessurl = accessoptions.selectSingleNode(ele).getText();
+							p.setAccessurl(accessurl);
+						}
+					}
+					catch(Exception e) {
+						p.setAccessurl("NA");
 					}
 				}
 
