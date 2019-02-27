@@ -1,6 +1,7 @@
 package edu.gmu.csiss.earthcube.cyberconnector.products;
 
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -295,12 +296,14 @@ public class Product {
 	}
 
 
-	public static String generateSafeRandomId(String name) {
-		return name
+	public static String generateSafeId(String name, String uniqueInfo) {
+		String safeName = name
 				.replaceAll("\\.", "-")
-				.replaceAll("\\ ", "-")
-				+ "-"
-				+ new RandomString(3).nextString();
+				.replaceAll("\\ ", "-");
+
+		String uniqueInfoMd5 = DigestUtils.md5Hex(uniqueInfo).substring(0, 8);
+
+		return safeName + "-" + uniqueInfoMd5;
 	}
 
 	//	CREATE TABLE `products` (

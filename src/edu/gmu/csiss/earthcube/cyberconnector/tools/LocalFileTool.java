@@ -180,7 +180,7 @@ public class LocalFileTool {
 
 		p.setIfvirtual("0");
 
-		String identifier = Product.generateSafeRandomId(file.getName());
+		String identifier = Product.generateSafeId(file.getName(), file.getAbsolutePath());
 		p.setId(identifier);
 
 		if(file.getAbsolutePath().startsWith(BaseTool.getCyberConnectorRootPath()+

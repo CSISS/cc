@@ -619,12 +619,7 @@ public class SearchTool {
 
 				p.setName(iso_id);
 				p.setDesc(iso_id);
-				
-				//identifier must be escaped : and /
 
-//				String identifier = iso_id.replaceAll(":", "__y__");
-//				
-//				identifier = identifier.replaceAll("/", "__x__");
 				
 				if(titlepath.selectSingleNode(ele)!=null){
 					
@@ -639,7 +634,7 @@ public class SearchTool {
 					p.setTitle(title);
 				}
 				
-				String identifier = Product.generateSafeRandomId(p.getTitle());
+				String identifier = Product.generateSafeId(p.getTitle(), iso_id);
 				
 				p.setId(identifier);
 				
@@ -910,6 +905,11 @@ public class SearchTool {
 			Product p = g.toProduct(collectionRecord, i, granules.size());
 
 			products.add(p);
+
+			if(p.isCached()) {
+				ProductCache cache = new ProductCache(p.getId(), p.getAccessurl());
+				p.setAccessurl(cache.getCacheUrl());
+			}
 		}
 
 		sr.setProducts(products);

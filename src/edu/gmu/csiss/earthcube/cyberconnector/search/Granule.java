@@ -59,7 +59,7 @@ public class Granule {
 
         p.setTitle(title);
         p.setName(this.name);
-        p.setId(Product.generateSafeRandomId(title));
+        p.setId(Product.generateSafeId(title, this.name));
 
         p.setDesc("Granule " + (index + 1) + " of " + total + " in " + collectionRecord.getTitle());
 

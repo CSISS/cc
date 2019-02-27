@@ -7,6 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -297,23 +299,16 @@ public class CovaliController {
      */
     @RequestMapping(value = "/adddata", method = RequestMethod.POST)
     public @ResponseBody String adddata(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-    	
-    	String resp = null;
-    	
-//    	String querystr = request.getQueryString();
-    	
-    	String id = RandomString.get(3);
-    	
+    	String resp;
+
     	String location = request.getParameter("location");
-    	
+
     	try {
     		
     		if(location.startsWith(SysDir.PREFIXURL)) {
-    			
-    			location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
-    			
-    			logger.debug("the new location is : " + location);
-    			
+
+				location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
+
     		}else if(location.startsWith(SysDir.getCovali_file_path())){
     			
 //    			location = location;
@@ -337,8 +332,7 @@ public class CovaliController {
     		}
 
 			File f = new File(location);
-			
-			id = f.getName() + "-" + id; //id should contain the file name so people know which file they are looking at
+			String id = FilenameUtils.getBaseName(location);
     		
     		ncWMSTool.addDataset(id, location);
     		
