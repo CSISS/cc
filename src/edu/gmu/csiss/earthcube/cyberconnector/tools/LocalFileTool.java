@@ -90,6 +90,7 @@ public class LocalFileTool {
 			}
 
 			if(!BaseTool.isNull(files)) {
+				Arrays.sort(files);
 
 				for (int i=0; i < files.length; i++) {
 					if(results.size() >= MAX_RESULTS) {
