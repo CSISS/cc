@@ -213,7 +213,7 @@ edu.gmu.csiss.covali.search = {
     						"		<i class=\"glyphicon glyphicon-info-sign\" title=\"View Details\"></i>"+
     						"	</button>";
 
-                            if(full.iscollection) {
+                            if(full.iscollection == "1") {
                                 content += '		<button onclick="edu.gmu.csiss.covali.search.granules('
 									+ "'" + full.name + "'" + ')"'
                                     + ' class="btn btn-default" ' +
