@@ -298,8 +298,7 @@ public class Product {
 
 	public static String generateSafeId(String name, String uniqueInfo) {
 		String safeName = name
-				.replaceAll("\\.", "-")
-				.replaceAll("\\ ", "-");
+				.replaceAll("\\W", "-");
 
 		String uniqueInfoMd5 = DigestUtils.md5Hex(uniqueInfo).substring(0, 8);
 
