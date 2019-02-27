@@ -36,7 +36,7 @@ public class SysDir {
 	public static String CACHE_DATA_URLPREFIX = null;
     
 	public static String CSISS_CSW_URL = null;
-    
+
 	public static String PREFIXURL = null;
     
 	public static String ncWMSURL = null; 
@@ -53,7 +53,7 @@ public class SysDir {
     
 	public static String temp_file_path = null;
 
-	public static String thredds_harvester_path = null;
+	public static String thredds_index_url = null;
 
 	public static String database_driver = null;
 
@@ -157,7 +157,7 @@ public class SysDir {
 			
 			temp_file_path = p.getProperty("temp_file_path");
 
-			thredds_harvester_path = p.getProperty("thredds_harvester_path");
+			thredds_index_url = p.getProperty("thredds_index_url");
 			
 			database_driver = p.getProperty("database_driver");
 

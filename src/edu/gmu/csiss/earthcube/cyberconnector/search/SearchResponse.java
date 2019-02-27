@@ -12,13 +12,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.products.Product;
 *Original aim is to support CyberConnector.
 */
 public class SearchResponse {
-	
-	int product_total_number;
-	
-	int startposition;
-	
-	int recordsperpage;
-	
+
 	/**
 	 * The following three variables are added for JQuery DataTable
 	 * Refer to https://datatables.net/manual/server-side
@@ -27,9 +21,8 @@ public class SearchResponse {
 	int draw;
 	
 	int recordsTotal;
-	
 	int recordsFiltered;
-	
+
 	List<Product> products;
 	
 	public int getRecordsTotal() {
@@ -54,30 +47,6 @@ public class SearchResponse {
 
 	public void setDraw(int draw) {
 		this.draw = draw;
-	}
-
-	public int getStartposition() {
-		return startposition;
-	}
-
-	public void setStartposition(int startposition) {
-		this.startposition = startposition;
-	}
-
-	public int getRecordsperpage() {
-		return recordsperpage;
-	}
-
-	public void setRecordsperpage(int recordsperpage) {
-		this.recordsperpage = recordsperpage;
-	}
-
-	public int getProduct_total_number() {
-		return product_total_number;
-	}
-
-	public void setProduct_total_number(int product_total_number) {
-		this.product_total_number = product_total_number;
 	}
 
 	public List<Product> getProducts() {

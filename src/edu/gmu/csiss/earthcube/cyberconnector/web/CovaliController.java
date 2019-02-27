@@ -7,9 +7,10 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -23,7 +24,6 @@ import org.springframework.web.context.request.WebRequest;
 import edu.gmu.csiss.earthcube.cyberconnector.ncwms.ncWMSTool;
 import edu.gmu.csiss.earthcube.cyberconnector.products.Product;
 import edu.gmu.csiss.earthcube.cyberconnector.search.Granule;
-import edu.gmu.csiss.earthcube.cyberconnector.search.GranulesRequest;
 import edu.gmu.csiss.earthcube.cyberconnector.search.GranulesTool;
 import edu.gmu.csiss.earthcube.cyberconnector.search.SearchRequest;
 import edu.gmu.csiss.earthcube.cyberconnector.search.SearchResponse;
@@ -93,70 +93,18 @@ public class CovaliController {
     
 
     @RequestMapping(value = "/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String tableserver(@ModelAttribute("request") SearchRequest searchreq,  WebRequest request) {
-    	
-    	int start = Integer.parseInt(request.getParameter("start")) + 1;
-    	
-    	int length = Integer.parseInt(request.getParameter("length"));
-    	
-    	int pageNum = start/length;
-    	
-    	searchreq.setPageno(pageNum);
+	public @ResponseBody String tableserver(@ModelAttribute("request") SearchRequest searchreq, WebRequest webreq) {
 
 		SearchResponse sr = SearchTool.search(searchreq);
 		
     	//for JQuery DataTables
-    	String draw = request.getParameter("draw");
+    	String draw = webreq.getParameter("draw");
 
     	sr.setDraw(Integer.parseInt(draw));
-    	
-    	sr.setRecordsFiltered(sr.getProduct_total_number());
-    	
-    	sr.setRecordsTotal(sr.getProduct_total_number());
 
 		return BaseTool.toJSONString(sr);
 		
     }
-
-	@RequestMapping(value = "/listgranules", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String listgranules_ajax(@ModelAttribute("request") GranulesRequest gRequest, WebRequest webRequest) {
-		int start = Integer.parseInt(webRequest.getParameter("start"));
-		int length = Integer.parseInt(webRequest.getParameter("length"));
-
-
-        GranulesTool.indexCollectionGranules(gRequest);
-
-        List<Granule> granules = GranulesTool.getCollectionGranules(gRequest);
-
-		SearchResponse sr = new SearchResponse();
-
-		List products = new ArrayList();
-		for(int i = start; i < start + length && i < granules.size() ; i++) {
-			Granule g = granules.get(i);
-			Product p = g.toProduct(gRequest);
-
-			products.add(p);
-		}
-
-		sr.setProducts(products);
-
-		int draw = Integer.parseInt(webRequest.getParameter("draw"));
-		sr.setDraw(draw);
-
-		sr.setRecordsFiltered(granules.size());
-		sr.setRecordsTotal(granules.size());
-
-
-		return BaseTool.toJSONString(sr);
-    }
-
-	@RequestMapping(value = "/listgranules", method = RequestMethod.GET)
-    public String listgranules(@ModelAttribute("request") GranulesRequest request, ModelMap model){
-
-		return "listgranules";
-	}
-	
-	
 
     /**
      * List local files in the shared folder
@@ -351,23 +299,16 @@ public class CovaliController {
      */
     @RequestMapping(value = "/adddata", method = RequestMethod.POST)
     public @ResponseBody String adddata(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-    	
-    	String resp = null;
-    	
-//    	String querystr = request.getQueryString();
-    	
-    	String id = RandomString.get(3);
-    	
+    	String resp;
+
     	String location = request.getParameter("location");
-    	
+
     	try {
     		
     		if(location.startsWith(SysDir.PREFIXURL)) {
-    			
-    			location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
-    			
-    			logger.debug("the new location is : " + location);
-    			
+
+				location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
+
     		}else if(location.startsWith(SysDir.getCovali_file_path())){
     			
 //    			location = location;
@@ -391,8 +332,7 @@ public class CovaliController {
     		}
 
 			File f = new File(location);
-			
-			id = f.getName() + "-" + id; //id should contain the file name so people know which file they are looking at
+			String id = FilenameUtils.getBaseName(location);
     		
     		ncWMSTool.addDataset(id, location);
     		

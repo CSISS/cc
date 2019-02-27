@@ -51,25 +51,29 @@ public class Granule {
     public Granule() {
     }
 
-    public Product toProduct(GranulesRequest gRequest) {
+    public Product toProduct(Product collectionRecord, int index, int total) {
         Product p = new Product();
 
-        String id = this.name.replaceAll("/", "_");
-        p.setName(id);
-        p.setId(id);
-        p.setTitle(this.name);
-        p.setDesc("From collection: " + gRequest.collection_desc);
+        String[] parts = this.name.split("/");
+        String title = parts[parts.length - 1];
+
+        p.setTitle(title);
+        p.setName(this.name);
+        p.setId(Product.generateSafeId(title, this.name));
+
+        p.setDesc("Granule " + (index + 1) + " of " + total + " in " + collectionRecord.getTitle());
 
         p.setBegintime(this.time_start);
         p.setEndtime(this.time_end);
-        p.setWest(gRequest.west);
-        p.setEast(gRequest.east);
-        p.setNorth(gRequest.north);
-        p.setSouth(gRequest.south);
+        p.setWest(collectionRecord.getWest());
+        p.setEast(collectionRecord.getEast());
+        p.setNorth(collectionRecord.getNorth());
+        p.setSouth(collectionRecord.getSouth());
         p.setAccessurl(this.access_url);
         p.setIfvirtual("0");
         p.setIsspatial("1");
         p.setIscollection("0");
+        p.setVariables(collectionRecord.getVariables());
 
         return p;
     }

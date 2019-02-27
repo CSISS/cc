@@ -15,6 +15,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.MyHttpUtils;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SOAPClient;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -45,10 +46,21 @@ public class ProductCache {
         this.id = id;
         this.url = url;
 
+        String suffix = FilenameUtils.getExtension(url).toLowerCase();
+
+        String cacheFileName = id;
+        if(!suffix.isEmpty()) {
+            cacheFileName = cacheFileName + "." + suffix;
+        }
+
+
+
         this.cacheDir = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path ;
 
-        this.cacheUrl = SysDir.PREFIXURL + "/CyberConnector/" + SysDir.upload_file_path + "/" + id;
-        this.cachePath = cacheDir  + "/" + id;
+        this.cacheUrl = SysDir.PREFIXURL + "/CyberConnector/" + SysDir.upload_file_path + "/" + cacheFileName;
+
+        this.cachePath = cacheDir  + "/" + cacheFileName;
+
         this.cacheTmpPath = this.cachePath + ".tmp";
     }
 
@@ -83,54 +95,7 @@ public class ProductCache {
         cachedFile.renameTo(new File(cachePath));
         
     }
-    
-    
-//    public static void down(String savedir, String imgUrl) {
-//        File f = new File(savedir);
-//        byte[] buffer = new byte[8 * 1024];
-//        URL u;
-//        URLConnection connection = null;
-//        try {
-//            u = new URL(imgUrl);
-//            connection = u.openConnection();
-//        } catch (Exception e) {
-//            logger.info("ERR:" + imgUrl);
-//            return;
-//        }
-//        connection.setReadTimeout(1000000); //milliseconds
-//        InputStream is = null;
-//        FileOutputStream fos = null;
-//        try {
-//            f.createNewFile();
-//            is = connection.getInputStream();
-//            fos = new FileOutputStream(f);
-//            int len = 0;
-//            while ((len = is.read(buffer)) != -1) {
-//                fos.write(buffer, 0, len);
-//            }
-//
-//        } catch (Exception e) {
-//            f.delete();
-//            if (fos != null) {
-//                try {
-//                    fos.close();
-//                } catch (IOException e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
-//            if (is != null) {
-//                try {
-//                    is.close();
-//                } catch (IOException e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
-//            throw new RuntimeException("Fail to download the image from the link.."+e.getClass().getName()+":"+e.getLocalizedMessage());
-//        }
-//        logger.info(imgUrl+" is downloaded!");
-////        buffer = null;
-//        // System.gc();
-//    }
+
     
     /**
      * Download file through URI
