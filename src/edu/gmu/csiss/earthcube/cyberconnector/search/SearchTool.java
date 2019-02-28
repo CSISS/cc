@@ -224,13 +224,24 @@ public class SearchTool {
 			.append("	        <Constraint version=\"1.1.0\"> ")
 			.append("	            <ogc:Filter> ")
 			.append("	                <ogc:And> ")
+
+			// match csw:AnyText or apiso:Identifier
+			.append("	                <ogc:Or> ")
 			.append("	                    <ogc:PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\"> ")
 			.append("	                        <ogc:PropertyName>apiso:Identifier</ogc:PropertyName> ")
 			.append("	                        <ogc:Literal>%")
 			.append(req.searchtext)
 			.append("%</ogc:Literal> ")
-			.append("	                    </ogc:PropertyIsLike> ");
-		
+			.append("	                    </ogc:PropertyIsLike> ")
+			.append("	                    <ogc:PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\"> ")
+			.append("	                        <ogc:PropertyName>csw:AnyText</ogc:PropertyName> ")
+			.append("	                        <ogc:Literal>%")
+			.append(req.searchtext)
+			.append("%</ogc:Literal> ")
+			.append("	                    </ogc:PropertyIsLike> ")
+			.append("	                </ogc:Or> ");
+
+
 		if(!req.distime && !BaseTool.isNull(req.begindatetime)){
 			cswreq.append("	                <ogc:PropertyIsGreaterThanOrEqualTo> ")
 			.append("	                        <ogc:PropertyName>apiso:TempExtent_begin</ogc:PropertyName> ")
