@@ -11,6 +11,9 @@ import java.util.Map;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductVariable;
+import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
+import edu.iris.dmc.fdsn.station.model.Network;
+import edu.iris.dmc.fdsn.station.model.Station;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -825,12 +828,13 @@ public class SearchTool {
 		return resp;
 		
 	}
+
 	
 	public static SearchResponse searchRealData(SearchRequest req){
 		
 		SearchResponse resp = null;
 		
-//		VDP catalog (0), pycsw_unidata (1), Public&Uploaded files (2), BCube (3), CSISS Landsat Catalog (4). 
+//		VDP catalog (0), pycsw_unidata (1), Public&Uploaded files (2), BCube (3), CSISS Landsat Catalog (4), IRIS (5)
 		
 		if("1".equals(req.csw)){
 			
@@ -845,9 +849,9 @@ public class SearchTool {
 			throw new RuntimeException("This catalog is not supported at present.");
 			
 		}else if("4".equals(req.csw)) {
-			
+
 			throw new RuntimeException("This catalog is not supported at present.");
-			
+
 		}
 		
 		return resp;
@@ -867,7 +871,7 @@ public class SearchTool {
 		
 		logger.debug("Request Keywords :" + req.keywords);
 		
-		logger.debug("Is Virtual :  " + req.isvirtual); //0 : real; 1: virtual; 2: both
+		logger.debug("Catalog :  " + req.csw);
 		
 		logger.debug("Disable time: " + req.distime);
 		
@@ -877,17 +881,12 @@ public class SearchTool {
 			resp = searchGranulesIndex(req);
 		}
 		else if(req.isvirtual.equals("1")){
-			
-			logger.debug("This is for VDP. Search in CyberConnector database..");
-			
+
 			resp = SearchTool.searchVDP(req);
 			
 		}else if(req.isvirtual.equals("0")){
-			
-			logger.debug("This is for real data. Search in PyCSW for Unidata..");
-			
+
 			resp = SearchTool.searchRealData(req);
-			
 		}
 		
 		return resp;

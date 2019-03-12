@@ -1,12 +1,20 @@
 package edu.gmu.csiss.earthcube.cyberconnector.web;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
+import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
+import edu.iris.dmc.criteria.OutputLevel;
+import edu.iris.dmc.criteria.StationCriteria;
+import edu.iris.dmc.fdsn.station.model.Channel;
+import edu.iris.dmc.fdsn.station.model.Network;
+import edu.iris.dmc.fdsn.station.model.Station;
+import edu.iris.dmc.service.StationService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -34,6 +42,9 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.Message;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 
+import edu.iris.dmc.criteria.CriteriaException;
+import edu.iris.dmc.service.ServiceUtil;
+
 /**
 *Class CovaliController.java
 *Every bean COVALI used should be put here
@@ -46,7 +57,58 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 public class CovaliController {
 	
 	Logger logger = Logger.getLogger(this.getClass());
-	
+
+	@RequestMapping(value = "/iris/stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String irisstationlist() {
+
+		List<Station> stations = IRISTool.demoList();
+		List<String> stationJson = new ArrayList<>();
+
+		for (Station s: stations) {
+			stationJson.add(IRISTool.stationToJSON(s));
+		}
+		return "[" + String.join(", ", stationJson) + "]";
+	}
+
+	@RequestMapping(value = "/iris/channels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String irischannellist(WebRequest request) {
+		String station = request.getParameter("station");
+		String network = request.getParameter("network");
+
+
+		List<Channel> channels = IRISTool.listChannels(network, station);
+
+		List<String> channelJson = new ArrayList<>();
+
+		for (Channel c: channels) {
+			channelJson.add(IRISTool.channelToJSON(c));
+		}
+
+		return "[" + String.join(", ", channelJson) + "]";
+	}
+
+
+	@RequestMapping(value = "/iris/channelsdetails", method = RequestMethod.GET)
+	public String irischanneldetails(WebRequest request, ModelMap model) {
+		String station = request.getParameter("station");
+		String network = request.getParameter("network");
+
+
+		List<Channel> channels = IRISTool.listChannels(network, station);
+		List<HashMap<String, String>> channelHMaps = new ArrayList<>();
+
+		for (Channel c: channels) {
+			channelHMaps.add(IRISTool.channelToHMap(c));
+		}
+
+		model.addAttribute("station", station);
+		model.addAttribute("network", network);
+		model.addAttribute("channels", channelHMaps);
+
+		return "irischanneldetails";
+	}
+
+
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
     public String productsearch(@ModelAttribute("request") SearchRequest searchreq,  ModelMap model){

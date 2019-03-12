@@ -24,6 +24,10 @@ public class SearchResponse {
 	int recordsFiltered;
 
 	List<Product> products;
+
+	public SearchResponse() {
+		this.products = new ArrayList<>();
+	}
 	
 	public int getRecordsTotal() {
 		return recordsTotal;
