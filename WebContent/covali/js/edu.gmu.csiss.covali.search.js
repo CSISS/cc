@@ -982,15 +982,15 @@ edu.gmu.csiss.covali.search = {
 			
 //			'				      <option value="0">VDP</option>'+
 
-            '				      <option value="1">CSISS Catalogue (ASRv2)</option>'+
+            '				      <option value="1">CSISS Catalogue (UCAR/RDA)</option>'+
             
             '				      <option value="2">Public & Uploaded Files</option>'+
 			
 //			'				      <option value="4">CSISS Catalogue for Landsat 4/5/7 images (incomplete)</option>'+
 			
 			'				      <option value="3">BCube Broker</option>'+
-							  
-			'				    </select>'+
+
+                '				    </select>'+
 							  
 			'				  </div>'+
 						

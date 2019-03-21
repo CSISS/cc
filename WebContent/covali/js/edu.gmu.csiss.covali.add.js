@@ -24,9 +24,10 @@ edu.gmu.csiss.covali.add= {
 	            			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\"  onclick=\"edu.gmu.csiss.covali.wms.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>OGC WMS:</strong> Web Mapping Service Capabilities URL\n    </div>\n\n    "+
 	            			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.upload.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>Upload:</strong> NetCDF, GRIB or GeoJSON files\n    </div>\n\n    "+
 	            			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.uri.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>File URL:</strong> The URL of an online data file\n    </div>"+
-	            			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.chords.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>CHORDS URL:</strong> The URL of a CHORDS instance\n    </div>");
-	            	
-	            	return $content;
+	            			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.chords.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>CHORDS URL:</strong> The URL of a CHORDS instance\n    </div>" +
+                   			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.iris.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>IRIS:</strong> IRIS seismology stations\n    </div>");
+
+                    return $content;
 	            	
 	            },
 	            
