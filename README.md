@@ -116,7 +116,7 @@ Use `Alt+Shift+Drag` to rotate the map.
 
 # Demo Site
 
-A demo instance has been deployed on George Mason University server. [here](http://cube.csiss.gmu.edu/CyberConnector/web/index)
+A demo instance has been deployed on George Mason University server. [here](http://cube.csiss.gmu.edu/CyberConnector/web/covali)
 
 # License
 
