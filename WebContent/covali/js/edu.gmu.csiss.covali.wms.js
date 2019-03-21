@@ -720,11 +720,32 @@ edu.gmu.csiss.covali.wms = {
 			    return target.replace(new RegExp(search, 'g'), replacement);
 			};
 			
-			if(window.location.protocol=="https:"){
+			var pathArray = location.href.split( '/' );
+			var protocol = pathArray[0];
+			var host = pathArray[2];
+			var urlprefix = protocol + '//' + host;
+			
+			console.log("current url base: " + urlprefix);
+			
+			if(!endpointurl.startsWith(urlprefix)){
+				
+				var pathArray1 = endpointurl.split( '/' );
+				var protocol1 = pathArray1[0];
+				var host1 = pathArray1[2];
+				pathArray1[0] = protocol;
+				pathArray1[2] = host;
+				endpointurl = pathArray1.join("/");
+				console.log("switch WMS prefix to current" + endpointurl);
+				
+			}
+			
+			if(location.protocol=="https:"){
 				
 				endpointurl = endpointurl.replaceAll("http://", "https://").replaceAll("HTTP://", "https://");
 				
 			}
+			
+			
 			
 			return endpointurl;
 			

@@ -704,7 +704,26 @@ edu.gmu.csiss.covali.map = {
 				    return target.replace(new RegExp(search, 'g'), replacement);
 				};
 				
-				if(window.location.protocol=="https:"){
+				var pathArray = location.href.split( '/' );
+				var protocol = pathArray[0];
+				var host = pathArray[2];
+				var urlprefix = protocol + '//' + host;
+				
+				console.log("current url base: " + urlprefix);
+				
+				if(!legendurl.startsWith(urlprefix)){
+					
+					var pathArray1 = legendurl.split( '/' );
+					var protocol1 = pathArray1[0];
+					var host1 = pathArray1[2];
+					pathArray1[0] = protocol;
+					pathArray1[2] = host;
+					legendurl = pathArray1.join("/");
+					console.log("switch WMS prefix to current" + endpointurl);
+					
+				}
+				
+				if(location.protocol=="https:"){
 					
 					legendurl = legendurl.replaceAll("http://", "https://").replaceAll("HTTP://", "https://");
 					
