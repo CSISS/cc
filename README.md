@@ -61,7 +61,9 @@ CyberConnector Service Register - a sub-system for registering and searching geo
 
 ## COVALI
 
+Example: 
 
+![comparison](docs/comparison_asr_era5.jpg)
 
 ### Roam around the Globe
 

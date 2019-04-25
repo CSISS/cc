@@ -515,7 +515,7 @@ public class UserTool {
 	
 	public static Message registerNewUser(User user){
 		
-		if(!checkWhiteList(user.getEmail())) {
+		if(SysDir.enable_whitelist&&!checkWhiteList(user.getEmail())) {
 			
 			Message msg = new Message("configuration", "user_login", "the email is not allowed for registration", false );
 			

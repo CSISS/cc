@@ -71,6 +71,8 @@ public class SysDir {
 	
 	public static boolean login_required = false;
 	
+	public static boolean enable_whitelist = true;
+	
 	public static List whiteusers = new ArrayList();
 	
 	public static String getCovali_file_path() {
@@ -166,6 +168,8 @@ public class SysDir {
 			database_docker_url = p.getProperty("database_docker_url");
 			
 			login_required = Boolean.parseBoolean(p.getProperty("login_required"));
+			
+			enable_whitelist = Boolean.parseBoolean(p.getProperty("enable_whitelist"));
 			
 			// SECRET PROPERTIES
 
