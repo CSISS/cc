@@ -50,6 +50,8 @@ public class SysDir {
 	public static String geoweaver_file_path = null;
     
 	public static String upload_file_path = null;
+
+	public static String ncra_path = null;
     
 	public static String temp_file_path = null;
 
@@ -168,6 +170,8 @@ public class SysDir {
 			database_docker_url = p.getProperty("database_docker_url");
 			
 			login_required = Boolean.parseBoolean(p.getProperty("login_required"));
+
+			ncra_path = p.getProperty("ncra_path");
 			
 			enable_whitelist = Boolean.parseBoolean(p.getProperty("enable_whitelist"));
 			

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
+import edu.gmu.csiss.earthcube.cyberconnector.tools.NcoTool;
 import edu.iris.dmc.criteria.OutputLevel;
 import edu.iris.dmc.criteria.StationCriteria;
 import edu.iris.dmc.fdsn.station.model.Channel;
@@ -57,6 +58,28 @@ import edu.iris.dmc.service.ServiceUtil;
 public class CovaliController {
 	
 	Logger logger = Logger.getLogger(this.getClass());
+
+	@RequestMapping(value = "/nco/ncra", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	public @ResponseBody String nconcra(WebRequest request) {
+		String command = request.getParameter("command");
+		String result = NcoTool.execNcra(command);
+		return result;
+
+
+		//		String[] infiles = request.getParameterValues("infiles[]");
+
+//		infile = SysDir.getCovali_file_path()+ "/" + infile;
+//		outfile = SysDir.getCovali_file_path()+ "/" + outfile;
+
+//		List<String> inputs = new ArrayList<>();
+//		inputs.add(infile);
+
+
+//		if(result.isEmpty()) {
+//			result = "ncra output created: " + outfile + ". Adding file to COVALI...";
+//		}
+//
+	}
 
 	@RequestMapping(value = "/iris/stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String irisstationlist() {

@@ -302,4 +302,15 @@ section{
     position: absolute;
     background-color: white;
 }
-	
+
+li.selected {
+	background: #DAEAFF;
+}
+
+.file-browser-item {
+	cursor: pointer;
+}
+
+.file-browser-item:hover a {
+	text-decoration: underline;
+}

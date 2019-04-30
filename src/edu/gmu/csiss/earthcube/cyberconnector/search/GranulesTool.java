@@ -15,19 +15,6 @@ import java.util.List;
 
 
 public class GranulesTool {
-    public static void appendToLog(File log, String text) {
-        try {
-            BufferedWriter out = new BufferedWriter(new FileWriter(log, true));
-            out.write(text);
-            out.close();
-        }
-        catch (IOException e) {
-            System.out.println("IOException occurred" + e);
-        }
-
-    }
-
-
     public static List<Granule> getCollectionGranules(SearchRequest request) {
         String url = SysDir.thredds_index_url + "/index?collection_name=" + request.getSearchtext();
 

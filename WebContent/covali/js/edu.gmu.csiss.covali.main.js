@@ -27,8 +27,11 @@ edu.gmu.csiss.covali.main = {
 
         edu.gmu.csiss.covali.about.init();
 
-        // edu.gmu.csiss.covali.chords.current_chords = "http://portal.chordsrt.com";
-        // edu.gmu.csiss.covali.geojson.addGeoJSONFeature("http://portal.chordsrt.com/sites/map_markers_geojson", "CHORDS instruments");
+        $('#toolbar-difference').click();
+        window.setTimeout(function () {
+            $("#nco-operation").val("2").change();
+        }, 500);
+
     },
 	
 	
