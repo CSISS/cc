@@ -52,7 +52,7 @@ public class NcoTool {
             output = IOUtils.toString(p.getInputStream());
         } catch (Exception e) {
             e.printStackTrace();
-            output = e.toString();
+            output = "Failed. " + e.getLocalizedMessage();
         }
 
 

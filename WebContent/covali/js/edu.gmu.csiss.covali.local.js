@@ -12,7 +12,7 @@ edu.gmu.csiss.covali.local = {
 		
 		init: function(){
 		
-			this.dialog('layer');
+			this.dialog("", 'layer');
 
 		},
 		
@@ -253,8 +253,9 @@ edu.gmu.csiss.covali.local = {
 				relativepath = "";
 				
 			}
+			
 			console.log("relative path is:" + relativepath);
-
+			
 			edu.gmu.csiss.covali.local.root_directory = relativepath;
 			
 			var posting = $.ajax({

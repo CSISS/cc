@@ -13,15 +13,15 @@ edu.gmu.csiss.covali.nco = {
         //     if($(this).val()) {return $(this).val();}
         // }).toArray();
         var command = $("#ncra-command").val();
+        
         var outfile = command.split(' ').pop();
-
-
+        
         $.ajax({
-
+        	
             // dataType: 'json',
-
+        	
             type: "POST",
-
+            
             data: {
                 "command": command
             },
@@ -29,9 +29,22 @@ edu.gmu.csiss.covali.nco = {
             url: '../web/nco/ncra',
 
         }).success(function (data) {
-            alert('Created ' + outfile + '. Loading layers...');
-            edu.gmu.csiss.covali.local.loadlocalfile('/' + outfile, 'layer');
+        	
+        	if(!data.startsWith("Fail")){
+        	
+        		//alert('Created ' + outfile + '. Loading layers...');
+                edu.gmu.csiss.covali.local.loadlocalfile('/' + outfile, 'layer');
+        		
+        	}else{
+        		
+        		console.error(data);
+        		
+        		alert(data);
+        		
+        	}
+            
         });
+        
     },
 
 
@@ -39,9 +52,7 @@ edu.gmu.csiss.covali.nco = {
         var content = "";
         content += '  <div class="row" style="height: 20px">';
         content += '  </div>';
-
-
-
+        
         // INPUT FILES
         content += '  <div class="row infile-row">';
         content += '	<label class="col-md-4 control-label" for="ncra-infiles">Input Files</label>';
@@ -52,7 +63,7 @@ edu.gmu.csiss.covali.nco = {
         content += '        <button href="#" role="button" id="ncra-add-file-btn" class="btn btn-warning">...</button>';
         content += '	</div>';
         content += '  </div class="row">';
-
+        
         // OPTIONS
         content += '  <div class="row">';
         content += '	<label class="col-md-4 control-label" for="ncra-options">Options</label>';
@@ -170,9 +181,7 @@ edu.gmu.csiss.covali.nco = {
                 cssClass: 'btn-warning',
                 
                 action: function(dialogItself){
-
-
-
+                	
                     edu.gmu.csiss.covali.nco.doNcraCalculation(dialogItself);
 
                     console.log(dialogItself);

@@ -1,3 +1,4 @@
+
 edu.gmu.csiss.covali.filebrowser = {
     selectedFiles: [],
     currentPath: '/',
