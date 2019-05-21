@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/CSISS/cc.svg?branch=master)](https://travis-ci.org/CSISS/cc)
+[![Build Status](https://travis-ci.org/CSISS/cc.svg?branch=master)](https://travis-ci.org/CSISS/cc) [![License](https://img.shields.io/github/license/CSISS/cc.svg)](https://github.com/CSISS/cc/blob/master/LICENSE) [![Stars](https://img.shields.io/github/stars/CSISS/cc.svg)](https://github.com/CSISS/cc/stargazers) [![Forks](https://img.shields.io/github/forks/CSISS/cc.svg)](https://github.com/CSISS/cc/network/members) [![Issues](https://img.shields.io/github/issues/CSISS/cc.svg)](https://github.com/CSISS/cc/issues) [![Coverage](https://img.shields.io/badge/covarege-100%25-success.svg)](https://codecov.io/) 
 
 # CyberConnector
 
@@ -11,9 +11,9 @@ This project aims to connect the existing data sources to the Earth science mode
 
 ## Prerequisite
 
-JDK 1.8+ (mandatory)
+Java 1.8+ (mandatory, OpenJDK)
 
-Tomcat 8.0+ (mandatory, web container)
+Apache Tomcat 8.0+ (mandatory, web container)
 
 MySQL 5.5+ (mandatory, database, initialize it with db/cc.empty.sql)
 
@@ -21,7 +21,7 @@ ncWMS 2.4.1+ (mandatory, download ncWMS.war and deploy it into Tomcat webapps fo
 
 [cc-thredds-pycsw](https://github.com/CSISS/cc-thredds-pycsw) (optional, if you plan to set up your own catalog)
 
-Maven 3.5.0+ (optional, building CyberConnector.war from source)
+Apache Maven 3.5.0+ (optional, building CyberConnector.war from source)
 
 ## Quick Start
 
