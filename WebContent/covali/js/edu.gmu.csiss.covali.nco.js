@@ -49,45 +49,39 @@ edu.gmu.csiss.covali.nco = {
 
 
     ncraDialogContent: function() {
-        var content = "";
-        content += '  <div class="row" style="height: 20px">';
-        content += '  </div>';
+        var content = "<br/>";
         
         // INPUT FILES
         content += '  <div class="row infile-row">';
-        content += '	<label class="col-md-4 control-label" for="ncra-infiles">Input Files</label>';
-        content += '	<div class="col-md-7">';
+        content += '	<label class="col-md-3 control-label" for="ncra-infiles">Input Files</label>';
+        content += '	<div class="col-md-8">';
         content += '		<textarea rows=5 id="ncra-infiles" name="ncra-infiles" class="form-control"/>';
         content += '	</div>';
-        content += '	<div class="col-md-1" style="padding-left:4px">';
-        content += '        <button href="#" role="button" id="ncra-add-file-btn" class="btn btn-warning">...</button>';
+        content += '	<div class="col-md-1 text-left"  style="padding-left: 0px;">';
+        content += '		<a class="btn btn-primary" id="ncra-add-file-btn" href="javascript:void(0)"><i class="fa fa-folder"></i></a>';
         content += '	</div>';
-        content += '  </div class="row">';
+        content += '  </div><br/>';
         
         // OPTIONS
         content += '  <div class="row">';
-        content += '	<label class="col-md-4 control-label" for="ncra-options">Options</label>';
-        content += '	<div class="col-md-7">';
+        content += '	<label class="col-md-3 control-label" for="ncra-options">Options</label>';
+        content += '	<div class="col-md-9">';
         content += '		<input id="ncra-options" name="ncra-options" class="form-control">';
         content += '	</div>';
-        content += '  </div class="row">';
+        content += '  </div><br/>';
 
         // OUTPUT FILE
         content += '  <div class="row">';
-        content += '	<label class="col-md-4 control-label" for="ncra-infile">Output file</label>';
-        content += '	<div class="col-md-7">';
+        content += '	<label class="col-md-3 control-label" for="ncra-infile">Output file</label>';
+        content += '	<div class="col-md-9">';
         content += '		<input id="ncra-outfile" name="ncra-outfile" class="form-control" required>';
         content += '	</div>';
-        content += '  </div class="row">';
-
-        content += '  <div class="row" style="height: 20px">';
-        content += '  </div>';
-
+        content += '  </div><br/>';
 
         // COMMAND
         content += '  <div class="row infile-row">';
-        content += '	<label class="col-md-4 control-label" for="ncra-command">Command</label>';
-        content += '	<div class="col-md-7">';
+        content += '	<label class="col-md-3 control-label" for="ncra-command">Command</label>';
+        content += '	<div class="col-md-9">';
         content += '		<textarea rows=6 id="ncra-command" name="ncra-command" class="form-control"/>';
         content += '	</div>';
 
@@ -98,7 +92,6 @@ edu.gmu.csiss.covali.nco = {
                 $('#ncra-infiles').val(selectedFiles.join(" "));
                 $('#ncra-infiles').change();
             };
-
             edu.gmu.csiss.covali.filebrowser.init();
         });
 
@@ -119,13 +112,27 @@ edu.gmu.csiss.covali.nco = {
         var content = "";
         switch(selected) {
             case "1":
-                content = "<div>" + "</div>";
+                content = "<div></div>";
                 break;
             case "2":
                 content = edu.gmu.csiss.covali.nco.ncraDialogContent();
                 break;
         }
         $('#nco-operation-content').html(content);
+    },
+    
+    information: function(){
+    	
+    	if($("#nco-operation").val()=="2"){
+    		
+    		window.open('https://linux.die.net/man/1/ncra', '_blank');
+    		
+    	}else if($("#nco-operation").val()=="3"){
+    		
+    		
+    		
+    	}
+    	
     },
 	
 	showDialog: function(){
@@ -138,33 +145,29 @@ edu.gmu.csiss.covali.nco = {
 			
 			message: function(){
 				
-				var content = '';
-                content += '<div class="row">';
-                content += '<div class="col-md-12">';
-                content += '  <div class="row">';
-                content += '	<label class="col-md-4 control-label" for="nco-operation">Operation</label>';
+				var content = '<div class="row">';
+                content += '	<label class="col-md-3 control-label" for="nco-operation">Operation</label>';
                 content += '	<div class="col-md-8">';
                 content += '		<select id="nco-operation" name="nco-operation" class="form-control">';
                 content += '			<option value="1">Select</option>';
                 content += '			<option id="operation-ncra" value="2">Average (nco ncra)</option>';
                 content += '		</select>';
                 content += '	</div>';
-                content += '  </div class="row">';
-                content += '  <div class="row">';
-                content += '  </div class="row">';
+                content += '	<div class="col-md-1 text-left" style="padding-left: 0px;">';
+                content += '		<a class="btn btn-primary" id="process-info-btn" href="javascript:void(0)"><i class="fa fa-info"></i></a>';
+                content += '	</div>';
                 content += '</div>';
-                content += '</div>';
+                
 
-                content += '<div class="row">';
-                content += '<div class="col-md-12">';
-                content += ' <div id="nco-operation-content">';
-                content += ' </div>';
-                content += '</div>';
-                content += '</div>';
+                content += '<div id="nco-operation-content"></div>';
 
                 content = $(content);
                 content.find('#nco-operation').change(function() {
                     edu.gmu.csiss.covali.nco.changeDialogContent(this.value);
+                });
+                
+                content.find('#process-info-btn').click(function() {
+                    edu.gmu.csiss.covali.nco.information();
                 });
                 return content;
 				
