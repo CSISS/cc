@@ -108,17 +108,7 @@ edu.gmu.csiss.covali.map = {
 		
 		getMapContainerIdBySide: function(side){
 			
-			var id = "";
-			
-			if(side=="left"){
-				
-				id = "openlayers1";
-				
-			}else if(side=="right"){
-				
-				id = "openlayers2";
-				
-			}
+			var id = "openlayers"+this.getNumberBySide(side);
 			
 			return id;
 			
@@ -126,19 +116,23 @@ edu.gmu.csiss.covali.map = {
 		
 		getLegendIdBySide: function(side){
 			
-			var id = "";
+			var id = "legend"+this.getNumberBySide(side);
 			
-			if(side == "left"){
+			return id;
+			
+		},
+		
+		getNumberBySide: function(side){
+			
+			var num = 1;
+			
+			if(side=="right"){
 				
-				id = "legend1";
-				
-			}else if(side == "right"){				
-				
-				id = "legend2";
+				num = 2;
 				
 			}
 			
-			return id;
+			return num;
 			
 		},
 		
@@ -219,6 +213,8 @@ edu.gmu.csiss.covali.map = {
 				
 				$('#'+lid).attr("legendurl", legendurl);
 				
+				this.updateScale(side, false);
+				
 //				layer.getSource().getParams()["LEGEND"] = legendurl;
 				
 			}else{
@@ -226,6 +222,8 @@ edu.gmu.csiss.covali.map = {
 				$('#'+lid).css("background-image", "url('')");  
 				
 				$('#'+lid).attr("legendurl", null);
+				
+				this.updateScale(side, true);
 				
 			}
 			
@@ -372,7 +370,7 @@ edu.gmu.csiss.covali.map = {
 		/**
 		 * show style manager. all information comes from the legend element object and the global variable
 		 */
-		showStyleManager: function(legendid, legendurl, palettename, min, max, currentstyle, belowcolor, abovecolor){
+		showStyleManager: function(legendid, legendurl, palettename, min, max, currentstyle, belowcolor, abovecolor, side){
 			
 			$stylelist = "<select class=\"form-control\" id=\"stylelist\" style=\"width:auto;\"> ";
 			
@@ -386,7 +384,9 @@ edu.gmu.csiss.covali.map = {
 					
 				}
 				
-				$stylelist += "    <option value=\""+edu.gmu.csiss.covali.map.layerdetails.supportedStyles[i] +"\" "+ selected +" >" + edu.gmu.csiss.covali.map.layerdetails.supportedStyles[i] + "</option> ";
+				$stylelist += "    <option value=\""+edu.gmu.csiss.covali.map.layerdetails.supportedStyles[i] +"\" "+ selected +" >" 
+					
+					+ edu.gmu.csiss.covali.map.layerdetails.supportedStyles[i] + "</option> ";
 				
 			}
 			
@@ -485,7 +485,7 @@ edu.gmu.csiss.covali.map = {
 				
 	            message: $content,
 	            
-	            title: "Style Manager",
+	            title: "Style Manager for " + side + " Map",
 	            
 	            cssClass: 'dialog-vertical-center',
 	            
@@ -508,6 +508,193 @@ edu.gmu.csiss.covali.map = {
 	            },
 	            
 	            buttons: [{
+	            	
+	            	label: "Sync with " + edu.gmu.csiss.covali.map.getOtherSide(side),
+	            	
+	            	action: function(dialogItself){
+	            		
+	            		//get the style of the top layer of the other map and put the number into the current style manager
+	            		
+	            		var theotherside = edu.gmu.csiss.covali.map.getOtherSide(side);
+	            		
+	            		var theotherlayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(theotherside);
+	            		
+	            		if(theotherlayer!=null){
+	            			
+	            			var theotherlegend_layername = theotherlayer.get('name');
+		        			
+	    					var theothermap = edu.gmu.csiss.covali.map.getMapBySide(theotherside);
+		        				
+		        			$.ajax({
+		        				
+		        				contentType: "application/x-www-form-urlencoded", //this is by default
+		        				
+		        				type: "GET",
+		        				
+		        				url: "../../ncWMS2/wms?request=GetMetadata&item=layerDetails&layerName=" + theotherlegend_layername,
+		        				
+		        				success: function(obj, text, jxhr){
+		        					
+		        					var theotherlegendid = edu.gmu.csiss.covali.map.getLegendIdBySide(theotherside);
+		        					
+		        					theotherlegend_url = $("#"+theotherlegendid).attr("legendurl");
+		        					
+		        					var palettename = edu.gmu.csiss.covali.map.getParameterByName("PALETTE", theotherlegend_url);
+		        					
+		        					if(palettename == null){
+		        						
+		        						palettename = edu.gmu.csiss.covali.map.getParameterByName("palette", theotherlegend_url);
+		        						
+		        					}
+		        					
+		        					//var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(theothermap, theotherlegend_layername);
+		        					
+//		        					console.log("current palette name: " + palettename);
+		        					
+		        					var sp = [null, null];
+		        					
+		        					if(edu.gmu.csiss.covali.map.isValue(theotherlayer.getSource().getParams()["STYLES"])){
+		        						
+		        						sp = theotherlayer.getSource().getParams()["STYLES"].split("/");
+		        						
+		        					}else{
+		        						
+		        						sp = [obj.supportedStyles[0],palettename];
+		        						
+		        					}
+		        					
+		        					var minmax = [null,null];
+		        					
+		        					if(edu.gmu.csiss.covali.map.isValue(theotherlayer.getSource().getParams()["COLORSCALERANGE"])){
+		        						
+		        						minmax = theotherlayer.getSource().getParams()["COLORSCALERANGE"].split(",");
+		        						
+		        					}else{
+		        						
+		        						minmax = [Number(obj.scaleRange[0]).toFixed(2), Number(obj.scaleRange[1]).toFixed(2)];
+		        						
+		        					}
+		        					
+		        					var belowabove = [null, null];
+		        					
+		        					if(edu.gmu.csiss.covali.map.isValue(theotherlayer.getSource().getParams()["ABOVEMAXCOLOR"])){
+		        						
+		        						belowabove[0] = theotherlayer.getSource().getParams()["BELOWMINCOLOR"];
+		        						
+		        						belowabove[1] = theotherlayer.getSource().getParams()["ABOVEMAXCOLOR"];
+		        						
+		        					}else{
+		        						
+		        						belowabove[0] = obj.belowMinColor;
+		        						
+		        						belowabove[1] = obj.aboveMaxColor;
+		        						
+		        					}
+		        					
+		        					$("#paletteselector").attr("src", edu.gmu.csiss.covali.map.legend_url+ "&palette=" + palettename +"&height=1&VERTICAL=FALSE&COLORBARONLY=True");
+		        					
+		        					$("#paletteselector").attr("alt", palettename);
+		    	            		
+		    	            		$("#min").val(minmax[0]);
+		    	            		
+		    	            		$("#max").val(minmax[1]);
+		    	            		
+		    	            		$("#colorbelowpicker").val("#" + belowabove[0].slice(-6));
+		    	            		
+		    	            		$("#colorabovepicker").val("#" + belowabove[1].slice(-6));
+		        					
+		        				},
+		        				
+		        				error: function(msg){
+		        					
+		        					console.log("Fail to get layer details: " + msg);
+		        					
+		        				}
+		        				
+		        			});
+	            			
+	            			
+	            			
+	            		}else{
+	            			
+	            			console.warn("Cannot find the WMS layer on the other map!!");
+	            			
+	            		}
+	        			
+	            	}
+	            	
+	            },{
+	            	
+	            	label: "Restore",
+	            	
+	            	action: function(dialogItself){
+	            		
+	            		//set a request to get the original values of the style
+	            		
+	            		$.ajax({
+	        				
+	        				contentType: "application/x-www-form-urlencoded", //this is by default
+	        				
+	        				type: "GET",
+	        				
+	        				url: "../../ncWMS2/wms?request=GetMetadata&item=layerDetails&layerName=" + 
+	        					edu.gmu.csiss.covali.map.legend_layername,
+	        				
+	        				success: function(obj, text, jxhr){
+	        					
+	        					edu.gmu.csiss.covali.map.layerdetails = obj;
+	        					
+//	        					edu.gmu.csiss.covali.map.legend_url = $(legendobj).attr("legendurl");
+	        					
+	        					var palettename = "default";
+	        					
+	        					var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+	        					
+	        					var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
+	        					
+//	        					console.log("current palette name: " + palettename);
+	        					
+	        					var sp = [null, null];
+	        					
+	        					sp = [obj.supportedStyles[0],palettename];
+	        					
+	        					var minmax = [Number(obj.scaleRange[0]).toFixed(2), Number(obj.scaleRange[1]).toFixed(2)];
+	        						
+	        					var belowabove = [null, null];
+	        						
+	        					belowabove[0] = obj.belowMinColor;
+	        						
+	        					belowabove[1] = obj.aboveMaxColor;
+	        					
+//	        					var style = $("#stylelist").val()
+//	    	            		
+//	    	            		var palette = $("#paletteselector").attr("alt");
+	        					
+	        					$("#paletteselector").attr("src", edu.gmu.csiss.covali.map.legend_url+ "&palette=" + palettename +"&height=1&VERTICAL=FALSE&COLORBARONLY=True");
+	        					
+	        					$("#paletteselector").attr("alt", palettename);
+	    	            		
+	    	            		$("#min").val(minmax[0]);
+	    	            		
+	    	            		$("#max").val(minmax[1]);
+	    	            		
+	    	            		$("#colorbelowpicker").val("#" + belowabove[0].slice(-6));
+	    	            		
+	    	            		$("#colorabovepicker").val("#" + belowabove[1].slice(-6));
+	    	            		
+	        				},
+	        				
+	        				error: function(msg){
+	        					
+	        					console.log("Fail to get layers details: " + msg);
+	        					
+	        				}
+	        				
+	        			});
+	            		
+	            	}
+	            	
+	            },{
 	            	
 	            	label: "Apply",
 	            	
@@ -585,6 +772,91 @@ edu.gmu.csiss.covali.map = {
 			});
 			
 			edu.gmu.csiss.covali.map.style_dialog.open();
+			
+		},
+		
+		/**
+		 * update the numbers in the scale bar
+		 */
+		updateScale: function(side, empty){
+			
+			if(!empty){
+				
+				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+				
+				edu.gmu.csiss.covali.map.legend_layername = layer.get('name');
+					
+				$.ajax({
+					
+					contentType: "application/x-www-form-urlencoded", //this is by default
+					
+					type: "GET",
+					
+					url: "../../ncWMS2/wms?request=GetMetadata&item=layerDetails&layerName=" + edu.gmu.csiss.covali.map.legend_layername,
+					
+					success: function(obj, text, jxhr){
+						
+						edu.gmu.csiss.covali.map.layerdetails = obj;
+						
+						var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+						
+						var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
+						
+						var minmax = [null,null];
+						
+						if(edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["COLORSCALERANGE"])){
+							
+							minmax = layer.getSource().getParams()["COLORSCALERANGE"].split(",");
+							
+						}else{
+							
+							minmax = [Number(obj.scaleRange[0]).toFixed(2), Number(obj.scaleRange[1]).toFixed(2)];
+							
+						}
+						
+						var belowabove = [null, null];
+						
+						if(edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["ABOVEMAXCOLOR"])){
+							
+							belowabove[0] = layer.getSource().getParams()["BELOWMINCOLOR"];
+							
+							belowabove[1] = layer.getSource().getParams()["ABOVEMAXCOLOR"];
+							
+						}else{
+							
+							belowabove[0] = obj.belowMinColor;
+							
+							belowabove[1] = obj.aboveMaxColor;
+							
+						}
+						
+						$("#min"+side).text(minmax[0]);
+						
+						$("#max"+side).text(minmax[1]);
+						
+						var avg = (Number(minmax[0])+Number(minmax[1]))/2;
+						
+						$("#middle"+side).text(avg.toFixed(2));
+						
+					},
+					
+					error: function(msg){
+						
+						console.log("Fail to get layers details: " + msg);
+						
+					}
+					
+				});
+				
+			}else{
+				
+				$("#min"+side).text("");
+				
+				$("#max"+side).text("");
+				
+				$("#middle"+side).text("");
+				
+			}
 			
 		},
 		
@@ -672,7 +944,8 @@ edu.gmu.csiss.covali.map = {
 							minmax[1], 
 							sp[0],
 							belowabove[0],
-							belowabove[1]
+							belowabove[1],
+							side
 					);
 					
 				},
@@ -743,8 +1016,6 @@ edu.gmu.csiss.covali.map = {
 			var legendurl = edu.gmu.csiss.covali.map.getWMSLegend(side, layername, stylename);
 			
 			edu.gmu.csiss.covali.map.updateLegend(side, layername, legendurl);
-			
-			
 			
 		},
 		
