@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>CyberConnector</groupId>
     <artifactId>CyberConnector</artifactId>
-    <version>0.6.11</version>
+    <version>0.7.0</version>
     <packaging>war</packaging>
     <name>CyberConnector</name>
     <description>NSF EarthCube Funded Building Block Project</description>
@@ -200,12 +200,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.9.8</version>
+            <version>2.9.9</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.8</version>
+            <version>2.9.9</version>
         </dependency>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
