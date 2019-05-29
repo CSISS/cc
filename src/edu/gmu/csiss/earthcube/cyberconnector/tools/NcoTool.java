@@ -8,8 +8,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class NcoTool {
 
@@ -26,24 +24,15 @@ public class NcoTool {
     }
 
 
-    public static String execNcra(String command) {
+    public static String execNcoCommand(String command) {
         String dataDirectory = BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path;
-        File log = new File(SysDir.temp_file_path + "/ncra.log");
-
-        command = command.replaceAll("^ncra", SysDir.ncra_path);
-
-//        List<String> args = new ArrayList<String>();
-//
-//        args.add(SysDir.ncra_path);
-//        args.addAll(inputFiles);
-//        args.add(outFile);
+        File log = new File(SysDir.temp_file_path + "/nco.log");
 
         String[] args = command.split("\\s+");
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.directory(new File(dataDirectory));
         pb.redirectErrorStream(true);
         appendToLog(log, pb.command().toString() + "\n");
-
 
         String output = "";
 
@@ -57,5 +46,15 @@ public class NcoTool {
 
 
         return output;
+    }
+
+    public static String execNcra(String command) {
+        command = command.replaceAll("^ncra", SysDir.ncra_path);
+        return execNcoCommand(command);
+    }
+
+    public static String execNcbo(String command) {
+        command = command.replaceAll("^ncbo", SysDir.ncbo_path);
+        return execNcoCommand(command);
     }
 }

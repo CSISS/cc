@@ -27,11 +27,10 @@ edu.gmu.csiss.covali.main = {
 
         edu.gmu.csiss.covali.about.init();
 
-        /*$('#toolbar-difference').click();
-        window.setTimeout(function () {
-            $("#nco-operation").val("2").change();
-        }, 500);*/
-
+        // $('#toolbar-difference').click();
+        // window.setTimeout(function () {
+        //     $("#nco-operation").val("3").change();
+        // }, 500);
     },
 	
 	

@@ -52,7 +52,9 @@ public class SysDir {
 	public static String upload_file_path = null;
 
 	public static String ncra_path = null;
-    
+
+	public static String ncbo_path = null;
+
 	public static String temp_file_path = null;
 
 	public static String thredds_index_url = null;
@@ -172,6 +174,8 @@ public class SysDir {
 			login_required = Boolean.parseBoolean(p.getProperty("login_required"));
 
 			ncra_path = p.getProperty("ncra_path");
+
+			ncbo_path = p.getProperty("ncbo_path");
 			
 			enable_whitelist = Boolean.parseBoolean(p.getProperty("enable_whitelist"));
 			
