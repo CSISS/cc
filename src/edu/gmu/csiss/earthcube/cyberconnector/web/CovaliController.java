@@ -248,24 +248,29 @@ public class CovaliController {
     	
     }
     
-	// cache remote data in the local filesystem
+	// cache remote data via url in the local filesystem
     @RequestMapping(value = "/cachecasual", method = RequestMethod.POST)
     public @ResponseBody String cachecasualdata(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
     	
     	String resp = null;
     	
     	String dataurl = request.getParameter("accessurl");
+    	
 		String id = request.getParameter("id");
-
-
+		
 		try {
+			
 			ProductCache cache = new ProductCache(id, dataurl);
+			
 			if (!cache.cacheExists()) {
+			
 				cache.doCache();
+			
 			}
 			resp = "{\"output\":\"success\", \"file_url\": \""+cache.getCacheUrl()+"\"}";
 
 		} catch(Exception e) {
+			e.printStackTrace();
 			resp = "{\"output\":\"failure\"}";
 
 		}

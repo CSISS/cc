@@ -47,14 +47,12 @@ public class ProductCache {
         this.url = url;
 
         String suffix = FilenameUtils.getExtension(url).toLowerCase();
-
+        
         String cacheFileName = id;
         if(!suffix.isEmpty()) {
             cacheFileName = cacheFileName + "." + suffix;
         }
-
-
-
+        
         this.cacheDir = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path ;
 
         this.cacheUrl = SysDir.PREFIXURL + "/CyberConnector/" + SysDir.upload_file_path + "/" + cacheFileName;

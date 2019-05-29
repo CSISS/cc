@@ -36,6 +36,7 @@ public class SearchRequest {
 
 	String formats;
 	
+	
 	public SearchRequest(){
 		
 	}

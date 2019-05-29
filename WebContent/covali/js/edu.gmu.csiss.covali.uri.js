@@ -29,8 +29,23 @@ edu.gmu.csiss.covali.uri = {
 		},
 		 
 		cache: function(){
+
+			var url = $("#file_url").val();
+			
+			if(!url){
+				
+				alert("Please input data url!");
+				
+				return;
+				
+			}
 			
 			$("#cachebtn").html("<i class='fa fa-circle-o-notch fa-spin'></i> Processing");
+			
+			
+			var filename = url.substring(url.lastIndexOf('/')+1);
+			
+			filename = filename.substring(0, filename.lastIndexOf('.'));
 			
 			var postresp = $.ajax({
 				
@@ -40,21 +55,37 @@ edu.gmu.csiss.covali.uri = {
 				
 				url: "../web/cachecasual",
 				
-				data: "data=" + $("#file_url").val(), 
+				data: "id="+filename+"&accessurl=" + url, 
 				
 				success: function(obj, text, jxhr){
 					
-					var obj = jQuery.parseJSON( obj );
+					var obj = $.parseJSON( obj );
 					
-					console.info("the new relative path is : " + obj.file_url);
+					if(obj.output != "failure"){
+						
+						console.info("the new relative path is : " + obj.file_url);
+						
+						edu.gmu.csiss.covali.uri.cached_url = obj.file_url;
+						
+						$("#cachebtn").prop('disabled', true);
+						
+						edu.gmu.csiss.covali.uri.cached = true;
+						
+						$("#cachebtn").html('Cached');
+						
+					}else{
+						
+						alert("failed to cache")
+						
+						$("#cachebtn").prop('disabled', false);
+						
+						edu.gmu.csiss.covali.uri.cached = false;
+						
+						$("#cachebtn").html('Cache');
+						
+					}
 					
-					edu.gmu.csiss.covali.uri.cached_url = obj.file_url;
 					
-					$("#cachebtn").prop('disabled', true);
-					
-					edu.gmu.csiss.covali.uri.cached = true;
-					
-					$("#cachebtn").html('Cached');
 					
 				}, error: function(){
 					

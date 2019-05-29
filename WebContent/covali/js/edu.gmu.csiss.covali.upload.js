@@ -38,7 +38,7 @@ edu.gmu.csiss.covali.upload = {
 				
 				success: function(obj, text, jxhr){
 					
-					var obj = jQuery.parseJSON( obj );
+					var obj = $.parseJSON( obj );
 					
 					if(obj.output!="failure"){
 						
