@@ -64,21 +64,13 @@ public class CovaliController {
 		String command = request.getParameter("command");
 		String result = NcoTool.execNcra(command);
 		return result;
+	}
 
-
-		//		String[] infiles = request.getParameterValues("infiles[]");
-
-//		infile = SysDir.getCovali_file_path()+ "/" + infile;
-//		outfile = SysDir.getCovali_file_path()+ "/" + outfile;
-
-//		List<String> inputs = new ArrayList<>();
-//		inputs.add(infile);
-
-
-//		if(result.isEmpty()) {
-//			result = "ncra output created: " + outfile + ". Adding file to COVALI...";
-//		}
-//
+	@RequestMapping(value = "/nco/ncbo", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	public @ResponseBody String nconcbo(WebRequest request) {
+		String command = request.getParameter("command");
+		String result = NcoTool.execNcbo(command);
+		return result;
 	}
 
 	@RequestMapping(value = "/iris/stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
