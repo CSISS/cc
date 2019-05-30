@@ -25,8 +25,8 @@ edu.gmu.csiss.covali.chords = {
 		
 		showInstrumentDetails: function(id, aElementClicked){
 			
-			var jsonUrl = this.current_chords + "/instruments/" + id + ".json";
-            var csvUrl = this.current_chords + "/instruments/" + id + ".csv";
+			var jsonUrl = this.current_chords + "/api/v1/data/" + id + ".json";
+            var csvUrl = this.current_chords + "/api/v1/data/" + id + ".csv";
 			var popupContent = $(aElementClicked).closest('.popup-content');
 
 
@@ -48,12 +48,14 @@ edu.gmu.csiss.covali.chords = {
 
                     detailsHtml += '<div class="row"><h5>Last Reading ' + dateEnd + ':</h5></div>';
 
-                    lastReading.vars.forEach(function (v){
-                        detailsHtml += '<div class="row"><b> ' + v.variable_name + ' (' + v.variable_shortname + ')' + ': </b> ' + v.value + ' ' + v.units + '</div>';
+                    properties.variables.forEach(function (v){
+                    	var lastValue = lastReading.measurements[v.shortname];
+
+                        detailsHtml += '<div class="row"><b> ' + v.name + ' (' + v.shortname + ')' + ': </b> ' + lastValue + '</div>';
 
                     });
 
-                    detailsHtml += '<div class="row"><a target="_blank" href="' + csvUrl + '">'+ properties.measurements_in_file +' total measurements</a></div>';
+                    detailsHtml += '<div class="row"><a target="_blank" href="' + csvUrl + '">'+ properties.measurements_in_feature +' total measurements</a></div>';
 
                     popupContent.html(detailsHtml);
 				}
