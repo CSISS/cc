@@ -88,16 +88,22 @@ public class SysDir {
 	}
 	
 	static Properties readProperties(String path) {
+		
 		Properties p = new Properties();
 
 		try {
+			
 			FileInputStream fileIn = new FileInputStream(path);
 
 			p.load(fileIn);
+			
 			fileIn.close();
+			
 		} catch (IOException e) {
+			
 			e.printStackTrace();
-			System.exit(1);
+			
+			//System.exit(1);
 		}
 
 		return p;

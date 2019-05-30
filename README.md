@@ -65,6 +65,10 @@ Example:
 
 ![comparison](docs/comparison_asr_era5.jpg)
 
+Animation Demo:
+
+![general](docs/covali-demo.gif)
+
 ### Roam around the Globe
 
 ![roam](docs/ccportal.gif)
@@ -75,14 +79,17 @@ COVALI has different projection options and 3-D view to enable multi-perspective
 
 ### Search Data
 
-#### search in UCAR THREDDS server
+#### search in UCAR server
 
+![ucar](docs/search_ucar.png)
 
 #### search in the public folder
 
+![local](docs/search_local.png)
 
-#### search in broker
+Search results are listed in a panel where users can directly download the files or load them into the maps.
 
+![localresult](docs/search_results.png)
 
 ### Add Data
 
@@ -100,21 +107,18 @@ COVALI provides a Settings menu to controll the two maps. It allows users to man
 
 COVALI provides a number of tools to facilitate the comparison and validation among the data. 
 
-#### Calculate Difference
-
-
-
 #### Statistic Report
 
+Users can draw points or lines on the map to get a statistics on the values on the points or along the lines.
 
-#### Animation of changes
+![linestats](docs/line_stats.png)
 
 
 #### Map rotation
 
 Use `Alt+Shift+Drag` to rotate the map.
 
-
+![rotate](docs/map_rotate.png)
 
 # Demo Site
 
@@ -122,7 +126,7 @@ A demo instance has been deployed on George Mason University server. [here](http
 
 # License
 
-Apache 2.0
+MIT
 
 # Developers
 
