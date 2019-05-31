@@ -80,6 +80,8 @@ edu.gmu.csiss.covali.iris = {
 
                 var styleCache = {};
                 var clusters = new ol.layer.Vector({
+                    name: 'IRIS',
+                    title: 'IRIS Layer',
                     source: clusterSource,
                     style: function (feature) {
                         var size = feature.get('features').length;
@@ -99,6 +101,9 @@ edu.gmu.csiss.covali.iris = {
 
                 map1.addLayer(clusters);
                 map2.addLayer(clusters);
+
+                edu.gmu.csiss.covali.map.updateCaption('left', 'IRIS Layer');
+                edu.gmu.csiss.covali.map.updateCaption('right', 'IRIS Layer');
 
                 var select1 = new ol.interaction.Select();
                 var select2 = new ol.interaction.Select();
