@@ -25,6 +25,8 @@ edu.gmu.csiss.covali.upload = {
 			var req = "location="+sURL;
 			
 			console.log("request is : " + req);
+
+            edu.gmu.csiss.covali.local.showFileLoadingDialog(sURL);
 			
 			var posting = $.ajax({
 				

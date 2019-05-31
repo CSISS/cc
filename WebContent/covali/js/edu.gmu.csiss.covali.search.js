@@ -232,7 +232,7 @@ edu.gmu.csiss.covali.search = {
 
                                     content += '		<button onclick="edu.gmu.csiss.covali.search.download(\'' + full.accessurl + '\')" class="btn btn-default" ' +
                                         ' id="downbtn_' + escapeid + '"> <span ' +
-                                        '			class="glyphicon glyphicon-download-alt pull-left" title="Download"></span> ' +
+                                        '			class="glyphicon glyphicon-download-alt" title="Download"></span> ' +
                                         '		</button>';
 
                                 }

@@ -145,10 +145,8 @@ public class LocalFileTool {
 		logger.debug("upload folder: " + BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path);
 
 		List<File> matchingFiles = findFileByKeywords(keywords, BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path, formats);
-		
-		if(matchingFiles.size() < recordsperpage) {
-			matchingFiles.addAll(findFileByKeywords(keywords, SysDir.getCovali_file_path(), formats));
-		}
+
+		matchingFiles.addAll(findFileByKeywords(keywords, SysDir.getCovali_file_path(), formats));
 
 		// create a page of products
 		List <Product> products = new ArrayList<>();
