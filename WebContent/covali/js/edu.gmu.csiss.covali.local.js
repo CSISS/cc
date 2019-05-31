@@ -1,26 +1,48 @@
 /**
- * Dialog browsing the data files in local folder
- * Author: Ziheng Sun
- * Date: 8/1/2018
- */
+* Dialog browsing the data files in local folder
+* Author: Ziheng Sun
+* Date: 8/1/2018
+*/
 
 edu.gmu.csiss.covali.local = {
-		
-		formats: ["tif", "tiff", "shp", "grb", "grib", "grib2", "h5","hdf", "hdfeos", "hdf4", "hdf5", "nc", "nc4",  "nc3", "ncf"],
-		
-		root_directory: null,
-		
-		init: function(){
-		
-			this.dialog("", 'layer');
 
-		},
-		
-		filterFormats: function(file_path){
-			
-			//only supports netCDF, GRIB and GeoTiff rightnow
-			
-			var support = true;
+	formats: ["tif", "tiff", "shp", "grb", "grib", "grib2", "h5","hdf", "hdfeos", "hdf4", "hdf5", "nc", "nc4",  "nc3", "ncf"],
+
+
+	init: function(){
+
+        edu.gmu.csiss.covali.filebrowser.selectedCallback = function(selectedFile) {
+            edu.gmu.csiss.covali.local.showFileLoadingDialog(selectedFile);
+            edu.gmu.csiss.covali.local.loadWMSFile(selectedFile);
+        };
+        edu.gmu.csiss.covali.filebrowser.init();
+
+	},
+
+
+	showFileLoadingDialog: function(file_path) {
+        BootstrapDialog.show({
+
+            message: function(dialog){
+
+                return '<b>Parsing file ' + file_path + '...</b>';
+
+            },
+
+            title: "File Loading",
+
+            cssClass: 'dialog-vertical-center',
+
+        });
+
+
+    },
+
+	filterFormats: function(file_path){
+
+		//only supports netCDF, GRIB and GeoTiff rightnow
+
+		var support = true;
 //			
 //			for(var i=0; i< edu.gmu.csiss.covali.local.formats.length; i++){
 //				
@@ -33,330 +55,96 @@ edu.gmu.csiss.covali.local = {
 //				}
 //				
 //			}
-			
-			return support;
-			
-		},
 
-		loadlocalfile: function(file_path, target){
-			if(target == "layer") {
-                if (file_path.toLowerCase().endsWith('.geojson')) {
-                    edu.gmu.csiss.covali.local.loadGeoJSON(file_path);
-                } else {
-                    edu.gmu.csiss.covali.local.loadWMSFile(file_path);
-                }
-            } else {
-				// target is an input element
-				$(target).val(file_path);
-			}
+		return support;
 
-			$('.dialog-local-file-list').modal('hide');
+	},
 
+	loadWMSFile: function(file_path){
 
-		},
+		if(!edu.gmu.csiss.covali.local.filterFormats(file_path)){
 
-		loadGeoJSON: function(file_path) {
-			var url = '../uploadFile' + file_path;
-            edu.gmu.csiss.covali.geojson.addGeoJSONFeature(url);
+			alert("COVALI doesn't support this format at present. Please check our website for more details.");
 
-		},
-		
-		loadWMSFile: function(file_path){
-			
-			if(!edu.gmu.csiss.covali.local.filterFormats(file_path)){
-				
-				alert("COVALI doesn't support this format at present. Please check our website for more details.");
-				
-				return;
-				
-			}
-			
-			var postresp = $.ajax({
-				
-				contentType: "application/x-www-form-urlencoded", //this is by default
-				
-				type: "POST",
-				
-				url: "../web/adddata",
-				
-				data: "location="+file_path, 
-				
-				success: function(obj, text, jxhr){
-					
-					var obj = jQuery.parseJSON( obj );
-					
-					if(obj.output=="failure"){
-						
-						alert("Fail to parse the file: " + obj.reason);
-						
-					}else{
-						
-						console.info("the new WMS layer name is : " + obj.id);
-						
-						BootstrapDialog.closeAll();
-						
-						BootstrapDialog.show({
-							
-							title: "Add data from server public folder",
-							
-				            message: function(dialog){
-				            	
-				            	$content = $("<p class=\"text-success\">The file is parsed. Do you want to load it into the map now?</p>" +
-				            			"<p class=\"text-warning\">Warning: For netCDF format, only files compliant to CF convention are supported.</p>");
-				            	
-				            	return $content;
-				            	
-				            },
-				            
-				            title: "Data Uploader",
-				            
-				            cssClass: 'dialog-vertical-center',
-				            
-				            buttons: [{
-					                
-				            		label: 'Load',
-					                
-					                action: function(dialogItself){
-					                	
-					                	//open the WMS loading dialog to add a specific layer
-					                	
-					                	var id = obj.id; //the wms layer name
-					                	
-					                	edu.gmu.csiss.covali.wms.showLayerSelector(id);
-					                    
-					                }
-				            	},{
-					                
-				            		label: 'Close',
-					                
-					                action: function(dialogItself){
-					                	
-					                    dialogItself.close();
-					                    
-					                }
-				            }]
-				        });
-						
-					}
-					
-				}, //success(result,status,xhr)
-				error: function(){
-				
-					alert("Fail to process the request.");
-					
-				} //error(xhr,status,error)
-				
-			});
-			
-		},
+			return;
 
-		// multiSelect: [],
-
-		showMultiSelectDialog: function(items) {
-            BootstrapDialog.show({
-                message: function(dialog){
-
-                    var filelist = " <ul class=\"list-group\">";
-                    // var parentpath = "/";
-                    // if(edu.gmu.csiss.covali.local.root_directory!=""){
-                    //     var pathes = edu.gmu.csiss.covali.local.root_directory.split("/");
-                    //     pathes.splice(-1,1);
-                    //     parentpath = pathes.join("/");
-                    // }
-
-                    filelist += "<li class=\"list-group-item\">"+
-                        "<span class=\"glyphicon glyphicon-file text-primary\"></span>"+
-                        "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+
-                        parentpath +
-                        "')\">..</a>"+
-                        "</li>";
-
-                    for(var i=0;i<obj.length;i++){
-
-                        if(obj[i].type=="file"){
-
-                            filelist += "<li class=\"list-group-item\">"+
-                                " <span class=\"glyphicon glyphicon-file text-primary\"></span> "+
-                                "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.loadlocalfile('"+edu.gmu.csiss.covali.local.root_directory +"/"+obj[i].name+"', '"+ target +"')\">"+obj[i].name+"</a> "+
-                                "</li>";
-
-                        }else if(obj[i].type=="directory"){
-
-                            filelist += "<li class=\"list-group-item\">"+
-                                " <span class=\"glyphicon glyphicon-folder-close text-primary\"></span> "+
-                                "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+
-                                edu.gmu.csiss.covali.local.root_directory + "/" + obj[i].name+"')\">"+obj[i].name+"</a> "+
-                                "</li>";
-
-                        }
-
-                    }
-
-                    filelist += "</ul> ";
-
-                    $content = $(filelist);
-
-                    return $content;
-
-                },
-
-                title: "Local Files",
-
-                cssClass: 'dialog-vertical-center dialog-local-file-list',
-
-                buttons: [
-                    {
-
-                        label: 'Close',
-
-                        action: function(dialogItself){
-
-                            dialogItself.close();
-
-                        }
-                    }]
-            });
-
-        },
-
-		multiSelectDialog: function() {
-            $.ajax({
-                contentType: "application/x-www-form-urlencoded", //this is by default
-
-                type: "POST",
-
-                url: "../web/localfilelist",
-
-                data: "root=/",
-
-                success: function (obj, text, jxhr) {
-                    var obj = jQuery.parseJSON(obj);
-
-                    if (obj.ret == "login") {
-                        edu.gmu.csiss.covali.login.loginDialog(edu.gmu.csiss.covali.local.multiSelectDialog);
-                    } else {
-                        edu.gmu.csiss.covali.local.showMultiSelectDialog(obj);
-                    }
-                }
-            });
-        },
-		
-		/**
-		 * Pop up a dialog to contain all the files in the shared folder 
-		 */
-		dialog: function(relativepath, target){
-			
-			//get the file list
-			
-			if(typeof(relativepath) == "undefined" || relativepath == null){
-				
-				relativepath = "";
-				
-			}
-			
-			console.log("relative path is:" + relativepath);
-			
-			edu.gmu.csiss.covali.local.root_directory = relativepath;
-			
-			var posting = $.ajax({
-				
-				contentType: "application/x-www-form-urlencoded", //this is by default
-				
-				type: "POST",
-				
-				url: "../web/localfilelist",
-				
-				data: "root="+relativepath, 
-
-				success: function(obj, text, jxhr){
-
-					var obj = jQuery.parseJSON( obj );
-
-//					console.info("the retrieved file list is : " + obj);
-
-					// BootstrapDialog.closeAll();
-
-					if(obj.ret == "login"){
-
-						edu.gmu.csiss.covali.login.loginDialog(edu.gmu.csiss.covali.local.dialog, relativepath, target);
-
-					}else{
-
-						BootstrapDialog.show({
-							
-				            message: function(dialog){
-				            	
-				            	var filelist = " <ul class=\"list-group\">";
-				            	var parentpath = "/";
-				            	if(edu.gmu.csiss.covali.local.root_directory!=""){
-				            		var pathes = edu.gmu.csiss.covali.local.root_directory.split("/");
-				            		pathes.splice(-1,1);
-				            		parentpath = pathes.join("/");
-				            	}
-				            	
-				            	filelist += "<li class=\"list-group-item\">"+
-		            			"<span class=\"glyphicon glyphicon-file text-primary\"></span>"+
-		            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+
-		            			parentpath + 
-		            			"')\">..</a>"+
-		            			"</li>";
-				            	
-				            	for(var i=0;i<obj.length;i++){
-				            		
-				            		if(obj[i].type=="file"){
-				            			
-				            			filelist += "<li class=\"list-group-item\">"+
-				            			" <span class=\"glyphicon glyphicon-file text-primary\"></span> "+
-				            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.loadlocalfile('"+edu.gmu.csiss.covali.local.root_directory +"/"+obj[i].name+"', '"+ target +"')\">"+obj[i].name+"</a> "+
-				            			"</li>";
-				            			
-				            		}else if(obj[i].type=="directory"){
-				            			
-				            			filelist += "<li class=\"list-group-item\">"+
-				            			" <span class=\"glyphicon glyphicon-folder-close text-primary\"></span> "+
-				            			"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.local.dialog('"+ 
-				            			edu.gmu.csiss.covali.local.root_directory + "/" + obj[i].name+"')\">"+obj[i].name+"</a> "+
-				            			"</li>";
-				            			
-				            		}
-				            		
-				            	}
-				            	
-				            	filelist += "</ul> ";
-				            	
-				            	$content = $(filelist);
-				            	
-				            	return $content;
-				            	
-				            },
-				            
-				            title: "Local Files",
-				            
-				            cssClass: 'dialog-vertical-center dialog-local-file-list',
-				            
-				            buttons: [
-				            	{
-					                
-				            		label: 'Close',
-					                
-					                action: function(dialogItself){
-					                	
-					                    dialogItself.close();
-					                    
-					                }
-				            }]
-				        });
-						
-					}
-					
-					
-				}, //success(result,status,xhr)
-				error: function(){
-				
-					alert("Fail to send the request.");
-					
-				} //error(xhr,status,error)
-			});
-			
 		}
+
+		var postresp = $.ajax({
+
+			contentType: "application/x-www-form-urlencoded", //this is by default
+
+			type: "POST",
+
+			url: "../web/adddata",
+
+			data: "location="+file_path,
+
+			success: function(obj, text, jxhr){
+                BootstrapDialog.closeAll();
+
+				var obj = jQuery.parseJSON( obj );
+
+				if(obj.output=="failure"){
+
+					alert("Fail to parse the file: " + obj.reason);
+
+				}else{
+
+					console.info("the new WMS layer name is : " + obj.id);
+
+
+					BootstrapDialog.show({
+
+						title: "Add data from server public folder",
+
+						message: function(dialog){
+
+							$content = $("<p class=\"text-success\">The file is parsed. Do you want to load it into the map now?</p>" +
+									"<p class=\"text-warning\">Warning: For netCDF format, only files compliant to CF convention are supported.</p>");
+
+							return $content;
+
+						},
+
+						title: "Data Uploader",
+
+						cssClass: 'dialog-vertical-center',
+
+						buttons: [{
+
+								label: 'Load',
+
+								action: function(dialogItself){
+
+									//open the WMS loading dialog to add a specific layer
+
+									var id = obj.id; //the wms layer name
+
+									edu.gmu.csiss.covali.wms.showLayerSelector(id);
+
+								}
+							},{
+
+								label: 'Close',
+
+								action: function(dialogItself){
+
+									dialogItself.close();
+
+								}
+						}]
+					});
+
+				}
+
+			},
+			error: function(){
+                BootstrapDialog.closeAll();
+
+                alert("Failed to process the request.");
+			}
+		});
+	}
+
 }

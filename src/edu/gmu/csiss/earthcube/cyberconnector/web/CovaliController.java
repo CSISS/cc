@@ -19,6 +19,7 @@ import edu.iris.dmc.service.StationService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONValue;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -219,7 +220,7 @@ public class CovaliController {
         			resp = LocalFileTool.getLocalFileList("/tmp/");
         			
         		}else
-        		
+
         			resp = LocalFileTool.getLocalFileList(rootlocation);
         		
     		}
@@ -407,14 +408,14 @@ public class CovaliController {
         			
         		}else {
         			
-        			location = SysDir.getCovali_file_path() + location;
+        			location = SysDir.getCovali_file_path() + '/' + location;
         			
         		} 
     			
     		}
 
 			File f = new File(location);
-			String id = FilenameUtils.getBaseName(location);
+			String id = FilenameUtils.getBaseName(location) + '-' + RandomString.get(4);
     		
     		ncWMSTool.addDataset(id, location);
     		
@@ -425,9 +426,7 @@ public class CovaliController {
     		e.printStackTrace();
     		
     		resp = "{\"output\":\"failure\",\"reason\": \""+
-    				
-    				e.getLocalizedMessage() +
-    				
+					JSONValue.escape(e.getLocalizedMessage()) +
     				"\"}";
     				
     	}
