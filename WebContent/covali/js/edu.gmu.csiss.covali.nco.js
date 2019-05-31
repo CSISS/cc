@@ -25,7 +25,7 @@ edu.gmu.csiss.covali.nco = {
 
         }).success(function (data) {
         	
-        	if(!data.startsWith("Fail")){
+            if(!data.startsWith("Fail") && !data.includes('ERROR')){
         	
         		//alert('Created ' + outfile + '. Loading layers...');
                 edu.gmu.csiss.covali.local.loadlocalfile('/' + outfile, 'layer');

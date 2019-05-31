@@ -25,7 +25,7 @@ public class NcoTool {
 
 
     public static String execNcoCommand(String command) {
-        String dataDirectory = BaseTool.getCyberConnectorRootPath()+SysDir.upload_file_path;
+        String dataDirectory = SysDir.getCovali_file_path();
         File log = new File(SysDir.temp_file_path + "/nco.log");
 
         String[] args = command.split("\\s+");
