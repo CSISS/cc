@@ -26,9 +26,8 @@ edu.gmu.csiss.covali.nco = {
         }).success(function (data) {
         	
             if(!data.startsWith("Fail") && !data.includes('ERROR')){
-        	
-        		//alert('Created ' + outfile + '. Loading layers...');
-                edu.gmu.csiss.covali.local.loadlocalfile('/' + outfile, 'layer');
+                edu.gmu.csiss.covali.local.showFileLoadingDialog('/' + outfile);
+                edu.gmu.csiss.covali.local.loadWMSFile('/' + outfile);
         		
         	}else{
         		
@@ -61,7 +60,7 @@ edu.gmu.csiss.covali.nco = {
         content += '  <div class="row">';
         content += '	<label class="col-md-3 control-label" for="ncra-options">Options</label>';
         content += '	<div class="col-md-9">';
-        content += '		<input id="ncra-options" name="ncra-options" class="form-control">';
+        content += '		<input id="ncra-options" name="ncra-options" class="form-control" value="-O">';
         content += '	</div>';
         content += '  </div><br/>';
 
@@ -108,7 +107,7 @@ edu.gmu.csiss.covali.nco = {
 
         // OPERATION
         content += '  <div class="row">';
-        content += '	<label class="col-md-3 control-label" for="ncbo-options">Operation</label>';
+        content += '	<label class="col-md-3 control-label" for="ncbo-operation">Operation</label>';
         content += '	<div class="col-md-9">';
         content += '		<select id="ncbo-operation" name="ncbo-operation" class="form-control">';
         content += '			<option data-operation="add" id="ncbo-operation-add" value="1">Addition</option>';
@@ -146,7 +145,7 @@ edu.gmu.csiss.covali.nco = {
         content += '  <div class="row">';
         content += '	<label class="col-md-3 control-label" for="ncbo-options">Options</label>';
         content += '	<div class="col-md-9">';
-        content += '		<input id="ncbo-options" name="ncbo-options" class="form-control">';
+        content += '		<input id="ncbo-options" name="ncbo-options" class="form-control" value="-O">';
         content += '	</div>';
         content += '  </div><br/>';
 
