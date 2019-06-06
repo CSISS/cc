@@ -2,26 +2,15 @@ edu.gmu.csiss.covali.filebrowser = {
     currentPath: '/',
     selectedCallback: function() {},
 
-    updateBrowserContents: function(path, files) {
-        console.log(path);
-        console.log(files);
 
+    fileListHtml: function(path, files) {
         var parentPath = path.substring(0, path.lastIndexOf('/'));
-        if(parentPath == "") {
-            parentPath = '/';
-        }
-
-        // add trailing slash to folders
-        if(path.lastIndexOf('/') != path.length - 1) {
-            path = path + '/'
-        }
-
 
         var fileList = '';
 
         fileList += '<ul class="list-group">';
 
-        if(path != '/') {
+        if(path != '') {
             fileList += '<li class="list-group-item file-browser-item file-browser-directory" data-path="' + parentPath + '">';
             fileList += '<span class="glyphicon glyphicon-folder-close text-primary"></span>';
             fileList += '<a href="javascript:void(0)"> ..</a>';
@@ -30,20 +19,22 @@ edu.gmu.csiss.covali.filebrowser = {
 
         files.forEach(function(f){
             var icon = f.type == 'file' ? 'glyphicon-file' : 'glyphicon-folder-open';
-            var fullPath = path + f.name;
-            if(f.type == 'file') {
-                // remove leading slash from file paths
-                fullPath = fullPath.substring(1)
-            }
-            fileList += '<li class="list-group-item file-browser-item file-browser-'+ f.type + '" data-path="' + fullPath + '">';
+
+            var localName = f.name.substring(f.name.lastIndexOf('/') + 1);
+            fileList += '<li class="list-group-item file-browser-item file-browser-'+ f.type + '" data-path="' + f.name + '">';
             fileList += '<span class="glyphicon ' + icon + ' text-primary"></span>';
-            fileList += '<a href="javascript:void(0)"> ' + f.name +'</a>';
+            fileList += '<a href="javascript:void(0)"> ' + localName +'</a>';
             fileList += '</li>';
         });
 
         fileList += '</ul>';
 
-        $('#filebrowser').html($(fileList));
+        return $(fileList)
+
+    },
+
+    updateBrowserContents: function(path, files) {
+        $('#filebrowser').html(edu.gmu.csiss.covali.filebrowser.fileListHtml(path, files));
 
         // folder click event
         $('.file-browser-directory').each(function(e){
@@ -104,7 +95,7 @@ edu.gmu.csiss.covali.filebrowser = {
             },
 
             onshown: function() {
-                edu.gmu.csiss.covali.filebrowser.loadPath('/');
+                edu.gmu.csiss.covali.filebrowser.loadPath('');
 
             },
 

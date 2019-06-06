@@ -19,48 +19,47 @@ edu.gmu.csiss.covali.multifilebrowser = {
     },
 
     updateBrowserContents: function(path, files) {
-        console.log(path);
-        console.log(files);
+        // var parentPath = path.substring(0, path.lastIndexOf('/'));
+        // if(parentPath == "") {
+        //     parentPath = '/';
+        // }
+        //
+        // // add trailing slash to folders
+        // if(path.lastIndexOf('/') != path.length - 1) {
+        //     path = path + '/'
+        // }
+        //
+        //
+        // var fileList = '';
+        //
+        // fileList += '<ul class="list-group">';
+        //
+        // if(path != '/') {
+        //     fileList += '<li class="list-group-item file-browser-item file-browser-directory" data-path="' + parentPath + '">';
+        //     fileList += '<span class="glyphicon glyphicon-folder-close text-primary"></span>';
+        //     fileList += '<a href="javascript:void(0)"> ..</a>';
+        //     fileList += '</li>';
+        // }
+        //
+        // files.forEach(function(f){
+        //     var icon = f.type == 'file' ? 'glyphicon-file' : 'glyphicon-folder-open';
+        //     var fullPath = path + f.name;
+        //     if(f.type == 'file') {
+        //         // remove leading slash from file paths
+        //         fullPath = fullPath.substring(1)
+        //     }
+        //     var selected = edu.gmu.csiss.covali.multifilebrowser.selectedFiles.includes(fullPath) ? 'selected' : '';
+        //     fileList += '<li class="' + selected + ' list-group-item file-browser-item file-browser-'+ f.type + '" data-path="' + fullPath + '">';
+        //     fileList += '<span class="glyphicon ' + icon + ' text-primary"></span>';
+        //     fileList += '<a href="javascript:void(0)"> ' + f.name +'</a>';
+        //     fileList += '</li>';
+        // });
+        //
+        // fileList += '</ul>';
 
-        var parentPath = path.substring(0, path.lastIndexOf('/'));
-        if(parentPath == "") {
-            parentPath = '/';
-        }
-
-        // add trailing slash to folders
-        if(path.lastIndexOf('/') != path.length - 1) {
-            path = path + '/'
-        }
+        $('#multifilebrowser').html(edu.gmu.csiss.covali.filebrowser.fileListHtml(path, files));
 
 
-        var fileList = '';
-
-        fileList += '<ul class="list-group">';
-
-        if(path != '/') {
-            fileList += '<li class="list-group-item file-browser-item file-browser-directory" data-path="' + parentPath + '">';
-            fileList += '<span class="glyphicon glyphicon-folder-close text-primary"></span>';
-            fileList += '<a href="javascript:void(0)"> ..</a>';
-            fileList += '</li>';
-        }
-
-        files.forEach(function(f){
-            var icon = f.type == 'file' ? 'glyphicon-file' : 'glyphicon-folder-open';
-            var fullPath = path + f.name;
-            if(f.type == 'file') {
-                // remove leading slash from file paths
-                fullPath = fullPath.substring(1)
-            }
-            var selected = edu.gmu.csiss.covali.multifilebrowser.selectedFiles.includes(fullPath) ? 'selected' : '';
-            fileList += '<li class="' + selected + ' list-group-item file-browser-item file-browser-'+ f.type + '" data-path="' + fullPath + '">';
-            fileList += '<span class="glyphicon ' + icon + ' text-primary"></span>';
-            fileList += '<a href="javascript:void(0)"> ' + f.name +'</a>';
-            fileList += '</li>';
-        });
-
-        fileList += '</ul>';
-
-        $('#multifilebrowser').html($(fileList));
 
         // folder click event
         $('.file-browser-directory').each(function(e){
@@ -72,6 +71,11 @@ edu.gmu.csiss.covali.multifilebrowser = {
 
         // file click event
         $('.file-browser-file').each(function(e){
+            var path = $(this).data('path');
+            if(edu.gmu.csiss.covali.multifilebrowser.selectedFiles.includes(path)) {
+                $(this).addClass('selected');
+            }
+
             $(this).click(function(){
                 edu.gmu.csiss.covali.multifilebrowser.toggleSelect($(this));
             });
@@ -117,7 +121,7 @@ edu.gmu.csiss.covali.multifilebrowser = {
             },
 
             onshown: function() {
-                edu.gmu.csiss.covali.multifilebrowser.loadPath('/');
+                edu.gmu.csiss.covali.multifilebrowser.loadPath('');
 
             },
 

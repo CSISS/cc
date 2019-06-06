@@ -25,7 +25,7 @@ edu.gmu.csiss.covali.nco = {
 
         }).success(function (data) {
         	
-            if(!data.startsWith("Fail") && !data.includes('ERROR')){
+            if(!data.startsWith("Fail") && !data.includes('ERROR') && !data.includes('HTTP Status 500')){
                 edu.gmu.csiss.covali.local.showFileLoadingDialog('/' + outfile);
                 edu.gmu.csiss.covali.local.loadWMSFile('/' + outfile);
         		
@@ -95,7 +95,7 @@ edu.gmu.csiss.covali.nco = {
             var output = $('#ncra-outfile').val();
 
 
-            var command = 'ncra ' + options + ' ' + inputs + ' ' + output
+            var command = 'ncra ' + options + ' ' + inputs + ' ' + output;
             $('#ncra-command').val(command);
         });
 

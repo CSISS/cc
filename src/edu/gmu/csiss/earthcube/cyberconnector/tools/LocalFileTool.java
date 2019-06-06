@@ -201,37 +201,44 @@ public class LocalFileTool {
 
 	/**
 	 * Get local file list
-	 * @param rootlocation
+	 * @param location
 	 * @return
 	 */
-	public static String getLocalFileList(String rootlocation) {
+	public static String getLocalFileList(String location) {
+		String covaliFilePath = SysDir.getCovali_file_path();
+		String uploadFilePath = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path;
+
+		if(!location.startsWith(covaliFilePath) && !location.startsWith(uploadFilePath))
+		{
+			location = "";
+		}
+
+		logger.debug(location);
+
+		File[] flist;
+		if (location == "") {
+			flist = new File[2];
+
+			flist[0] = new File(covaliFilePath);
+			flist[1] = new File(uploadFilePath);
+
+		}
+		else {
+			File f = new File(location);
+			flist = f.listFiles();
+		}
+
 
 		StringBuffer filelist = new StringBuffer("[") ;
-
-		String file_loc = SysDir.getCovali_file_path()+ rootlocation;
-
-		logger.debug(file_loc);
-
-		File f = new File(file_loc);
-
-		File[] flist = f.listFiles();
-
 		for(int i=0; i<flist.length; i++) {
-
 			if(i!=0) {
-
 				filelist.append(",");
-
 			}
 
 			if(flist[i].isFile()) {
-
-				filelist.append("{\"name\":\"").append(flist[i].getName()).append("\",\"type\":\"file\"}");
-
-			}else if(flist[i].isDirectory()) {
-
-				filelist.append("{\"name\":\"").append(flist[i].getName()).append("\",\"type\":\"directory\"}");
-
+				filelist.append("{\"name\":\"").append(flist[i].getAbsolutePath()).append("\",\"type\":\"file\"}");
+			} else if(flist[i].isDirectory()) {
+				filelist.append("{\"name\":\"").append(flist[i].getAbsolutePath()).append("\",\"type\":\"directory\"}");
 			}
 
 		}
@@ -239,7 +246,6 @@ public class LocalFileTool {
 		filelist.append("]");
 
 		return filelist.toString();
-
 	}
 
 	/**
