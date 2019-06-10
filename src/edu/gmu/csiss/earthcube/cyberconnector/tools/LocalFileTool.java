@@ -205,12 +205,21 @@ public class LocalFileTool {
 	 * @return
 	 */
 	public static String getLocalFileList(String location) {
-		String covaliFilePath = SysDir.getCovali_file_path();
+		
+		String covaliFilePath = SysDir.getCovali_file_path().replaceAll("\\\\", "/");
+		
 		String uploadFilePath = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path;
-
-		if(!location.startsWith(covaliFilePath) && !location.startsWith(uploadFilePath))
+		
+		uploadFilePath = uploadFilePath.replaceAll("\\\\", "/");
+		
+		logger.debug(covaliFilePath);
+		
+		logger.debug(uploadFilePath);
+		
+		if(!(location.startsWith(covaliFilePath) || location.startsWith(uploadFilePath)))
 		{
 			location = "";
+			logger.debug("the location is not the COVALI and Upload folder path");
 		}
 
 		logger.debug(location);
@@ -228,24 +237,36 @@ public class LocalFileTool {
 			flist = f.listFiles();
 		}
 
+		Arrays.sort(flist);
 
 		StringBuffer filelist = new StringBuffer("[") ;
+		
 		for(int i=0; i<flist.length; i++) {
+			
 			if(i!=0) {
+				
 				filelist.append(",");
+				
 			}
 
 			if(flist[i].isFile()) {
-				filelist.append("{\"name\":\"").append(flist[i].getAbsolutePath()).append("\",\"type\":\"file\"}");
+				
+				filelist.append("{\"name\":\"").append(flist[i].getAbsolutePath().replaceAll("\\\\","/")).append("\",\"type\":\"file\"}");
+				
 			} else if(flist[i].isDirectory()) {
-				filelist.append("{\"name\":\"").append(flist[i].getAbsolutePath()).append("\",\"type\":\"directory\"}");
+				
+				filelist.append("{\"name\":\"").append(flist[i].getAbsolutePath().replaceAll("\\\\","/")).append("\",\"type\":\"directory\"}");
+				
 			}
 
 		}
-
+		
 		filelist.append("]");
+		
+		logger.debug(filelist);
 
 		return filelist.toString();
+		
 	}
 
 	/**

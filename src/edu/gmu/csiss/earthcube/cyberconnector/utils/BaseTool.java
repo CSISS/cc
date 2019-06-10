@@ -210,7 +210,11 @@ public class BaseTool {
 		
 		String classpath = getClassPath();
 		
-		String rootpath = classpath.substring(0, classpath.indexOf("CyberConnector") + "CyberConnector".length()) + "/";
+		String rootpath = classpath;
+		
+		if(classpath.indexOf("CyberConnector")!=-1)
+		
+			rootpath = classpath.substring(0, classpath.indexOf("CyberConnector") + "CyberConnector".length()) + "/";
 		
 		return rootpath;
 	}
