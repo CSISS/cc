@@ -121,8 +121,6 @@ public class SysDir {
 
 			String secretConfigFile = p.getProperty("secret_properties_path");
 			
-			
-
 			Properties secrets = null;
 			
 			if(new File(secretConfigFile).exists())
@@ -168,7 +166,7 @@ public class SysDir {
 			upload_file_path = p.getProperty("upload_file_path");
 			
 			temp_file_path = p.getProperty("temp_file_path");
-
+			
 			thredds_index_url = p.getProperty("thredds_index_url");
 			
 			database_driver = p.getProperty("database_driver");

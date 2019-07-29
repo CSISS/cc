@@ -1,22 +1,23 @@
 edu.gmu.csiss.covali.filebrowser = {
+	
     currentPath: '/',
+    
     selectedCallback: function() {},
-
-
+    
     fileListHtml: function(path, files) {
         var parentPath = path.substring(0, path.lastIndexOf('/'));
-
+        
         var fileList = '';
-
+        
         fileList += '<ul class="list-group">';
-
+        
         if(path != '') {
             fileList += '<li class="list-group-item file-browser-item file-browser-directory" data-path="' + parentPath + '">';
             fileList += '<span class="glyphicon glyphicon-folder-close text-primary"></span>';
             fileList += '<a href="javascript:void(0)"> ..</a>';
             fileList += '</li>';
         }
-
+        
         files.forEach(function(f){
             var icon = f.type == 'file' ? 'glyphicon-file' : 'glyphicon-folder-open';
 
@@ -26,13 +27,13 @@ edu.gmu.csiss.covali.filebrowser = {
             fileList += '<a href="javascript:void(0)"> ' + localName +'</a>';
             fileList += '</li>';
         });
-
+        
         fileList += '</ul>';
-
+        
         return $(fileList)
-
+        
     },
-
+    
     updateBrowserContents: function(path, files) {
         $('#filebrowser').html(edu.gmu.csiss.covali.filebrowser.fileListHtml(path, files));
 

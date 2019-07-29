@@ -212,15 +212,23 @@ public class LocalFileTool {
 		
 		uploadFilePath = uploadFilePath.replaceAll("\\\\", "/");
 		
+		logger.debug(location);
+		
 		logger.debug(covaliFilePath);
 		
 		logger.debug(uploadFilePath);
+
+		File uploadf = new File(uploadFilePath);
 		
-		if(!(location.startsWith(covaliFilePath) || location.startsWith(uploadFilePath)))
+		if(uploadf.exists()) uploadf.mkdir();
+		
+		if(!(location.startsWith(covaliFilePath) || covaliFilePath.startsWith(location)
+				|| location.startsWith(uploadFilePath) || uploadFilePath.startsWith(location)))
 		{
 			location = "";
 			logger.debug("the location is not the COVALI and Upload folder path");
 		}
+		
 
 		logger.debug(location);
 

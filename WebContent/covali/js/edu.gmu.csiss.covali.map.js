@@ -166,18 +166,26 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
-		updateCaption: function(side,layername){
+		updateCaption: function(side,layername, time, elevation){
 			
 			var caption_id = "title-" + this.getMapContainerIdBySide(side) ;
 			
-			$("#"+caption_id).html(layername);
+			var captionhtml = "name: " + layername;
+			
+			if(time!=null || elevation!=null){
+				
+				captionhtml += " - time: " + time + " - elevation : " + elevation;
+				
+			}
+			
+			$("#"+caption_id).html(captionhtml);
 			
 		},
 		
 		/**
 		 * only used for updating the legend div element and the current legend layer variable
 		 */
-		updateLegend: function(side,layername, legendurl, palette, style){
+		updateLegend: function(side,layername, legendurl, palette, style, time, elevation){
 			
 			var lid = this.getLegendIdBySide(side);
 			
@@ -227,7 +235,7 @@ edu.gmu.csiss.covali.map = {
 				
 			}
 			
-			this.updateCaption(side, layername);
+			this.updateCaption(side, layername, time, elevation);
 //			console.log("the legend div height: " + $("#"+lid).height());
 			
 		},
@@ -718,40 +726,40 @@ edu.gmu.csiss.covali.map = {
 	            		
 //	            		$("#"+legendid).attr("src", $(legendobj).attr("legendurl")+"&height=1&VERTICAL=FALSE&COLORBARONLY=True");
 	            		
-	            		edu.gmu.csiss.covali.map.updateLegend(side, edu.gmu.csiss.covali.map.legend_layername, 
-	            				legendurl, palette, style);
+	            		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+	            		
+	            		var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
+	            		
+	            		edu.gmu.csiss.covali.map.updateLegend(side, edu.gmu.csiss.covali.map.legend_layername,
+	            				legendurl, palette, style, layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
 	            		
 //	            		function(side,layername, legendurl, palette, min, max, style){
 	            		
 	            		//change the layer source
 	            		
-	            		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+	            		var oldparams = layer.getSource().getParams();
 	            		
-	            		var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
+	            		oldparams.LAYERS = edu.gmu.csiss.covali.map.legend_layername;
+	            		
+	            		oldparams.TILED = true;
+	            		
+	            		oldparams.VERSION = '1.3.0';
+	            		
+	            		oldparams.COLORSCALERANGE = minv+","+maxv;
+  				    	
+	            		oldparams.LEGEND = $("#"+legendid).attr("legendurl");
+  				    	
+	            		oldparams.STYLES = style+"/"+palette;
+  				    	
+	            		oldparams.ABOVEMAXCOLOR = newabovecolor;
+  				    	
+	            		oldparams.BELOWMINCOLOR = newbelowcolor;
 	            		
 	            		layer.setSource(new ol.source.TileWMS({
 	            			
 		  					url: layer.getSource().getUrls()[0],
 		  				    
-		  					params: {
-		  						
-		  						'LAYERS': edu.gmu.csiss.covali.map.legend_layername, 
-		  				    	
-		  				    	'TILED': true, 
-		  				    	
-		  				    	'VERSION': '1.3.0',
-		  				    	
-		  				    	'COLORSCALERANGE': minv+","+maxv,
-		  				    	
-		  				    	'LEGEND': $("#"+legendid).attr("legendurl"),
-		  				    	
-		  				    	'STYLES':style+"/"+palette,
-		  				    	
-		  				    	'ABOVEMAXCOLOR': newabovecolor,
-		  				    	
-		  				    	'BELOWMINCOLOR': newbelowcolor
-		  				    	
-		  					}
+		  					params: oldparams
 	            			
 	  				    }));
 	            		
@@ -1011,11 +1019,11 @@ edu.gmu.csiss.covali.map = {
 		/**
 		 * only used when first adding the layer
 		 */
-		addWMSLegend: function(side, url, layername, stylename){
+		addWMSLegend: function(side, url, layername, stylename, time, elevation){
 			
 			var legendurl = edu.gmu.csiss.covali.map.getWMSLegend(side, layername, stylename);
 			
-			edu.gmu.csiss.covali.map.updateLegend(side, layername, legendurl);
+			edu.gmu.csiss.covali.map.updateLegend(side, layername, legendurl, null, null, time, elevation);
 			
 		},
 		
@@ -1174,7 +1182,7 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
-		addWMSLayer: function(map, url, layername, stylename){
+		addWMSLayer: function(map, url, layername, stylename, time, elevation){
 			
 			//add code to check if the WMS has already been added
 			
@@ -1183,6 +1191,25 @@ edu.gmu.csiss.covali.map = {
 			var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
 			
 			var legendurl = edu.gmu.csiss.covali.map.getWMSLegend(side, layername, stylename);
+			
+			var params = {'LAYERS': layername, 
+			    	'TILED': true, 
+			    	'VERSION': '1.3.0',
+			    	'TIME': time,
+			    	'LEGEND': legendurl
+			    };
+			
+			if(time != null){
+				
+				params.TIME = time;
+				
+			}
+			
+			if(elevation!=null){
+				
+				params.ELEVATION = elevation;
+				
+			}
 			
 			var myLayer1303 = new ol.layer.Tile({
 				  //extent: [2033814, 6414547, 2037302, 6420952],
@@ -1194,11 +1221,7 @@ edu.gmu.csiss.covali.map = {
 //					  LAYERS=IR&ELEVATION=0&TIME=2018-05-31T02%3A00%3A19.000Z&TRANSPARENT=true&STYLES=boxfill%2Frainbow&COLORSCALERANGE=-50%2C50&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A4326&BBOX=-101.47971029369,19.92840558883,-85.775652352431,35.632463530092&WIDTH=256&HEIGHT=256
 //				    url: 'http://thredds.ucar.edu/thredds/wms/grib/NCEP/GEFS/Global_1p0deg_Ensemble/members-analysis/GEFS_Global_1p0deg_Ensemble_ana_20180520_0600.grib2',
 					url: url,
-				    params: {'LAYERS': layername, 
-				    	'TILED': true, 'VERSION': '1.3.0',
-				    	'STYLES':stylename,
-				    	'LEGEND': legendurl
-				    }
+				    params: params
 				  })
 			});
 			
@@ -1242,11 +1265,12 @@ edu.gmu.csiss.covali.map = {
 			
 			if(nextlayer!=null){
 				
-				edu.gmu.csiss.covali.map.updateLegend(side, nextlayer.get('name'), nextlayer.getSource().getParams()["LEGEND"], null, null);
+				edu.gmu.csiss.covali.map.updateLegend(side, nextlayer.get('name'), nextlayer.getSource().getParams()["LEGEND"], 
+						null, null, nextlayer.getSource().getParams()["TIME"], nextlayer.getSource().getParams()["ELEVATION"]);
 				
 			}else{
 				
-				edu.gmu.csiss.covali.map.updateLegend(side, null, null, null, null);
+				edu.gmu.csiss.covali.map.updateLegend(side, null, null, null, null, null, null);
 				
 			}
 			

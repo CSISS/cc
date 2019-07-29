@@ -26,7 +26,7 @@ edu.gmu.csiss.covali.add= {
 	            			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.uri.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>File URL:</strong> The URL of an online data file\n    </div>"+
 	            			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.chords.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>CHORDS URL:</strong> The URL of a CHORDS instance\n    </div>" +
                    			"<div class=\"alert alert-info\">\n        <a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.iris.init();\" class=\"btn btn-primary pull-right\">Choose</a>\n        <strong>IRIS:</strong> IRIS seismology stations\n    </div>");
-
+	            	
                     return $content;
 	            	
 	            },

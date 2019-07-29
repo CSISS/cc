@@ -38,10 +38,10 @@ edu.gmu.csiss.covali.wms = {
 	            			
 	            			"    <form> "+
 							"	    <label class=\"radio-inline\"> "+
-							"	      <input type=\"radio\" name=\"wms_source\" value=\"Custom\" checked > Other WMS"+
+							"	      <input type=\"radio\" name=\"wms_source\" value=\"Custom\" checked /> Other WMS"+
 							"	    </label> "+
 							"	    <label class=\"radio-inline\"> "+
-							"	      <input type=\"radio\" name=\"wms_source\" value=\"Builtin\"> Built-in ncWMS "+
+							"	      <input type=\"radio\" name=\"wms_source\" value=\"Builtin\" /> Built-in ncWMS "+
 							"	    </label> "+
 							"	 </form>"+
 	            			
@@ -49,7 +49,7 @@ edu.gmu.csiss.covali.wms = {
 	            			
 	            			"<div class=\"input-group col-md-12\">"+
 	            			
-	            			"    <input type=\"text\" id=\"wms_capa_url\"  class=\"form-control\" placeholder=\"Please input the complete WMS capabilities URL..\">"+
+	            			"    <input type=\"text\" id=\"wms_capa_url\"  class=\"form-control\" placeholder=\"Please input the complete WMS capabilities URL..\" />"+
 	            			
 	            			"    <span class=\"input-group-btn\"><button type=\"button\" onclick=\"edu.gmu.csiss.covali.wms.addWMS();\" class=\"btn btn-default\">Add</button></span>"+
 	            			
@@ -497,6 +497,11 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		dateFromISO8601: function(isostr) {
+		    var parts = isostr.match(/\d+/g);
+		    return new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+		},
+		
 		getLayerHierarchyDiv: function(layerlist){
 			
 			var divcont = "";
@@ -533,6 +538,8 @@ edu.gmu.csiss.covali.wms = {
 				
 				var id = this.makeid();
 				
+				//add style select
+				
 				$styles = " <p>Styles: <select name=\"styleselect_"+id+"\" class=\"js-example-basic-hide-search wms-layer-style\">";
 				
 				if(layerlist.Style!=null){
@@ -547,9 +554,103 @@ edu.gmu.csiss.covali.wms = {
 				
 				$styles += "</select></p>";
 				
+				//add dimensions
+				
+				$dims = "";
+				
+				if(typeof layerlist.Dimension != "undefined" && layerlist.Dimension.length > 0){
+					
+					for(var j=0; j<layerlist.Dimension.length; j++){
+						
+						if(layerlist.Dimension[j].name == "time" || layerlist.Dimension[j].name == "Time"){
+							
+//							<Dimension name="time" units="unknown" multipleValues="true" current="true" default="2017-06-17T06:00:00.000Z">
+//							2017-06-12T06:00:00.000Z/2017-06-17T06:00:00.000Z/PT6H
+//							</Dimension>
+							
+//							<Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2009-04-01T19:00:28.800Z"> 2009-04-01T19:00:28.800Z </Dimension>
+							
+							$timedim = " <p>Time: <select name=\"timeselect_"+id+"\" class=\"js-example-basic-hide-search wms-layer-time\">";
+							
+							var timevalues = layerlist.Dimension[j].values;
+							
+							var timesteps = [];
+							
+							if(timevalues.split(",").length>1){
+                				
+                				timesteps = timevalues.split(",");
+                				
+                			}else if(timevalues.indexOf("/")!=-1){
+								
+								var timesplit = timevalues.split("/");
+								
+								if(timesplit.length!=3){
+									
+									console.error("The time dimension definition is not supported yet.");
+									
+								}
+								
+								//iso 8601 duration
+//                				2018-08-12T06:00:00.000Z/2018-08-17T00:00:00.000Z/PT6H
+                				
+                				start_time = moment(timesplit[0]);
+                				
+                				end_time = moment(timesplit[1]);
+                				
+                				interval = moment.duration(timesplit[2]);
+                				
+                				for(current_time = start_time; current_time.isBefore(end_time); current_time = current_time.add(interval)){
+                					
+                					timesteps.push(current_time.toISOString());
+                					
+                				}
+								
+							}else{
+								
+								//one time step
+//								$timedim += "<option value=\"" + timevalues + "\">"+timevalues+"</option>";
+								timesteps.push(timevalues);
+								
+							}
+							
+							for(var x=0;x<timesteps.length;x+=1){
+								
+								$timedim += "<option value=\"" + timesteps[x] + "\">" + timesteps[x] + "</option>";
+								
+							}
+							
+							$timedim += "</select></p>";
+							
+							$dims += $timedim;
+							
+						}else if(layerlist.Dimension[j].name == "elevation" || layerlist.Dimension[j].name == "Elevation"){
+							
+							$eledim = " <p>Elevation: <select name=\"elevationselect_"+id+"\" class=\"js-example-basic-hide-search wms-layer-elevation\">";
+							
+							var elevalues = layerlist.Dimension[j].values;
+							
+							var elesplit = elevalues.split(",");
+							
+							for(var k=0;k<elesplit.length;k+=1){
+
+								$eledim += "<option value=\"" + elesplit[k].trim() + "\">" + elesplit[k].trim() + "</option>";
+								
+							}
+							
+							$eledim += "</select></p>";
+							
+							$dims += $eledim;
+							
+						}
+						
+					}
+					
+				}
+				
+				
 				$layerselector = "	<a href=\"javascript:void(0)\" class=\"list-group-item wms-layer\">"+
 					
-					"		<div class=\"checkbox pull-right col-md-1\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\"> </label> </div> "+
+					"		<div class=\"checkbox pull-right col-md-1\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\" /> </label> </div> "+
 					
 					"       <div class=\"pull-left form-control-inline col-md-11\">"+
 					
@@ -559,9 +660,10 @@ edu.gmu.csiss.covali.wms = {
 					
 					"\" >"+layerlist.text+"</h4> "+
 					
-					$styles + 
+					$styles + " " + $dims + 
 					
-					"		</div><div class=\"clearfix\"></div>            </a>";
+					"		</div><div class=\"clearfix\"></div></a>";
+				
 				
 				divcont += $layerselector;
 				
@@ -594,6 +696,8 @@ edu.gmu.csiss.covali.wms = {
 			BootstrapDialog.closeAll();
 			
 			$content = this.getLayerHierarchyDiv(layerlist);
+			
+			console.log($content);
 			
 			BootstrapDialog.show({
 				
@@ -751,7 +855,7 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
-		addLayer: function(side, layername, stylename){
+		addLayer: function(side, layername, stylename, time, elevation){
 			
 			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 			
@@ -759,9 +863,9 @@ edu.gmu.csiss.covali.wms = {
 //				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
 			endpointurl = this.getCurrentEndPoint();
 			
-			edu.gmu.csiss.covali.map.addWMSLayer(map, endpointurl, layername, stylename);
+			edu.gmu.csiss.covali.map.addWMSLayer(map, endpointurl, layername, stylename, time, elevation);
 			
-			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename);
+			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename, time, elevation);
 			
 		},
 		
@@ -784,9 +888,13 @@ edu.gmu.csiss.covali.wms = {
     				
     				var stylename = $(obj).find(".wms-layer-style").find(":selected").text();
     				
+    				var timename = $(obj).find(".wms-layer-time").find(":selected").text();
+    				
+    				var elevationname = $(obj).find(".wms-layer-elevation").find(":selected").text();
+    				
     				console.log("checked layer style: " + stylename);
     				
-    				edu.gmu.csiss.covali.wms.addLayer(side, layername, stylename);
+    				edu.gmu.csiss.covali.wms.addLayer(side, layername, stylename, timename, elevationname);
     				
     			}
     			
