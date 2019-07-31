@@ -267,7 +267,8 @@ edu.gmu.csiss.covali.settings = {
 			
 			othermap.addLayer(layer);
 			
-			edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null);
+			edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, 
+					layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
 			
 			this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
 			

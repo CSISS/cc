@@ -1164,7 +1164,7 @@ edu.gmu.csiss.covali.map = {
 					
 					console.log("The layer " + layer.get('name') + " is visible.");
 					
-					edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null);
+					edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,layer.getSource().getParams()["TIME"],layer.getSource().getParams()["ELEVATION"]);
 					
 				}else{
 					
@@ -1241,7 +1241,7 @@ edu.gmu.csiss.covali.map = {
 					
 					console.log("The layer " + layer.get('name') + " is visible.");
 					
-					edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null);
+					edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
 					
 				}else{
 					
