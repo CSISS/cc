@@ -121,8 +121,6 @@ edu.gmu.csiss.covali.statistics = {
         		
         	}
         	
-
-        	
         }, this);
         
         map.addInteraction(edu.gmu.csiss.covali.statistics.draw);
@@ -138,7 +136,19 @@ edu.gmu.csiss.covali.statistics = {
         
 		
 	},
+	
+	removeAllListeners: function(){
 		
+		var leftmap = edu.gmu.csiss.covali.map.getMapBySide("left");
+		
+		leftmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		
+		var rightmap = edu.gmu.csiss.covali.map.getMapBySide("right");
+		
+		rightmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		
+	},
+	
 	showDialog: function(){
 		
 		BootstrapDialog.closeAll();
@@ -168,6 +178,8 @@ edu.gmu.csiss.covali.statistics = {
 				label: "Start Draw",
 				
 				action: function(thedialog){
+					
+					edu.gmu.csiss.covali.statistics.removeAllListeners();
 										
 					var type = $("#typeselect").val();
 					
@@ -251,11 +263,7 @@ edu.gmu.csiss.covali.statistics = {
         
         var wmssource = layer.getSource();
         
-        var url = wmssource.getGetFeatureInfoUrl(
-        
-        	evt.coordinate, viewResolution, 'EPSG:3857',
-          
-        	{'INFO_FORMAT': 'text/html'});
+        var url = wmssource.getGetFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:3857', {'INFO_FORMAT': 'text/html'});
         
         if (url) {
         
@@ -279,9 +287,13 @@ edu.gmu.csiss.covali.statistics = {
 		
 		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 		
-		var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" + layer.get('name') + "&CRS=CRS:84&LINESTRING=" + 
+		var timestep = layer.getSource().getParams()["TIME"];
 		
-			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent";
+		var elevation = layer.getSource().getParams()["ELEVATION"];
+		
+		var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" + layer.get('name') + "&CRS=CRS:84&LINESTRING=" +
+		
+			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep + "&elevation=" + elevation;
 		
 		console.log(req);
 		
