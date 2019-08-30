@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>CyberConnector</title>
+        <link href="css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="js/jquery-1.10.2.min.js" defer></script>
+        <script src="js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body class="homepage">
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href=".">CyberConnector</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#cyberconnector">CyberConnector</a></li>
+        <li class="main "><a href="#installation">Installation</a></li>
+            <li><a href="#prerequisite">Prerequisite</a></li>
+            <li><a href="#quick-start">Quick Start</a></li>
+        <li class="main "><a href="#modules">Modules</a></li>
+        <li class="main "><a href="#usage">Usage</a></li>
+            <li><a href="#covali">COVALI</a></li>
+        <li class="main "><a href="#demo-site">Demo Site</a></li>
+        <li class="main "><a href="#license">License</a></li>
+        <li class="main "><a href="#developers">Developers</a></li>
+        <li class="main "><a href="#funders">Funders</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<p><a href="https://travis-ci.org/CSISS/cc"><img alt="Build Status" src="https://travis-ci.org/CSISS/cc.svg?branch=master" /></a> <a href="https://github.com/CSISS/cc/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/CSISS/cc.svg" /></a> <a href="https://github.com/CSISS/cc/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/CSISS/cc.svg" /></a> <a href="https://github.com/CSISS/cc/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/CSISS/cc.svg" /></a> <a href="https://github.com/CSISS/cc/issues"><img alt="Issues" src="https://img.shields.io/github/issues/CSISS/cc.svg" /></a> <a href="https://codecov.io/"><img alt="Coverage" src="https://img.shields.io/badge/covarege-100%25-success.svg" /></a> </p>
+<h1 id="cyberconnector">CyberConnector</h1>
+<p>NSF EarthCube Building Block project</p>
+<p>This project aims to connect the existing data sources to the Earth science models so the generation of modeling products could be more automatic and effortless. </p>
+<h1 id="installation">Installation</h1>
+<h2 id="prerequisite">Prerequisite</h2>
+<p>Java 1.8+ (mandatory, OpenJDK)</p>
+<p>Apache Tomcat 8.0+ (mandatory, web container)</p>
+<p>MySQL 5.5+ (mandatory, database, initialize it with db/cc.empty.sql)</p>
+<p>ncWMS 2.4.1+ (mandatory, download ncWMS.war and deploy it into Tomcat webapps folder)</p>
+<p><a href="https://github.com/CSISS/cc-thredds-pycsw">cc-thredds-pycsw</a> (optional, if you plan to set up your own catalog)</p>
+<p>Apache Maven 3.5.0+ (optional, building CyberConnector.war from source)</p>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="java-war-package">Java War Package</h3>
+<p>To use CyberConnector, <a href="https://github.com/CSISS/cc/releases">download</a> the latest release war and copy it to the webapps directory of Tomcat. Start Tomcat. </p>
+<p>After the tomcat is fully started, configure the database connection. The configuration files are <code>WEB-INF/classes/config.properties</code> (database url, default: jdbc:mysql://localhost:3306/cyberconnector) and <code>WEB-INF/classes/cc_secret.properties</code> (database username and password: database_user=root database_password=xxxxxxxx). Fill the fields with correct values. (<strong>Note: the database must be initiated first.</strong>)</p>
+<p>Then enter the following URL into browser address bar to open CyberConnector:</p>
+<p><code>http://your-ip:your-port/CyberConnector-&lt;version&gt;/web/CyberConnector</code></p>
+<p>Replace the <code>your-ip</code>, <code>your-port</code>, <code>CyberConnector-&lt;version&gt;</code> with the real name of your tomcat and downloaded CyberConnector package. For example, <code>localhost:8080</code>, <code>CyberConnector-0.6.6</code>.</p>
+<h3 id="cloud-instance-template">Cloud Instance Template</h3>
+<p>We provide a ready-to-use cloud template for you to install on mainstream cloud platforms like AWS, Google Cloud, Azure, OpenStack and CloudStack. Please go here to download the template.</p>
+<h3 id="docker-image">Docker Image</h3>
+<p>We published a Docker image in DockerHub for docker users. The pull command is:</p>
+<p><code>docker pull csiss/cyberconnector</code></p>
+<h1 id="modules">Modules</h1>
+<p>COVALI - a sub-system for comparison and validation of atmospheric and other Earth science models (funded by <a href="http://cube.csiss.gmu.edu/CyberWay/web/index">EarthCube CyberWay</a>)</p>
+<p>CyberConnector Searcher - a sub-system for searching Earth observations, model results or virtual data products (VDP)</p>
+<p>CyberConnector Orderer - a sub-system for orderring VDP (customizing existing observations into ready-to-use format)</p>
+<p>CyberConnector Service Register - a sub-system for registering and searching geoprocessing web services</p>
+<h1 id="usage">Usage</h1>
+<h2 id="covali">COVALI</h2>
+<p>Example: </p>
+<p><img alt="comparison" src="comparison_asr_era5.jpg" /></p>
+<p>Animation Demo:</p>
+<p><img alt="general" src="covali-demo.gif" /></p>
+<h3 id="roam-around-the-globe">Roam around the Globe</h3>
+<p><img alt="roam" src="ccportal.gif" /></p>
+<p>COVALI has different projection options and 3-D view to enable multi-perspective viewing the data.</p>
+<p><img alt="globe" src="cc-3d.gif" /></p>
+<h3 id="search-data">Search Data</h3>
+<h4 id="search-in-ucar-server">search in UCAR server</h4>
+<p><img alt="ucar" src="search_ucar.png" /></p>
+<h4 id="search-in-the-public-folder">search in the public folder</h4>
+<p><img alt="local" src="search_local.png" /></p>
+<p>Search results are listed in a panel where users can directly download the files or load them into the maps.</p>
+<p><img alt="localresult" src="search_results.png" /></p>
+<h3 id="add-data">Add Data</h3>
+<p>COVALI supports visualizing GRIB/NetCDF data on the maps. </p>
+<p><img alt="visualization" src="cc-add-data.gif" /></p>
+<h3 id="settings">Settings</h3>
+<p>COVALI provides a Settings menu to controll the two maps. It allows users to manage the added data layers.</p>
+<p><img alt="settings" src="cc-settings.gif" /></p>
+<h3 id="tools">Tools</h3>
+<p>COVALI provides a number of tools to facilitate the comparison and validation among the data. </p>
+<h4 id="statistic-report">Statistic Report</h4>
+<p>Users can draw points or lines on the map to get a statistics on the values on the points or along the lines.</p>
+<p><img alt="linestats" src="line_stats.png" /></p>
+<h4 id="map-rotation">Map rotation</h4>
+<p>Use <code>Alt+Shift+Drag</code> to rotate the map.</p>
+<p><img alt="rotate" src="map_rotate.png" /></p>
+<h1 id="demo-site">Demo Site</h1>
+<p>A demo instance has been deployed on George Mason University server. <a href="http://cube.csiss.gmu.edu/CyberConnector/web/covali">here</a></p>
+<h1 id="license">License</h1>
+<p>MIT</p>
+<h1 id="developers">Developers</h1>
+<p><a href="authors.md">developer list</a></p>
+<h1 id="funders">Funders</h1>
+<p>National Science Foundation (#1740693 and #1440294)</p>
+<p><img alt="nsf" src="logo_nsf.gif" /></p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js" defer></script>
+        <script src="search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.0.4
+Build Date UTC : 2019-08-30 19:07:29
+-->
