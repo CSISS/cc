@@ -579,7 +579,7 @@ edu.gmu.csiss.covali.map = {
 		        						
 		        					}else{
 		        						
-		        						minmax = [Number(obj.scaleRange[0]).toFixed(2), Number(obj.scaleRange[1]).toFixed(2)];
+		        						minmax = [Number(obj.scaleRange[0]), Number(obj.scaleRange[1])];
 		        						
 		        					}
 		        					
@@ -666,7 +666,7 @@ edu.gmu.csiss.covali.map = {
 	        					
 	        					sp = [obj.supportedStyles[0],palettename];
 	        					
-	        					var minmax = [Number(obj.scaleRange[0]).toFixed(2), Number(obj.scaleRange[1]).toFixed(2)];
+	        					var minmax = [Number(obj.scaleRange[0]), Number(obj.scaleRange[1])];
 	        						
 	        					var belowabove = [null, null];
 	        						
@@ -818,7 +818,7 @@ edu.gmu.csiss.covali.map = {
 							
 						}else{
 							
-							minmax = [Number(obj.scaleRange[0]).toFixed(2), Number(obj.scaleRange[1]).toFixed(2)];
+							minmax = [Number(obj.scaleRange[0]), Number(obj.scaleRange[1])];
 							
 						}
 						
@@ -844,7 +844,7 @@ edu.gmu.csiss.covali.map = {
 						
 						var avg = (Number(minmax[0])+Number(minmax[1]))/2;
 						
-						$("#middle"+side).text(avg.toFixed(2));
+						$("#middle"+side).text(avg.toFixed(5));
 						
 					},
 					
@@ -925,7 +925,7 @@ edu.gmu.csiss.covali.map = {
 						
 					}else{
 						
-						minmax = [Number(obj.scaleRange[0]).toFixed(2), Number(obj.scaleRange[1]).toFixed(2)];
+						minmax = [Number(obj.scaleRange[0]), Number(obj.scaleRange[1])];
 						
 					}
 					
