@@ -1,15 +1,31 @@
 
 [![Build Status](https://travis-ci.org/CSISS/cc.svg?branch=master)](https://travis-ci.org/CSISS/cc) [![License](https://img.shields.io/github/license/CSISS/cc.svg)](https://github.com/CSISS/cc/blob/master/LICENSE) [![Stars](https://img.shields.io/github/stars/CSISS/cc.svg)](https://github.com/CSISS/cc/stargazers) [![Forks](https://img.shields.io/github/forks/CSISS/cc.svg)](https://github.com/CSISS/cc/network/members) [![Issues](https://img.shields.io/github/issues/CSISS/cc.svg)](https://github.com/CSISS/cc/issues) [![Coverage](https://img.shields.io/badge/covarege-100%25-success.svg)](https://codecov.io/) 
 
-# CyberConnector
+# 1. Introduction
 
 NSF EarthCube Building Block project
 
 This project aims to connect the existing data sources to the Earth science models so the generation of modeling products could be more automatic and effortless. 
 
-# Installation
+## 1.1 COVALI
 
-## Prerequisite
+A sub-system for comparison and validation of Earth system science models. COVALI is the most important sub-system of CyberConnector. It can support comparison and validation of the tremendous amount of observational data or modeling data from atmospheric and other Earth science models (funded by [EarthCube CyberWay](http://cube.csiss.gmu.edu/CyberWay/web/index)). 
+
+## 1.2 Data Searcher
+
+A sub-system for searching Earth observations, model results or virtual data products (VDP)
+
+## 1.3 Data Orderer
+
+A sub-system for orderring VDP (customizing existing observations into ready-to-use format)
+
+## 1.4 Data Register
+
+A sub-system for registering and searching geoprocessing web services
+
+# 2. Installation
+
+## 2.1 Prerequisite
 
 Java 1.8+ (mandatory, OpenJDK)
 
@@ -23,9 +39,7 @@ ncWMS 2.4.1+ (mandatory, download ncWMS.war and deploy it into Tomcat webapps fo
 
 Apache Maven 3.5.0+ (optional, building CyberConnector.war from source)
 
-## Quick Start
-
-### Java War Package
+## 2.2 Java War Package
 
 To use CyberConnector, [download](https://github.com/CSISS/cc/releases) the latest release war and copy it to the webapps directory of Tomcat. Start Tomcat. 
 
@@ -37,47 +51,27 @@ Then enter the following URL into browser address bar to open CyberConnector:
 
 Replace the `your-ip`, `your-port`, `CyberConnector-<version>` with the real name of your tomcat and downloaded CyberConnector package. For example, `localhost:8080`, `CyberConnector-0.6.6`.
 
-### Cloud Instance Template
-
-We provide a ready-to-use cloud template for you to install on mainstream cloud platforms like AWS, Google Cloud, Azure, OpenStack and CloudStack. Please go here to download the template.
-
-### Docker Image
+## 2.3 Docker Image
 
 We published a Docker image in DockerHub for docker users. The pull command is:
 
 `docker pull csiss/cyberconnector`
 
-# Modules
+## 2.4 Cloud Instance Template
 
-## COVALI
+We provide a ready-to-use cloud template for you to install on mainstream cloud platforms like AWS, Google Cloud, Azure, OpenStack and CloudStack. Please go here to download the template.
 
-COVALI is the most important sub-system of CyberConnector. It can support comparison and validation of the tremendous amount of observational data or modeling data from atmospheric and other Earth science models (funded by [EarthCube CyberWay](http://cube.csiss.gmu.edu/CyberWay/web/index)). 
+# 3. Usage
 
-## Data Searcher
+## 3.1 Open Interface 
 
-A sub-system for searching Earth observations, model results or virtual data products (VDP)
-
-## Data Orderer
-
-A sub-system for orderring VDP (customizing existing observations into ready-to-use format)
-
-## Data Register
-
-A sub-system for registering and searching geoprocessing web services
-
-# Usage
-
-## COVALI
-
-### Interface 
-
-The interface of COVALI has one top toolbar, one side menu, one left map and one right map. 
+COVALI is web system. You can open it by entering "[http://cube.csiss.gmu.edu/CyberConnector/web/covali](http://cube.csiss.gmu.edu/CyberConnector/web/covali)" or "http://<yourtomcatip>:<yourtomcatport>/CyberConnector/web/covali" in the browser. The interface of COVALI has one top toolbar, one side menu, one left map and one right map. 
 
 The buttons in the top toolbar from left to right are "Search", "Add", "Settings", "Animation", "Statistics", "Calculation" ([NCO](http://nco.sourceforge.net/) backed processing), "Print". The functions in the top toolbar and side menu are duplicated for easy access. The default base map of the two maps is OpenStreetMap. The two maps are synchronized at the same resolution, extent, and direction. Every time users move one of them, the other one will do the same. There are two map scales on the left top of each map indicating how many actual miles one pixel is equal to. There is a dropdown selection box on the left bottom of the right map to change the map projection or switch between 2D and 3D mode. 
 
 ![comparison](comparison_asr_era5.jpg)
 
-### Add Data to Maps
+## 3.2 Add Data to Maps
 
 COVALI supports visualizing GRIB/NetCDF data on the maps. 
 
@@ -97,23 +91,23 @@ CHORDS URL: Besides GRIB and NetCDF files, COVALI can also load real time statio
 
 IRIS: Similar with CHORDS, COVALI can load the sensor network of [IRIS (Incorporated Research Institutions for Seismology)](https://www.iris.edu/hq/). It can visualize the distribution of IRIS sensor networks and clicking on each sensor will give the observation data captured by the sensor. 
 
-### Roaming
+## 3.3 Roaming
 
 ![roam](ccportal.gif)
 
-COVALI has different projection options and 3-D view to enable multi-perspective viewing the data. Users can switch projection or dimension by clicking the selection button at the right-bottom. 
+After the data is loaded, users can browse and compare the data in details from whatever scales and angles they think will help understand the data. COVALI has different projection options and 3-D view to enable multi-perspective viewing the data. Users can switch projection or dimension by clicking the selection button at the right-bottom. 
 
 ![globe](cc-3d.gif)
 
-### Search Data
+## 3.4 Search Data
 
-#### search in UCAR server
+### 3.4.1 search in UCAR server
 
 COVALI integrates a catalog service which hosts the metadata of ASR (Arctic System Reanalysis) products. Users can choose the "CSISS Catalogue (UCAR/RDA)" in the field of catalog to search. The search function allows users to specify their interested spatial extent and temporal period to narrow down to their interest data. 
 
 ![ucar](search_ucar.png)
 
-#### search in the public folder
+### 3.4.2 search in the public folder
 
 COVALI supports searching among the local files stored in the public folder and the upload_file folder. Notice: the spatial and temporal filters are not working for local files (because there is no metadata).
 
@@ -123,50 +117,49 @@ Search results are listed in a panel where users can directly download the files
 
 ![localresult](search_results.png)
 
-### Settings
+## 3.5 Settings
 
-COVALI provides a Settings menu to controll the two maps. It allows users to manage the added data layers.
+COVALI provides a Settings menu to controll the two maps. It allows users to manage the added data layers. They can adjust the opacity of the layers, change the order of the layers, change the legend/style of the layers (by clicking on the legend at the bottom of each map). They can also switch layers between the two maps by clicking the "switch map" button after the layer name in the "Settings" window. Users can also download the corresponding original data files by clicking the "Download" button. 
 
 ![settings](cc-settings.gif)
 
-### Tools
 
-COVALI provides a number of tools to facilitate the comparison and validation among the data. 
-
-#### Statistic Report
-
-Users can draw points or lines on the map to get a statistics on the values on the points or along the lines.
-
-![linestats](line_stats.png)
-
-### Map Synchronization
+### 3.5.1 Map Synchronization
 
 Users can also disconnect them by clicking "Settings" -> "Map Control" -> uncheck "Enable Map Synchronization". After disconnected, the two maps will no longer move together so users can observe the two maps at different scale and location. Check the box will make them synchronize again on next move.
 
-#### Map rotation
+### 3.5.2 Map rotation
 
 Use `Alt+Shift+Drag` to rotate the map.
 
 ![rotate](map_rotate.png)
 
-# Demo Site
+## 3.6 Tools
+
+COVALI provides a number of tools to facilitate the comparison and validation among the data. 
+
+### 3.6.1 Statistic Report
+
+Users can draw points or lines on the map to get a statistics on the values on the points or along the lines.
+
+![linestats](line_stats.png)
+
+# 4. Demo Site
 
 A demo instance has been deployed on George Mason University server. [here](http://cube.csiss.gmu.edu/CyberConnector/web/covali)
 
 ![general](covali-demo.gif)
 
-# License
+# 5. License
 
 MIT
 
-# Developers
+# 6. Developers
 
 [developer list](https://github.com/CSISS/cc/graphs/contributors)
 
-# Funders
+# 7. Funders
 
-National Science Foundation (#1740693 and #1440294)
+This project is initially funded by National Science Foundation (#1740693 and #1440294). 
 
 ![nsf](logo_nsf.gif)
-
-
