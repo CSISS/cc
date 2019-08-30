@@ -57,8 +57,12 @@
             <li><a href="#prerequisite">Prerequisite</a></li>
             <li><a href="#quick-start">Quick Start</a></li>
         <li class="main "><a href="#modules">Modules</a></li>
-        <li class="main "><a href="#usage">Usage</a></li>
             <li><a href="#covali">COVALI</a></li>
+            <li><a href="#data-searcher">Data Searcher</a></li>
+            <li><a href="#data-orderer">Data Orderer</a></li>
+            <li><a href="#data-register">Data Register</a></li>
+        <li class="main "><a href="#usage">Usage</a></li>
+            <li><a href="#covali_1">COVALI</a></li>
         <li class="main "><a href="#demo-site">Demo Site</a></li>
         <li class="main "><a href="#license">License</a></li>
         <li class="main "><a href="#developers">Developers</a></li>
@@ -92,30 +96,46 @@
 <p>We published a Docker image in DockerHub for docker users. The pull command is:</p>
 <p><code>docker pull csiss/cyberconnector</code></p>
 <h1 id="modules">Modules</h1>
-<p>COVALI - a sub-system for comparison and validation of atmospheric and other Earth science models (funded by <a href="http://cube.csiss.gmu.edu/CyberWay/web/index">EarthCube CyberWay</a>)</p>
-<p>CyberConnector Searcher - a sub-system for searching Earth observations, model results or virtual data products (VDP)</p>
-<p>CyberConnector Orderer - a sub-system for orderring VDP (customizing existing observations into ready-to-use format)</p>
-<p>CyberConnector Service Register - a sub-system for registering and searching geoprocessing web services</p>
-<h1 id="usage">Usage</h1>
 <h2 id="covali">COVALI</h2>
-<p>Example: </p>
+<p>COVALI is the most important sub-system of CyberConnector. It can support comparison and validation of the tremendous amount of observational data or modeling data from atmospheric and other Earth science models (funded by <a href="http://cube.csiss.gmu.edu/CyberWay/web/index">EarthCube CyberWay</a>). </p>
+<h2 id="data-searcher">Data Searcher</h2>
+<p>a sub-system for searching Earth observations, model results or virtual data products (VDP)</p>
+<h2 id="data-orderer">Data Orderer</h2>
+<p>a sub-system for orderring VDP (customizing existing observations into ready-to-use format)</p>
+<h2 id="data-register">Data Register</h2>
+<p>a sub-system for registering and searching geoprocessing web services</p>
+<h1 id="usage">Usage</h1>
+<h2 id="covali_1">COVALI</h2>
+<h3 id="interface">Interface</h3>
+<p>The interface of COVALI has one top toolbar, one side menu, one left map and one right map. </p>
+<p>The buttons in the top toolbar from left to right are "Search", "Add", "Settings", "Animation", "Statistics", "Calculation" (<a href="http://nco.sourceforge.net/">NCO</a> backed processing), "Print". The functions in the top toolbar and side menu are duplicated for easy access. The default base map of the two maps is OpenStreetMap. The two maps are synchronized at the same resolution, extent, and direction. Every time users move one of them, the other one will do the same. There are two map scales on the left top of each map indicating how many actual miles one pixel is equal to. There is a dropdown selection box on the left bottom of the right map to change the map projection or switch between 2D and 3D mode. </p>
+<p>Example:</p>
 <p><img alt="comparison" src="comparison_asr_era5.jpg" /></p>
 <p>Animation Demo:</p>
 <p><img alt="general" src="covali-demo.gif" /></p>
-<h3 id="roam-around-the-globe">Roam around the Globe</h3>
+<h3 id="add-data-to-maps">Add Data to Maps</h3>
+<p>COVALI supports visualizing GRIB/NetCDF data on the maps. </p>
+<p><img alt="visualization" src="cc-add-data.gif" /></p>
+<p>Users have several options to add data into the maps, including:</p>
+<p>Public: COVALI allows users to browse a public folder on the server which is configured when CyberConnector is installed. All the files in the public folder will be accessible and downloaded by the public. COVALI will be able to locate, parse and visualize the data on either of the two maps. After you click the corresponding "Choose" button, a new dialog listing "cc_cache" and "uploadFile" will show up. The "cc_cache" is the public folder, the "uploadFile" is the folder which holds all the uploaded files from the public. Click either of them will show all the files within it. Click on any data file with specific format suffix, e.g., grib and nc (netcdf), COVALI will automatically locate the file and parse its metadata. If the parsing is complete, a new window will pop up to ask if you "want to load it into the map now?" Click "Load" button will give you a list of variables which you can display. You can also choose the rendering style, time step, and elevation/depth value of the variable. Click on either "Add to Left" or "Add to Right" button to load the variable into the respective map. </p>
+<p>WMS (Web Map Service) (support version 1.3.0): COVALI depends on ncWMS. Users can use the built-in ncWMS which was installed on the same server by selecting the "Built-in ncWMS" option. If you want to use other WMS, we strongly recommand ncWMS-backed WMS which is best supported by COVALI at present. You need input the WMS capability document URL into the field, and click "Add" button next to it. COVALI will start to parse the WMS document and will list all the layers contained in the WMS if the parsing is successful. The rest variable selection and loading is the same as the "Public" option.</p>
+<p>Upload: COVALI also allows users to upload data files from their machines. Users must agree the service terms by clicking the "Agree" checkbox before they are allowed to click "Open Upload Window". Once the term is accepted and the upload window pops up, click "Choose File" in the window to choose local files and click "Upload". Don't close the COVALI web page and the upload page at the uploading. Once it says the uploading is complete, click "Load" button and COVALI will start to parse the uploaded file. The rest loading steps will be the same as "Public" option. If you accidentally closed the COVALI web page, you could find your uploaded files in the "uploadfiles" folder in the "Public" option.</p>
+<p>File URL: COVALI allows users to ask COVALI to download data files from URL. Once you click the "File URL" option, you will be able to input file URLs into the blank field. Once a URL is filled, click the "Cache" button next to it. COVALI will download the file into the "upload folder". The "Cache" button will go gray during the downloading. It means you cannot cache multiple files at the same time to prevent confusion. Once it notifys the file is cached, click on the button "Load Map" and the rest steps are the usual. </p>
+<p>CHORDS URL: Besides GRIB and NetCDF files, COVALI can also load real time stationary data. CHORDS is a real time data streaming system which is deployed on cloud and can capture real time observations from field sensors (e.g., 3D printed low-cost sensors) and store them into database. They have a official demo site which you can choose by checking the "CHORDS official instance" option and the filed will be automatically filled by its portal entry link. Click "Add" button and the sensors of CHORDS will be labelled on both maps. Clicking on the sensor lables will give information like sensor name, sensor device model, geolocation, the latest observations, etc, which can be used to validation the results from climate models. </p>
+<p>IRIS: Similar with CHORDS, COVALI can load the sensor network of <a href="https://www.iris.edu/hq/">IRIS (Incorporated Research Institutions for Seismology)</a>. It can visualize the distribution of IRIS sensor networks and clicking on each sensor will give the observation data captured by the sensor. </p>
+<h3 id="roaming">Roaming</h3>
 <p><img alt="roam" src="ccportal.gif" /></p>
-<p>COVALI has different projection options and 3-D view to enable multi-perspective viewing the data.</p>
+<p>COVALI has different projection options and 3-D view to enable multi-perspective viewing the data. Users can switch projection or dimension by clicking the selection button at the right-bottom. </p>
 <p><img alt="globe" src="cc-3d.gif" /></p>
 <h3 id="search-data">Search Data</h3>
 <h4 id="search-in-ucar-server">search in UCAR server</h4>
+<p>COVALI integrates a catalog service which hosts the metadata of ASR (Arctic System Reanalysis) products. Users can choose the "CSISS Catalogue (UCAR/RDA)" in the field of catalog to search. The search function allows users to specify their interested spatial extent and temporal period to narrow down to their interest data. </p>
 <p><img alt="ucar" src="search_ucar.png" /></p>
 <h4 id="search-in-the-public-folder">search in the public folder</h4>
+<p>COVALI supports searching among the local files stored in the public folder and the upload_file folder. Notice: the spatial and temporal filters are not working for local files (because there is no metadata).</p>
 <p><img alt="local" src="search_local.png" /></p>
 <p>Search results are listed in a panel where users can directly download the files or load them into the maps.</p>
 <p><img alt="localresult" src="search_results.png" /></p>
-<h3 id="add-data">Add Data</h3>
-<p>COVALI supports visualizing GRIB/NetCDF data on the maps. </p>
-<p><img alt="visualization" src="cc-add-data.gif" /></p>
 <h3 id="settings">Settings</h3>
 <p>COVALI provides a Settings menu to controll the two maps. It allows users to manage the added data layers.</p>
 <p><img alt="settings" src="cc-settings.gif" /></p>
@@ -124,6 +144,8 @@
 <h4 id="statistic-report">Statistic Report</h4>
 <p>Users can draw points or lines on the map to get a statistics on the values on the points or along the lines.</p>
 <p><img alt="linestats" src="line_stats.png" /></p>
+<h3 id="map-synchronization">Map Synchronization</h3>
+<p>Users can also disconnect them by clicking "Settings" -&gt; "Map Control" -&gt; uncheck "Enable Map Synchronization". After disconnected, the two maps will no longer move together so users can observe the two maps at different scale and location. Check the box will make them synchronize again on next move.</p>
 <h4 id="map-rotation">Map rotation</h4>
 <p>Use <code>Alt+Shift+Drag</code> to rotate the map.</p>
 <p><img alt="rotate" src="map_rotate.png" /></p>
@@ -132,7 +154,7 @@
 <h1 id="license">License</h1>
 <p>MIT</p>
 <h1 id="developers">Developers</h1>
-<p><a href="authors.md">developer list</a></p>
+<p><a href="https://github.com/CSISS/cc/graphs/contributors">developer list</a></p>
 <h1 id="funders">Funders</h1>
 <p>National Science Foundation (#1740693 and #1440294)</p>
 <p><img alt="nsf" src="logo_nsf.gif" /></p></div>
@@ -218,5 +240,5 @@
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-08-30 19:07:29
+Build Date UTC : 2019-08-30 20:28:09
 -->
