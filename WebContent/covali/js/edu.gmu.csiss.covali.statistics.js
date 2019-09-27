@@ -17,48 +17,53 @@ edu.gmu.csiss.covali.statistics = {
 	
 	listenPoint: function(side){
 		
-		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+		var sides = ["left", "right"];
 		
-		if(!$("#popup-"+side).length)
-			$('body').append('<div id="popup-'+side+'" class="ol-popup">'+
-				'      <a href="#" id="popup-closer-'+side+'" class="ol-popup-closer"></a>'+
-				'      <div id="popup-content-'+side+'"></div>'+
-				'    </div>'); 
-		
-		var container = document.getElementById('popup-'+side);
-		var closer = document.getElementById('popup-closer-'+side);
-		
-		var popup = new ol.Overlay({
-	        element: container,
-	        id: "point-popup-" +side,
-	        autoPan: true,
-	        autoPanAnimation: {
-	          duration: 250
-	        }
-	    });
-		
-		closer.onclick = function() {
-			popup.setPosition(undefined);
-	        closer.blur();
-	        return false;
-	    };
-		
-	    map.addOverlay(popup);
-	    
-	    //add single click
-	    
-	    map.on('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
-	    
-	    //double click to end
-	    
-	    map.on('dblclick', function(evt){
-	    	if($("#popup-" + side).length){
-	    		var element = popup.getElement();
-	    		$(element).popover('destroy');
-	    		$("#popup-" + side).remove();
-	    		map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
-	    	}
-	    });
+		for (var i=0; i<sides.length; i++){
+			var side = sides[i];
+			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+			if(!$("#popup-"+side).length)
+				$('body').append('<div id="popup-'+side+'" class="ol-popup">'+
+					'      <a href="#" id="popup-closer-'+side+'" class="ol-popup-closer"></a>'+
+					'      <div id="popup-content-'+side+'"></div>'+
+					'    </div>'); 
+			
+			var container = document.getElementById('popup-'+side);
+			var closer = document.getElementById('popup-closer-'+side);
+			
+			var popup = new ol.Overlay({
+		        element: container,
+		        id: "point-popup-" +side,
+		        autoPan: true,
+		        autoPanAnimation: {
+		          duration: 250
+		        }
+		    });
+			
+			closer.onclick = function() {
+				popup.setPosition(undefined);
+		        closer.blur();
+		        return false;
+		    };
+			
+		    map.addOverlay(popup);
+		    
+		    //add single click
+		    
+		    map.on('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		    
+		    //double click to end
+		    
+		    map.on('dblclick', function(evt){
+		    	if($("#popup-" + side).length){
+		    		var element = popup.getElement();
+		    		$(element).popover('destroy');
+		    		$("#popup-" + side).remove();
+		    		map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		    	}
+		    });
+		}
 	    
 	},
 	
@@ -160,9 +165,11 @@ edu.gmu.csiss.covali.statistics = {
 //			"<option value=\"right\">right</option>"+
 //			"</select></div>"+
 			"<div class=\"form-group\">"+
+			'<div>Activate pop-up on both maps: <input type="checkbox" id="bothMapsPopupChk" name="bothMapsPopupChk"></div><br>'+
 			"<label for=\"typeselect\">Select Statistics Type</label><select id=\"typeselect\">"+
 			"<option value=\"point\">point</option>"+
-			"<option value=\"linestring\">linestring</option>"+
+			"<option value=\"linestring\">linestring</option><br>"+
+			
 			"</select></div></div><div class=\"row\" style=\"padding:10px;\">Note: Double click on the map to stop.</div>";
 		
 		//only support the build-in ncWMS
@@ -182,6 +189,8 @@ edu.gmu.csiss.covali.statistics = {
 					edu.gmu.csiss.covali.statistics.removeAllListeners();
 										
 					var type = $("#typeselect").val();
+					//var bothMapsPopupChecked = $("#bothMapsPopupChk");
+					var bothMapsPopupChecked = document.getElementById("bothMapsPopupChk").checked;
 					
 					if(type=="point"){
 						
@@ -210,14 +219,9 @@ edu.gmu.csiss.covali.statistics = {
 				action: function(thedialog){
 					
 					thedialog.close();
-					
 				}
-				
 			}]
-			
 		});
-		
-		
 	},
 	
 	singleClickListener: function(evt) {
@@ -236,7 +240,7 @@ edu.gmu.csiss.covali.statistics = {
         var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(map.getTarget());
         
         var popup = map.getOverlayById("point-popup-" + side);
-        
+        //var dialogModal = $("#showDialog");
         popup.setPosition(coordinate);
         
 //        if(side=="left")
@@ -273,7 +277,7 @@ edu.gmu.csiss.covali.statistics = {
 
             var content = document.getElementById('popup-content-' + side);
             
-            content.innerHTML = '<p>You clicked here:</p><code>' + hdms +
+            content.innerHTML = 'X, Y:<code>' + hdms +
             
                 '</code><iframe seamless src="' + url + '"></iframe>';
         	

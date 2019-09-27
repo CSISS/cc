@@ -23,6 +23,8 @@ edu.gmu.csiss.covali.animation = {
 	
 	showTimeStepSelect: function(layername, timesteps){
 		
+		console.log("show me time series");
+		
 		var content = "<div class=\"row\" style=\"margin: 10px;\" id=\"frame-select\">"+
     	"  <div class=\"form-group\">"+
 		"    <label for=\"first-select\">Choose first time step </label>"+

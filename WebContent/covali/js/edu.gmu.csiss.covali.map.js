@@ -1104,18 +1104,51 @@ edu.gmu.csiss.covali.map = {
 				    	'FRAMERATE': framerate,
 				    	'LEGEND': legendurl,
 				    	'ANIMATION': true,
-				    	'TIME': starttime + "/" + endtime
+				    	'TIME': starttime + "/" + endtime,
+				    	'WIDTH': 800
 				    },
 				    
 				    imageLoadFunction: function (image, src) {
+
+				        console.log("map size", map.getSize().toString());
+				        console.log("rotation", map.getView().getRotation() * 180 / Math.PI);
+				        var params = new URLSearchParams(src.slice(src.indexOf("?")));
+				        var width = params.get("WIDTH");
+				        var height = params.get("HEIGHT");
+				        console.log("width", width);
+				        console.log("height", height);
+				        //var scaling = 4096 / Math.max(width, height);
+				        if (width < 1024 && height <1024 ) {
+				          image.getImage().src = src;
+				        } else {
+				          params.set("WIDTH", Math.round(width * 0.7));
+				          params.set("HEIGHT", Math.round(height * 0.7));
+				          
+					      var time = params.get("TIME");
+					      console.log("time"+time);
+					      
+				          url = src.slice(0, src.indexOf("?") + 1) + params.toString();
+				          console.log(url);
+				          var tempImage = document.createElement("img");
+				          tempImage.onload = function() {
+				            var canvas = document.createElement("canvas");
+				            canvas.width = width;
+				            canvas.height = height;
+				            var ctx = canvas.getContext("2d");
+				            ctx.drawImage(tempImage, 0, 0, width, height);
+				            image.getImage().src = canvas.toDataURL();
+				          };
+				          tempImage.crossOrigin = "anonymous";
+				          tempImage.src = url;
+				        }
+				        
+				    	//console.log(image);
 				    	
-				    	console.log(image);
-				    	
-				    	console.log(image.getImage());
+				    	//console.log(image.getImage());
 				    	
 //				    	window.open(src,"_blank");
 				    	
-				    	image.getImage().src = src;
+				    	//image.getImage().src = src;
 
 //			            var client = new XMLHttpRequest();
 //			            client.open('GET', src, true);
@@ -1146,7 +1179,37 @@ edu.gmu.csiss.covali.map = {
 				  })
 			});
 			
-			console.log(myLayer1303.getSource());
+		    //var startDate = myLayer1303.getSource().starttime;
+		    var frameRate = myLayer1303.getSource().framerate;
+    
+		    var animationId = null;
+		      
+		    //console.log(typeof(starttime));
+		    var startDate = new Date(starttime);
+			//console.log(myLayer1303.getSource());
+		    			
+			function setTime() {
+				startDate.setMinutes(startDate.getMinutes() + 30);
+		          myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
+		          //updateInfo();
+		        }
+		    
+			setTime();
+
+	        var stop = function() {
+	          if (animationId !== null) {
+	            window.clearInterval(animationId);
+	            animationId = null;
+	          }
+	        };
+
+	        //var play = function() {
+	          stop();
+	          animationId = window.setInterval(setTime, 1000);
+	        //};
+			
+			
+			
 			
 			myLayer1303.on("change:visible", function(event){
 				
