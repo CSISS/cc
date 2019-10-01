@@ -17,10 +17,6 @@ edu.gmu.csiss.covali.statistics = {
 	
 	listenPoint: function(side){
 		
-		//var sides = ["left", "right"];
-		
-		//for (var i=0; i<sides.length; i++){
-		//	var side = sides[i];
 			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 			
 			if(!$("#popup-"+side).length)
@@ -53,20 +49,32 @@ edu.gmu.csiss.covali.statistics = {
 		    
 		    map.on('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
 		    
-		    //double click to end
+		    //double click to close popups on both maps
 		    
-		    map.on('dblclick', function(evt){
-		    	if($("#popup-" + side).length){
-		    		var element = popup.getElement();
-		    		$(element).popover('destroy');
-		    		$("#popup-" + side).remove();
-		    		map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
-		    	}
-		    });
-		//}
-	    
+		    map.on('dblclick', function(){
+		    	edu.gmu.csiss.covali.statistics.removeAllPopups();
+		    });	    
+	},
+		
+	clearAllPopups: function(map,side){
+		if($("#popup-" + side).length){
+			var popup = map.getOverlayById("point-popup-" + side);
+    		var element = popup.getElement();
+    		$(element).popover('destroy');
+    		$("#popup-" + side).remove();
+    		map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+    	}
 	},
 	
+	removeAllPopups: function(){
+		
+		var leftmap = edu.gmu.csiss.covali.map.getMapBySide("left");
+		var rightmap = edu.gmu.csiss.covali.map.getMapBySide("right");
+		edu.gmu.csiss.covali.statistics.clearAllPopups(leftmap,"left");
+		edu.gmu.csiss.covali.statistics.clearAllPopups(rightmap,"right");
+		
+	},
+
 	listenLineString: function(side){
 		
 		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
