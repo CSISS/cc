@@ -17,10 +17,10 @@ edu.gmu.csiss.covali.statistics = {
 	
 	listenPoint: function(side){
 		
-		var sides = ["left", "right"];
+		//var sides = ["left", "right"];
 		
-		for (var i=0; i<sides.length; i++){
-			var side = sides[i];
+		//for (var i=0; i<sides.length; i++){
+		//	var side = sides[i];
 			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 			
 			if(!$("#popup-"+side).length)
@@ -63,7 +63,7 @@ edu.gmu.csiss.covali.statistics = {
 		    		map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
 		    	}
 		    });
-		}
+		//}
 	    
 	},
 	
@@ -267,20 +267,32 @@ edu.gmu.csiss.covali.statistics = {
         
         var wmssource = layer.getSource();
         
-        var url = wmssource.getGetFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:3857', {'INFO_FORMAT': 'text/html'});
+        var url = wmssource.getGetFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:3857', {'INFO_FORMAT': 'text/xml'});
         
         if (url) {
-        
-//        	document.getElementById('info').innerHTML =
-//            
-//        		'<iframe seamless src="' + url + '"></iframe>';
-
-            var content = document.getElementById('popup-content-' + side);
-            
-            content.innerHTML = 'X, Y:<code>' + hdms +
-            
-                '</code><iframe seamless src="' + url + '"></iframe>';
         	
+        	fetch(url)
+	        	.then(function(resp){
+	        		return resp.text();
+	        	})
+	        	.then(function(data){
+	        		parser = new DOMParser();
+	        		xmlDoc = parser.parseFromString(data,"text/xml");
+	        		
+	        		var content = document.getElementById('popup-content-' + side);
+	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
+	        		
+	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
+	        		'<pre><div style="font-family: Arial, Helvetica, sans-serif">'+
+	        		'<b>Layer:</b> '+LayerName[0]+
+	        		//'<br>Layer: '+LayerName[1]+
+	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
+	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
+	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue+
+	        		'</pre></div>';
+	        	})        	
         }
         
     },

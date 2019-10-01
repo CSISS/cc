@@ -1,4 +1,4 @@
-.ol-popup {
+﻿.ol-popup {
         position: absolute;
         background-color: white;
         -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
@@ -38,5 +38,5 @@
         right: 8px;
       }
       .ol-popup-closer:after {
-        content: "✖";
+	content: "✖";
       }
