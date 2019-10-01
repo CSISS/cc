@@ -198,9 +198,18 @@ edu.gmu.csiss.covali.statistics = {
         	map.getInteractions().forEach(function (interaction) {
         		  if(interaction instanceof ol.interaction.Draw) {
         			  map.removeInteraction(interaction);
+        			  //remove the draw from the other map as well
+        			  var theotherside = edu.gmu.csiss.covali.map.getOtherSide(side);
+        			  var othermap = edu.gmu.csiss.covali.map.getMapBySide(theotherside);
+        			  othermap.getInteractions().forEach(function (interaction) {
+	                		  if(interaction instanceof ol.interaction.Draw) {
+	                			  othermap.removeInteraction(interaction);
+	                		  }
+                		  }
+        			  );
         		  }
     		});
-	    });
+        });
         
 		
 	},
@@ -228,7 +237,7 @@ edu.gmu.csiss.covali.statistics = {
 //			"<option value=\"right\">right</option>"+
 //			"</select></div>"+
 			"<div class=\"form-group\">"+
-			'<div>Activate pop-up on both maps: <input type="checkbox" id="bothMapsPopupChk" name="bothMapsPopupChk"></div><br>'+
+			'<div><b>Activate pop-up on both maps:<b> <input type="checkbox" id="bothMapsPopupChk" name="bothMapsPopupChk"></div><br>'+
 			"<label for=\"typeselect\">Select Statistics Type</label><select id=\"typeselect\">"+
 			"<option value=\"point\">point</option>"+
 			"<option value=\"linestring\">linestring</option><br>"+
