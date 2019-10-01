@@ -513,14 +513,15 @@ edu.gmu.csiss.covali.wms = {
 				var downloadbtn = "";
 				
 				if(layerlist.text.indexOf("ncWMS")==-1) //skip the first layer
-					downloadbtn = "<a onclick=\"edu.gmu.csiss.covali.wms.download('"+layerlist.text+"')\" class=\"btn\"><span class=\"glyphicon glyphicon-download\" ></span> </a> ";
+					downloadbtn = "<a onclick=\"edu.gmu.csiss.covali.wms.download('"+layerlist.text+"')\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Download The Original Data File\" class=\"btn\"><span class=\"glyphicon glyphicon-download\" ></span> </a> ";
 				
 				divcont += "<div class=\"panel-group\"> "+
 		           " 		<div class=\"panel panel-default\"> "+
 		           "       	<div class=\"panel-heading\"> "+
 		           "       		<h4 class=\"panel-title\"> "+
 		           "        	  <a data-toggle=\"collapse\" href=\"#"+id+"\">"+layerlist.text+"</a> "+
-		           downloadbtn +
+		           "			  <span data-toggle=\"collapse\" href=\"#"+id+"\"><a  data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Show all the variables in this file\" class=\"btn\" ><span class=\"glyphicon glyphicon-list\" ></span></a></span>"+ //add a button to open the layer list
+		           				  downloadbtn +
 		           "       		</h4> "+
 		           "    	</div>"+
 		           "	<div id=\""+id+"\" class=\"panel-collapse collapse\"> "+
@@ -697,7 +698,7 @@ edu.gmu.csiss.covali.wms = {
 			
 			$content = this.getLayerHierarchyDiv(layerlist);
 			
-			console.log($content);
+//			console.log($content);
 			
 			BootstrapDialog.show({
 				

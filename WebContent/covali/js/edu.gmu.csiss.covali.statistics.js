@@ -8,7 +8,7 @@
  */
 
 edu.gmu.csiss.covali.statistics = {
-		
+	
 	draw: null,
 	
 	popup: null, 
@@ -267,9 +267,7 @@ edu.gmu.csiss.covali.statistics = {
         
         if (url) {
         
-//        	document.getElementById('info').innerHTML =
-//            
-//        		'<iframe seamless src="' + url + '"></iframe>';
+//        	document.getElementById('info').innerHTML = '<iframe seamless src="' + url + '"></iframe>';
 
             var content = document.getElementById('popup-content-' + side);
             

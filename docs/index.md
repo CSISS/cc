@@ -65,7 +65,7 @@ We provide a ready-to-use cloud template for you to install on mainstream cloud 
 
 ## 3.1 Open Interface 
 
-COVALI is web system. You can open it by entering "[http://cube.csiss.gmu.edu/CyberConnector/web/covali](http://cube.csiss.gmu.edu/CyberConnector/web/covali)" or "http://<yourtomcatip>:<yourtomcatport>/CyberConnector/web/covali" in the browser. The interface of COVALI has one top toolbar, one side menu, one left map and one right map. 
+COVALI is web system. You can open it by entering "[http://cube.csiss.gmu.edu/CyberConnector/web/covali](http://cube.csiss.gmu.edu/CyberConnector/web/covali)" or "http://your-ip:your-port/CyberConnector/web/covali" in the browser. The interface of COVALI has one top toolbar, one side menu, one left map and one right map. 
 
 The buttons in the top toolbar from left to right are "Search", "Add", "Settings", "Animation", "Statistics", "Calculation" ([NCO](http://nco.sourceforge.net/) backed processing), "Print". The functions in the top toolbar and side menu are duplicated for easy access. The default base map of the two maps is OpenStreetMap. The two maps are synchronized at the same resolution, extent, and direction. Every time users move one of them, the other one will do the same. There are two map scales on the left top of each map indicating how many actual miles one pixel is equal to. There is a dropdown selection box on the left bottom of the right map to change the map projection or switch between 2D and 3D mode. 
 
