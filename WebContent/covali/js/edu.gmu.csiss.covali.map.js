@@ -1110,25 +1110,27 @@ edu.gmu.csiss.covali.map = {
 				    
 				    imageLoadFunction: function (image, src) {
 
-				        console.log("map size", map.getSize().toString());
-				        console.log("rotation", map.getView().getRotation() * 180 / Math.PI);
+				        //console.log("map size", map.getSize().toString());
+				        //console.log("rotation", map.getView().getRotation() * 180 / Math.PI);
 				        var params = new URLSearchParams(src.slice(src.indexOf("?")));
 				        var width = params.get("WIDTH");
 				        var height = params.get("HEIGHT");
-				        console.log("width", width);
-				        console.log("height", height);
+				        //console.log("width", width);
+				        //console.log("height", height);
 				        //var scaling = 4096 / Math.max(width, height);
 				        if (width < 1024 && height <1024 ) {
 				          image.getImage().src = src;
+				          console.log("Executing initial request...")
 				        } else {
+				          //console.log("Reducing image size...")
 				          params.set("WIDTH", Math.round(width * 0.7));
 				          params.set("HEIGHT", Math.round(height * 0.7));
 				          
 					      var time = params.get("TIME");
-					      console.log("time"+time);
+					      //console.log("time"+time);
 					      
 				          url = src.slice(0, src.indexOf("?") + 1) + params.toString();
-				          console.log(url);
+				          //console.log(url);
 				          var tempImage = document.createElement("img");
 				          tempImage.onload = function() {
 				            var canvas = document.createElement("canvas");
@@ -1180,36 +1182,51 @@ edu.gmu.csiss.covali.map = {
 			});
 			
 		    //var startDate = myLayer1303.getSource().starttime;
-		    var frameRate = myLayer1303.getSource().framerate;
+		    //var frameRate = myLayer1303.getSource().framerate;
     
 		    var animationId = null;
-		      
-		    //console.log(typeof(starttime));
 		    var startDate = new Date(starttime);
-			//console.log(myLayer1303.getSource());
-		    			
-			function setTime() {
-				startDate.setMinutes(startDate.getMinutes() + 30);
-		          myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
-		          //updateInfo();
-		        }
 		    
-			setTime();
-
-	        var stop = function() {
-	          if (animationId !== null) {
+		    function updateInfo() {
+		    	if (side == 'left'){
+		    		var el = document.getElementById('title-openlayers1');
+		    	}
+		    	else{
+		    		var el = document.getElementById('title-openlayers2');		    		
+		    	}
+		    	el.innerHTML = "layer:" + myLayer1303.values_.name.split("/")[1]+"; time: "+startDate.toISOString();
+		    }
+		    var startTimeCurVal = null;
+		    var endTimeFormatted = new Date(endtime);
+			function setTime() {
+				startDate.setMinutes(startDate.getMinutes() + 60);						
+			    myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
+			    updateInfo();
+			    return startDate < endTimeFormatted;
+		     }
+			//setTime();
+			
+	        var stopAnimation = function() {
+	          if (animationId !== null && setTime() == false) {
 	            window.clearInterval(animationId);
 	            animationId = null;
 	          }
 	        };
 
-	        //var play = function() {
-	          stop();
+	        var playAnimation = function() {
+
+	          stopAnimation();
+	          console.log(setTime());
 	          animationId = window.setInterval(setTime, 1000);
-	        //};
+	          window.setInterval(stopAnimation, 1000);
+	        };
 			
-			
-			
+	        playAnimation();
+	        	        
+	        console.log(myLayer1303.getSource().getParams());
+	        map.on('dblclick', function(evt){
+	        	stopAnimation();
+			    });
 			
 			myLayer1303.on("change:visible", function(event){
 				
