@@ -1085,62 +1085,64 @@ edu.gmu.csiss.covali.map = {
 			
 			console.log(url);
 			
-			var myLayer1303 = new ol.layer.Image({
+			var myLayer1303 = new ol.layer.Tile({
 				  //extent: [2033814, 6414547, 2037302, 6420952],
 				  //preload: Infinity,
 				  name: layername,
 				  title: layername,
 				  visible: true,
-				  source: new ol.source.ImageWMS({
+				  source: new ol.source.TileWMS({
 //					  LAYERS=IR&ELEVATION=0&TIME=2018-05-31T02%3A00%3A19.000Z&TRANSPARENT=true&STYLES=boxfill%2Frainbow&COLORSCALERANGE=-50%2C50&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A4326&BBOX=-101.47971029369,19.92840558883,-85.775652352431,35.632463530092&WIDTH=256&HEIGHT=256
 //				    url: 'http://thredds.ucar.edu/thredds/wms/grib/NCEP/GEFS/Global_1p0deg_Ensemble/members-analysis/GEFS_Global_1p0deg_Ensemble_ana_20180520_0600.grib2',
 					url: url,
 				    params: {
-				    	'LAYERS': layername, 
-				    	'TILED': true,  
-				    	'FORMAT': 'image/gif',
+				    	'LAYERS': layername,
+				    	'FORMAT': 'image/png',
 				    	'VERSION': '1.3.0',
 				    	'STYLES':stylename,
-				    	'FRAMERATE': framerate,
+//				    	'FRAMERATE': framerate,
 				    	'LEGEND': legendurl,
-				    	'ANIMATION': true,
-				    	'TIME': starttime + "/" + endtime,
-				    	'WIDTH': 800
+				    	'TIME': starttime
+//				    	'ANIMATION': true,
+//				    	'TIME': starttime + "/" + endtime,
+//				    	'WIDTH': 800
 				    },
 				    
 				    imageLoadFunction: function (image, src) {
-
-				        console.log("map size", map.getSize().toString());
-				        console.log("rotation", map.getView().getRotation() * 180 / Math.PI);
-				        var params = new URLSearchParams(src.slice(src.indexOf("?")));
-				        var width = params.get("WIDTH");
-				        var height = params.get("HEIGHT");
-				        console.log("width", width);
-				        console.log("height", height);
-				        //var scaling = 4096 / Math.max(width, height);
-				        if (width < 1024 && height <1024 ) {
-				          image.getImage().src = src;
-				        } else {
-				          params.set("WIDTH", Math.round(width * 0.7));
-				          params.set("HEIGHT", Math.round(height * 0.7));
-				          
-					      var time = params.get("TIME");
-					      console.log("time"+time);
-					      
-				          url = src.slice(0, src.indexOf("?") + 1) + params.toString();
-				          console.log(url);
-				          var tempImage = document.createElement("img");
-				          tempImage.onload = function() {
-				            var canvas = document.createElement("canvas");
-				            canvas.width = width;
-				            canvas.height = height;
-				            var ctx = canvas.getContext("2d");
-				            ctx.drawImage(tempImage, 0, 0, width, height);
-				            image.getImage().src = canvas.toDataURL();
-				          };
-				          tempImage.crossOrigin = "anonymous";
-				          tempImage.src = url;
-				        }
+//				    	image.getImage().src = src;
+				        //console.log("map size", map.getSize().toString());
+				        //console.log("rotation", map.getView().getRotation() * 180 / Math.PI);
+//				        var params = new URLSearchParams(src.slice(src.indexOf("?")));
+//				        var width = params.get("WIDTH");
+//				        var height = params.get("HEIGHT");
+//				        //console.log("width", width);
+//				        //console.log("height", height);
+//				        //var scaling = 4096 / Math.max(width, height);
+//				        if (width < 1024 && height <1024 ) {
+//				          image.getImage().src = src;
+//				          console.log("Executing initial request...")
+//				        } else {
+//				          //console.log("Reducing image size...")
+//				          params.set("WIDTH", Math.round(width * 0.7));
+//				          params.set("HEIGHT", Math.round(height * 0.7));
+//				          
+//					      var time = params.get("TIME");
+//					      //console.log("time"+time);
+//					      
+//				          url = src.slice(0, src.indexOf("?") + 1) + params.toString();
+//				          //console.log(url);
+//				          var tempImage = document.createElement("img");
+//				          tempImage.onload = function() {
+//				            var canvas = document.createElement("canvas");
+//				            canvas.width = width;
+//				            canvas.height = height;
+//				            var ctx = canvas.getContext("2d");
+//				            ctx.drawImage(tempImage, 0, 0, width, height);
+//				            image.getImage().src = canvas.toDataURL();
+//				          };
+//				          tempImage.crossOrigin = "anonymous";
+//				          tempImage.src = url;
+//				        }
 				        
 				    	//console.log(image);
 				    	
@@ -1179,37 +1181,52 @@ edu.gmu.csiss.covali.map = {
 				  })
 			});
 			
-//		    //var startDate = myLayer1303.getSource().starttime;
-//		    var frameRate = myLayer1303.getSource().framerate;
-//    
-//		    var animationId = null;
-//		      
-//		    //console.log(typeof(starttime));
-//		    var startDate = new Date(starttime);
-//			//console.log(myLayer1303.getSource());
-//		    			
-//			function setTime() {
-//				startDate.setMinutes(startDate.getMinutes() + 30);
-//		          myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
-//		          //updateInfo();
-//		        }
-//		    
-//			setTime();
-//
-//	        var stop = function() {
-//	          if (animationId !== null) {
-//	            window.clearInterval(animationId);
-//	            animationId = null;
-//	          }
-//	        };
-//
-//	        //var play = function() {
-//	          stop();
-//	          animationId = window.setInterval(setTime, 1000);
-//	        //};
-	          
-	          
-	        
+		    //var startDate = myLayer1303.getSource().starttime;
+		    //var frameRate = myLayer1303.getSource().framerate;
+    
+		    var animationId = null;
+		    var startDate = new Date(starttime);
+		    
+		    function updateInfo() {
+		    	if (side == 'left'){
+		    		var el = document.getElementById('title-openlayers1');
+		    	}
+		    	else{
+		    		var el = document.getElementById('title-openlayers2');		    		
+		    	}
+		    	el.innerHTML = "layer:" + myLayer1303.values_.name.split("/")[1]+"; time: "+startDate.toISOString();
+		    }
+		    var startTimeCurVal = null;
+		    var endTimeFormatted = new Date(endtime);
+			function setTime() {
+				startDate.setMinutes(startDate.getMinutes() + 60);						
+			    myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
+			    updateInfo();
+			    return startDate < endTimeFormatted;
+		     }
+			//setTime();
+			
+	        var stopAnimation = function() {
+	          if (animationId !== null && setTime() == false) {
+	            window.clearInterval(animationId);
+	            animationId = null;
+	          }
+	        };
+
+	        var playAnimation = function() {
+
+	          stopAnimation();
+	          console.log(setTime());
+	          animationId = window.setInterval(setTime, 1000);
+//	          window.setInterval(stopAnimation, 1000);
+	        };
+			
+	        playAnimation();
+	        	        
+	        console.log(myLayer1303.getSource().getParams());
+	        map.on('dblclick', function(evt){
+	        	stopAnimation();
+			});
 			
 			myLayer1303.on("change:visible", function(event){
 				
