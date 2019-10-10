@@ -1217,16 +1217,10 @@ edu.gmu.csiss.covali.map = {
 	        var playAnimation = function() {
 
 	          stopAnimation();
-<<<<<<< HEAD
-	          console.log(setTime());
-	          animationId = window.setInterval(setTime, 1000);
-//	          window.setInterval(stopAnimation, 1000);
-=======
-	          
+      
 	          console.log(1000/framerate);
 	          animationId = window.setInterval(setTime, 1000/framerate);
 	          window.setInterval(stopAnimation, 1000/framerate);
->>>>>>> animation improved (frame rate fixed)
 	        };
 			
 	        playAnimation();
