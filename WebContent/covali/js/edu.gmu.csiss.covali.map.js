@@ -1406,8 +1406,9 @@ edu.gmu.csiss.covali.map = {
 				  title: "World Boundary",	
 				  zIndex: 99,
 		          source: new ol.source.ImageWMS({
-		            url: 'http://gis.csiss.gmu.edu/cgi-bin/wms_world_modissin',
+		            url: 'http://gis.csiss.gmu.edu/cgi-bin/mapserv.cgi',
 		            params: {
+		            	map: "/media/gisiv01/world/world_modissin.map",
 		            	'LAYERS': 'world_countries_sin,world_state_provinces_sin',
 		            	'VERSION': '1.3.0'
 		            },
@@ -1422,8 +1423,9 @@ edu.gmu.csiss.covali.map = {
 				  title: "World Boundary",				  
 				  zIndex: 99,
 				  source: new ol.source.ImageWMS({
-		            url: 'http://gis.csiss.gmu.edu/cgi-bin/wms_world_modissin',
+		            url: 'http://gis.csiss.gmu.edu/cgi-bin/mapserv.cgi',
 		            params: {
+		            	map: "/media/gisiv01/world/world_modissin.map",
 		            	'LAYERS': 'world_countries_sin,world_state_provinces_sin',
 		            	'VERSION': '1.3.0'
 		            },
