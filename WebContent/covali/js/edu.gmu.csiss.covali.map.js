@@ -1180,9 +1180,6 @@ edu.gmu.csiss.covali.map = {
 				    
 				  })
 			});
-			
-		    //var startDate = myLayer1303.getSource().starttime;
-		    //var frameRate = myLayer1303.getSource().framerate;
     
 		    var animationId = null;
 		    var startDate = new Date(starttime);
@@ -1194,11 +1191,15 @@ edu.gmu.csiss.covali.map = {
 		    	else{
 		    		var el = document.getElementById('title-openlayers2');		    		
 		    	}
-		    	el.innerHTML = "layer:" + myLayer1303.values_.name.split("/")[1]+"; time: "+startDate.toISOString();
+		    	el.innerHTML = "layer:" + myLayer1303.values_.name+
+		    				   "; time: "+myLayer1303.getSource().getParams().TIME;
+		    				   //startDate.toISOString();
 		    }
+		    console.log(myLayer1303);
 		    var startTimeCurVal = null;
 		    var endTimeFormatted = new Date(endtime);
 			function setTime() {
+				//console.log(myLayer1303.getSource().getParams().TIME);
 				startDate.setMinutes(startDate.getMinutes() + 60);						
 			    myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
 			    updateInfo();
@@ -1216,14 +1217,15 @@ edu.gmu.csiss.covali.map = {
 	        var playAnimation = function() {
 
 	          stopAnimation();
-	          console.log(setTime());
-	          animationId = window.setInterval(setTime, 1000);
-//	          window.setInterval(stopAnimation, 1000);
+      
+	          console.log(1000/framerate);
+	          animationId = window.setInterval(setTime, 1000/framerate);
+	          window.setInterval(stopAnimation, 1000/framerate);
 	        };
 			
 	        playAnimation();
 	        	        
-	        console.log(myLayer1303.getSource().getParams());
+	        
 	        map.on('dblclick', function(evt){
 	        	stopAnimation();
 			});
