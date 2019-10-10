@@ -1179,37 +1179,37 @@ edu.gmu.csiss.covali.map = {
 				  })
 			});
 			
-		    //var startDate = myLayer1303.getSource().starttime;
-		    var frameRate = myLayer1303.getSource().framerate;
-    
-		    var animationId = null;
-		      
-		    //console.log(typeof(starttime));
-		    var startDate = new Date(starttime);
-			//console.log(myLayer1303.getSource());
-		    			
-			function setTime() {
-				startDate.setMinutes(startDate.getMinutes() + 30);
-		          myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
-		          //updateInfo();
-		        }
-		    
-			setTime();
-
-	        var stop = function() {
-	          if (animationId !== null) {
-	            window.clearInterval(animationId);
-	            animationId = null;
-	          }
-	        };
-
-	        //var play = function() {
-	          stop();
-	          animationId = window.setInterval(setTime, 1000);
-	        //};
-			
-			
-			
+//		    //var startDate = myLayer1303.getSource().starttime;
+//		    var frameRate = myLayer1303.getSource().framerate;
+//    
+//		    var animationId = null;
+//		      
+//		    //console.log(typeof(starttime));
+//		    var startDate = new Date(starttime);
+//			//console.log(myLayer1303.getSource());
+//		    			
+//			function setTime() {
+//				startDate.setMinutes(startDate.getMinutes() + 30);
+//		          myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
+//		          //updateInfo();
+//		        }
+//		    
+//			setTime();
+//
+//	        var stop = function() {
+//	          if (animationId !== null) {
+//	            window.clearInterval(animationId);
+//	            animationId = null;
+//	          }
+//	        };
+//
+//	        //var play = function() {
+//	          stop();
+//	          animationId = window.setInterval(setTime, 1000);
+//	        //};
+	          
+	          
+	        
 			
 			myLayer1303.on("change:visible", function(event){
 				
