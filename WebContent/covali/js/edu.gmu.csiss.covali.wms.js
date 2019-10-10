@@ -820,6 +820,8 @@ edu.gmu.csiss.covali.wms = {
 			var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
 					.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
 			
+			console.log(endpointurl);
+			
 			String.prototype.replaceAll = function(search, replacement) {
 			    var target = this;
 			    return target.replace(new RegExp(search, 'g'), replacement);
@@ -832,17 +834,18 @@ edu.gmu.csiss.covali.wms = {
 			
 			console.log("current url base: " + urlprefix);
 			
-			if(!endpointurl.startsWith(urlprefix)){
-				
-				var pathArray1 = endpointurl.split( '/' );
-				var protocol1 = pathArray1[0];
-				var host1 = pathArray1[2];
-				pathArray1[0] = protocol;
-				pathArray1[2] = host;
-				endpointurl = pathArray1.join("/");
-				console.log("switch WMS prefix to current" + endpointurl);
-				
-			}
+			//why doing this?
+//			if(!endpointurl.startsWith(urlprefix)){
+//				
+//				var pathArray1 = endpointurl.split( '/' );
+//				var protocol1 = pathArray1[0];
+//				var host1 = pathArray1[2];
+//				pathArray1[0] = protocol;
+//				pathArray1[2] = host;
+//				endpointurl = pathArray1.join("/");
+//				console.log("switch WMS prefix to current" + endpointurl);
+//				
+//			}
 			
 			if(location.protocol=="https:"){
 				
