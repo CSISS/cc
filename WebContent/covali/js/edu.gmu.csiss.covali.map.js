@@ -1108,6 +1108,8 @@ edu.gmu.csiss.covali.map = {
 //				    	'WIDTH': 800
 				    },
 				    
+				    crossOrigin: 'anonymous',
+				    
 				    imageLoadFunction: function (image, src) {
 //				    	image.getImage().src = src;
 				        //console.log("map size", map.getSize().toString());
@@ -1303,7 +1305,8 @@ edu.gmu.csiss.covali.map = {
 //					  LAYERS=IR&ELEVATION=0&TIME=2018-05-31T02%3A00%3A19.000Z&TRANSPARENT=true&STYLES=boxfill%2Frainbow&COLORSCALERANGE=-50%2C50&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A4326&BBOX=-101.47971029369,19.92840558883,-85.775652352431,35.632463530092&WIDTH=256&HEIGHT=256
 //				    url: 'http://thredds.ucar.edu/thredds/wms/grib/NCEP/GEFS/Global_1p0deg_Ensemble/members-analysis/GEFS_Global_1p0deg_Ensemble_ana_20180520_0600.grib2',
 					url: url,
-				    params: params
+				    params: params,
+				    crossOrigin: 'anonymous'
 				  })
 			});
 			
