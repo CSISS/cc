@@ -1184,45 +1184,71 @@ edu.gmu.csiss.covali.map = {
 			});
     
 		    var animationId = null;
-		    var startDate = new Date(starttime);
 		    
-		    function updateInfo() {
-		    	if (side == 'left'){
-		    		var el = document.getElementById('title-openlayers1');
+		    var startDate = new Date(starttime);
+		    var tz_offset = startDate.getTimezoneOffset();
+		    startDate.setMinutes(startDate.getMinutes()+tz_offset);
+		    //console.log(startDate);
+		    
+		    function updateInfo(StartOrStop) {
+		    	
+		    	if(myLayer1303){
+			    	var animationMessage = {"start": "Animation is playing. Double click on the map to stop.", 
+			    			"stop": "Animation is stopped."}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
+			    	if (side == 'left'){
+			    		var el = document.getElementById('title-openlayers1');
+			    	}
+			    	else{
+			    		var el = document.getElementById('title-openlayers2');		    		
+			    	}
+		    		el.innerHTML = animationMessage[StartOrStop] + 
+					   "<br>Layer:" + myLayer1303.values_.name+
+					   ";<br>Time: "+myLayer1303.getSource().getParams().TIME;		    		
 		    	}
-		    	else{
-		    		var el = document.getElementById('title-openlayers2');		    		
-		    	}
-		    	el.innerHTML = "layer:" + myLayer1303.values_.name+
-		    				   "; time: "+myLayer1303.getSource().getParams().TIME;
-		    				   //startDate.toISOString();
 		    }
-		    console.log(myLayer1303);
-		    var startTimeCurVal = null;
-		    var endTimeFormatted = new Date(endtime);
+		    console.log("startDate: "+startDate+"; Layer time:"+myLayer1303.getSource().getParams().TIME);
+		    //var startTimeCurVal = null;
+		    var endDate = new Date(endtime);
+		    endDate.setMinutes(endDate.getMinutes()+tz_offset);
+		    
+		    var stopAnimationFlag = true;
 			function setTime() {
-				//console.log(myLayer1303.getSource().getParams().TIME);
-				startDate.setMinutes(startDate.getMinutes() + 60);						
+				//var now = new Date();
+				
+				if (startDate > endDate){
+					//console.log("Resetting the time!!!"+startDate);
+				    startDate = new Date(starttime);
+				    startDate.setMinutes(startDate.getMinutes()+tz_offset);
+					//console.log("Resetting the time!!!"+startDate);
+				}
+				startDate.setMinutes(startDate.getMinutes() + interval/60000);						
 			    myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
-			    updateInfo();
-			    return startDate < endTimeFormatted;
+			    updateInfo("start");
+			    //console.log("Start date: "+startDate+"; Now: "+now);
+			    stopAnimationFlag = startDate < endDate;
 		     }
 			//setTime();
 			
-	        var stopAnimation = function() {
-	          if (animationId !== null && setTime() == false) {
+	       function stopAnimation() {
+	          if (animationId !== null){// && stopAnimationFlag == false) {
 	            window.clearInterval(animationId);
 	            animationId = null;
+	            updateInfo("stop");
 	          }
 	        };
+	        
+	        var animationFunctions = function(){
+	        	setTime();
+	        	stopAnimation();
+	        }
 
-	        var playAnimation = function() {
+	        function playAnimation() {
 
 	          stopAnimation();
       
 	          console.log(1000/framerate);
 	          animationId = window.setInterval(setTime, 1000/framerate);
-	          window.setInterval(stopAnimation, 1000/framerate);
+	          //window.setInterval(stopAnimation, 1000/framerate);
 	        };
 			
 	        playAnimation();
