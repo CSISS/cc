@@ -1061,7 +1061,7 @@ edu.gmu.csiss.covali.map = {
 
 					layer = l;
 					
-					console.log("the first visible layer is : " + l.get('name'));
+					//console.log("the first visible layer is : " + l.get('name'));
 					
 					break;
 					

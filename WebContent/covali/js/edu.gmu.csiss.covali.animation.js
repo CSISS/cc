@@ -10,6 +10,14 @@ edu.gmu.csiss.covali.animation = {
 		
 	layer_tree : null,
 	
+	starttime : null,
+	
+	endtime : null,
+	
+	mapside : null,
+	
+	framerate : null,
+	
 	/**
 	 *  show a select list to choose the rendered layer list
 	 */
@@ -101,13 +109,13 @@ edu.gmu.csiss.covali.animation = {
             		
         			//overlay the animation on the maps. show buttons in the map area to stop the animation.
         			
-                	var starttime = $("#first-select").val();
+                	starttime = $("#first-select").val();
                 	
-                	var endtime = $("#last-select").val();
+                	endtime = $("#last-select").val();
                 	
-                	var mapside = $("input[name='mapside']:checked").val();
+                	mapside = $("input[name='mapside']:checked").val();
                 	
-                	var framerate = $("#frame-rate").val();
+                	framerate = $("#frame-rate").val();
                 	
                 	edu.gmu.csiss.covali.wms.loadAnimation(layername, mapside, starttime, endtime, framerate);
             		

@@ -265,14 +265,20 @@ edu.gmu.csiss.covali.settings = {
 			
 			var othermap = edu.gmu.csiss.covali.map.getMapBySide(target_side);
 			
-			othermap.addLayer(layer);
-			
-			edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, 
-					layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
-			
-			this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
-			
+			console.log(layer.values_.enableLocalCache);
+			if (layer.values_.enableLocalCache == true){
+				edu.gmu.csiss.covali.wms.loadAnimation(layername, target_side, starttime, endtime, framerate);
+			}
+			else{
+				othermap.addLayer(layer);
+				edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, 
+						layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
+				
+				this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
+				
+			}
 			this.delLayer(side, layername, true);
+
 			
 		},
 		
