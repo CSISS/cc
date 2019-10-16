@@ -1081,6 +1081,8 @@ edu.gmu.csiss.covali.map = {
 			
 			var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
 			
+			stylename = "default-scalar/default"; //this is a quick fix to adding the legend to animation. it needs to be a permanent fix.
+			
 			var legendurl = edu.gmu.csiss.covali.map.getWMSLegend(side, layername, stylename);
 			
 			console.log(url);
@@ -1091,6 +1093,7 @@ edu.gmu.csiss.covali.map = {
 				  name: layername,
 				  title: layername,
 				  visible: true,
+				  enableLocalCache:true,
 				  source: new ol.source.TileWMS({
 //					  LAYERS=IR&ELEVATION=0&TIME=2018-05-31T02%3A00%3A19.000Z&TRANSPARENT=true&STYLES=boxfill%2Frainbow&COLORSCALERANGE=-50%2C50&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A4326&BBOX=-101.47971029369,19.92840558883,-85.775652352431,35.632463530092&WIDTH=256&HEIGHT=256
 //				    url: 'http://thredds.ucar.edu/thredds/wms/grib/NCEP/GEFS/Global_1p0deg_Ensemble/members-analysis/GEFS_Global_1p0deg_Ensemble_ana_20180520_0600.grib2',
@@ -1190,20 +1193,44 @@ edu.gmu.csiss.covali.map = {
 		    startDate.setMinutes(startDate.getMinutes()+tz_offset);
 		    //console.log(startDate);
 		    
-		    function updateInfo(StartOrStop) {
+		    
+			/*var nextlayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+			
+			if(nextlayer!=null){
+				
+				edu.gmu.csiss.covali.map.updateLegend(side, nextlayer.get('name'), nextlayer.getSource().getParams()["LEGEND"], 
+						null, null, nextlayer.getSource().getParams()["TIME"], nextlayer.getSource().getParams()["ELEVATION"]);
+				
+			}else{
+				
+				edu.gmu.csiss.covali.map.updateLegend(side, null, null, null, null, null, null);
+				
+			}*/
+		    //this function already exists, it's called updateCaption!!
+		    function updateInfo(StartOrStop, side) {
 		    	
-		    	if(myLayer1303){
-			    	var animationMessage = {"start": "Animation is playing. Double click on the map to stop.", 
-			    			"stop": "Animation is stopped."}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
-			    	if (side == 'left'){
-			    		var el = document.getElementById('title-openlayers1');
-			    	}
-			    	else{
-			    		var el = document.getElementById('title-openlayers2');		    		
-			    	}
-		    		el.innerHTML = animationMessage[StartOrStop] + 
-					   "<br>Layer:" + myLayer1303.values_.name+
-					   ";<br>Time: "+myLayer1303.getSource().getParams().TIME;		    		
+		    	var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+		    	
+		    	if(layer!=null){
+		    	
+		    		    	
+			    	edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,layer.getSource().getParams()["TIME"],layer.getSource().getParams()["ELEVATION"]);
+			    	
+			    	//if(myLayer1303.isVisible){
+				    	var animationMessage = {"start": "Animation is playing. Double click on the map to stop.", 
+				    			"stop": "Animation is stopped."}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
+				    	if (side == 'left'){
+				    		var el = document.getElementById('title-openlayers1');
+				    	}
+				    	else{
+				    		var el = document.getElementById('title-openlayers2');		    		
+				    	}
+			    		el.innerHTML = animationMessage[StartOrStop] + 
+						   "<br>Layer:" + myLayer1303.values_.name+
+						   ";<br>Time: "+myLayer1303.getSource().getParams().TIME;		    		
+		    	}
+		    	else{
+		    		return;
 		    	}
 		    }
 		    console.log("startDate: "+startDate+"; Layer time:"+myLayer1303.getSource().getParams().TIME);
@@ -1212,28 +1239,42 @@ edu.gmu.csiss.covali.map = {
 		    endDate.setMinutes(endDate.getMinutes()+tz_offset);
 		    
 		    var stopAnimationFlag = true;
-			function setTime() {
-				//var now = new Date();
+			
+		    function setTime() {
+				var mapid = map.get('target');
 				
-				if (startDate > endDate){
-					//console.log("Resetting the time!!!"+startDate);
-				    startDate = new Date(starttime);
-				    startDate.setMinutes(startDate.getMinutes()+tz_offset);
-					//console.log("Resetting the time!!!"+startDate);
-				}
-				startDate.setMinutes(startDate.getMinutes() + interval/60000);						
-			    myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
-			    updateInfo("start");
-			    //console.log("Start date: "+startDate+"; Now: "+now);
-			    stopAnimationFlag = startDate < endDate;
+				var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
+				//var now = new Date();
+				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+		    	
+		    	if(layer!=null){
+				
+					if (startDate > endDate){
+						//console.log("Resetting the time!!!"+startDate);
+					    startDate = new Date(starttime);
+					    startDate.setMinutes(startDate.getMinutes()+tz_offset);
+						//console.log("Resetting the time!!!"+startDate);
+					}
+					startDate.setMinutes(startDate.getMinutes() + interval/60000);						
+				    myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
+				    updateInfo("start", side);
+				    //console.log("Start date: "+startDate+"; Now: "+now);
+				    stopAnimationFlag = startDate < endDate;
+		    	}
+		    	else{
+		    		return;
+		    	}
 		     }
 			//setTime();
 			
 	       function stopAnimation() {
+			  var mapid = map.get('target');
+				
+			  var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
 	          if (animationId !== null){// && stopAnimationFlag == false) {
 	            window.clearInterval(animationId);
 	            animationId = null;
-	            updateInfo("stop");
+	            updateInfo("stop", side);
 	          }
 	        };
 	        
@@ -1259,10 +1300,13 @@ edu.gmu.csiss.covali.map = {
 			});
 			
 			myLayer1303.on("change:visible", function(event){
+				//alert("The layer is visible now!");
+				//console.log("The layer is visible now!");
 				
 				//change the legend accordingly
 				
 				var layer = event.target;
+				//var layer = myLayer1303;
 				
 				var parentmapid = map.get('target');
 				
@@ -1283,6 +1327,7 @@ edu.gmu.csiss.covali.map = {
 					console.log("show the current top layer's legend");
 					
 					edu.gmu.csiss.covali.map.showNextAvailableLegend(side);
+					//stopAnimation();
 					
 				}
 				
