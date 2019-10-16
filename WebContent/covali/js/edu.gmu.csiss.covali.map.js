@@ -1114,72 +1114,6 @@ edu.gmu.csiss.covali.map = {
 				    crossOrigin: 'anonymous',
 				    
 				    imageLoadFunction: function (image, src) {
-//				    	image.getImage().src = src;
-				        //console.log("map size", map.getSize().toString());
-				        //console.log("rotation", map.getView().getRotation() * 180 / Math.PI);
-//				        var params = new URLSearchParams(src.slice(src.indexOf("?")));
-//				        var width = params.get("WIDTH");
-//				        var height = params.get("HEIGHT");
-//				        //console.log("width", width);
-//				        //console.log("height", height);
-//				        //var scaling = 4096 / Math.max(width, height);
-//				        if (width < 1024 && height <1024 ) {
-//				          image.getImage().src = src;
-//				          console.log("Executing initial request...")
-//				        } else {
-//				          //console.log("Reducing image size...")
-//				          params.set("WIDTH", Math.round(width * 0.7));
-//				          params.set("HEIGHT", Math.round(height * 0.7));
-//				          
-//					      var time = params.get("TIME");
-//					      //console.log("time"+time);
-//					      
-//				          url = src.slice(0, src.indexOf("?") + 1) + params.toString();
-//				          //console.log(url);
-//				          var tempImage = document.createElement("img");
-//				          tempImage.onload = function() {
-//				            var canvas = document.createElement("canvas");
-//				            canvas.width = width;
-//				            canvas.height = height;
-//				            var ctx = canvas.getContext("2d");
-//				            ctx.drawImage(tempImage, 0, 0, width, height);
-//				            image.getImage().src = canvas.toDataURL();
-//				          };
-//				          tempImage.crossOrigin = "anonymous";
-//				          tempImage.src = url;
-//				        }
-				        
-				    	//console.log(image);
-				    	
-				    	//console.log(image.getImage());
-				    	
-//				    	window.open(src,"_blank");
-				    	
-				    	//image.getImage().src = src;
-
-//			            var client = new XMLHttpRequest();
-//			            client.open('GET', src, true);
-//			            client.setRequestHeader('Authorization', "Basic " + btoa("login:password"));
-//			            client.responseType = "arraybuffer";
-//
-//			            client.onload = function () {
-//
-//			                var byteArray = new Uint8Array(this.response);
-//			                var blob = new Blob([byteArray], {type: "image/png"});
-//			                var urlCreator = window.URL || window.webkitURL;
-//			                var imageUrl = urlCreator.createObjectURL(blob);
-//
-//			                gifler(imageUrl)
-//			                    .get()
-//			                    .then(function(animator) {
-//			                        var BufferCanvas = animator.constructor.createBufferCanvas(animator._frames[0], animator.width, animator.height);
-//			                        animator.animateInCanvas(BufferCanvas);
-//			                        image.setImage(BufferCanvas);
-//			                        image.load();
-//			                    });
-//			            };
-//
-//			            client.send();
 			            
 			        }
 				    
@@ -1193,19 +1127,6 @@ edu.gmu.csiss.covali.map = {
 		    startDate.setMinutes(startDate.getMinutes()+tz_offset);
 		    //console.log(startDate);
 		    
-		    
-			/*var nextlayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-			
-			if(nextlayer!=null){
-				
-				edu.gmu.csiss.covali.map.updateLegend(side, nextlayer.get('name'), nextlayer.getSource().getParams()["LEGEND"], 
-						null, null, nextlayer.getSource().getParams()["TIME"], nextlayer.getSource().getParams()["ELEVATION"]);
-				
-			}else{
-				
-				edu.gmu.csiss.covali.map.updateLegend(side, null, null, null, null, null, null);
-				
-			}*/
 		    //this function already exists, it's called updateCaption!!
 		    function updateInfo(StartOrStop, side) {
 		    	
@@ -1226,8 +1147,8 @@ edu.gmu.csiss.covali.map = {
 				    		var el = document.getElementById('title-openlayers2');		    		
 				    	}
 			    		el.innerHTML = animationMessage[StartOrStop] + 
-						   "<br>Layer:" + myLayer1303.values_.name+
-						   ";<br>Time: "+myLayer1303.getSource().getParams().TIME;		    		
+						   "<br>Layer:" + layer.values_.name+
+						   ";<br>Time: "+layer.getSource().getParams().TIME;		    		
 		    	}
 		    	else{
 		    		return;
@@ -1256,7 +1177,7 @@ edu.gmu.csiss.covali.map = {
 						//console.log("Resetting the time!!!"+startDate);
 					}
 					startDate.setMinutes(startDate.getMinutes() + interval/60000);						
-				    myLayer1303.getSource().updateParams({'TIME': startDate.toISOString()});
+					layer.getSource().updateParams({'TIME': startDate.toISOString()});
 				    updateInfo("start", side);
 				    //console.log("Start date: "+startDate+"; Now: "+now);
 				    stopAnimationFlag = startDate < endDate;
