@@ -73,6 +73,8 @@ The buttons in the top toolbar from left to right are "Search", "Add", "Settings
 
 ## 3.2 Add Data to Maps
 
+### 3.2.1 static layers
+
 COVALI supports visualizing GRIB/NetCDF data on the maps. 
 
 ![visualization](cc-add-data.gif)
@@ -81,15 +83,21 @@ Users have several options to add data into the maps, including:
 
 Public: COVALI allows users to browse a public folder on the server which is configured when CyberConnector is installed. All the files in the public folder will be accessible and downloaded by the public. COVALI will be able to locate, parse and visualize the data on either of the two maps. After you click the corresponding "Choose" button, a new dialog listing "cc_cache" and "uploadFile" will show up. The "cc_cache" is the public folder, the "uploadFile" is the folder which holds all the uploaded files from the public. Click either of them will show all the files within it. Click on any data file with specific format suffix, e.g., grib and nc (netcdf), COVALI will automatically locate the file and parse its metadata. If the parsing is complete, a new window will pop up to ask if you "want to load it into the map now?" Click "Load" button will give you a list of variables which you can display. You can also choose the rendering style, time step, and elevation/depth value of the variable. Click on either "Add to Left" or "Add to Right" button to load the variable into the respective map. 
 
-WMS (Web Map Service) (support version 1.3.0): COVALI depends on ncWMS. Users can use the built-in ncWMS which was installed on the same server by selecting the "Built-in ncWMS" option. If you want to use other WMS, we strongly recommand ncWMS-backed WMS which is best supported by COVALI at present. You need input the WMS capability document URL into the field, and click "Add" button next to it. COVALI will start to parse the WMS document and will list all the layers contained in the WMS if the parsing is successful. The rest variable selection and loading is the same as the "Public" option.
+WMS (Web Map Service) (support version 1.3.0): COVALI depends on ncWMS. Users can use the built-in ncWMS which was installed on the same server by selecting the "Built-in ncWMS" option. If you want to use other WMS, we strongly recommend ncWMS-backed WMS which is best supported by COVALI at present. You need input the WMS capability document URL into the field, and click "Add" button next to it. COVALI will start to parse the WMS document and will list all the layers contained in the WMS if the parsing is successful. The rest variable selection and loading is the same as the "Public" option.
 
 Upload: COVALI also allows users to upload data files from their machines. Users must agree the service terms by clicking the "Agree" checkbox before they are allowed to click "Open Upload Window". Once the term is accepted and the upload window pops up, click "Choose File" in the window to choose local files and click "Upload". Don't close the COVALI web page and the upload page at the uploading. Once it says the uploading is complete, click "Load" button and COVALI will start to parse the uploaded file. The rest loading steps will be the same as "Public" option. If you accidentally closed the COVALI web page, you could find your uploaded files in the "uploadfiles" folder in the "Public" option.
 
-File URL: COVALI allows users to ask COVALI to download data files from URL. Once you click the "File URL" option, you will be able to input file URLs into the blank field. Once a URL is filled, click the "Cache" button next to it. COVALI will download the file into the "upload folder". The "Cache" button will go gray during the downloading. It means you cannot cache multiple files at the same time to prevent confusion. Once it notifys the file is cached, click on the button "Load Map" and the rest steps are the usual. 
+File URL: COVALI allows users to ask COVALI to download data files from URL. Once you click the "File URL" option, you will be able to input file URLs into the blank field. Once a URL is filled, click the "Cache" button next to it. COVALI will download the file into the "upload folder". The "Cache" button will go gray during the downloading. It means you cannot cache multiple files at the same time to prevent confusion. Once it notifies the file is cached, click on the button "Load Map" and the rest steps are the usual. 
 
-CHORDS URL: Besides GRIB and NetCDF files, COVALI can also load real time stationary data. CHORDS is a real time data streaming system which is deployed on cloud and can capture real time observations from field sensors (e.g., 3D printed low-cost sensors) and store them into database. They have a official demo site which you can choose by checking the "CHORDS official instance" option and the filed will be automatically filled by its portal entry link. Click "Add" button and the sensors of CHORDS will be labelled on both maps. Clicking on the sensor lables will give information like sensor name, sensor device model, geolocation, the latest observations, etc, which can be used to validation the results from climate models. 
+CHORDS URL: Besides GRIB and NetCDF files, COVALI can also load real time stationary data. CHORDS is a real time data streaming system which is deployed on cloud and can capture real time observations from field sensors (e.g., 3D printed low-cost sensors) and store them into database. They have a official demo site which you can choose by checking the "CHORDS official instance" option and the filed will be automatically filled by its portal entry link. Click "Add" button and the sensors of CHORDS will be labeled on both maps. Clicking on the sensor labels will give information like sensor name, sensor device model, geolocation, the latest observations, etc, which can be used to validation the results from climate models. 
 
 IRIS: Similar with CHORDS, COVALI can load the sensor network of [IRIS (Incorporated Research Institutions for Seismology)](https://www.iris.edu/hq/). It can visualize the distribution of IRIS sensor networks and clicking on each sensor will give the observation data captured by the sensor. 
+
+### 3.2.2 animation layers
+
+![visualization](animation-demo.gif)
+
+COVALI supports gif animation layers with customizable frame rate and observation period. Just like static layers, the animated layers support change of style/symbology, visibility toggle and switching from one map to another. By default, the animation loops until stopped with a double-click on the respective map. The map footer contains helpful information about the layer name, time and instructions how to stop the animation.
 
 ## 3.3 Roaming
 
@@ -119,7 +127,7 @@ Search results are listed in a panel where users can directly download the files
 
 ## 3.5 Settings
 
-COVALI provides a Settings menu to controll the two maps. It allows users to manage the added data layers. They can adjust the opacity of the layers, change the order of the layers, change the legend/style of the layers (by clicking on the legend at the bottom of each map). They can also switch layers between the two maps by clicking the "switch map" button after the layer name in the "Settings" window. Users can also download the corresponding original data files by clicking the "Download" button. 
+COVALI provides a Settings menu to control the two maps. It allows users to manage the added data layers. They can adjust the opacity of the layers, change the order of the layers, change the legend/style of the layers (by clicking on the legend at the bottom of each map). They can also switch layers between the two maps by clicking the "switch map" button after the layer name in the "Settings" window. Users can also download the corresponding original data files by clicking the "Download" button. 
 
 ![settings](cc-settings.gif)
 
