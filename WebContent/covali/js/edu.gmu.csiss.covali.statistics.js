@@ -123,7 +123,12 @@ edu.gmu.csiss.covali.statistics = {
 	        	        	var content1 = document.getElementById('popup-content-' + side);
 	        	        	console.log(content1);
 	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
-	        	        }
+	        	        },
+	    				error: function(msg){
+	    					var content1 = document.getElementById('popup-content-' + side);
+	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
+	    					console.log("Fail to get layers details: " + msg);	    					
+	    				}
 	        	    })
 	        	})        	
         }
@@ -424,7 +429,12 @@ edu.gmu.csiss.covali.statistics = {
 	        	        	var content1 = document.getElementById('popup-content-' + side);
 	        	        	console.log(content1);
 	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
-	        	        }
+	        	        },
+	    				error: function(msg){
+	    					var content1 = document.getElementById('popup-content-' + side);
+	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
+	    					console.log("Fail to get layers details: " + msg);	    					
+	    				}
 	        	    })
 	        	})        	
         }
