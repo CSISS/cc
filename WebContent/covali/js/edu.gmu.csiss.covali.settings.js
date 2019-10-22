@@ -204,33 +204,33 @@ edu.gmu.csiss.covali.settings = {
 					"<label>"+
 					//check/uncheck layer
 					"<input type=\"checkbox\" checked=\"checked\" onchange=\"edu.gmu.csiss.covali.settings.checkLayer('"+
-					side + "', '"+ layername + "', this.checked)\" value=\"\" />" + 
+					side + "', '"+ layername + "', this.checked)\" value=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Layer visibility\"/>" + 
 					//layer name
-					"<span style=\"word-wrap:break-word;\">" + layername + "</span>" +
+					"<span style=\"word-wrap:break-word;\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Layer name\">" + layername + "</span>" +
 					//delete button
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.delLayer('"+
 					side + "', '" + layername + 
-					"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-trash\"></i></a>"+
+					"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Remove layer\"><i class=\"glyphicon glyphicon-trash\"></i></a>"+
 					
 					//up button
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveBack('"+
 					side + "', '" + layername + 
-					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-up\"></i></a>"+
+					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-up\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer up!\"></i></a>"+
 					//down button
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveFront('"+
 					side + "', '" + layername + 
-					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-down\"></i></a>";
+					"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-down\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer down!\"></i></a>";
 					
 					if(layername!="osm-basemap" && layername != "World Boundary"){
 						
 						//switch button
 						onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.switchMap('"+
 						side + "', '" + layername + 
-						"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-transfer\"></i></a>"+
+						"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-transfer\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer to the other map!\"></i></a>"+
 						//add more button
 						"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.wms.addMore('"+
 						side + "', '" + layername + 
-						"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-plus\"></i></a>";
+						"'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-plus\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Add another layer!\"></i></a>";
 						
 					}
 					
