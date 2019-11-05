@@ -450,10 +450,14 @@ edu.gmu.csiss.covali.statistics = {
 		var timestep = layer.getSource().getParams()["TIME"];
 		
 		var elevation = layer.getSource().getParams()["ELEVATION"];
-		
+
 		var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" + layer.get('name') + "&CRS=CRS:84&LINESTRING=" +
 		
-			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep + "&elevation=" + elevation;
+			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
+			
+		if(elevation != "" && elevation != null && typeof elevation !== 'undefined')
+		
+			req += "&elevation=" + elevation; 
 		
 		console.log(req);
 		
