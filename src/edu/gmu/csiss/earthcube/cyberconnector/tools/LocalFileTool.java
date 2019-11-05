@@ -220,7 +220,7 @@ public class LocalFileTool {
 
 		File uploadf = new File(uploadFilePath);
 		
-		if(uploadf.exists()) uploadf.mkdir();
+		if(!uploadf.exists()) uploadf.mkdir();
 		
 		if(!(location.startsWith(covaliFilePath) || covaliFilePath.startsWith(location)
 				|| location.startsWith(uploadFilePath) || uploadFilePath.startsWith(location)))
@@ -229,7 +229,6 @@ public class LocalFileTool {
 			logger.debug("the location is not the COVALI and Upload folder path");
 		}
 		
-
 		logger.debug(location);
 
 		File[] flist;
