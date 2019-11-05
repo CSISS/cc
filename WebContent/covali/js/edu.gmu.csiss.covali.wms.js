@@ -834,18 +834,18 @@ edu.gmu.csiss.covali.wms = {
 			
 			console.log("current url base: " + urlprefix);
 			
-			//why doing this?
-//			if(!endpointurl.startsWith(urlprefix)){
-//				
-//				var pathArray1 = endpointurl.split( '/' );
-//				var protocol1 = pathArray1[0];
-//				var host1 = pathArray1[2];
-//				pathArray1[0] = protocol;
-//				pathArray1[2] = host;
-//				endpointurl = pathArray1.join("/");
+			//why doing this? - because the url prefix need change if it has a proxy
+			if(endpointurl.indexOf("localhost")!=-1 && !endpointurl.startsWith(urlprefix)){
+				
+				var pathArray1 = endpointurl.split( '/' );
+				var protocol1 = pathArray1[0];
+				var host1 = pathArray1[2];
+				pathArray1[0] = protocol;
+				pathArray1[2] = host;
+				endpointurl = pathArray1.join("/");
 //				console.log("switch WMS prefix to current" + endpointurl);
-//				
-//			}
+				
+			}
 			
 			if(location.protocol=="https:"){
 				

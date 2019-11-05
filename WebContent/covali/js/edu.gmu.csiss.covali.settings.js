@@ -211,7 +211,6 @@ edu.gmu.csiss.covali.settings = {
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.delLayer('"+
 					side + "', '" + layername + 
 					"'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-trash\"></i></a>"+
-					
 					//up button
 					"<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveBack('"+
 					side + "', '" + layername + 

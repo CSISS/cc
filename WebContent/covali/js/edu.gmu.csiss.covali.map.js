@@ -991,8 +991,8 @@ edu.gmu.csiss.covali.map = {
 				var urlprefix = protocol + '//' + host;
 				
 				console.log("current url base: " + urlprefix);
-				
-				if(!legendurl.startsWith(urlprefix)){
+				//why doing this? - because the url prefix need change if it has a proxy
+				if(legendurl.indexOf("localhost")!=-1 && !legendurl.startsWith(urlprefix)){
 					
 					var pathArray1 = legendurl.split( '/' );
 					var protocol1 = pathArray1[0];
@@ -1000,7 +1000,7 @@ edu.gmu.csiss.covali.map = {
 					pathArray1[0] = protocol;
 					pathArray1[2] = host;
 					legendurl = pathArray1.join("/");
-					console.log("switch WMS prefix to current" + endpointurl);
+//					console.log("switch WMS prefix to current" + legendurl);
 					
 				}
 				
