@@ -179,8 +179,8 @@ edu.gmu.csiss.covali.statistics = {
         edu.gmu.csiss.covali.statistics.draw.on('drawend', function(evt) {
         	
         	try{
-        		
-        		var line_geom = evt.feature.getGeometry().transform('EPSG:3857','EPSG:4326')
+				
+        		var line_geom = evt.feature.getGeometry().transform(map.getView().getProjection().getCode(),'EPSG:4326')
 
 	        	linestring_coords = line_geom.getCoordinates();
 	        	
@@ -202,7 +202,7 @@ edu.gmu.csiss.covali.statistics = {
 	        	for(var i=0;i<linestring_coords.length;i++){
 	        		if(i!=0){
 	        			coords += ",";
-	        		}
+	        		} 
 	        		var coordinates = linestring_coords[i];
 //	        		var coordinates = ol.proj.transform([linestring_coords[i][0], linestring_coords[i][1]], source.getProjection(), 'EPSG:4326');
 	        		coords += coordinates[0] + " " + coordinates[1];
@@ -443,12 +443,18 @@ edu.gmu.csiss.covali.statistics = {
 //    	http://godiva.rdg.ac.uk/ncWMS2/wms?REQUEST=GetTransect&LAYERS=cci/analysed_sst&CRS=CRS:84&LINESTRING=62.04%2018,%2064.56%204.56,%2076.56%201.08&FORMAT=image/png&TIME=2010-12-31T12:00:00.000Z&COLORSCALERANGE=269,306&NUMCOLORBANDS=250&LOGSCALE=false&ABOVEMAXCOLOR=0x000000&BELOWMINCOLOR=0x000000&BGCOLOR=transparent&PALETTE=psu-inferno
 		
 		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+
+		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 		
 		var timestep = layer.getSource().getParams()["TIME"];
 		
 		var elevation = layer.getSource().getParams()["ELEVATION"];
 
-		var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" + layer.get('name') + "&CRS=CRS:84&LINESTRING=" +
+		// var projection = map.getView().getProjection();
+
+		var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" + 
+		
+			layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
 		
 			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
 			
@@ -460,7 +466,7 @@ edu.gmu.csiss.covali.statistics = {
 		
 		var $textAndPic = $('<div></div>');
         
-		$textAndPic.append('<img src="'+req+'" />');
+		$textAndPic.append('<img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" />');
         
 		BootstrapDialog.show({
             title: 'Line Statistics Result',
