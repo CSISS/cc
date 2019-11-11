@@ -132,12 +132,7 @@ edu.gmu.csiss.covali.statistics = {
 	        	    })
 	        	})        	
         }
-
-		//console.log(layerMetaDataUrl);
-        //if (layerMetaDataUrl) {
 		
-
-
     },
     
     showPopupsOnBothMapsSameXY: function(coordinates){
@@ -373,9 +368,11 @@ edu.gmu.csiss.covali.statistics = {
 
         var viewResolution = /** @type {number} */ (map.getView().getResolution());
         
-        var wmssource = layer.getSource();
+		var wmssource = layer.getSource();
+		
+		var currentprojection = map.getView().getProjection();
         
-        var url = wmssource.getGetFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:3857', {'INFO_FORMAT': 'text/xml'});
+        var url = wmssource.getGetFeatureInfoUrl(evt.coordinate, viewResolution, currentprojection, {'INFO_FORMAT': 'text/xml'});
         var params = {
 				SERVICE: 'WMS',
 				VERSION: '1.3.0',
