@@ -23,6 +23,8 @@ edu.gmu.csiss.covali.settings = {
 				if (layer.get('name') == layername) {
 			    	
 					layer.setVisible(checked);
+					edu.gmu.csiss.covali.statistics.changePopupVisibility(side, checked);
+					edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);
 					
 			    }
 				
@@ -52,9 +54,27 @@ edu.gmu.csiss.covali.settings = {
 			
 		},
 		
+		
+		changeLegendVisibility: function(side, checked){
+			
+			var legendId = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
+			
+			if($("#"+legendId).length){
+	    		if(checked==false){
+	    			$("#"+legendId).hide();
+	    		}else{
+	    			$("#"+legendId).show();
+	    		}
+	    	}
+		},
+		
 		delLayer: function(side, layername, noquestion){
 			
-			if(noquestion||confirm("You really want to delete this layer?")){
+			if(noquestion||confirm("Do you really want to delete this layer?")){
+				
+				//var legendId = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
+				//$("#"+legendId).remove();
+				//$("#scale"+side).remove();
 				
 				var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
 				
@@ -77,6 +97,7 @@ edu.gmu.csiss.covali.settings = {
 					olmap.removeLayer(layersToRemove[len-1]);
 				
 //				}
+				edu.gmu.csiss.covali.statistics.clearAllPopupsOnAMap(side);
 				
 				edu.gmu.csiss.covali.map.showNextAvailableLegend(side);
 				

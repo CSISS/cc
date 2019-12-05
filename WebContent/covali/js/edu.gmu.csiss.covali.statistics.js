@@ -20,6 +20,8 @@ edu.gmu.csiss.covali.statistics = {
 	listenPoint: function(side){
 		
 			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+			var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+			
 			
 			if(!$("#popup-"+side).length)
 				$('body').append('<div id="popup-'+side+'" class="ol-popup">'+
@@ -50,7 +52,7 @@ edu.gmu.csiss.covali.statistics = {
 		    //add single click
 		    
 		    if(bothMapsPopupChecked == true){
-			    map.on('singleclick', function(evt) {
+				    map.on('singleclick', function(evt) {
 			    		edu.gmu.csiss.covali.statistics.showPopupsOnBothMapsSameXY(evt.coordinate);
 			    });
 		    }
@@ -69,80 +71,90 @@ edu.gmu.csiss.covali.statistics = {
 	showPopupFunction: function(coordinate, map, side) {
 	        
 		//NEXT BUG: pop-up should react to the settings buttons
-		var hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));
-        var popup = map.getOverlayById("point-popup-" + side);
-        popup.setPosition(coordinate);
-        var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-        var viewResolution = /** @type {number} */ (map.getView().getResolution());
-        
-        var wmssource = layer.getSource();
-        
-        var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, 'EPSG:3857', {'INFO_FORMAT': 'text/xml'});
-        var params = {
-				SERVICE: 'WMS',
-				VERSION: '1.3.0',
-				REQUEST: 'GetMetadata',
-				outputFormat: 'application/json',
-				ITEM: 'layerDetails',
-				LayerName: wmssource.params_.LAYERS,
-				TIME: wmssource.params_.TIME
-			};
+		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 
-		var esc = encodeURIComponent;
-		var layerMetaDataUrl = 'http://localhost:8080/ncWMS2/wms?';
-		layerMetaDataUrl += Object.keys(params)
-		    .map(k => esc(k) + '=' + esc(params[k]))
-		    .join('&');
-        if (url) {
+        
+        if(layer && layer.getVisible()==true){
+    		var hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));
+            var popup = map.getOverlayById("point-popup-" + side);
+            popup.setPosition(coordinate);
+        	var viewResolution = /** @type {number} */ (map.getView().getResolution());
+            
+            var wmssource = layer.getSource();
+            
+            var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, 'EPSG:3857', {'INFO_FORMAT': 'text/xml'});
+            var params = {
+    				SERVICE: 'WMS',
+    				VERSION: '1.3.0',
+    				REQUEST: 'GetMetadata',
+    				outputFormat: 'application/json',
+    				ITEM: 'layerDetails',
+    				LayerName: wmssource.params_.LAYERS,
+    				TIME: wmssource.params_.TIME
+    			};
 
-        	fetch(url)
-	        	.then(function(resp){
-	        		return resp.text();
-	        	})
-	        	.then(function(data){
-	        		parser = new DOMParser();
-	        		xmlDoc = parser.parseFromString(data,"text/xml");
-	        		
-	        		var content = document.getElementById('popup-content-' + side);
-	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
-	        		
-	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
-	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
-	        		'<b>Layer:</b> '+LayerName[0]+
-	        		//'<br>Layer: '+LayerName[1]+
-	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
-	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
-	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
-	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
-	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
-	        	    $.ajax({
-	        	        url: layerMetaDataUrl,
-	        	        contentType: "application/json",
-	        	        dataType: 'json',
-	        	        success: function(result){
-	        	        	var content1 = document.getElementById('popup-content-' + side);
-	        	        	console.log(content1);
-	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
-	        	        },
-	    				error: function(msg){
-	    					var content1 = document.getElementById('popup-content-' + side);
-	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
-	    					console.log("Failed to get layers details: " + msg);	    					
-	    				}
-	        	    })
-	        	})        	
+    		var esc = encodeURIComponent;
+    		var layerMetaDataUrl = 'http://localhost:8080/ncWMS2/wms?';
+    		layerMetaDataUrl += Object.keys(params)
+    		    .map(k => esc(k) + '=' + esc(params[k]))
+    		    .join('&');
+            if (url) {
+
+            	fetch(url)
+    	        	.then(function(resp){
+    	        		return resp.text();
+    	        	})
+    	        	.then(function(data){
+    	        		parser = new DOMParser();
+    	        		xmlDoc = parser.parseFromString(data,"text/xml");
+    	        		
+    	        		var content = document.getElementById('popup-content-' + side);
+    	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
+    	        		
+    	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
+    	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
+    	        		'<b>Layer:</b> '+LayerName[0]+
+    	        		//'<br>Layer: '+LayerName[1]+
+    	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
+    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+    	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
+    	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
+    	        	    $.ajax({
+    	        	        url: layerMetaDataUrl,
+    	        	        contentType: "application/json",
+    	        	        dataType: 'json',
+    	        	        success: function(result){
+    	        	        	var content1 = document.getElementById('popup-content-' + side);
+    	        	        	console.log(content1);
+    	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
+    	        	        },
+    	    				error: function(msg){
+    	    					var content1 = document.getElementById('popup-content-' + side);
+    	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
+    	    					console.log("Failed to get layers details: " + msg);	    					
+    	    				}
+    	        	    })
+    	        	})        	
+            }
         }
+        
+
+		//console.log(layerMetaDataUrl);
+        //if (layerMetaDataUrl) {
 		
     },
     
     showPopupsOnBothMapsSameXY: function(coordinates){
-		var leftmap = edu.gmu.csiss.covali.map.getMapBySide("left");
-		var rightmap = edu.gmu.csiss.covali.map.getMapBySide("right");
-		edu.gmu.csiss.covali.statistics.showPopupFunction(coordinates, leftmap, "left");
-		edu.gmu.csiss.covali.statistics.showPopupFunction(coordinates, rightmap, "right");
+		var sides = ["left", "right"];
+		for (i=0; i<sides.length; i++){
+			var map = edu.gmu.csiss.covali.map.getMapBySide(sides[i]);
+			edu.gmu.csiss.covali.statistics.showPopupFunction(coordinates, map, sides[i]);			
+		}
     },
     
-	clearAllPopupsOnAMap: function(map,side){
+	clearAllPopupsOnAMap: function(side){
+		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 		if($("#popup-" + side).length){
 			var popup = map.getOverlayById("point-popup-" + side);
     		var element = popup.getElement();
@@ -152,13 +164,30 @@ edu.gmu.csiss.covali.statistics = {
     	}
 	},
 	
+	changePopupVisibility: function(side, checked){
+		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+		if($("#popup-" + side).length){
+			var popup = map.getOverlayById("point-popup-" + side);
+    		var element = popup.getElement();
+    		if(checked==false){
+    			$("#popup-" + side).hide();
+    		}else{
+    			$("#popup-" + side).show();
+    		}
+    		
+    		//$(element).popover('destroy');
+    		//$("#popup-" + side).remove();
+    		//map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+    	}
+	},
+	
 	removePopupsFromBothMaps: function(){
-		
-		var leftmap = edu.gmu.csiss.covali.map.getMapBySide("left");
-		var rightmap = edu.gmu.csiss.covali.map.getMapBySide("right");
-		edu.gmu.csiss.covali.statistics.clearAllPopupsOnAMap(leftmap,"left");
-		edu.gmu.csiss.covali.statistics.clearAllPopupsOnAMap(rightmap,"right");
-		
+		var sides = ["left", "right"];
+		for (i=0; i<sides.length; i++){
+			var map = edu.gmu.csiss.covali.map.getMapBySide(sides[i]);
+			edu.gmu.csiss.covali.statistics.clearAllPopupsOnAMap(sides[i]);				
+		}
+
 	},
 
 	listenLineString: function(side){
@@ -288,6 +317,8 @@ edu.gmu.csiss.covali.statistics = {
 				label: "Start Draw",
 				
 				action: function(thedialog){
+					
+					showLoadingLoadingDialog();
 					
 					edu.gmu.csiss.covali.statistics.removeAllListeners();
 										
@@ -443,8 +474,7 @@ edu.gmu.csiss.covali.statistics = {
 //    	http://godiva.rdg.ac.uk/ncWMS2/wms?REQUEST=GetTransect&LAYERS=cci/analysed_sst&CRS=CRS:84&LINESTRING=62.04%2018,%2064.56%204.56,%2076.56%201.08&FORMAT=image/png&TIME=2010-12-31T12:00:00.000Z&COLORSCALERANGE=269,306&NUMCOLORBANDS=250&LOGSCALE=false&ABOVEMAXCOLOR=0x000000&BELOWMINCOLOR=0x000000&BGCOLOR=transparent&PALETTE=psu-inferno
 		
 		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-
-		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+		//console.log(layer.getSource().getParams());
 		
 		var timestep = layer.getSource().getParams()["TIME"];
 		
@@ -460,7 +490,11 @@ edu.gmu.csiss.covali.statistics = {
 			
 		if(elevation != "" && elevation != null && typeof elevation !== 'undefined')
 		
-			req += "&elevation=" + elevation; 
+			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
+			
+			if(elevation!=""){
+				req += "&elevation=" + elevation;
+				}
 		
 		console.log(req);
 		
