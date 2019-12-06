@@ -1160,7 +1160,7 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 			    	
 			    	//if(myLayer1303.isVisible){
 			    	var animationMessage = {"start": "Animation is playing. <button id=\"stop\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Stop</button>", 
-			    			"stop": "Animation is stopped. <button id=\"restart\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Replay</button>"}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
+			    			"stop": "Animation is stopped. <button id=\"restart\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Resume</button>"}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
 			    	if (side == 'left'){
 			    		var el = document.getElementById('title-openlayers1');
 			    	}
