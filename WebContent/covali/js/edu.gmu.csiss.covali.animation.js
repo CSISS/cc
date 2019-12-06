@@ -119,7 +119,8 @@ edu.gmu.csiss.covali.animation = {
                 	
                 	edu.gmu.csiss.covali.wms.loadAnimation(layername, mapside, starttime, endtime, framerate);
             		
-            		dialogItself.close();
+            		//dialogItself.close();
+                	BootstrapDialog.closeAll();
             		
             	}
             
