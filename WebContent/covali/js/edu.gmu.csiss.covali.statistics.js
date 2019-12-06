@@ -318,7 +318,6 @@ edu.gmu.csiss.covali.statistics = {
 				
 				action: function(thedialog){
 					
-					showLoadingLoadingDialog();
 					
 					edu.gmu.csiss.covali.statistics.removeAllListeners();
 										

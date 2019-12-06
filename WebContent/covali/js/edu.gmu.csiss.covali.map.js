@@ -1148,13 +1148,14 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 		    var animationId = null;
 		    
 		    var startDate = new Date(starttime);
-		    var tz_offset = startDate.getTimezoneOffset();
-		    startDate.setMinutes(startDate.getMinutes()+tz_offset);
+		    //var tz_offset = startDate.getTimezoneOffset();
+		    //startDate.setMinutes(startDate.getMinutes()+tz_offset);
 		    //console.log(startDate);
 		    
 		    //this function already exists, it's called updateCaption!!
 		    function updateInfo(StartOrStop, side) {
 		    	
+		    	//console.log("startDate: "+startDate.toISOString()+"; endDate: "+endDate.toISOString());
 		    	var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 		    	
 		    	if(layer!=null){
@@ -1162,8 +1163,8 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 			    	edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,layer.getSource().getParams()["TIME"],layer.getSource().getParams()["ELEVATION"]);
 			    	
 			    	//if(myLayer1303.isVisible){
-			    	var animationMessage = {"start": "Animation is playing. <button id=\"stop\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Stop animation</button>", 
-			    			"stop": "Animation is stopped. <button id=\"restart\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Replay animation</button>"}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
+			    	var animationMessage = {"start": "Animation is playing. <button id=\"stop\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Stop</button>", 
+			    			"stop": "Animation is stopped. <button id=\"restart\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Replay</button>"}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
 			    	if (side == 'left'){
 			    		var el = document.getElementById('title-openlayers1');
 			    	}
@@ -1189,13 +1190,13 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 		    		return;
 		    	}
 		    }
-		    console.log("startDate: "+startDate+"; Layer time:"+myLayer1303.getSource().getParams().TIME);
+		    //console.log("startDate: "+startDate+"; Layer time:"+myLayer1303.getSource().getParams().TIME);
 		    //var startTimeCurVal = null;
 		    var endDate = new Date(endtime);
-		    endDate.setMinutes(endDate.getMinutes()+tz_offset);
+		    //endDate.setMinutes(endDate.getMinutes()+tz_offset);
 		    
 		    var stopAnimationFlag = true;
-			
+		    
 		    function setTime() {
 				var mapid = map.get('target');
 				
@@ -1208,20 +1209,21 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 					if (startDate > endDate){
 						//console.log("Resetting the time!!!"+startDate);
 					    startDate = new Date(starttime);
-					    startDate.setMinutes(startDate.getMinutes()+tz_offset);
+					    //startDate.setMinutes(startDate.getMinutes()+tz_offset);
 						//console.log("Resetting the time!!!"+startDate);
 					}
-					startDate.setMinutes(startDate.getMinutes() + interval/60000);						
 					layer.getSource().updateParams({'TIME': startDate.toISOString()});
 				    updateInfo("start", side);
-				    //console.log("Start date: "+startDate+"; Now: "+now);
-				    stopAnimationFlag = startDate < endDate;
+				    console.log("Start date in setTime(): "+startDate.toISOString());
+				    startDate.setMinutes(startDate.getMinutes() + interval/60000);
+
+				    stopAnimationFlag = startDate <= endDate;
 		    	}
 		    	else{
 		    		return;
 		    	}
 		     }
-			setTime();
+			//setTime();
 			
 	       function stopAnimation() {
 			  var mapid = map.get('target');
