@@ -161,8 +161,6 @@
 <!-- ------------------------------------------------------- -->
 <!-- ------------------------------------------------------- -->
 
-	<!--google map-->
-	<script type="text/javascript"src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzpGK0E70yB5M5cJpYuXayG29X3YJghD0&sensor=false&libraries=drawing"></script>
 	<!--OpenLayers map-->
 	<!--<script type="text/javascript" src="js/example-behaviour.js"></script>-->
 	<script type="text/javascript" src="js/ol.js"></script>
