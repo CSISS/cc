@@ -1148,14 +1148,10 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 		    var animationId = null;
 		    
 		    var startDate = new Date(starttime);
-		    //var tz_offset = startDate.getTimezoneOffset();
-		    //startDate.setMinutes(startDate.getMinutes()+tz_offset);
-		    //console.log(startDate);
 		    
 		    //this function already exists, it's called updateCaption!!
 		    function updateInfo(StartOrStop, side) {
 		    	
-		    	//console.log("startDate: "+startDate.toISOString()+"; endDate: "+endDate.toISOString());
 		    	var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 		    	
 		    	if(layer!=null){
@@ -1190,40 +1186,30 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 		    		return;
 		    	}
 		    }
-		    //console.log("startDate: "+startDate+"; Layer time:"+myLayer1303.getSource().getParams().TIME);
-		    //var startTimeCurVal = null;
+
 		    var endDate = new Date(endtime);
-		    //endDate.setMinutes(endDate.getMinutes()+tz_offset);
 		    
-		    var stopAnimationFlag = true;
+		    //var stopAnimationFlag = true;
 		    
 		    function setTime() {
 				var mapid = map.get('target');
 				
 				var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
-				//var now = new Date();
 				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 		    	
 		    	if(layer!=null){
 				
 					if (startDate > endDate){
-						//console.log("Resetting the time!!!"+startDate);
 					    startDate = new Date(starttime);
-					    //startDate.setMinutes(startDate.getMinutes()+tz_offset);
-						//console.log("Resetting the time!!!"+startDate);
 					}
 					layer.getSource().updateParams({'TIME': startDate.toISOString()});
 				    updateInfo("start", side);
-				    console.log("Start date in setTime(): "+startDate.toISOString());
 				    startDate.setMinutes(startDate.getMinutes() + interval/60000);
-
-				    stopAnimationFlag = startDate <= endDate;
 		    	}
 		    	else{
 		    		return;
 		    	}
 		     }
-			//setTime();
 			
 	       function stopAnimation() {
 			  var mapid = map.get('target');
