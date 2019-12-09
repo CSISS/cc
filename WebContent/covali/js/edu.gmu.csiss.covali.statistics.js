@@ -450,9 +450,7 @@ edu.gmu.csiss.covali.statistics = {
 	        	.then(function(resp){
 	        		return resp.text();
 	        	})
-	        	.then(function(data){
-	        		//console.log(data);
-	        		
+	        	.then(function(data){	        		
 	        		parser = new DOMParser();
 	        		xmlDoc = parser.parseFromString(data,"text/xml");
 	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
