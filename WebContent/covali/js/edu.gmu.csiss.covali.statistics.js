@@ -15,7 +15,7 @@ edu.gmu.csiss.covali.statistics = {
 	
 	side: null,
 	
-	bothMapsPopupChecked: null,
+	bothMapsPopupChecked: false,
 	
 	listenPoint: function(side){
 		
@@ -127,7 +127,7 @@ edu.gmu.csiss.covali.statistics = {
     	        	        dataType: 'json',
     	        	        success: function(result){
     	        	        	var content1 = document.getElementById('popup-content-' + side);
-    	        	        	console.log(content1);
+    	        	        	//console.log(content1);
     	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
     	        	        },
     	    				error: function(msg){
@@ -238,7 +238,7 @@ edu.gmu.csiss.covali.statistics = {
 	        		coords += coordinates[0] + " " + coordinates[1];
 	        	}
 	        	
-	        	console.log(coords);
+	        	//console.log(coords);
         	
         		edu.gmu.csiss.covali.statistics.getLineStatistics(side, coords);
         		
@@ -284,6 +284,9 @@ edu.gmu.csiss.covali.statistics = {
 		var rightmap = edu.gmu.csiss.covali.map.getMapBySide("right");
 		
 		rightmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		
+		rightmap.removeEventListener('singleclick');
+		leftmap.removeEventListener('singleclick');
 		
 	},
 	
@@ -360,6 +363,8 @@ edu.gmu.csiss.covali.statistics = {
 	},
 	
 	singleClickListener: function(evt) {
+		
+		//console.log(evt);
 		
 		var coordinate = evt.coordinate;
         
@@ -456,7 +461,7 @@ edu.gmu.csiss.covali.statistics = {
 	        	        dataType: 'json',
 	        	        success: function(result){
 	        	        	var content1 = document.getElementById('popup-content-' + side);
-	        	        	console.log(content1);
+	        	        	//console.log(content1);
 	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
 	        	        },
 	    				error: function(msg){
@@ -497,7 +502,7 @@ edu.gmu.csiss.covali.statistics = {
 				req += "&elevation=" + elevation;
 				}
 		
-		console.log(req);
+		//console.log(req);
 		
 		var $textAndPic = $('<div></div>');
         
