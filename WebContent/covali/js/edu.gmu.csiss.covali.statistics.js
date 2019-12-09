@@ -84,7 +84,6 @@ edu.gmu.csiss.covali.statistics = {
             var epsg = map.getView().getProjection().getCode();
             
             var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, epsg, {'INFO_FORMAT': 'text/xml'});
-            console.log(url);
             var params = {
     				SERVICE: 'WMS',
     				VERSION: '1.3.0',
@@ -291,6 +290,7 @@ edu.gmu.csiss.covali.statistics = {
 	showDialog: function(){
 		
 		BootstrapDialog.closeAll();
+		edu.gmu.csiss.covali.statistics.removePopupsFromBothMaps();
 		
 		var content = "<div class=\"row\" style=\"padding:10px;\">"+
 //			"<div class=\"form-group\"> "+
