@@ -81,8 +81,11 @@ edu.gmu.csiss.covali.statistics = {
         	var viewResolution = /** @type {number} */ (map.getView().getResolution());
             
             var wmssource = layer.getSource();
+            console.log(wmssource);
+            var epsg = map.getView().getProjection().getCode();
             
-            var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, 'EPSG:3857', {'INFO_FORMAT': 'text/xml'});
+            var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, epsg, {'INFO_FORMAT': 'text/xml'});
+            console.log(url);
             var params = {
     				SERVICE: 'WMS',
     				VERSION: '1.3.0',
@@ -107,8 +110,9 @@ edu.gmu.csiss.covali.statistics = {
     	        	.then(function(data){
     	        		parser = new DOMParser();
     	        		xmlDoc = parser.parseFromString(data,"text/xml");
-    	        		
+    	        		console.log(xmlDoc.getElementsByTagName("layer"));
     	        		var content = document.getElementById('popup-content-' + side);
+    	        		
     	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
     	        		
     	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
