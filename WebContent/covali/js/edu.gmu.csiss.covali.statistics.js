@@ -279,11 +279,11 @@ edu.gmu.csiss.covali.statistics = {
 		
 		var leftmap = edu.gmu.csiss.covali.map.getMapBySide("left");
 		
-		leftmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		//leftmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
 		
 		var rightmap = edu.gmu.csiss.covali.map.getMapBySide("right");
 		
-		rightmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		//rightmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
 		
 		rightmap.removeEventListener('singleclick');
 		leftmap.removeEventListener('singleclick');
