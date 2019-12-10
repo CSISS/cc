@@ -1163,12 +1163,17 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 			    	edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,layer.getSource().getParams()["TIME"],layer.getSource().getParams()["ELEVATION"]);
 			    	
 			    	//define animation message
-			    	var animationMessage = {"start": "Animation is playing. <button id=\"stop\"type=\"button\" class=\"AnimationButton1\">Stop</button>" +
-			    			"<div id=\"animation-time\">"+"<br>Layer:" + layer.values_.name+
-		   												";<br>Time: "+layer.getSource().getParams().TIME+"</div>", 
-			    			"stop": "Animation is stopped. <button id=\"restart\"type=\"button\" class=\"AnimationButton2\">Resume</button>" +
-			    										"<div id=\"animation-time\">"+"<br>Layer:" + layer.values_.name+
-			    										";<br>Time: "+layer.getSource().getParams().TIME+"</div>"}
+			    	var animationMessage =
+			    		
+			    			{"start": "Animation is playing. <button id=\"stop-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Stop</button>" +
+					    			"<div id=\"animation-time-"+side+"\">"+
+					    			"<br>Layer:" + layer.values_.name+
+				   					";<br>Time: "+layer.getSource().getParams().TIME+"</div>", 
+					    	"stop": "Animation is stopped. <button id=\"restart-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Resume</button>" +
+					    			"<div id=\"animation-time-"+side+"\">"+
+					    			"<br>Layer:" + layer.values_.name+
+					    			";<br>Time: "+layer.getSource().getParams().TIME+"</div>"}
+			    	console.log(animationMessage)
 			    	//pick a side
 			    	if (side == 'left'){
 			    		var el = document.getElementById('title-openlayers1');

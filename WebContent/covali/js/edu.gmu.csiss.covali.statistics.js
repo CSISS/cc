@@ -110,17 +110,15 @@ edu.gmu.csiss.covali.statistics = {
     	        		xmlDoc = parser.parseFromString(data,"text/xml");
     	        		
     	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
-    	        		
     	        		var content = document.getElementById('popup-content-' + side);
     	        		
     	        		if(clickWithinTheLayer>0){
-	    	        		
+
 	    	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
 	    	        		
-	    	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
+	    	        		content.innerHTML = 
 	    	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
 	    	        		'<b>Layer:</b> '+LayerName[0]+
-	    	        		//'<br>Layer: '+LayerName[1]+
 	    	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
 	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
 	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
@@ -143,9 +141,10 @@ edu.gmu.csiss.covali.statistics = {
 	    	        	    })
     	        		}
     	        		else{	        		
-    		        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
-    		        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
-    		        		'<b>Please click on the layer!</b> ';
+    	        			content.innerHTML = '<div style="font-family: Arial, Helvetica, sans-serif">'+
+    	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+    	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+    	    	        		'<br><b>Value: Please click on the layer!</b> ';
     	        		}
     	        	})        	
             }
@@ -437,7 +436,7 @@ edu.gmu.csiss.covali.statistics = {
 		    .map(k => esc(k) + '=' + esc(params[k]))
 		    .join('&');
         if (url) {
-        
+        	
 //        	document.getElementById('info').innerHTML = '<iframe seamless src="' + url + '"></iframe>';
 
 //            var content = document.getElementById('popup-content-' + side);
@@ -446,11 +445,14 @@ edu.gmu.csiss.covali.statistics = {
 //            
 //                '</code><iframe seamless src="' + url + '"></iframe>';
         	
+        	
+        	
         	fetch(url)
 	        	.then(function(resp){
 	        		return resp.text();
 	        	})
-	        	.then(function(data){	        		
+	        	.then(function(data){
+	        		console.log(data);
 	        		parser = new DOMParser();
 	        		xmlDoc = parser.parseFromString(data,"text/xml");
 	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
@@ -486,9 +488,10 @@ edu.gmu.csiss.covali.statistics = {
 	        			
 	        		}
 	        		else{	        		
-		        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
-		        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
-		        		'<b>Please click on the layer!</b> ';
+	        			content.innerHTML = '<div style="font-family: Arial, Helvetica, sans-serif">'+
+	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Value: Please click on the layer!</b> ';
 	        		}
 	        		
 	        	})        	
