@@ -52,7 +52,7 @@ edu.gmu.csiss.covali.statistics = {
 		    //add single click
 		    
 		    if(bothMapsPopupChecked == true){
-				    map.on('singleclick', function(evt) {
+				map.on('singleclick', function(evt) {
 			    		edu.gmu.csiss.covali.statistics.showPopupsOnBothMapsSameXY(evt.coordinate);
 			    });
 		    }

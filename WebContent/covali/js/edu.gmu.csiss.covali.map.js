@@ -1098,7 +1098,7 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
-addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerate, stylename){
+		addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerate, stylename){
 			
 			//add code to check if the WMS has already been added
 			
@@ -1159,8 +1159,7 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 			    	edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,layer.getSource().getParams()["TIME"],layer.getSource().getParams()["ELEVATION"]);
 			    	
 			    	//if(myLayer1303.isVisible){
-			    	var animationMessage = {"start": "Animation is playing. <button id=\"stop\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Stop</button>", 
-			    			"stop": "Animation is stopped. <button id=\"restart\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Resume</button>"}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
+			    	var animationMessage = {"start": "Animation is playing. <button id=\"stop\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Stop</button>", "stop": "Animation is stopped. <button id=\"restart\"type=\"button\" class=\"AnimationButton1 AnimationButton2\">Resume</button>"}// <button type=\"button\" onclick=\"playAnimation()\">Replay animation</button>"}
 			    	if (side == 'left'){
 			    		var el = document.getElementById('title-openlayers1');
 			    	}
@@ -1181,10 +1180,10 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 				        stopButton.addEventListener('click', stopAnimation, false);			        	
 			        }
 
-		    	}
-		    	else{
-		    		return;
-		    	}
+			    	}
+			    	else{
+			    		return;
+			    	}
 		    }
 
 		    var endDate = new Date(endtime);
