@@ -1198,7 +1198,7 @@ edu.gmu.csiss.covali.map = {
 			    		else{
 			    			console.log(side, StartOrStop, edu.gmu.csiss.covali.map.animationCounterLeft == 0)
 			    		}
-			    			el.innerHTML = animationMessage[StartOrStop];
+			    			//el.innerHTML = animationMessage[StartOrStop];
 				    		var animationInfoLeft = document.getElementById('animation-time-left');
 				    		var restartLeft = document.getElementById('restart-left');
 					    	var stopLeft = document.getElementById('stop-left');
