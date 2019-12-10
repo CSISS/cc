@@ -108,34 +108,44 @@ edu.gmu.csiss.covali.statistics = {
     	        	.then(function(data){
     	        		parser = new DOMParser();
     	        		xmlDoc = parser.parseFromString(data,"text/xml");
+    	        		
+    	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
     	        		var content = document.getElementById('popup-content-' + side);
     	        		
-    	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
-    	        		
-    	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
-    	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
-    	        		'<b>Layer:</b> '+LayerName[0]+
-    	        		//'<br>Layer: '+LayerName[1]+
-    	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
-    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
-    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
-    	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
-    	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
-    	        	    $.ajax({
-    	        	        url: layerMetaDataUrl,
-    	        	        contentType: "application/json",
-    	        	        dataType: 'json',
-    	        	        success: function(result){
-    	        	        	var content1 = document.getElementById('popup-content-' + side);
-    	        	        	//console.log(content1);
-    	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
-    	        	        },
-    	    				error: function(msg){
-    	    					var content1 = document.getElementById('popup-content-' + side);
-    	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
-    	    					console.log("Failed to get layers details: " + msg);	    					
-    	    				}
-    	        	    })
+    	        		if(clickWithinTheLayer>0){
+
+	    	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
+	    	        		
+	    	        		content.innerHTML = 
+	    	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
+	    	        		'<b>Layer:</b> '+LayerName[0]+
+	    	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
+	    	        	    $.ajax({
+	    	        	        url: layerMetaDataUrl,
+	    	        	        contentType: "application/json",
+	    	        	        dataType: 'json',
+	    	        	        success: function(result){
+	    	        	        	var content1 = document.getElementById('popup-content-' + side);
+	    	        	        	//console.log(content1);
+	    	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
+	    	        	        },
+	    	    				error: function(msg){
+	    	    					var content1 = document.getElementById('popup-content-' + side);
+	    	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
+	    	    					console.log("Failed to get layers details: " + msg);	    					
+	    	    				}
+	    	        	    })
+    	        		}
+    	        		else{	        		
+    	        			content.innerHTML = '<div style="font-family: Arial, Helvetica, sans-serif">'+
+    	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+    	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+    	    	        		'<br><b>Value: Please click on the layer!</b> ';
+    	        		}
     	        	})        	
             }
         }
@@ -426,7 +436,7 @@ edu.gmu.csiss.covali.statistics = {
 		    .map(k => esc(k) + '=' + esc(params[k]))
 		    .join('&');
         if (url) {
-        
+        	
 //        	document.getElementById('info').innerHTML = '<iframe seamless src="' + url + '"></iframe>';
 
 //            var content = document.getElementById('popup-content-' + side);
@@ -435,41 +445,55 @@ edu.gmu.csiss.covali.statistics = {
 //            
 //                '</code><iframe seamless src="' + url + '"></iframe>';
         	
+        	
+        	
         	fetch(url)
 	        	.then(function(resp){
 	        		return resp.text();
 	        	})
 	        	.then(function(data){
+	        		console.log(data);
 	        		parser = new DOMParser();
 	        		xmlDoc = parser.parseFromString(data,"text/xml");
+	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
+        			var content = document.getElementById('popup-content-' + side);
+        			
+	        		if(clickWithinTheLayer>0){
+
+		        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");		        		
+		        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
+		        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
+		        		'<b>Layer:</b> '+LayerName[0]+
+		        		//'<br>Layer: '+LayerName[1]+
+		        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
+		        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+		        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+		        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
+		        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
+		        	    $.ajax({
+		        	        url: layerMetaDataUrl,
+		        	        contentType: "application/json",
+		        	        dataType: 'json',
+		        	        success: function(result){
+		        	        	var content1 = document.getElementById('popup-content-' + side);
+		        	        	//console.log(content1);
+		        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
+		        	        },
+		    				error: function(msg){
+		    					var content1 = document.getElementById('popup-content-' + side);
+		    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
+		    					console.log("Failed to get layers details: " + msg);	    					
+		    				}
+		        	    })
+	        			
+	        		}
+	        		else{	        		
+	        			content.innerHTML = '<div style="font-family: Arial, Helvetica, sans-serif">'+
+	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Value: Please click on the layer!</b> ';
+	        		}
 	        		
-	        		var content = document.getElementById('popup-content-' + side);
-	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
-	        		
-	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
-	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
-	        		'<b>Layer:</b> '+LayerName[0]+
-	        		//'<br>Layer: '+LayerName[1]+
-	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
-	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
-	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
-	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
-	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
-	        	    $.ajax({
-	        	        url: layerMetaDataUrl,
-	        	        contentType: "application/json",
-	        	        dataType: 'json',
-	        	        success: function(result){
-	        	        	var content1 = document.getElementById('popup-content-' + side);
-	        	        	//console.log(content1);
-	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
-	        	        },
-	    				error: function(msg){
-	    					var content1 = document.getElementById('popup-content-' + side);
-	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
-	    					console.log("Failed to get layers details: " + msg);	    					
-	    				}
-	        	    })
 	        	})        	
         }
         
@@ -498,9 +522,9 @@ edu.gmu.csiss.covali.statistics = {
 		
 			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
 			
-			if(elevation!=""){
+			//if(elevation!=""){
 				req += "&elevation=" + elevation;
-				}
+			//	}
 		
 		//console.log(req);
 		

@@ -205,7 +205,7 @@ edu.gmu.csiss.covali.animation = {
                 				end_time = moment(timerange[1]);
                 				
                 				interval = moment.duration(timerange[2]);
-                				console.log(timerange[2]);
+                				console.log("INTERVAL: "+timerange[2]);
                 				
                 				for(current_time = start_time; current_time.isBefore(end_time); current_time = current_time.add(interval)){
                 					
