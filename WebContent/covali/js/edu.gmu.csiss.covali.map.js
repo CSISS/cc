@@ -21,6 +21,9 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
+		animationCounterLeft: 0,
+		animationCounterRight: 0,
+		
 		getMapStatus: function(side){
 			
 			var id = this.getMapContainerIdBySide(side);
@@ -1149,7 +1152,7 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 		    
 		    var startDate = new Date(starttime);
 		    
-		    //this function already exists, it's called updateCaption!!		    
+		    //this function already exists, it's called updateCaption!!
 		    
 		    function updateInfo(StartOrStop, side) {
 		    	
@@ -1186,23 +1189,38 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 			    			var stopRight = document.getElementById('stop-right');			    			
 			    		}		    		
 			    	}
-
+			    	
 			    	if (side == 'left'){
-			    		if((StartOrStop == "start" && !restartLeft && !stopLeft) || StartOrStop == "stop"){
+			    		if((StartOrStop == "start" && edu.gmu.csiss.covali.map.addWMSAnimationLayer.counterLeft == 0) ||StartOrStop == "stop"){
+			    			//console.log("adding the button")
 				    		el.innerHTML = animationMessage[StartOrStop];
 			    		}
+			    		else{
+			    			console.log(side, StartOrStop, edu.gmu.csiss.covali.map.animationCounterLeft == 0)
+			    		}
+			    			el.innerHTML = animationMessage[StartOrStop];
 				    		var animationInfoLeft = document.getElementById('animation-time-left');
 				    		var restartLeft = document.getElementById('restart-left');
 					    	var stopLeft = document.getElementById('stop-left');
+					    	edu.gmu.csiss.covali.map.animationCounterLeft++;
+					    if(StartOrStop == "stop"){
+					    	edu.gmu.csiss.covali.map.animationCounterLeft = 0;
+					    }
+					    
 			    	}
 			    	else{
-			    		if((StartOrStop == "start" && !restartRight && !stopRight)||StartOrStop == "stop"){
+			    		if((StartOrStop == "start" && edu.gmu.csiss.covali.map.animationCounterRight == 0)||StartOrStop == "stop"){
 				    		el.innerHTML = animationMessage[StartOrStop]; //update the whole legend div and change the button
 			    		}
 			    			//in any case keep updating the time
+			    			el.innerHTML = animationMessage[StartOrStop];
 				    		var animationInfoRight = document.getElementById('animation-time-right');
 				    		var restartRight = document.getElementById('restart-right');
-					    	var stopRight = document.getElementById('stop-right');			    		
+					    	var stopRight = document.getElementById('stop-right');
+					    	edu.gmu.csiss.covali.map.animationCounterRight++;
+					    if(StartOrStop == "stop"){
+					    	edu.gmu.csiss.covali.map.animationCounterRight = 0;
+					    }
 			    	}
 			    	
 			    	
@@ -1243,6 +1261,7 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 			        if (stopRight){
 			        	stopRight.addEventListener('click', stopAnimation, false);			        	
 			        }
+			        
 
 		    	}
 		    	else{
