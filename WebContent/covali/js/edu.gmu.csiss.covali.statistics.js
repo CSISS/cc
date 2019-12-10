@@ -522,9 +522,9 @@ edu.gmu.csiss.covali.statistics = {
 		
 			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
 			
-			if(elevation!=""){
+			//if(elevation!=""){
 				req += "&elevation=" + elevation;
-				}
+			//	}
 		
 		//console.log(req);
 		

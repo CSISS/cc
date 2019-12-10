@@ -1149,10 +1149,7 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 		    
 		    var startDate = new Date(starttime);
 		    
-		    //this function already exists, it's called updateCaption!!
-		    
-		    //function updateAnimationControls(StartOrStop, side)
-		    
+		    //this function already exists, it's called updateCaption!!		    
 		    
 		    function updateInfo(StartOrStop, side) {
 		    	
@@ -1162,67 +1159,51 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 		    		    	
 			    	edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,layer.getSource().getParams()["TIME"],layer.getSource().getParams()["ELEVATION"]);
 			    	
-			    	//define animation message
 			    	var animationMessage =
 			    		
 			    			{"start": "Animation is playing. <button id=\"stop-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Stop</button>" +
 					    			"<div id=\"animation-time-"+side+"\">"+
-					    			"<br>Layer:" + layer.values_.name+
+					    			"Layer:" + layer.values_.name+
 				   					";<br>Time: "+layer.getSource().getParams().TIME+"</div>", 
 					    	"stop": "Animation is stopped. <button id=\"restart-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Resume</button>" +
 					    			"<div id=\"animation-time-"+side+"\">"+
-					    			"<br>Layer:" + layer.values_.name+
+					    			"Layer:" + layer.values_.name+
 					    			";<br>Time: "+layer.getSource().getParams().TIME+"</div>"}
-			    	console.log(animationMessage)
-			    	//pick a side
+
 			    	if (side == 'left'){
 			    		var el = document.getElementById('title-openlayers1');
 			    	}
 			    	else{
 			    		var el = document.getElementById('title-openlayers2');
 			    	}
-			    	console.log(el);
-			    	//var elb = document.getElementsByClassName("AnimationButton1")[0];
-			    	//console.log(elb);
-			    	//var childrenNodes = el.childNodes;
-			    	//console.log(childrenNodes);
 			    	
 			    	window.onload = function(){
-			    		var restartButton = document.getElementBy('restart');  //get the ids of the elements
-				    	var stopButton = document.getElementById('stop');        //get the ids of the elements
-				    	
-				    	console.log(StartOrStop, el, restartButton, stopButton);			    		
+			    		if (side == 'left'){
+			    			var restartLeft = document.getElementBy('restart-left');
+			    			var stopLeft = document.getElementById('stop-left');
+			    		} else{
+			    			var restartRight = document.getElementBy('restart-right');
+			    			var stopRight = document.getElementById('stop-right');			    			
+			    		}		    		
 			    	}
 
-			    	// beginning of the animation
-			    	//if(!restartButton && !stopButton){
-		    		if(StartOrStop == "start" && !restartButton && !stopButton){
-			    		el.innerHTML = animationMessage[StartOrStop]; //update the whole legend div
-			    		console.log("StartOrStop is START: title-openlayers updated!"+layer.getSource().getParams()["TIME"]);
-			    		var anim_el = document.getElementById('animation-time'); //get the ids of the elements
-			    		var restartButton = document.getElementById('restart');  //get the ids of the elements
-				    	var stopButton = document.getElementById('stop');        //get the ids of the elements
-				    	//console.log(StartOrStop, el, restartButton, stopButton);	
+			    	if (side == 'left'){
+			    		if((StartOrStop == "start" && !restartLeft && !stopLeft) || StartOrStop == "stop"){
+				    		el.innerHTML = animationMessage[StartOrStop];
+			    		}
+				    		var animationInfoLeft = document.getElementById('animation-time-left');
+				    		var restartLeft = document.getElementById('restart-left');
+					    	var stopLeft = document.getElementById('stop-left');
 			    	}
-		    		else if(StartOrStop == "start"){
-			    		console.log("StartOrStop is START: title-openlayers updated!"+layer.getSource().getParams()["TIME"]);
-			    		var anim_el = document.getElementById('animation-time'); //get the ids of the elements
-			    		var restartButton = document.getElementById('restart');  //get the ids of the elements
-				    	var stopButton = document.getElementById('stop');        //get the ids of the elements
-				    	//console.log(StartOrStop, el, restartButton, stopButton);	
+			    	else{
+			    		if((StartOrStop == "start" && !restartRight && !stopRight)||StartOrStop == "stop"){
+				    		el.innerHTML = animationMessage[StartOrStop]; //update the whole legend div and change the button
+			    		}
+			    			//in any case keep updating the time
+				    		var animationInfoRight = document.getElementById('animation-time-right');
+				    		var restartRight = document.getElementById('restart-right');
+					    	var stopRight = document.getElementById('stop-right');			    		
 			    	}
-		    		else if(StartOrStop == "stop"){
-			    		el.innerHTML = animationMessage[StartOrStop]; //update the whole legend div
-			    		console.log("StartOrStop is STOP: title-openlayers updated!"+layer.getSource().getParams()["TIME"]);
-			    		var anim_el = document.getElementById('animation-time'); //get the ids of the elements
-			    		var restartButton = document.getElementById('restart');  //get the ids of the elements
-				    	var stopButton = document.getElementById('stop');        //get the ids of the elements
-				    	//console.log(StartOrStop, el, restartButton, stopButton);	
-			    	}
-		    		else{
-		    			console.log("Nesto sedmo!!!");
-		    		}
-			    	//}
 			    	
 			    	
 		    		//el.innerHTML = animationMessage[StartOrStop] + 
@@ -1241,15 +1222,26 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 				    //	var stopButton = document.getElementById('stop');
 		    		//}
 		    		
-		    		anim_el.innerHTML = "<br>Layer:" + layer.values_.name+
-					   					";<br>Time: "+layer.getSource().getParams().TIME;
+			    	if (side == 'left'){
+			    		animationInfoLeft.innerHTML = "<br>Layer:" + layer.values_.name+
+						   							  ";<br>Time: "+layer.getSource().getParams().TIME;
+			    	}else{
+			    		animationInfoRight.innerHTML = "<br>Layer:" + layer.values_.name+
+	   												   ";<br>Time: "+layer.getSource().getParams().TIME;			    		
+			    	}
 		    		
-			        if(restartButton){
-			        	restartButton.addEventListener('click', playAnimation, false);
+			        if(restartLeft){
+			        	restartLeft.addEventListener('click', playAnimation, false);
 			        }
+			        if(restartRight){
+			        	restartRight.addEventListener('click', playAnimation, false);
+			        }			        
 			        
-			        if (stopButton){
-				        stopButton.addEventListener('click', stopAnimation, false);			        	
+			        if (stopLeft){
+				        stopLeft.addEventListener('click', stopAnimation, false);			        	
+			        }
+			        if (stopRight){
+			        	stopRight.addEventListener('click', stopAnimation, false);			        	
 			        }
 
 		    	}
