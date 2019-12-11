@@ -248,7 +248,7 @@ edu.gmu.csiss.covali.statistics = {
 	        		coords += coordinates[0] + " " + coordinates[1];
 	        	}
 	        	
-	        	//console.log(coords);
+	        	console.log(side+":"+coords);
         	
         		edu.gmu.csiss.covali.statistics.getLineStatistics(side, coords);
         		
