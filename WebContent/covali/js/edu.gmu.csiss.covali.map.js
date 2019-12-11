@@ -1195,9 +1195,6 @@ edu.gmu.csiss.covali.map = {
 		    
 		    //this function already exists, it's called updateCaption!!
 		    
-		    function updateInfo(StartOrStop, side) {
-		    		
-		    }
 		    
 		    
 		    function setTime() {
