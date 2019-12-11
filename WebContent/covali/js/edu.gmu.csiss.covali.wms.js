@@ -598,9 +598,9 @@ edu.gmu.csiss.covali.wms = {
                 				
                 				end_time = moment(timesplit[1]);
                 				
-                				interval = moment.duration(timesplit[2]);
+                				edu.gmu.csiss.covali.animation.interval = moment.duration(timesplit[2]);
                 				
-                				for(current_time = start_time; current_time.isBefore(end_time); current_time = current_time.add(interval)){
+                				for(current_time = start_time; current_time.isBefore(end_time); current_time = current_time.add(edu.gmu.csiss.covali.animation.interval)){
                 					
                 					timesteps.push(current_time.toISOString());
                 					
@@ -795,7 +795,7 @@ edu.gmu.csiss.covali.wms = {
 			
 			var endpointurl = edu.gmu.csiss.covali.wms.getCurrentEndPoint();
 			
-			var stylename = "default";
+			var stylename = "default-scalar/default";
 			
 			edu.gmu.csiss.covali.map.addWMSAnimationLayer(map, endpointurl, layername, starttime, endtime, framerate, stylename);
 

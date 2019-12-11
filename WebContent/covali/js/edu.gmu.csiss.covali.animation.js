@@ -18,6 +18,8 @@ edu.gmu.csiss.covali.animation = {
 	
 	framerate : null,
 	
+	interval: null,
+	
 	/**
 	 *  show a select list to choose the rendered layer list
 	 */
@@ -204,10 +206,11 @@ edu.gmu.csiss.covali.animation = {
                 				
                 				end_time = moment(timerange[1]);
                 				
-                				interval = moment.duration(timerange[2]);
+                				edu.gmu.csiss.covali.animation.interval = moment.duration(timerange[2]);
+                				
                 				console.log("INTERVAL: "+timerange[2]);
                 				
-                				for(current_time = start_time; current_time.isBefore(end_time); current_time = current_time.add(interval)){
+                				for(current_time = start_time; current_time.isBefore(end_time); current_time = current_time.add(edu.gmu.csiss.covali.animation.interval)){
                 					
                 					timesteps.push(current_time.toISOString());
                 					

@@ -182,13 +182,27 @@ edu.gmu.csiss.covali.map = {
 		    	}
 		},
 		
+		stoporresume: function(side){
+			
+			if($("#animationbtn-" + side).text()=="Stop"){
+				
+				$("#animationbtn-" + side).text("Resume");
+				
+			}
+			else{
+				
+				$("#animationbtn-" + side).text("Stop");
+				
+			}
+			
+		},
+		
 		updateAnimationCaption: function(side,layername, time, elevation, stoporresume){
-			if(!$("#animationindicator-" + side).length){
-				if(stoporesume){
-					$("#animationindicator-" + side).html("Animation is playing. <button id=\"stop-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Stop</button>");
-				}else{
-					$("#animationindicator-" + side).html("Animation is stopped. <button id=\"restart-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Resume</button>");
-				}
+			
+			if(!$("#animationbtn-" + side).length){
+				
+				$("#animationindicator-" + side).html("Animation is playing. <button onclick=\"edu.gmu.csiss.covali.map.stoporresume('"+side+"')\" type=\"button\" id=\"animationbtn-"+side+"\">Stop</button>");
+				
 			}
 			
 			$("#time-" + side).html(time);
@@ -243,6 +257,7 @@ edu.gmu.csiss.covali.map = {
 	    		//if(theotherlayer!=null){
 	    		
 	    		if(layer){
+	    			
 	    			var legend_layername = layer.get('name');
 	    			  
 					
@@ -1137,7 +1152,7 @@ edu.gmu.csiss.covali.map = {
 			
 			var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
 			
-			stylename = "default-scalar/default"; //this is a quick fix to adding the legend to animation. it needs to be a permanent fix.
+//			stylename = "default-scalar/default"; //this is a quick fix to adding the legend to animation. it needs to be a permanent fix.
 			
 			var legendurl = edu.gmu.csiss.covali.map.getWMSLegend(side, layername, stylename);
 			
@@ -1183,19 +1198,19 @@ edu.gmu.csiss.covali.map = {
 		    var endDate = new Date(endtime);
 		    
 		    var animationMessage =
-	    		
-			{"start": "Animation is playing. <button id=\"stop-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Stop</button>" +
-	    			"<div id=\"animation-time-"+side+"\">"+
-	    			"Layer:" + myLayer1303.getSource().getParams().LAYERS +
-			    ";<br>Time: <span id=\"legend-time-"+side+"\">"+myLayer1303.getSource().getParams().TIME+"</span></div>", 
-   			 	"stop": "Animation is stopped. <button id=\"restart-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Resume</button>" +
-	    			"<div id=\"animation-time-"+side+"\">"+
-	    			"Layer:" + myLayer1303.getSource().getParams().LAYERS +
-	    			";<br>Time: <span id=\"legend-time-"+side+"\">"+myLayer1303.getSource().getParams().TIME+"</span></div>"}
+			{
+		    		"start": "Animation is playing. <button id=\"stop-"+side+"\" onclick=\"edu.gmu.csiss.covali.map.stoporresume('"+side+"')\"  type=\"button\" id=\"animationbtn-"+side+"\">Stop</button>" +
+		    			"<div id=\"animation-time-"+side+"\">"+
+		    			"Layer:" + myLayer1303.getSource().getParams().LAYERS +
+				    ";<br>Time: <span id=\"legend-time-"+side+"\">"+myLayer1303.getSource().getParams().TIME+"</span></div>", 
+   			 	
+			    "stop": "Animation is stopped. <button id=\"restart-"+side+"\" onclick=\"edu.gmu.csiss.covali.map.stoporresume('"+side+"')\"  type=\"button\" id=\"animationbtn-"+side+"\">Resume</button>" +
+		    			"<div id=\"animation-time-"+side+"\">"+
+		    			"Layer:" + myLayer1303.getSource().getParams().LAYERS +
+		    			";<br>Time: <span id=\"legend-time-"+side+"\">"+myLayer1303.getSource().getParams().TIME+"</span></div>"
+		    	}
 		    
 		    //this function already exists, it's called updateCaption!!
-		    
-		    
 		    
 		    function setTime() {
 		    	
@@ -1221,12 +1236,12 @@ edu.gmu.csiss.covali.map = {
 					
 //					$("#legend-time-" + side).val(layer.getSource().getParams().TIME);
 					
-					edu.gmu.csiss.covali.map.updateAnimationCaption(side,myLayer1303.getSource().getParams().LAYERS, 
+					edu.gmu.csiss.covali.map.updateAnimationCaption(side, myLayer1303.getSource().getParams().LAYERS, 
 							startDate.toISOString(), "", true);
 				    
 					//console.log("StartDate: "+startDate.toISOString()+" layer time: "+layer.getSource().getParams()["TIME"]+" layer name: "+layer.getSource().getParams()["LAYERS"]);
 				    
-					startDate.setMinutes(startDate.getMinutes() + interval/60000);
+					startDate.setMinutes(startDate.getMinutes() + edu.gmu.csiss.covali.animation.interval/60000);
 						
 			    	}
 			    	else{
