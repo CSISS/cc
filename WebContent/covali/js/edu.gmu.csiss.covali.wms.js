@@ -798,8 +798,8 @@ edu.gmu.csiss.covali.wms = {
 			var stylename = "default";
 			
 			edu.gmu.csiss.covali.map.addWMSAnimationLayer(map, endpointurl, layername, starttime, endtime, framerate, stylename);
-			
-			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename);
+
+			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename, starttime, "");
 			
 		},
 		
