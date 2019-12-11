@@ -518,13 +518,13 @@ edu.gmu.csiss.covali.statistics = {
 		
 			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
 			
-		if(elevation != "" && elevation != null && typeof elevation !== 'undefined')
+		if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
 		
-			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
+			//linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
 			
 			//if(elevation!=""){
-				req += "&elevation=" + elevation;
-			//	}
+			req += "&elevation=" + elevation;
+		}
 		
 		//console.log(req);
 		
