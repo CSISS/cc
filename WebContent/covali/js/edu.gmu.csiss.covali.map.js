@@ -169,6 +169,9 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
+		/**
+		 * Legend means the color bar.
+		 */
 		changeLegendVisibility: function(side, checked){
 			
 			var legendId = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
@@ -182,6 +185,9 @@ edu.gmu.csiss.covali.map = {
 		    	}
 		},
 		
+		/**
+		 * This function is not finished, please finish it @sreten
+		 */
 		stoporresume: function(side){
 			
 			if($("#animationbtn-" + side).text()=="Stop"){
@@ -197,6 +203,9 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
+		/**
+		 * This function is used for updating the text in the legend area only. The legend update has two parts: the color bar and the text.
+		 */
 		updateAnimationCaption: function(side,layername, time, elevation, stoporresume){
 			
 			if(!$("#animationbtn-" + side).length){
