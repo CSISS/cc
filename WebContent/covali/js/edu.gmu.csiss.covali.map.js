@@ -1098,7 +1098,7 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
-addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerate, stylename){
+		addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerate, stylename){
 			
 			//add code to check if the WMS has already been added
 			
@@ -1209,7 +1209,7 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 		    	else{
 		    		return;
 		    	}
-		     }
+		   }
 			
 	       function stopAnimation() {
 			  var mapid = map.get('target');
@@ -1237,9 +1237,6 @@ addWMSAnimationLayer: function(map, url, layername, starttime, endtime, framerat
 	        };
 			
 	        playAnimation();
-	        
-
-	        	        
 	        
 	        //map.on('dblclick', function(evt){
 	        //	stopAnimation();
