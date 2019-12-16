@@ -99,7 +99,10 @@ edu.gmu.csiss.covali.statistics = {
     		layerMetaDataUrl += Object.keys(params)
     		    .map(k => esc(k) + '=' + esc(params[k]))
     		    .join('&');
-            if (url) {
+    		var content = document.getElementById('popup-content-' + side);
+    		var layerName = params.LayerName.split("/")[0];
+    		var featureId = params.LayerName.split("/")[1];
+            if (url && content) {
 
             	fetch(url)
     	        	.then(function(resp){
@@ -110,9 +113,7 @@ edu.gmu.csiss.covali.statistics = {
     	        		xmlDoc = parser.parseFromString(data,"text/xml");
     	        		
     	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
-    	        		var content = document.getElementById('popup-content-' + side);
-    	        		var layerName = params.LayerName.split("/")[0];
-    	        		var featureId = params.LayerName.split("/")[1];
+
     	        		
     	        		if(clickWithinTheLayer>0){
     	        			
@@ -173,7 +174,8 @@ edu.gmu.csiss.covali.statistics = {
     		var element = popup.getElement();
     		$(element).popover('destroy');
     		$("#popup-" + side).remove();
-    		map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+    		map.removeEventListener('singleclick');
+    		//map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
     	}
 	},
 	
