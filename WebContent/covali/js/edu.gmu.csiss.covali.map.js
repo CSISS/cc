@@ -20,7 +20,7 @@ edu.gmu.csiss.covali.map = {
 			this.addBoundaryWMS();
 			
 		},
-		
+				
 		animationCounterLeft: 0,
 		animationCounterRight: 0,
 		
@@ -189,8 +189,11 @@ edu.gmu.csiss.covali.map = {
 		 * This function is not finished, please finish it @sreten
 		 */
 		stoporresume: function(side){
+
 			
 			if($("#animationbtn-" + side).text()=="Stop"){
+
+				window.clearInterval(window.animationId);
 				
 				$("#animationbtn-" + side).text("Resume");
 				
@@ -198,6 +201,7 @@ edu.gmu.csiss.covali.map = {
 			else{
 				
 				$("#animationbtn-" + side).text("Stop");
+				window.animationId = window.setInterval(setTime, 1000/framerate);
 				
 			}
 			
@@ -210,7 +214,7 @@ edu.gmu.csiss.covali.map = {
 			
 			if(!$("#animationbtn-" + side).length){
 				
-				$("#animationindicator-" + side).html("Animation is playing. <button onclick=\"edu.gmu.csiss.covali.map.stoporresume('"+side+"')\" type=\"button\" id=\"animationbtn-"+side+"\">Stop</button>");
+				$("#animationindicator-" + side).html("Animation is playing. <button onclick=\"stoporresume('"+side+"')\" type=\"button\" id=\"animationbtn-"+side+"\">Stop</button>");
 				
 			}
 			
@@ -235,13 +239,39 @@ edu.gmu.csiss.covali.map = {
 			
 			var caption_id = "title-" + this.getMapContainerIdBySide(side) ;
 			
-			var captionhtml = "<div id=\"animationindicator-"+side+"\"></div><div>name: " + layername;
+			//var captionhtml = "<div id=\"animationindicator-"+side+"\"></div><div><font color=\"#0841E4\">NAME: </font>" + layername;
 			
-			if(time!=null || elevation!=null){
+			var captionhtml = "<div id=\"animationindicator-"+side+"\"></div>" +
+					//"<div style=\"height: 30px;\">" +
+					"<table>"+
+				    //"<tbody>" +
+				    	"<tr>" +
+							"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">NAME: </font></th>" +
+							"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+layername+"</td>" +
+						"</tr>";
+			
+			if(time!=null){
 				
-				captionhtml += " - time: <span id=\"time-"+side+"\">" + time + "</time> - elevation : " + elevation + "</div>";
+				//captionhtml += "<br><font color=\"#0841E4\">TIME: </font>" + time;
+				captionhtml +=
+					"<tr>" +
+						"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">TIME: </font></th>" +
+						"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+time+"</td>" +
+					"</tr>";
 				
 			}
+			
+			if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
+				
+				//captionhtml += "<br><font color=\"#0841E4\">ELEVATION: </font>" + elevation;
+				captionhtml +=
+					"<tr>" +
+						"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">ELEVATION: </font></th>" +
+						"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+elevation+"</td>" +
+					"</tr>";					
+			}
+			captionhtml+= "</table>";//+
+					//"</div>";
 			
 			$("#"+caption_id).html(captionhtml);
 			
@@ -252,7 +282,7 @@ edu.gmu.csiss.covali.map = {
 		 */
 		updateLegend: function(side, layername, legendurl, palette, style, time, elevation){
 			
-			console.log("trace the legend update");
+			//console.log("trace the legend update");
 			
 			var lid = this.getLegendIdBySide(side);
 			
@@ -890,6 +920,8 @@ edu.gmu.csiss.covali.map = {
 						
 						var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
 						
+						//console.log(layer.getSource().getParams());
+						//console.table(layer.getSource().getParams());
 						var minmax = [null,null];
 						
 						if(edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["COLORSCALERANGE"])){
@@ -1206,20 +1238,179 @@ edu.gmu.csiss.covali.map = {
 		    
 		    var endDate = new Date(endtime);
 		    
-		    var animationMessage =
+		    function updateAnimationInfo(StartOrStop, side) {
+				
+				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+				
+				if(layer!=null){
+							
+					//edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,layer.getSource().getParams()["TIME"],layer.getSource().getParams()["ELEVATION"]);
+					
+					var animationMessage =
+						
+							{"start": "Animation is playing. <button id=\"stop-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Stop</button>" +
+									"<div id=\"animation-time-"+side+"\">"+
+									"Layer:" + layer.values_.name+
+									   ";<br>Time: "+layer.getSource().getParams().TIME+"</div>", 
+							"stop": "Animation is stopped. <button id=\"restart-"+side+"\"type=\"button\" class=\"AnimationButton"+side+"\">Resume</button>" +
+									"<div id=\"animation-time-"+side+"\">"+
+									"Layer:" + layer.values_.name+
+									";<br>Time: "+layer.getSource().getParams().TIME+"</div>"}
+
+					if (side == 'left'){
+						var el = document.getElementById('title-openlayers1');
+					}
+					else{
+						var el = document.getElementById('title-openlayers2');
+					}
+					
+					window.onload = function(){
+						if (side == 'left'){
+							var restartLeft = document.getElementBy('restart-left');
+							var stopLeft = document.getElementById('stop-left');
+						} else{
+							var restartRight = document.getElementBy('restart-right');
+							var stopRight = document.getElementById('stop-right');			    			
+						}		    		
+					}
+					
+					if (side == 'left'){
+						if((StartOrStop == "start" && edu.gmu.csiss.covali.map.animationCounterLeft == 0) ||StartOrStop == "stop"){
+							el.innerHTML = animationMessage[StartOrStop];
+						}
+						var animationInfoLeft = document.getElementById('animation-time-left');
+						var restartLeft = document.getElementById('restart-left');
+						var stopLeft = document.getElementById('stop-left');
+						edu.gmu.csiss.covali.map.animationCounterLeft++;
+						if(StartOrStop == "stop"){
+							edu.gmu.csiss.covali.map.animationCounterLeft = 0;
+						}
+						
+					}
+					else{
+						if((StartOrStop == "start" && edu.gmu.csiss.covali.map.animationCounterRight == 0)||StartOrStop == "stop"){
+							el.innerHTML = animationMessage[StartOrStop]; //update the whole legend div and change the button
+						}
+						var animationInfoRight = document.getElementById('animation-time-right');
+						var restartRight = document.getElementById('restart-right');
+						var stopRight = document.getElementById('stop-right');
+						edu.gmu.csiss.covali.map.animationCounterRight++;
+						if(StartOrStop == "stop"){
+							edu.gmu.csiss.covali.map.animationCounterRight = 0;
+						}
+					}
+					
+					if (side == 'left'){
+						animationInfoLeft.innerHTML = "<br>Layer:" + layer.values_.name+
+														 ";<br>Time: "+layer.getSource().getParams().TIME;
+					}else{
+						animationInfoRight.innerHTML = "<br>Layer:" + layer.values_.name+
+														  ";<br>Time: "+layer.getSource().getParams().TIME;			    		
+					}
+					
+					if(restartLeft){
+						restartLeft.addEventListener('click', playAnimation, false);
+					}
+					if(restartRight){
+						restartRight.addEventListener('click', playAnimation, false);
+					}			        
+					
+					if (stopLeft){
+						stopLeft.addEventListener('click', stopAnimation, false);			        	
+					}
+					if (stopRight){
+						stopRight.addEventListener('click', stopAnimation, false);			        	
+					}
+					
+
+				}
+				else{
+					return;
+				}
+			}
+
+			var endDate = new Date(endtime);
+			
+			function setLayerTimeParam() {
+				var mapid = map.get('target');
+				
+				var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
+				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+				console.table(layer.getSource().getParams());
+				
+				if(layer!=null){
+				
+					if (startDate > endDate){
+						startDate = new Date(starttime);
+					}
+					layer.getSource().updateParams({'TIME': startDate.toISOString()});
+					updateAnimationInfo("start", side);
+					//console.log("StartDate: "+startDate.toISOString()+" layer time: "+layer.getSource().getParams()["TIME"]+" layer name: "+layer.getSource().getParams()["LAYERS"]);
+					startDate.setMinutes(startDate.getMinutes() + edu.gmu.csiss.covali.animation.interval/60000);
+				}
+				else{
+					return;
+				}
+			 }
+			
+		   function stopAnimation() {
+			  var mapid = map.get('target');
+				
+			  var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
+			  if (animationId !== null){// && stopAnimationFlag == false) {
+				console.log("animation stopped");
+				window.clearInterval(animationId);
+				animationId = null;
+				updateAnimationInfo("stop", side);
+			  }
+			};
+			
+			var animationFunctions = function(){
+				setLayerTimeParam();
+				stopAnimation();
+			}
+
+			function playAnimation() {
+
+			  stopAnimation();
+	  
+			  console.log(1000/framerate);
+			  animationId = window.setInterval(setLayerTimeParam, 1000/framerate);
+			};
+			
+			playAnimation();
+/*		    var animationMessage =
 			{
-		    		"start": "Animation is playing. <button id=\"stop-"+side+"\" onclick=\"edu.gmu.csiss.covali.map.stoporresume('"+side+"')\"  type=\"button\" id=\"animationbtn-"+side+"\">Stop</button>" +
+		    		"start": "Animation is playing. <button id=\"stop-"+side+"\" onclick=\"stoporresume('"+side+"')\"  type=\"button\" id=\"animationbtn-"+side+"\">Stop</button>" +
 		    			"<div id=\"animation-time-"+side+"\">"+
 		    			"Layer:" + myLayer1303.getSource().getParams().LAYERS +
 				    ";<br>Time: <span id=\"legend-time-"+side+"\">"+myLayer1303.getSource().getParams().TIME+"</span></div>", 
    			 	
-			    "stop": "Animation is stopped. <button id=\"restart-"+side+"\" onclick=\"edu.gmu.csiss.covali.map.stoporresume('"+side+"')\"  type=\"button\" id=\"animationbtn-"+side+"\">Resume</button>" +
+					"stop": "Animation is stopped. <button id=\"restart-"+side+"\" onclick=\"stoporresume('"+side+"')\"  type=\"button\" id=\"animationbtn-"+side+"\">Resume</button>" +
 		    			"<div id=\"animation-time-"+side+"\">"+
 		    			"Layer:" + myLayer1303.getSource().getParams().LAYERS +
 		    			";<br>Time: <span id=\"legend-time-"+side+"\">"+myLayer1303.getSource().getParams().TIME+"</span></div>"
 		    	}
 		    
 		    //this function already exists, it's called updateCaption!!
+		    function stoporresume(side){
+
+				
+				if($("#animationbtn-" + side).text()=="Stop"){
+
+					window.clearInterval(window.animationId);
+					
+					$("#animationbtn-" + side).text("Resume");
+					
+				}
+				else{
+					
+					$("#animationbtn-" + side).text("Stop");
+					playAnimation();
+					
+				}
+				
+			}
 		    
 		    function setTime() {
 		    	
@@ -1243,7 +1434,7 @@ edu.gmu.csiss.covali.map = {
 				    
 //					updateInfo("start", side);
 					
-//					$("#legend-time-" + side).val(layer.getSource().getParams().TIME);
+					$("#legend-time-" + side).val(layer.getSource().getParams().TIME);
 					
 					edu.gmu.csiss.covali.map.updateAnimationCaption(side, myLayer1303.getSource().getParams().LAYERS, 
 							startDate.toISOString(), "", true);
@@ -1260,13 +1451,13 @@ edu.gmu.csiss.covali.map = {
 			
 	       function stopAnimation() {
 	    	   	  
-	          if (animationId !== null){// && stopAnimationFlag == false) {
+	          if (window.animationId !== null){// && stopAnimationFlag == false) {
 	        	  	
 	        	  	console.log("animation stopped");
 	        	
-	            window.clearInterval(animationId);
+	            window.clearInterval(window.animationId);
 	            
-	            animationId = null;
+	            window.animationId = null;
 	            
 //	            updateInfo("stop", side);
 	            
@@ -1291,7 +1482,7 @@ edu.gmu.csiss.covali.map = {
 	        		
 	        		console.log(1000/framerate);
 	          
-	        		animationId = window.setInterval(setTime, 1000/framerate);
+	        		window.animationId = window.setInterval(setTime, 1000/framerate);
 	          
 	        		//window.setInterval(stopAnimation, 1000/framerate);
 	          
@@ -1302,7 +1493,7 @@ edu.gmu.csiss.covali.map = {
 	        //map.on('dblclick', function(evt){
 	        //	stopAnimation();
 			//});
-			
+*/		
 			myLayer1303.on("change:visible", function(event){
 				//alert("The layer is visible now!");
 				//console.log("The layer is visible now!");
