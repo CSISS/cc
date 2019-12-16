@@ -15,7 +15,7 @@ edu.gmu.csiss.covali.statistics = {
 	
 	side: null,
 	
-	bothMapsPopupChecked: null,
+	bothMapsPopupChecked: false,
 	
 	listenPoint: function(side){
 		
@@ -52,7 +52,7 @@ edu.gmu.csiss.covali.statistics = {
 		    //add single click
 		    
 		    if(bothMapsPopupChecked == true){
-				    map.on('singleclick', function(evt) {
+				map.on('singleclick', function(evt) {
 			    		edu.gmu.csiss.covali.statistics.showPopupsOnBothMapsSameXY(evt.coordinate);
 			    });
 		    }
@@ -81,8 +81,9 @@ edu.gmu.csiss.covali.statistics = {
         	var viewResolution = /** @type {number} */ (map.getView().getResolution());
             
             var wmssource = layer.getSource();
+            var epsg = map.getView().getProjection().getCode();
             
-            var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, 'EPSG:3857', {'INFO_FORMAT': 'text/xml'});
+            var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, epsg, {'INFO_FORMAT': 'text/xml'});
             var params = {
     				SERVICE: 'WMS',
     				VERSION: '1.3.0',
@@ -92,7 +93,7 @@ edu.gmu.csiss.covali.statistics = {
     				LayerName: wmssource.params_.LAYERS,
     				TIME: wmssource.params_.TIME
     			};
-
+            //console.log(params);
     		var esc = encodeURIComponent;
     		var layerMetaDataUrl = 'http://localhost:8080/ncWMS2/wms?';
     		layerMetaDataUrl += Object.keys(params)
@@ -108,33 +109,45 @@ edu.gmu.csiss.covali.statistics = {
     	        		parser = new DOMParser();
     	        		xmlDoc = parser.parseFromString(data,"text/xml");
     	        		
+    	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
     	        		var content = document.getElementById('popup-content-' + side);
-    	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
+    	        		var layerName = params.LayerName.split("/")[0];
+    	        		var featureId = params.LayerName.split("/")[1];
     	        		
-    	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
-    	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
-    	        		'<b>Layer:</b> '+LayerName[0]+
-    	        		//'<br>Layer: '+LayerName[1]+
-    	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
-    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
-    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
-    	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
-    	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
-    	        	    $.ajax({
-    	        	        url: layerMetaDataUrl,
-    	        	        contentType: "application/json",
-    	        	        dataType: 'json',
-    	        	        success: function(result){
-    	        	        	var content1 = document.getElementById('popup-content-' + side);
-    	        	        	console.log(content1);
-    	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
-    	        	        },
-    	    				error: function(msg){
-    	    					var content1 = document.getElementById('popup-content-' + side);
-    	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
-    	    					console.log("Failed to get layers details: " + msg);	    					
-    	    				}
-    	        	    })
+    	        		if(clickWithinTheLayer>0){
+    	        			
+	    	        		content.innerHTML = 
+	    	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
+	    	        		'<b>Layer:</b> '+layerName+
+	    	        		'<br><b>Feature id</b>: '+featureId+
+	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
+	    	        	    $.ajax({
+	    	        	        url: layerMetaDataUrl,
+	    	        	        contentType: "application/json",
+	    	        	        dataType: 'json',
+	    	        	        success: function(result){
+	    	        	        	var content1 = document.getElementById('popup-content-' + side);
+	    	        	        	//console.log(content1);
+	    	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
+	    	        	        },
+	    	    				error: function(msg){
+	    	    					var content1 = document.getElementById('popup-content-' + side);
+	    	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
+	    	    					console.log("Failed to get layers details: " + msg);	    					
+	    	    				}
+	    	        	    })
+    	        		}
+    	        		else{	        		
+    	        			content.innerHTML = '<pre><div style="font-family: Arial, Helvetica, sans-serif">'+
+	    	        			'<b>Layer:</b> '+layerName+
+	    	        			'<br><b>Feature id</b>: '+featureId+
+    	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+    	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+    	    	        		'</div></pre>';
+    	        		}
     	        	})        	
             }
         }
@@ -237,9 +250,18 @@ edu.gmu.csiss.covali.statistics = {
 	        		coords += coordinates[0] + " " + coordinates[1];
 	        	}
 	        	
-	        	console.log(coords);
-        	
-        		edu.gmu.csiss.covali.statistics.getLineStatistics(side, coords);
+	        	console.log(side+":"+coords);
+	        	
+	        	//bothMapsPopupChecked = document.getElementById("bothMapsPopupChk").checked;
+	        	
+	        	if(bothMapsPopupChecked == true){
+	        		edu.gmu.csiss.covali.statistics.getLineStatistics("left", coords);
+	        		edu.gmu.csiss.covali.statistics.getLineStatistics("right", coords);
+	        	}
+	        	else{
+	        		edu.gmu.csiss.covali.statistics.getLineStatistics(side, coords);
+	        	}
+        		
         		
         	}catch(e){
         		
@@ -278,17 +300,21 @@ edu.gmu.csiss.covali.statistics = {
 		
 		var leftmap = edu.gmu.csiss.covali.map.getMapBySide("left");
 		
-		leftmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		//leftmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
 		
 		var rightmap = edu.gmu.csiss.covali.map.getMapBySide("right");
 		
-		rightmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		//rightmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+		
+		rightmap.removeEventListener('singleclick');
+		leftmap.removeEventListener('singleclick');
 		
 	},
 	
 	showDialog: function(){
 		
 		BootstrapDialog.closeAll();
+		edu.gmu.csiss.covali.statistics.removePopupsFromBothMaps();
 		
 		var content = "<div class=\"row\" style=\"padding:10px;\">"+
 //			"<div class=\"form-group\"> "+
@@ -359,6 +385,8 @@ edu.gmu.csiss.covali.statistics = {
 	
 	singleClickListener: function(evt) {
 		
+		//console.log(evt);
+		
 		var coordinate = evt.coordinate;
         
 		var hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));
@@ -412,14 +440,14 @@ edu.gmu.csiss.covali.statistics = {
 				LayerName: wmssource.params_.LAYERS,
 				TIME: wmssource.params_.TIME
 			};
-
+        console.table(params);
 		var esc = encodeURIComponent;
 		var layerMetaDataUrl = 'http://localhost:8080/ncWMS2/wms?';
 		layerMetaDataUrl += Object.keys(params)
 		    .map(k => esc(k) + '=' + esc(params[k]))
 		    .join('&');
         if (url) {
-        
+        	
 //        	document.getElementById('info').innerHTML = '<iframe seamless src="' + url + '"></iframe>';
 
 //            var content = document.getElementById('popup-content-' + side);
@@ -428,41 +456,59 @@ edu.gmu.csiss.covali.statistics = {
 //            
 //                '</code><iframe seamless src="' + url + '"></iframe>';
         	
+        	
+        	
         	fetch(url)
 	        	.then(function(resp){
 	        		return resp.text();
 	        	})
 	        	.then(function(data){
+	        		console.log(data);
 	        		parser = new DOMParser();
 	        		xmlDoc = parser.parseFromString(data,"text/xml");
-	        		
+        			
+	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
 	        		var content = document.getElementById('popup-content-' + side);
-	        		var LayerName = xmlDoc.getElementsByTagName("layer")[0].childNodes[0].nodeValue.split("/");
+	        		var layerName = params.LayerName.split("/")[0];
+	        		var featureId = params.LayerName.split("/")[1];
 	        		
-	        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
-	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
-	        		'<b>Layer:</b> '+LayerName[0]+
-	        		//'<br>Layer: '+LayerName[1]+
-	        		'<br><b>Feature id</b>: '+xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue+
-	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
-	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
-	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
-	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
-	        	    $.ajax({
-	        	        url: layerMetaDataUrl,
-	        	        contentType: "application/json",
-	        	        dataType: 'json',
-	        	        success: function(result){
-	        	        	var content1 = document.getElementById('popup-content-' + side);
-	        	        	console.log(content1);
-	        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
-	        	        },
-	    				error: function(msg){
-	    					var content1 = document.getElementById('popup-content-' + side);
-	    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
-	    					console.log("Failed to get layers details: " + msg);	    					
-	    				}
-	        	    })
+	        		if(clickWithinTheLayer>0){
+		        		
+		        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
+		        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
+		        		'<b>Layer:</b> '+layerName+
+		        		//'<br>Layer: '+LayerName[1]+
+		        		'<br><b>Feature id</b>: '+featureId+
+		        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+		        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+		        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
+		        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
+		        	    $.ajax({
+		        	        url: layerMetaDataUrl,
+		        	        contentType: "application/json",
+		        	        dataType: 'json',
+		        	        success: function(result){
+		        	        	var content1 = document.getElementById('popup-content-' + side);
+		        	        	//console.log(content1);
+		        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
+		        	        },
+		    				error: function(msg){
+		    					var content1 = document.getElementById('popup-content-' + side);
+		    					content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
+		    					console.log("Failed to get layers details: " + msg);	    					
+		    				}
+		        	    })
+	        			
+	        		}
+	        		else{	        		
+	        			content.innerHTML = '<pre><div style="font-family: Arial, Helvetica, sans-serif">'+
+    	        			'<b>Layer:</b> '+layerName+
+    	        			'<br><b>Feature id</b>: '+featureId+
+	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
+	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
+	    	        		'</div></pre>';
+	        		}
+	        		
 	        	})        	
         }
         
@@ -487,15 +533,15 @@ edu.gmu.csiss.covali.statistics = {
 		
 			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
 			
-		if(elevation != "" && elevation != null && typeof elevation !== 'undefined')
+		if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
 		
-			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
+			//linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
 			
-			if(elevation!=""){
-				req += "&elevation=" + elevation;
-				}
+			//if(elevation!=""){
+			req += "&elevation=" + elevation;
+		}
 		
-		console.log(req);
+		//console.log(req);
 		
 		var $textAndPic = $('<div></div>');
         

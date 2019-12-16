@@ -68,7 +68,7 @@ edu.gmu.csiss.covali.nco = {
         content += '  <div class="row">';
         content += '	<label class="col-md-3 control-label" for="ncra-infile">Output file</label>';
         content += '	<div class="col-md-9">';
-        content += '		<input id="ncra-outfile" name="ncra-outfile" class="form-control" required>';
+        content += '		<input id="ncra-outfile" name="ncra-outfile" value="nco_record_average_result.nc" class="form-control" required>';
         content += '	</div>';
         content += '  </div><br/>';
 
@@ -153,7 +153,7 @@ edu.gmu.csiss.covali.nco = {
         content += '  <div class="row">';
         content += '	<label class="col-md-3 control-label" for="ncbo-infile">Output file</label>';
         content += '	<div class="col-md-9">';
-        content += '		<input id="ncbo-outfile" name="ncbo-outfile" class="form-control" required>';
+        content += '		<input id="ncbo-outfile" name="ncbo-outfile" value="nco_binary_operator_result.nc" class="form-control" required>';
         content += '	</div>';
         content += '  </div><br/>';
 
