@@ -842,7 +842,6 @@ edu.gmu.csiss.covali.map = {
 	            		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 	            		
 	            		var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
-	            		//console.table(layer.getSource().getParams());
 	            		edu.gmu.csiss.covali.map.updateLegend(side, edu.gmu.csiss.covali.map.legend_layername,
 	            				legendurl, palette, style, layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
 	            		
@@ -903,6 +902,7 @@ edu.gmu.csiss.covali.map = {
 			
 			if(!empty){
 				
+				//var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 				
 				if(typeof layer == 'undefined' || layer == null){
@@ -929,12 +929,8 @@ edu.gmu.csiss.covali.map = {
 						edu.gmu.csiss.covali.map.layerdetails = obj;
 						
 						var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-						console.log(edu.gmu.csiss.covali.map.legend_layername);
 						var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
-						
-						//console.table(layer.getSource().getParams());
-						//console.log(layer.getSource().getParams());
-						//console.table(layer.getSource().getParams());
+
 						var minmax = [null,null];
 						
 						if(typeof layer != 'undefined' && layer!=null 
@@ -1212,8 +1208,6 @@ edu.gmu.csiss.covali.map = {
 			
 			var legendurl = edu.gmu.csiss.covali.map.getWMSLegend(side, layername, stylename);
 			
-			console.log(url);
-			
 			var myLayer1303 = new ol.layer.Tile({
 				  //extent: [2033814, 6414547, 2037302, 6420952],
 				  //preload: Infinity,
@@ -1256,7 +1250,6 @@ edu.gmu.csiss.covali.map = {
 		    function updateAnimationInfo(StartOrStop, side) {
 				
 				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-				//console.log(layer);
 				
 				if(layer!=null){
 							
@@ -1298,7 +1291,8 @@ edu.gmu.csiss.covali.map = {
 						}
 						var animationInfoLeft = document.getElementById('animation-time-left');
 						if(!animationInfoLeft){
-							el.innerHTML = animationMessage[StartOrStop];							
+							el.innerHTML = animationMessage[StartOrStop];
+							//console.log("Updating the element.......")
 						}
 						var restartLeft = document.getElementById('restart-left');
 						var stopLeft = document.getElementById('stop-left');
@@ -1360,7 +1354,6 @@ edu.gmu.csiss.covali.map = {
 				
 				var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
 				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-				//console.table(layer.getSource().getParams());
 				
 				if(layer!=null){
 				
@@ -1369,7 +1362,6 @@ edu.gmu.csiss.covali.map = {
 					}
 					layer.getSource().updateParams({'TIME': startDate.toISOString()});
 					updateAnimationInfo("start", side);
-					//console.log("StartDate: "+startDate.toISOString()+" layer time: "+layer.getSource().getParams()["TIME"]+" layer name: "+layer.getSource().getParams()["LAYERS"]);
 					startDate.setMinutes(startDate.getMinutes() + edu.gmu.csiss.covali.animation.interval/60000);
 				}
 				else{
@@ -1659,12 +1651,10 @@ edu.gmu.csiss.covali.map = {
 			var nextlayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 			
 			if(nextlayer!=null){
-				
 				edu.gmu.csiss.covali.map.updateLegend(side, nextlayer.get('name'), nextlayer.getSource().getParams()["LEGEND"], 
 						null, null, nextlayer.getSource().getParams()["TIME"], nextlayer.getSource().getParams()["ELEVATION"]);
 				
 			}else{
-				
 				edu.gmu.csiss.covali.map.updateLegend(side, null, null, null, null, null, null);
 				
 			}

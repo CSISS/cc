@@ -284,18 +284,15 @@ edu.gmu.csiss.covali.settings = {
 			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 			
 			var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, layername);
-			//console.log(layername);
-			//console.log(layer.getSource().getParams());
+			
 			var othermap = edu.gmu.csiss.covali.map.getMapBySide(target_side);
 			
-			//console.log(layer.values_.enableLocalCache);
 			if (layer.values_.enableLocalCache == true){//I didn't really know how to differentiate a static layer from the animation layer so I used this
 				edu.gmu.csiss.covali.wms.loadAnimation(layername, target_side, starttime, endtime, framerate);
 			}
 			else{
 				othermap.addLayer(layer);
 				layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(target_side);
-				//console.table(layer.getSource().getParams())
 				edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, 
 						layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
 			}
