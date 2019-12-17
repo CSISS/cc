@@ -905,7 +905,16 @@ edu.gmu.csiss.covali.map = {
 				
 				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 				
-				edu.gmu.csiss.covali.map.legend_layername = layer.get('name');
+				if(typeof layer == 'undefined' || layer == null){
+					
+					layer = edu.gmu.csiss.covali.map.legend_layername;
+					
+				}else{
+				
+					edu.gmu.csiss.covali.map.legend_layername = layer.get('name');
+					
+				}
+				
 					
 				$.ajax({
 					
@@ -928,7 +937,8 @@ edu.gmu.csiss.covali.map = {
 						//console.table(layer.getSource().getParams());
 						var minmax = [null,null];
 						
-						if(edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["COLORSCALERANGE"])){
+						if(typeof layer != 'undefined' && layer!=null 
+								&& edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["COLORSCALERANGE"])){
 							
 							minmax = layer.getSource().getParams()["COLORSCALERANGE"].split(",");
 							
@@ -940,7 +950,8 @@ edu.gmu.csiss.covali.map = {
 						
 						var belowabove = [null, null];
 						
-						if(edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["ABOVEMAXCOLOR"])){
+						if(typeof layer != 'undefined' && layer!=null 
+								&& edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["ABOVEMAXCOLOR"])){
 							
 							belowabove[0] = layer.getSource().getParams()["BELOWMINCOLOR"];
 							

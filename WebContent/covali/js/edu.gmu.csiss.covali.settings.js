@@ -267,6 +267,8 @@ edu.gmu.csiss.covali.settings = {
 		
 		switchMap: function(side, layername){
 			
+			edu.gmu.csiss.covali.map.legend_layername = layername;
+			
 			var target_side = null;
 			
 			if(side=="left"){
@@ -297,6 +299,7 @@ edu.gmu.csiss.covali.settings = {
 				edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, 
 						layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
 			}
+			//add to the settings menu
 			this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
 			this.delLayer(side, layername, true);
 
