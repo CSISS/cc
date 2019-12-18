@@ -1615,10 +1615,15 @@ edu.gmu.csiss.covali.map = {
 			myLayer1303.on("change:visible", function(event){
 				
 				//change the legend accordingly
-				
+
 				var layer = event.target;
 				
-				var parentmapid = map.get('target');
+				if(layer.getSource().getParams()["parentMapId"]){
+					var parentmapid = layer.getSource().getParams()["parentMapId"];
+				}
+				else{
+					var parentmapid = map.get('target');
+				}
 				
 				console.log("this layer belongs to map " + parentmapid);
 				

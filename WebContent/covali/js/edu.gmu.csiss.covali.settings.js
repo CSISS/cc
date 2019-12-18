@@ -298,6 +298,14 @@ edu.gmu.csiss.covali.settings = {
 			}
 			//add to the settings menu
 			this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
+			//add a parent map parameter to the layer object. Used in layer visibility change event handler
+			var params = layer.getSource().getParams();
+			if (target_side=='left'){
+				params.parentMapId = 'openlayers1';
+			}else{
+				params.parentMapId = 'openlayers2';
+			}
+			layer.getSource().updateParams(params);
 			this.delLayer(side, layername, true);
 
 			
