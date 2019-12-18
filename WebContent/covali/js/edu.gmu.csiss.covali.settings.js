@@ -15,12 +15,13 @@ edu.gmu.csiss.covali.settings = {
 		checkLayer: function(side, layername, checked){
 			
 			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-			
+			var topLayerIndex = olmap.getLayers().getLength()-1;
+			var topLayer = olmap.getLayers().item(topLayerIndex);
 //			var checked = this.checked;
 			
 			olmap.getLayers().forEach(function (layer) {
 			    
-				if (layer.get('name') == layername) {
+				if (layer.get('name') == layername && layername == topLayer.get('name')) {
 			    	
 					layer.setVisible(checked);
 					edu.gmu.csiss.covali.statistics.changePopupVisibility(side, checked);
@@ -298,17 +299,14 @@ edu.gmu.csiss.covali.settings = {
 			}
 			//add to the settings menu
 			this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
-			//add a parent map parameter to the layer object. Used in layer visibility change event handler
-			var params = layer.getSource().getParams();
-			if (target_side=='left'){
-				params.parentMapId = 'openlayers1';
-			}else{
-				params.parentMapId = 'openlayers2';
-			}
-			layer.getSource().updateParams(params);
-			this.delLayer(side, layername, true);
-
 			
+			//update target (map) property of the layer. Used in layer visibility change event handler
+			if (target_side=='left'){
+				layer.set('target', 'openlayers1');
+			}else{
+				layer.set('target', 'openlayers2');
+			}
+			this.delLayer(side, layername, true);
 		},
 		
 		/**

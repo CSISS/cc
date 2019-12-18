@@ -235,43 +235,50 @@ edu.gmu.csiss.covali.map = {
 			
 		},
 		
-		updateCaption: function(side,layername, time, elevation){
+		updateCaption: function(side, layername, time, elevation){
 			
 			var caption_id = "title-" + this.getMapContainerIdBySide(side) ;
 			
-			//var captionhtml = "<div id=\"animationindicator-"+side+"\"></div><div><font color=\"#0841E4\">NAME: </font>" + layername;
-			
-			var captionhtml = "<div id=\"animationindicator-"+side+"\"></div>" +
-					//"<div style=\"height: 30px;\">" +
-					"<table>"+
-				    //"<tbody>" +
-				    	"<tr>" +
-							"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">NAME: </font></th>" +
-							"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+layername+"</td>" +
+			if(!layername){
+				var captionhtml = "<div id=\"animationindicator-"+side+"\"></div>"+
+								  "<div><text>Layer Caption</text></div>"
+				
+			}else{
+					
+				//var captionhtml = "<div id=\"animationindicator-"+side+"\"></div><div><font color=\"#0841E4\">NAME: </font>" + layername;
+				
+				var captionhtml = "<div id=\"animationindicator-"+side+"\"></div>" +
+						//"<div style=\"height: 30px;\">" +
+						"<table>"+
+					    //"<tbody>" +
+					    	"<tr>" +
+								"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">NAME: </font></th>" +
+								"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+layername+"</td>" +
+							"</tr>";
+				
+				if(time!=null){
+					
+					//captionhtml += "<br><font color=\"#0841E4\">TIME: </font>" + time;
+					captionhtml +=
+						"<tr>" +
+							"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">TIME: </font></th>" +
+							"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+time+"</td>" +
 						"</tr>";
-			
-			if(time!=null){
+					
+				}
 				
-				//captionhtml += "<br><font color=\"#0841E4\">TIME: </font>" + time;
-				captionhtml +=
-					"<tr>" +
-						"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">TIME: </font></th>" +
-						"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+time+"</td>" +
-					"</tr>";
-				
+				if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
+					
+					//captionhtml += "<br><font color=\"#0841E4\">ELEVATION: </font>" + elevation;
+					captionhtml +=
+						"<tr>" +
+							"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">ELEVATION: </font></th>" +
+							"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+elevation+"</td>" +
+						"</tr>";					
+				}
+				captionhtml+= "</table>";//+
+						//"</div>";
 			}
-			
-			if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
-				
-				//captionhtml += "<br><font color=\"#0841E4\">ELEVATION: </font>" + elevation;
-				captionhtml +=
-					"<tr>" +
-						"<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">ELEVATION: </font></th>" +
-						"<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+elevation+"</td>" +
-					"</tr>";					
-			}
-			captionhtml+= "</table>";//+
-					//"</div>";
 			
 			$("#"+caption_id).html(captionhtml);
 			
@@ -343,12 +350,18 @@ edu.gmu.csiss.covali.map = {
 	    				$('#'+lid).attr("legendurl", null);
 	    				
 	    				this.updateScale(side, true);
-	    				
 	    			}
 	    			
+	    		}else{
+    				$('#'+lid).css("background-image", "url('')");  
+    				
+    				$('#'+lid).attr("legendurl", null);
+    				
+    				this.updateScale(side, true);
 	    		}
 			
 			this.updateCaption(side, layername, time, elevation);
+			
 //			console.log("the legend div height: " + $("#"+lid).height());
 			
 		},
@@ -900,6 +913,8 @@ edu.gmu.csiss.covali.map = {
 		 */
 		updateScale: function(side, empty){
 			
+			console.trace();
+			
 			if(!empty){
 				
 				//var map = edu.gmu.csiss.covali.map.getMapBySide(side);
@@ -914,7 +929,6 @@ edu.gmu.csiss.covali.map = {
 					edu.gmu.csiss.covali.map.legend_layername = layer.get('name');
 					
 				}
-				
 					
 				$.ajax({
 					
@@ -1618,12 +1632,11 @@ edu.gmu.csiss.covali.map = {
 
 				var layer = event.target;
 				
-				if(layer.getSource().getParams()["parentMapId"]){
-					var parentmapid = layer.getSource().getParams()["parentMapId"];
-				}
-				else{
+				if(layer.get('target')){
+					var parentmapid = layer.get('target');
+				}else{
 					var parentmapid = map.get('target');
-				}
+				}			
 				
 				console.log("this layer belongs to map " + parentmapid);
 				
@@ -1641,7 +1654,7 @@ edu.gmu.csiss.covali.map = {
 					
 					console.log("show the current top layer's legend");
 					
-					edu.gmu.csiss.covali.map.showNextAvailableLegend(side);
+					//edu.gmu.csiss.covali.map.showNextAvailableLegend(side);
 					
 				}
 				
@@ -1661,6 +1674,7 @@ edu.gmu.csiss.covali.map = {
 				
 			}else{
 				edu.gmu.csiss.covali.map.updateLegend(side, null, null, null, null, null, null);
+				//$('#'+side+'_bottom_area').hide();
 				
 			}
 			
