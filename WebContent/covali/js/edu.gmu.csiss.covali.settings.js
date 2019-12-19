@@ -17,6 +17,10 @@ edu.gmu.csiss.covali.settings = {
 			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
 			var topLayerIndex = olmap.getLayers().getLength()-1;
 			var topLayer = olmap.getLayers().item(topLayerIndex);
+			//console.log("TOP LAYERS:::" + layername);
+			//console.log("top layer: "+topLayer);
+			var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+			//console.log("top visible layer: "+topVisibleLayer);
 //			var checked = this.checked;
 			
 			olmap.getLayers().forEach(function (layer) {
@@ -24,9 +28,10 @@ edu.gmu.csiss.covali.settings = {
 				if (layer.get('name') == layername && layername == topLayer.get('name')) {
 			    	
 					layer.setVisible(checked);
+					//if (layername == topLayer.get('name')){
 					edu.gmu.csiss.covali.statistics.changePopupVisibility(side, checked);
-					edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);
-					
+					edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);						
+					//}
 			    }
 				
 			});
@@ -261,7 +266,7 @@ edu.gmu.csiss.covali.settings = {
 					"');\" type=\"range\" class=\"slider\" min=\"0\" max=\"100\" value=\""+opaval*100+"\" /><p>Opacity: <span class=\"opacity-value\">"+opaval+"</span></p>"+
 				"</label> "+
 			"</div>";
-    		
+					
     		return onecontrol;
     		
 		},
@@ -289,16 +294,23 @@ edu.gmu.csiss.covali.settings = {
 			var othermap = edu.gmu.csiss.covali.map.getMapBySide(target_side);
 			
 			if (layer.values_.enableLocalCache == true){//I didn't really know how to differentiate a static layer from the animation layer so I used this
+				try{
+					layer.getSource().clear();
+				}
+				catch(error){
+					console.log("ERROR REDRAWING THE LAYER"+error);
+				}
 				edu.gmu.csiss.covali.wms.loadAnimation(layername, target_side, starttime, endtime, framerate);
 			}
 			else{
 				othermap.addLayer(layer);
 				layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(target_side);
-				edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, 
-						layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
+
 			}
 			//add to the settings menu
 			this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
+			edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, 
+					layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
 			
 			//update target (map) property of the layer. Used in layer visibility change event handler
 			if (target_side=='left'){

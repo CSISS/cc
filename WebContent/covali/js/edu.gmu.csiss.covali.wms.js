@@ -795,8 +795,12 @@ edu.gmu.csiss.covali.wms = {
 			
 			var endpointurl = edu.gmu.csiss.covali.wms.getCurrentEndPoint();
 			
-			var stylename = "default-scalar/default";
-			
+			if(edu.gmu.csiss.covali.animation.style != null){
+				var stylename = edu.gmu.csiss.covali.animation.style;
+			}else{
+				var stylename = "default-scalar/default";
+			}
+						
 			edu.gmu.csiss.covali.map.addWMSAnimationLayer(map, endpointurl, layername, starttime, endtime, framerate, stylename);
 
 			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename, starttime, "");
