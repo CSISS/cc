@@ -314,3 +314,7 @@ li.selected {
 .file-browser-item:hover a {
 	text-decoration: underline;
 }
+
+.btn-tools {
+	margin: 3px;
+}

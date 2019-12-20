@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.NcoTool;
+import edu.gmu.csiss.earthcube.cyberconnector.tools.RegridTool;
 import edu.iris.dmc.criteria.OutputLevel;
 import edu.iris.dmc.criteria.StationCriteria;
 import edu.iris.dmc.fdsn.station.model.Channel;
@@ -59,6 +60,18 @@ import edu.iris.dmc.service.ServiceUtil;
 public class CovaliController {
 	
 	Logger logger = Logger.getLogger(this.getClass());
+
+	@RequestMapping(value = "/regrid", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	public @ResponseBody String regrid(WebRequest request) {
+		String datafile = request.getParameter("datafile");
+		String gridfile = request.getParameter("gridfile");
+		String outfile = request.getParameter("outfile");
+
+		String result = RegridTool.regrid(datafile, gridfile, outfile);
+
+		return result;
+	}
+
 
 	@RequestMapping(value = "/nco/ncra", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	public @ResponseBody String nconcra(WebRequest request) {

@@ -55,6 +55,8 @@ public class SysDir {
 
 	public static String ncbo_path = null;
 
+	public static String anaconda_path = null;
+
 	public static String temp_file_path = null;
 
 	public static String thredds_index_url = null;
@@ -180,6 +182,8 @@ public class SysDir {
 			ncra_path = p.getProperty("ncra_path");
 
 			ncbo_path = p.getProperty("ncbo_path");
+
+			anaconda_path = p.getProperty("anaconda_path");
 			
 			enable_whitelist = Boolean.parseBoolean(p.getProperty("enable_whitelist"));
 			

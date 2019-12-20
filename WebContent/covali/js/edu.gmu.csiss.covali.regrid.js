@@ -1,32 +1,42 @@
 
 edu.gmu.csiss.covali.regrid = {
-    // layer_tree : null,
 
-    /**
-     *  show a select list to choose the rendered layer list
-     */
-    // layerSelectCallback: function(layerjson){
-    //
-    //     console.log(layerjson);
-    //
-    //     // var
-    //
-    //     edu.gmu.csiss.covali.animation.layer_tree = $('#layer-select-tree').treeview({data: [layerjson]});
-    //
-    // },
+    doRegrid(datafile, gridfile, outpath) {
+        $.ajax({
+            type: "POST",
+
+            data: {
+                "datafile": datafile,
+                "gridfile": gridfile,
+                "outfile": outpath
+            },
+
+            url: '../web/regrid',
+
+        }).success(function(data) {
+            alert(data);
+        }).error(function(data) {
+            alert(data);
+        });
+    },
 
     inputFilesChanged: function() {
-        var path1 = $('#regrid-data-file').val();
-        var path2 = $('#regrid-grid-file').val();
+        var path1 = $('#regrid-datafile').val();
+        var path2 = $('#regrid-gridfile').val();
 
-        var dir = path1.substr(0, path1.lastIndexOf("/"));
+        var dir = $('#regrid-outdir').val();
+        if(dir == "") {
+            dir = path1.substr(0, path1.lastIndexOf("/"));
+            $('#regrid-outdir').val(dir);
+        }
+
         var name1 = path1.substr(path1.lastIndexOf("/") + 1);
         var name2 = path2.substr(path2.lastIndexOf("/") + 1);
 
         name1 = name1.replace(/\.[^/.]+$/, "");
         name2 = name2.replace(/\.[^/.]+$/, "");
 
-        var outname = dir + '/' + name1 + '-' + name2 + ".nc4";
+        var outname = name1 + '-gridto-' + name2 + ".nc4";
 
         $('#regrid-outfile').val(outname);
     },
@@ -40,39 +50,40 @@ edu.gmu.csiss.covali.regrid = {
             title: "Regrid",
 
             message: function() {
-                // var ui = "<label for=\"layer-select-tree\" >Select the Input Layer</label>";
-                //
-                // ui += "<div id=\"layer-select-tree\">";
-                // ui += "  </div>";
-                //
-                // ui += "<div class=\"row\" id=\"\"></div>";
-
                 // INPUT DATA FILE
                 var content = '';
                 content += '  <div class="row infile-row">';
                 content += '	<div class="col-md-12">';
-                content += 'Only NetCDF files with regular curvilinear grids are supported.';
+                content += 'Only NetCDF files with lat/lon grids are supported. Uses xESMF bilinear mode.';
                 content += '</div>';
                 content += '  </div><br/>';
 
                 content += '  <div class="row infile-row">';
-                content += '	<label class="col-md-3 control-label" for="regrid-data-file">Data File</label>';
+                content += '	<label class="col-md-3 control-label" for="regrid-datafile">Data File</label>';
                 content += '	<div class="col-md-8">';
-                content += '		<input id="regrid-data-file" name="regrid-data-file" class="form-control" required/>';
+                content += '		<input id="regrid-datafile" name="regrid-datafile" class="form-control" required/>';
                 content += '	</div>';
                 content += '	<div class="col-md-1 text-left"  style="padding-left: 0px;">';
-                content += '		<a class="btn btn-primary" id="regrid-add-data-file-btn" href="javascript:void(0)"><i class="fa fa-folder"></i></a>';
+                content += '		<a class="btn btn-primary" id="regrid-add-datafile-btn" href="javascript:void(0)"><i class="fa fa-folder"></i></a>';
                 content += '	</div>';
                 content += '  </div><br/>';
 
                 // INPUT GRID FILE
                 content += '  <div class="row infile-row">';
-                content += '	<label class="col-md-3 control-label" for="regrid-grid-file">Grid File</label>';
+                content += '	<label class="col-md-3 control-label" for="regrid-gridfile">Grid File</label>';
                 content += '	<div class="col-md-8">';
-                content += '		<input id="regrid-grid-file" name="regrid-grid-file" class="form-control" required/>';
+                content += '		<input id="regrid-gridfile" name="regrid-gridfile" class="form-control" required/>';
                 content += '	</div>';
                 content += '	<div class="col-md-1 text-left"  style="padding-left: 0px;">';
-                content += '		<a class="btn btn-primary" id="regrid-add-grid-file-btn" href="javascript:void(0)"><i class="fa fa-folder"></i></a>';
+                content += '		<a class="btn btn-primary" id="regrid-add-gridfile-btn" href="javascript:void(0)"><i class="fa fa-folder"></i></a>';
+                content += '	</div>';
+                content += '  </div><br/>';
+
+                // OUTPUT DIR
+                content += '  <div class="row">';
+                content += '	<label class="col-md-3 control-label" for="regrid-outdir">Output folder</label>';
+                content += '	<div class="col-md-9">';
+                content += '		<input id="regrid-outdir" name="regrid-outdir" value="" class="form-control" required>';
                 content += '	</div>';
                 content += '  </div><br/>';
 
@@ -87,25 +98,24 @@ edu.gmu.csiss.covali.regrid = {
 
                 content = $(content);
 
-                content.find('#regrid-add-data-file-btn').click(function(){
+                content.find('#regrid-add-datafile-btn').click(function(){
                     edu.gmu.csiss.covali.filebrowser.selectedCallback = function(selectedFile) {
-                        $('#regrid-data-file').val(selectedFile);
-                        $('#regrid-data-file').change();
+                        $('#regrid-datafile').val(selectedFile);
+                        $('#regrid-datafile').change();
 
                     };
                     edu.gmu.csiss.covali.filebrowser.init();
                 });
 
-                content.find('#regrid-add-grid-file-btn').click(function(){
+                content.find('#regrid-add-gridfile-btn').click(function(){
                     edu.gmu.csiss.covali.filebrowser.selectedCallback = function(selectedFile) {
-                        $('#regrid-grid-file').val(selectedFile);
-                        $('#regrid-grid-file').change();
+                        $('#regrid-gridfile').val(selectedFile);
+                        $('#regrid-gridfile').change();
                     };
                     edu.gmu.csiss.covali.filebrowser.init();
                 });
 
-                content.find('#regrid-data-file, #regrid-grid-file').change(function(){
-                    console.log('oh yeah!');
+                content.find('#regrid-datafile, #regrid-gridfile').change(function(){
                     edu.gmu.csiss.covali.regrid.inputFilesChanged();
                 });
 
@@ -113,51 +123,33 @@ edu.gmu.csiss.covali.regrid = {
 
             },
             onshown: function (dialog) {
-                // var x = 1;
-
-                // edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.regrid.layerSelectCallback);
-
-
-
 
             },
 
             buttons: [{
+                label: 'Regrid',
 
                 icon: 'glyphicon glyphicon-ok',
 
-                label: 'Regrid',
-
                 cssClass: 'btn-warning',
 
-                action: function (dialogItself) {
+                autospin: true,
 
-                    var nodes = $('#layer-select-tree').treeview('getSelected');
+                action: function(dialogItself) {
+                    var datafile = $('#regrid-datafile').val();
+                    var gridfile = $('#regrid-gridfile').val();
 
-                    if (nodes.length != 0) {
+                    var dir = $('#regrid-outdir').val();
+                    var outfile = $('#regrid-outfile').val();
 
-                        var layername = nodes[0].Name;
-                        alert(layername);
-
-
-                    } else {
-
-                        alert("Please select a layer");
-
-                    }
-
-
-
+                    edu.gmu.csiss.covali.regrid.doRegrid(datafile, gridfile, dir + '/' + outfile);
                 }
 
             }, {
-
                 label: 'Cancel',
 
-                action: function (dialogItself) {
-
+                action: function(dialogItself) {
                     dialogItself.close();
-
                 }
 
             }]
