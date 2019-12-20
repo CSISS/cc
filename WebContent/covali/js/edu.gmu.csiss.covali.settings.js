@@ -20,18 +20,21 @@ edu.gmu.csiss.covali.settings = {
 			//console.log("TOP LAYERS:::" + layername);
 			//console.log("top layer: "+topLayer);
 			var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-			//console.log("top visible layer: "+topVisibleLayer);
 //			var checked = this.checked;
 			
 			olmap.getLayers().forEach(function (layer) {
 			    
-				if (layer.get('name') == layername && layername == topLayer.get('name')) {
+				if (layer.get('name') == layername) {
 			    	
 					layer.setVisible(checked);
+					if (topVisibleLayer && layername == topVisibleLayer.get('name')){
 					//if (layername == topLayer.get('name')){
 					edu.gmu.csiss.covali.statistics.changePopupVisibility(side, checked);
-					edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);						
+					edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);		
+					//var nextTopVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+					//console.log("TOP VISIBLE LAYER: "+nextTopVisibleLayer.get('name'));
 					//}
+					}
 			    }
 				
 			});
@@ -61,18 +64,18 @@ edu.gmu.csiss.covali.settings = {
 		},
 		
 		
-		changeLegendVisibility: function(side, checked){
-			
-			var legendId = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
-			
-			if($("#"+legendId).length){
-	    		if(checked==false){
-	    			$("#"+legendId).hide();
-	    		}else{
-	    			$("#"+legendId).show();
-	    		}
-	    	}
-		},
+//		changeLegendVisibility: function(side, checked){
+//			
+//			var legendId = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
+//			
+//			if($("#"+legendId).length){
+//	    		if(checked==false){
+//	    			$("#"+legendId).hide();
+//	    		}else{
+//	    			$("#"+legendId).show();
+//	    		}
+//	    	}
+//		},
 		
 		delLayer: function(side, layername, noquestion){
 			
@@ -223,14 +226,29 @@ edu.gmu.csiss.covali.settings = {
 			
 		},
 		
+		checkBoxBasedOnLayerVisbility: function(side, layername){
+			
+			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+			var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, layername);
+			
+			if(layer.getVisible()==true){
+				return "checked";
+			}else{
+				return "";
+			}
+		},
+		
 		getOneLayerControl: function(side, layername, opacity){
 			
 			var opaval = Number(opacity);
+			
+
     		
     		var onecontrol = "<div class=\"checkbox\">"+
 					"<label>"+
 					//check/uncheck layer
-					"<input type=\"checkbox\" checked=\"checked\" onchange=\"edu.gmu.csiss.covali.settings.checkLayer('"+
+					"<input type=\"checkbox\" "+this.checkBoxBasedOnLayerVisbility(side,layername)+" onchange=\"edu.gmu.csiss.covali.settings.checkLayer('"+
 					side + "', '"+ layername + "', this.checked)\" value=\"\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Layer visibility\"/>" + 
 					//layer name
 					"<span style=\"word-wrap:break-word;\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Layer name\">" + layername + "</span>" +
@@ -304,7 +322,12 @@ edu.gmu.csiss.covali.settings = {
 			}
 			else{
 				othermap.addLayer(layer);
-				layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(target_side);
+				if(edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(target_side)){
+					layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(target_side);
+				}else{
+					var topLayerIndex = othermap.getLayers().getLength()-1;
+					layer = othermap.getLayers().item(topLayerIndex);
+				}		
 
 			}
 			//add to the settings menu
