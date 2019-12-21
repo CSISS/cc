@@ -9,10 +9,6 @@ outfile = sys.argv[3]
 data = xr.open_dataset(datafile)
 grid = xr.open_dataset(gridfile)
 
-print("Created regridded file: " + outfile)
-
-sys.exit(0)
-
 if 'XLAT' in data.coords._names:
     data = data.rename({'XLAT':'lat','XLONG':'lon'})
 
@@ -31,4 +27,4 @@ data_out = regridder(data, keep_attrs=True)
 
 data_out.to_netcdf(outfile)
 
-print("Created regridded file: " + outfile)
+print("Create regridded file: " + outfile)
