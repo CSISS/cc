@@ -15,8 +15,11 @@ edu.gmu.csiss.covali.regrid = {
 
         }).success(function(data) {
             alert(data);
+            BootstrapDialog.closeAll();
+
         }).error(function(data) {
             alert(data);
+            BootstrapDialog.closeAll();
         });
     },
 

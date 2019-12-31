@@ -10,21 +10,21 @@ data = xr.open_dataset(datafile)
 grid = xr.open_dataset(gridfile)
 
 if 'XLAT' in data.coords._names:
-    data = data.rename({'XLAT':'lat','XLONG':'lon'})
+    data = data.rename({'XLAT':'lat','XLONG':'lon'})#, 'Time': 'time'})
 
 if 'XLAT' in grid.coords._names:
-    grid = grid.rename({'XLAT':'lat','XLONG':'lon'})
-
-
-# delete variables with less than 2 dimensions from data. they won't be regridder
-for vname in data.variables:
-    if data[vname].ndim < 2:
-        data = data.drop(vname)
+    grid = grid.rename({'XLAT':'lat','XLONG':'lon'})#, 'Time': 'time'})
 
 regridder = xe.Regridder(data, grid, 'bilinear', reuse_weights=True)
 
-data_out = regridder(data, keep_attrs=True)
+# select vars with more than 1 dim that can be regridded
+regridded_vars = dict()
+for vname in data.variables:
+    if data[vname].ndim > 1 and not vname in ['lat', 'lon', 'x', 'y']:
+        regridded_vars[vname] = regridder(data[vname])
 
-data_out.to_netcdf(outfile)
+
+data_out = xr.Dataset(regridded_vars)
 
 print("Create regridded file: " + outfile)
+data_out.to_netcdf(outfile)
