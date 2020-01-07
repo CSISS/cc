@@ -239,7 +239,7 @@ edu.gmu.csiss.covali.map = {
 		},
 		
 		updateCaption: function(side, layername, time, elevation){
-			console.trace();
+			//console.trace();
 			
 			var caption_id = "title-" + this.getMapContainerIdBySide(side) ;
 			var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
