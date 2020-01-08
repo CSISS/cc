@@ -116,6 +116,17 @@ Users can draw points or lines on the map to get a statistics on the values on t
 ![linestats](docs/line_stats.png)
 
 
+#### Regridding
+
+Regridding for NetCDF data is supported but requires additional configuration. Regridding uses ESMF (Earth Science Modeling Framework) and xESMF Python libraries.
+
+First, [Anaconda](https://docs.anaconda.com/anaconda/install/) must be installed and it's location must be set in `config.properties` file. For example: `anaconda_path=/opt/anaconda3`  
+
+Second, a new environment with correct dependencies must be configured:
+```$bash
+conda create -n esmpy8 -y
+conda install -y -n esmpy8  -c conda-forge "esmf!=*nompi" esmpy xarray=0.14.1 scipy dask netCDF4 xesmf libnetcdf=4.6.2 netcdf4=1.5.1
+``` 
 #### Map rotation
 
 Use `Alt+Shift+Drag` to rotate the map.
