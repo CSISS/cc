@@ -16,6 +16,8 @@ edu.gmu.csiss.covali.regrid = {
         }).success(function(data) {
             alert(data);
             BootstrapDialog.closeAll();
+            edu.gmu.csiss.covali.local.showFileLoadingDialog(outpath);
+            edu.gmu.csiss.covali.local.loadWMSFile(outpath);
 
         }).error(function(data) {
             alert(data);
