@@ -20,5 +20,6 @@
 *all-*.sql
 /test/
 /test-bak/
+/WebContent/covali/js/Cesium/*
 
 
