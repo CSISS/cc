@@ -24,6 +24,44 @@ edu.gmu.csiss.covali.map = {
 		animationCounterLeft: 0,
 		animationCounterRight: 0,
 		
+		assignZIndicesToLoadedLayers: function(side){
+			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+			if(olmap.getLayers().getLength() == 0){
+				zIndex = 1;
+				zIndices = [];
+				olmap.getLayers().forEach(function (layer) {
+					
+					if(isNaN(layer.getZIndex())||layer.getZIndex()==99){
+						layer.setZIndex(zIndex);
+						layer.set("id", side + zIndex);
+						zIndices.push(zIndex);
+						zIndex++;
+					}
+					console.log("Zindices updated: "+side);
+					console.log(zIndices);
+					
+				});
+			}
+			else{
+				edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
+			}
+
+			
+		},
+		
+		getMapLayerByName: function(side, layerName){
+			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+			var neededLayer = null;
+			olmap.getLayers().forEach(function (layer) {
+				if(layer.get('name') == layerName){
+					neededLayer = layer; 
+				}
+				
+			});
+			return neededLayer;
+		},
+		
 		getMapStatus: function(side){
 			
 			var id = this.getMapContainerIdBySide(side);
@@ -176,7 +214,8 @@ edu.gmu.csiss.covali.map = {
 			
 			var legendId = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
 			
-			var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+			//var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+			var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
 			
 			if($("#"+legendId).length){
 		    		if(checked==false){
@@ -295,7 +334,11 @@ edu.gmu.csiss.covali.map = {
 		updateLegend: function(side, layername, legendurl, palette, style, time, elevation){
 			
 			
-			var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+			var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
+			if (topVisibleLayer == null){
+				var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+			}
+			
 			
 			
 			var lid = this.getLegendIdBySide(side);
@@ -1141,7 +1184,7 @@ edu.gmu.csiss.covali.map = {
 					
 				}
 				
-				console.log("legendurl:" + legendurl);
+				//console.log("legendurl:" + legendurl);
 				
 			}
 			
@@ -1177,6 +1220,16 @@ edu.gmu.csiss.covali.map = {
 			return layer;
 			
 		},
+		
+		indexOf: function(layers, layer) {
+            var length = layers.getLength();
+            for (var i = 0; i < length; i++) {
+                if (layer === layers.item(i)) {
+                    return i;
+                }
+            }
+            return -1;
+        },
 		
 		getVisibleTopWMSLayer: function(side){
 			

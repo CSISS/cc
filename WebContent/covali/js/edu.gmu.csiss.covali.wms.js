@@ -914,6 +914,8 @@ edu.gmu.csiss.covali.wms = {
 				
 			}
 			
+			edu.gmu.csiss.covali.map.assignZIndicesToLoadedLayers(side);
+			
 		},
 		
 		/**

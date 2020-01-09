@@ -11,16 +11,75 @@
 edu.gmu.csiss.covali.settings = {
 		
 		isSync: true,
+		
+		sortDictionaryBasedOnValues: function(obj) {
+		    items = Object.keys(obj).map(function(key) {
+		        return [key, obj[key]];
+		    });
+		    items.sort(function(first, second) {
+		        return first[1] - second[1];
+		    });
+		    sorted_obj={}
+		    $.each(items, function(k, v) {
+		        use_key = v[0]
+		        use_value = v[1]
+		        sorted_obj[use_key] = use_value
+		    })
+		    return(sorted_obj)
+		},
+		
+		getLayerSortedDictOfLayersAndZIndices: function(side){
+			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+			var ZIndices = {};
+			var layerNameWithMaxZIndex = null;
+			olmap.getLayers().forEach(function (layer) {
+				ZIndices[layer.get('name')] =layer.getZIndex();				
+			});
+			
+			var maxZIndex = Math.max(...Object.values(ZIndices));
+			olmap.getLayers().forEach(function (layer) {
+				if(layer.getZIndex() == maxZIndex){
+					layerNameWithMaxZIndex = layer.get('name');
+				}		
+			});
+			console.log(JSON.stringify(edu.gmu.csiss.covali.settings.sortDictionaryBasedOnValues(ZIndices), null, 2));
+			return edu.gmu.csiss.covali.settings.sortDictionaryBasedOnValues(ZIndices);
+			
+		},
+		
+		getMapLayerWithTopZIndex: function(side){
+			var ZIndices = edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
+			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+			var layer = null;
+			$.each( ZIndices, function( sortedDictlayerName, Zindex ){
+				//console.log("FINDING LAYER WITH TOP Z INDEX IS: "+olmap.getLayers().array_.length, Zindex, olmap.getLayers().array_.length==Zindex);
+				if(Zindex == olmap.getLayers().getLength()){
+					layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, sortedDictlayerName);
+				}
+			});
+			return layer;
+			 
+		},
+		
+		updateLegendWithMapLayerWithTopZIndex: function(side){
+			var ZIndices = edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
+			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+			var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
+
+			olmap.getLayers().forEach(function (layer) {    
+					if (topVisibleLayer && layer.get('name') == topVisibleLayer.get('name')){
+						edu.gmu.csiss.covali.statistics.changePopupVisibility(side, true);
+						edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null, 
+								layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
+					}
+			});
+		},
 
 		checkLayer: function(side, layername, checked){
 			
 			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-			var topLayerIndex = olmap.getLayers().getLength()-1;
-			var topLayer = olmap.getLayers().item(topLayerIndex);
-			//console.log("TOP LAYERS:::" + layername);
-			//console.log("top layer: "+topLayer);
-			var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-//			var checked = this.checked;
+			//var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+			var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
 			
 			olmap.getLayers().forEach(function (layer) {
 			    
@@ -28,12 +87,8 @@ edu.gmu.csiss.covali.settings = {
 			    	
 					layer.setVisible(checked);
 					if (topVisibleLayer && layername == topVisibleLayer.get('name')){
-					//if (layername == topLayer.get('name')){
-					edu.gmu.csiss.covali.statistics.changePopupVisibility(side, checked);
-					edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);		
-					//var nextTopVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-					//console.log("TOP VISIBLE LAYER: "+nextTopVisibleLayer.get('name'));
-					//}
+						edu.gmu.csiss.covali.statistics.changePopupVisibility(side, checked);
+						edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);		
 					}
 			    }
 				
@@ -62,20 +117,6 @@ edu.gmu.csiss.covali.settings = {
 			});
 			
 		},
-		
-		
-//		changeLegendVisibility: function(side, checked){
-//			
-//			var legendId = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
-//			
-//			if($("#"+legendId).length){
-//	    		if(checked==false){
-//	    			$("#"+legendId).hide();
-//	    		}else{
-//	    			$("#"+legendId).show();
-//	    		}
-//	    	}
-//		},
 		
 		delLayer: function(side, layername, noquestion){
 			
@@ -130,52 +171,86 @@ edu.gmu.csiss.covali.settings = {
 			
 		},
 		
+		moveLayerNameUp: function(side, layername){			
+            var elem = $("#" + side+"_"+layername.split("/")[1]);
+            if(layername!="osm-basemap" && layername != "World Boundary"){
+            	elem.next().after(elem);
+            	//console.log(elem.next());
+            }
+		},
+
+		moveLayerNameDown: function(side, layername){
+			
+			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+			
+            var elem = $("#" + side+"_"+layername.split("/")[1]);
+            if(elem.prev()[0]["id"]!=side+"_undefined"){
+            	var prev_elem = elem.prev().html();
+            	//console.log($($(prev_elem).find("span")[0]).text()); //previous layer name
+            	elem.prev().before(elem);
+            }
+		},
 		/**
 		 * Move back
 		 */
 		moveBack: function(side,layername){
 			
 			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-			
+			//console.log(olmap.getLayers().array_);
 			zIndex = 1;
+			zIndices = [];
 			
 			olmap.getLayers().forEach(function (layer) {
 				
 				if(isNaN(layer.getZIndex())||layer.getZIndex()==99){
 					layer.setZIndex(zIndex);
 					layer.set("id", side + zIndex);
+					zIndices.push(zIndex);
 					zIndex++;
+					//console.log(layer.get('name')+": "+layer.getZIndex());
 				}
 				
 			});
+			//var previous_layer = null;
 			
-			var previous_layer = null;
+			var elem = $("#" + side+"_"+layername.split("/")[1]);
+			var prev_elem = elem.prev().html();
+			var previousLayerName = $($(prev_elem).find("span")[0]).text();
 			
-			olmap.getLayers().forEach(function (layer){
+			var previous_layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, previousLayerName);
+			
+			var sortedDictOfLayerNamesAndZIndices = edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
+			$.each( sortedDictOfLayerNamesAndZIndices, function( sortedDictlayerName, Zindex ){
+			//olmap.getLayers().forEach(function (layer){
 				
+				var layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, sortedDictlayerName);
 				if (layer.get('name') == layername)  {
 			    	
 					layernum = layer.getZIndex();
 					
-					console.log("the zindex :" + layer.getZIndex());
+					if(layernum > 3){
+						
+						layer.setZIndex(layer.getZIndex()-1);
+
+						previous_layer.setZIndex(layer.getZIndex()+1);
+						
+						layer.getSource().changed();
+						
+						previous_layer.getSource().changed();
+						
+						edu.gmu.csiss.covali.settings.moveLayerNameDown(side, layername);
+						edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
+						
+					}
 					
-					layer.setZIndex(layer.getZIndex()-1);
-					
-					previous_layer.setZIndex(layer.getZIndex()+1);
-					
-					layer.getSource().changed();
-					
-					previous_layer.getSource().changed();
-					
-			    }else{
+			    }//else{
 			    	
-			    	previous_layer = layer;
+			    //	previous_layer = layer;
 			    	
-			    }
+			    //}
 				
 			});
-			
-			
+			edu.gmu.csiss.covali.settings.updateLegendWithMapLayerWithTopZIndex(side);
 			
 		},
 		
@@ -198,32 +273,47 @@ edu.gmu.csiss.covali.settings = {
 				
 			});
 			
-			var previous_layer = null;
+			//var previous_layer = null;
+			var elem = $("#" + side+"_"+layername.split("/")[1]);
+			var next_elem = elem.next().html();
+			var nextLayerName = $($(next_elem).find("span")[0]).text();
 			
-			olmap.getLayers().forEach(function (layer){
+			var next_layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, nextLayerName);
+			
+			var sortedDictOfLayerNamesAndZIndices = edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
+			$.each( sortedDictOfLayerNamesAndZIndices, function( sortedDictlayerName, Zindex ){
+			//sortedDictOfLayerNamesAndZIndices.forEach(function (sortedDictlayerName, Zindex){
 				
-				if (layer.get('name') == layername)  {
+				var layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, sortedDictlayerName);
+					if (layer.get('name') == layername){
 			    	
-					layernum = layer.getZIndex();
+						layernum = layer.getZIndex();
+						
+						console.log("the zindex :" + layer.getZIndex());
+						
+						if(layernum < olmap.getLayers().getLength()){
+							
+							layer.setZIndex(layer.getZIndex()+1);
+							
+							next_layer.setZIndex(layer.getZIndex()-1);
+							
+							layer.getSource().changed();
+							
+							next_layer.getSource().changed();
+							
+							edu.gmu.csiss.covali.settings.moveLayerNameUp(side, layername);
+							edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
+							
+					}
 					
-					console.log("the zindex :" + layer.getZIndex());
-					
-					layer.setZIndex(layer.getZIndex()+1);
-					
-					previous_layer.setZIndex(layer.getZIndex()-1);
-					
-					layer.getSource().changed();
-					
-					previous_layer.getSource().changed();
-					
-			    }else{
+			    }//else{
 			    	
-			    	previous_layer = layer;
+			    	//previous_layer = layer;
 			    	
-			    }
+			    //}
 				
 			});
-			
+			edu.gmu.csiss.covali.settings.updateLegendWithMapLayerWithTopZIndex(side);
 		},
 		
 		checkBoxBasedOnLayerVisbility: function(side, layername){
@@ -245,7 +335,7 @@ edu.gmu.csiss.covali.settings = {
 			
 
     		
-    		var onecontrol = "<div class=\"checkbox\">"+
+    		var onecontrol = "<div class=\"checkbox\" id=\""+side+"_"+layername.split("/")[1]+"\">"+
 					"<label>"+
 					//check/uncheck layer
 					"<input type=\"checkbox\" "+this.checkBoxBasedOnLayerVisbility(side,layername)+" onchange=\"edu.gmu.csiss.covali.settings.checkLayer('"+
@@ -342,6 +432,8 @@ edu.gmu.csiss.covali.settings = {
 				layer.set('target', 'openlayers2');
 			}
 			this.delLayer(side, layername, true);
+			edu.gmu.csiss.covali.map.assignZIndicesToLoadedLayers(side);
+			edu.gmu.csiss.covali.map.assignZIndicesToLoadedLayers(target_side);
 		},
 		
 		/**
