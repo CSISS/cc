@@ -1235,6 +1235,8 @@ edu.gmu.csiss.covali.map = {
 			
 			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 			
+			
+			
 			var layer = null;
 			
 			for(var i=map.getLayers().getLength()-1;i>=0;i--){
@@ -1248,6 +1250,24 @@ edu.gmu.csiss.covali.map = {
 					//console.log("the first visible layer is : " + l.get('name'));
 					
 					break;
+					
+				}
+				
+			}
+			
+			
+			for(var i=map.getLayers().getLength()-1;i>=0;i--){
+				
+				var l = map.getLayers().item(i);
+				
+				if( l!= layer && l.getVisible() && l.getSource() instanceof ol.source.TileWMS
+						&& l.getZIndex()>layer.getZIndex()){
+
+					layer = l;
+					
+					//console.log("the first visible layer is : " + l.get('name'));
+					
+//					break;
 					
 				}
 				
