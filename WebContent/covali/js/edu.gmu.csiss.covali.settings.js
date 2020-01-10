@@ -486,109 +486,212 @@ edu.gmu.csiss.covali.settings = {
 			
 		},
 		
+		getContent: function(){
+			
+        	var $lefttree = edu.gmu.csiss.covali.settings.getLayerControl("left");
+        	
+        	var $righttree = edu.gmu.csiss.covali.settings.getLayerControl("right");
+        	
+        	var leftstatus = "";
+        	
+        	if(edu.gmu.csiss.covali.map.getMapStatus("left")){
+        		
+        		leftstatus = "checked=\"checked\"";
+        		
+        	}
+        		
+        	var rightstatus = ""; 
+        	
+        	if(edu.gmu.csiss.covali.map.getMapStatus("right")){
+        		
+        		rightstatus = "checked=\"checked\"";
+        		
+        	} 
+        	
+        	console.log("left status: " + leftstatus + " - right status: " + rightstatus );
+        	
+        	var synccheck = "";
+        	
+        	if(edu.gmu.csiss.covali.settings.isSync){
+        		
+        		synccheck = "checked=\"checked\"";
+        		
+        	}
+        	
+            var $content = '<div class=\"row\">'+
+			
+			'<div class=\"col-md-12\"><h2>Map Control</h2></div>'+
+			
+			'<div class=\"col-md-12\"><span>Enable Map Synchronization:</span> <input type=\"checkbox\" id=\"map-sync\" onchange=\"edu.gmu.csiss.covali.settings.switchSync(this.checked)\" '+synccheck+' ></div>'+
+			
+			'<div class=\"col-md-6\" id=\"left-settings\">'+
+			
+			'	<h4>Left Map '+
+			
+			'	<input type=\"checkbox\" '+leftstatus+' id=\"left-map-switch\" onchange=\"edu.gmu.csiss.covali.settings.checkMap(\'left\', this.checked)\" value=\"\">'+
+			
+			'</h4>'+
+			
+			$lefttree.html()+
+			
+			'</div>' +
+			
+			'<div class=\"col-md-6\" id=\"right-settings\" >'+
+			
+			'<h4>Right Map'+
+			
+			'	<input type=\"checkbox\" '+rightstatus+' id=\"left-map-switch\" onchange=\"edu.gmu.csiss.covali.settings.checkMap(\'right\', this.checked)\" value=\"\">'+
+			
+			'</h4>'+
+			
+			$righttree.html()+
+			
+			'</div>';
+            
+            return $content;
+			
+		},
+		
 		init: function(){
 			
-			BootstrapDialog.show({
-				
-				cssClass: 'dialog-vertical-center',
-	            
-	            title: "Settings",
-	            
-	            message: function(dialog) {
-	            	
-	            	var $lefttree = edu.gmu.csiss.covali.settings.getLayerControl("left");
-	            	
-	            	var $righttree = edu.gmu.csiss.covali.settings.getLayerControl("right");
-	            	
-	            	var leftstatus = "";
-	            	
-	            	if(edu.gmu.csiss.covali.map.getMapStatus("left")){
-	            		
-	            		leftstatus = "checked=\"checked\"";
-	            		
-	            	}
-	            		
-	            	var rightstatus = ""; 
-	            	
-	            	if(edu.gmu.csiss.covali.map.getMapStatus("right")){
-	            		
-	            		rightstatus = "checked=\"checked\"";
-	            		
-	            	} 
-	            	
-	            	console.log("left status: " + leftstatus + " - right status: " + rightstatus );
-	            	
-	            	var synccheck = "";
-	            	
-	            	if(edu.gmu.csiss.covali.settings.isSync){
-	            		
-	            		synccheck = "checked=\"checked\"";
-	            		
-	            	}
-	            	
-	                var $content = $('<div class=\"row\">'+
-	    			
-					'<div class=\"col-md-12\"><h2>Map Control</h2></div>'+
-					
-					'<div class=\"col-md-12\"><span>Enable Map Synchronization:</span> <input type=\"checkbox\" id=\"map-sync\" onchange=\"edu.gmu.csiss.covali.settings.switchSync(this.checked)\" '+synccheck+' ></div>'+
-					
-					'<div class=\"col-md-6\" id=\"left-settings\">'+
-					
-					'	<h4>Left Map '+
-					
-					'	<input type=\"checkbox\" '+leftstatus+' id=\"left-map-switch\" onchange=\"edu.gmu.csiss.covali.settings.checkMap(\'left\', this.checked)\" value=\"\">'+
-					
-					'</h4>'+
-					
-					$lefttree.html()+
-					
-					'</div>' +
-					
-					'<div class=\"col-md-6\" id=\"right-settings\" >'+
-					
-					'<h4>Right Map'+
-					
-					'	<input type=\"checkbox\" '+rightstatus+' id=\"left-map-switch\" onchange=\"edu.gmu.csiss.covali.settings.checkMap(\'right\', this.checked)\" value=\"\">'+
-					
-					'</h4>'+
-					
-					$righttree.html()+
-					
-					'</div>');
-	                
-	                return $content;
-	                
-	            },
-	            
-	            buttons: [{
-	                
-	            	icon: 'glyphicon glyphicon-ok',
-	                
-	                label: 'OK',
-	                
-	                title: 'OK',
-	                
-	                cssClass: 'btn-warning',
-	                
-	                action: function(dialogItself){
-	                	
-	                	dialogItself.close();
-	                	
-	                }
-	                
-	            }, {
-	                
-	            	label: 'Close',
-	                
-	                action: function(dialogItself){
-	                	
-	                    dialogItself.close();
-	                    
-	                }
-	            
-	            }]
-	            
+			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+				edu.gmu.csiss.covali.settings.getContent()+
+				"</dl></div>";
+			
+			var width = 500; var height = 480;
+			
+			const frame = edu.gmu.csiss.covali.menu.jsframe.create({
+		    		title: 'Settings',
+		    	    left: 0, 
+		    	    top: 0, 
+		    	    width: width, 
+		    	    height: height,
+		    	    appearanceName: 'yosemite',
+		    	    style: {
+	                    backgroundColor: 'rgb(255,255,255)',
+			    	    fontSize: 12,
+	                    overflow:'auto'
+	                },
+		    	    html: content
+	    	});
+	    	
+			frame.setControl({
+	            styleDisplay:'inline',
+	            maximizeButton: 'zoomButton',
+	            demaximizeButton: 'dezoomButton',
+	            minimizeButton: 'minimizeButton',
+	            deminimizeButton: 'deminimizeButton',
+	            hideButton: 'closeButton',
+	            animation: true,
+	            animationDuration: 150,
+	
 	        });
+	    	
+	    	frame.show();
+	    	
+	    	frame.setPosition((window.innerWidth - width) / 2, (window.innerHeight -height) / 2, 'LEFT_TOP');
+			
+//			BootstrapDialog.show({
+//				
+//				cssClass: 'dialog-vertical-center',
+//	            
+//	            title: "Settings",
+//	            
+//	            message: function(dialog) {
+//	            	
+//	            	var $lefttree = edu.gmu.csiss.covali.settings.getLayerControl("left");
+//	            	
+//	            	var $righttree = edu.gmu.csiss.covali.settings.getLayerControl("right");
+//	            	
+//	            	var leftstatus = "";
+//	            	
+//	            	if(edu.gmu.csiss.covali.map.getMapStatus("left")){
+//	            		
+//	            		leftstatus = "checked=\"checked\"";
+//	            		
+//	            	}
+//	            		
+//	            	var rightstatus = ""; 
+//	            	
+//	            	if(edu.gmu.csiss.covali.map.getMapStatus("right")){
+//	            		
+//	            		rightstatus = "checked=\"checked\"";
+//	            		
+//	            	} 
+//	            	
+//	            	console.log("left status: " + leftstatus + " - right status: " + rightstatus );
+//	            	
+//	            	var synccheck = "";
+//	            	
+//	            	if(edu.gmu.csiss.covali.settings.isSync){
+//	            		
+//	            		synccheck = "checked=\"checked\"";
+//	            		
+//	            	}
+//	            	
+//	                var $content = $('<div class=\"row\">'+
+//	    			
+//					'<div class=\"col-md-12\"><h2>Map Control</h2></div>'+
+//					
+//					'<div class=\"col-md-12\"><span>Enable Map Synchronization:</span> <input type=\"checkbox\" id=\"map-sync\" onchange=\"edu.gmu.csiss.covali.settings.switchSync(this.checked)\" '+synccheck+' ></div>'+
+//					
+//					'<div class=\"col-md-6\" id=\"left-settings\">'+
+//					
+//					'	<h4>Left Map '+
+//					
+//					'	<input type=\"checkbox\" '+leftstatus+' id=\"left-map-switch\" onchange=\"edu.gmu.csiss.covali.settings.checkMap(\'left\', this.checked)\" value=\"\">'+
+//					
+//					'</h4>'+
+//					
+//					$lefttree.html()+
+//					
+//					'</div>' +
+//					
+//					'<div class=\"col-md-6\" id=\"right-settings\" >'+
+//					
+//					'<h4>Right Map'+
+//					
+//					'	<input type=\"checkbox\" '+rightstatus+' id=\"left-map-switch\" onchange=\"edu.gmu.csiss.covali.settings.checkMap(\'right\', this.checked)\" value=\"\">'+
+//					
+//					'</h4>'+
+//					
+//					$righttree.html()+
+//					
+//					'</div>');
+//	                
+//	                return $content;
+//	                
+//	            },
+//	            
+//	            buttons: [{
+//	                
+//	            	icon: 'glyphicon glyphicon-ok',
+//	                
+//	                label: 'OK',
+//	                
+//	                title: 'OK',
+//	                
+//	                cssClass: 'btn-warning',
+//	                
+//	                action: function(dialogItself){
+//	                	
+//	                	dialogItself.close();
+//	                	
+//	                }
+//	                
+//	            }, {
+//	                
+//	            	label: 'Close',
+//	                
+//	                action: function(dialogItself){
+//	                	
+//	                    dialogItself.close();
+//	                    
+//	                }
+//	            
+//	            }]
+//	            
+//	        });
 			
 		}
 		

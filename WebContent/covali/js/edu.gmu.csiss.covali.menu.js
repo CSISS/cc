@@ -5,6 +5,8 @@
  */
 edu.gmu.csiss.covali.menu = {
 		
+		jsframe: new JSFrame(),
+		
 		init: function(){
 			
 			$("#add").click(edu.gmu.csiss.covali.add.init);

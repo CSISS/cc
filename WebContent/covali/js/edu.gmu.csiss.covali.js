@@ -4,7 +4,7 @@
  */
 edu.gmu.csiss.covali = {
 		
-		version: "0.7.5",
+		version: "0.7.6",
 		
 		author: "Ziheng Sun, Liping Di",
 		
