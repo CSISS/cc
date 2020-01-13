@@ -334,10 +334,10 @@ edu.gmu.csiss.covali.map = {
 		updateLegend: function(side, layername, legendurl, palette, style, time, elevation){
 			
 			
-			var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
-			if (topVisibleLayer == null){
+			//var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
+			//if (topVisibleLayer == null){
 				var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-			}
+			//}
 			
 			
 			
