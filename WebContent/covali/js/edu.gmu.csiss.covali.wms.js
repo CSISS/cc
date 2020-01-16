@@ -11,10 +11,9 @@
 edu.gmu.csiss.covali.wms = {
 		
 		getContent: function(){
-			$content = "<div class=\"row\" style=\"padding:10px;\">"+
-					
+			
+			$content = "<div class=\"row\" style=\"padding:10px; margin: 0;\">"+
 					"<div class=\"input-group col-md-12\">"+
-					
 					"    <form> "+
 					"	    <label class=\"radio-inline\"> "+
 					"	      <input type=\"radio\" name=\"wms_source\" value=\"Custom\" checked /> Other WMS"+
@@ -78,15 +77,33 @@ edu.gmu.csiss.covali.wms = {
 			
 			
 			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			
 			var dialogName = 'edu.gmu.csiss.covali.wms.jsframe.AddWMS';
 			var dialogTitle = 'Add WMS';
 			
 			
-			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+			var content = "<div class=\"modal-body\"><div class=\"row\" style=\"font-size: 12px; padding: 10px;\">"+
 			edu.gmu.csiss.covali.wms.getContent()+
-			"</dl></div>";
+			"</div></div>";
 		
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			
+			$('input[type=radio][name=wms_source]').change(function() {
+        		
+        		$("#wms_capa_url").val(""); //clear the existing text
+        		
+        	    if (this.value == 'Custom') {
+        	        
+        	    	console.log("customized wms source");
+        	    	
+        	    }else if (this.value == 'Builtin') {
+        	        
+        	    	console.log("built-in ncwms source");
+        	    	
+        	    	$("#wms_capa_url").val(edu.gmu.csiss.covali.wms.getBuiltinNCWMS());
+        	        
+        	    }
+        	});
 			
 /*			BootstrapDialog.closeAll();
 			

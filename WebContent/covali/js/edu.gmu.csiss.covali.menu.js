@@ -58,13 +58,17 @@ edu.gmu.csiss.covali.menu = {
 		            movable: true,
 		            resizable: true,
 		            style:{
-		            	width: "auto",
-		            	height: "auto",
-		            	position: "relative",
-		            	overflow: "auto",
+//		            	width: "auto",
+//		            	height: "auto",
+//		            	position: "relative",
+//		            	overflow: "auto",
 			            //overflowX: "auto",
 			            //overflowY: "scroll",
-			            maxHeight: "500px"
+//			            maxHeight: "500px"
+		            	backgroundColor: 'rgb(255,255,255)',
+			    	    fontSize: 12,
+			    	    overflow:'auto',
+			    	    minHeight: "400px"
 		            },
 		    	    html: content
 	    	});

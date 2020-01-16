@@ -346,7 +346,7 @@ edu.gmu.csiss.covali.statistics = {
 		//BootstrapDialog.closeAll();
 		edu.gmu.csiss.covali.statistics.removePopupsFromBothMaps();
 		
-		var content = "<div class=\"row\" style=\"padding:10px;\">"+
+		var content = "<div class=\"row\" style=\"padding:10px;margin:0;\">"+
 //			"<div class=\"form-group\"> "+
 //			"<label for=\"mapsideselect\">Select Map Side</label><select id=\"mapsideselect\">"+
 //			"<option value=\"left\">left</option>"+
@@ -358,16 +358,16 @@ edu.gmu.csiss.covali.statistics = {
 			"<option value=\"point\">point</option>"+
 			"<option value=\"linestring\">linestring</option><br>"+
 			
-			"</select></div></div><div class=\"row\" style=\"padding:10px;\">Note: Double click on the map to stop.</div>";
+			"</select></div></div><div class=\"row\" style=\"padding:10px;margin:0;\">Note: Double click on the map to stop.</div>";
 		
 		//only support the build-in ncWMS
 	
 
-		var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+		var content = "<div class=\"modal-body\"><div class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
 			content+
-			"</dl></div>"+
+			"</div></div>"+
 			"<div class=\"modal-footer\">" +
-			"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.statistics.startDrawing();\">Start Drawing</span></p>"+
+			"<p style=\"margin:0;\"><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.statistics.startDrawing();\">Start Drawing</span></p>"+
 			"</div>";			
 		
 		edu.gmu.csiss.covali.menu.closeAllDialogs();
