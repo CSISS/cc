@@ -554,42 +554,19 @@ edu.gmu.csiss.covali.settings = {
 		
 		init: function(){
 			
+			
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			
+			var dialogName = 'edu.gmu.csiss.covali.settings.jsframe.Settings';
+			var dialogTitle = 'Settings';
 			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
 				edu.gmu.csiss.covali.settings.getContent()+
-				"</dl></div>";
-			
-			var width = 500; var height = 480;
-			
-			const frame = edu.gmu.csiss.covali.menu.jsframe.create({
-		    		title: 'Settings',
-		    	    left: 0, 
-		    	    top: 0, 
-		    	    width: width, 
-		    	    height: height,
-		    	    appearanceName: 'yosemite',
-		    	    style: {
-	                    backgroundColor: 'rgb(255,255,255)',
-			    	    fontSize: 12,
-	                    overflow:'auto'
-	                },
-		    	    html: content
-	    	});
-	    	
-			frame.setControl({
-	            styleDisplay:'inline',
-	            maximizeButton: 'zoomButton',
-	            demaximizeButton: 'dezoomButton',
-	            minimizeButton: 'minimizeButton',
-	            deminimizeButton: 'deminimizeButton',
-	            hideButton: 'closeButton',
-	            animation: true,
-	            animationDuration: 150,
-	
-	        });
-	    	
-	    	frame.show();
-	    	
-	    	frame.setPosition((window.innerWidth - width) / 2, (window.innerHeight -height) / 2, 'LEFT_TOP');
+				"</dl></div>"+
+				"<div class=\"modal-footer\">" +
+				"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Ok</span>"+
+				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+				"</div>";
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
 			
 //			BootstrapDialog.show({
 //				

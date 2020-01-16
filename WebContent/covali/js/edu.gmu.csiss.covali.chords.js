@@ -178,21 +178,38 @@ edu.gmu.csiss.covali.chords = {
 
 		},
 		
+		onShown: function(){
+        	
+        	$('input[type=radio][name=chords_source]').change(function() {
+        		
+        		$("#chords_ins_url").val(""); //clear the existing text
+        		
+        	    if (this.value == 'Custom') {
+        	        
+        	    	console.log("customized CHORDS source");
+        	    	
+        	    }else if (this.value == 'Builtin') {
+        	        
+        	    	console.log("built-in CHORDS source");
+        	    	
+        	    	$("#chords_ins_url").val(edu.gmu.csiss.covali.chords.getOfficialAddr());
+        	        
+        	    }
+        	});
+        	
+        },
+		
 		showInitialDialog: function(){
 			
-			BootstrapDialog.closeAll();
+			//BootstrapDialog.closeAll();
 			
-			BootstrapDialog.show({
-				
-				title: "Add CHORDS",
-				
-	            message: function(dialog){
-	            	
-	            	$content = $("<div class=\"row\" style=\"padding:10px;\">"+
-	            			
-	            			"<div class=\"input-group col-md-12\">"+
-	            			
-	            			"    <form> "+
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			
+			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+			
+							"<div class=\"input-group col-md-12\">"+
+							
+							"    <form> "+
 							"	    <label class=\"radio-inline\"> "+
 							"	      <input type=\"radio\" name=\"chords_source\" value=\"Custom\" checked > Other CHORDS instances"+
 							"	    </label> "+
@@ -200,60 +217,97 @@ edu.gmu.csiss.covali.chords = {
 							"	      <input type=\"radio\" name=\"chords_source\" value=\"Builtin\"> CHORDS official instance "+
 							"	    </label> "+
 							"	 </form>"+
-	            			
-	            			"</div>"+
-	            			
-	            			"<div class=\"input-group col-md-12\">"+
-	            			
-	            			"    <input type=\"text\" id=\"chords_ins_url\"  class=\"form-control\" placeholder=\"Please input the portal URL..\">"+
-	            			
-	            			"    <span class=\"input-group-btn\"><button type=\"button\" onclick=\"edu.gmu.csiss.covali.chords.add();\" class=\"btn btn-default\">Add</button></span>"+
-	            			
-	            			"</div>"+
-	            			
-	            			"<div class=\"col-md-1\"></div></div>"
-	            	);
-	            	
-	            	return $content;
-	            	
-	            },
-	            
-	            onshown: function(){
-	            	
-	            	$('input[type=radio][name=chords_source]').change(function() {
-	            		
-	            		$("#chords_ins_url").val(""); //clear the existing text
-	            		
-	            	    if (this.value == 'Custom') {
-	            	        
-	            	    	console.log("customized CHORDS source");
-	            	    	
-	            	    }else if (this.value == 'Builtin') {
-	            	        
-	            	    	console.log("built-in CHORDS source");
-	            	    	
-	            	    	$("#chords_ins_url").val(edu.gmu.csiss.covali.chords.getOfficialAddr());
-	            	        
-	            	    }
-	            	});
-	            	
-	            },
-	            
-	            cssClass: 'dialog-vertical-center',
-	            
-	            buttons: [{
-	                
-	            	label: 'Close',
-	                
-	            	action: function(dialogItself){
-	                	
-	                    dialogItself.close();
-	                    
-	                }
-	            
-	            }]
-	        
-			});
+							
+							"</div>"+
+							
+							"<div class=\"input-group col-md-12\">"+
+							
+							"    <input type=\"text\" id=\"chords_ins_url\"  class=\"form-control\" placeholder=\"Please input the portal URL..\">"+
+							
+							"    <span class=\"input-group-btn\"><button type=\"button\" onclick=\"edu.gmu.csiss.covali.chords.add();\" class=\"btn btn-default\">Add</button></span>"+
+							
+							"</div>"+
+							
+							"<div class=\"col-md-1\"></div></div>"//+
+							//edu.gmu.csiss.covali.wms.onShown()
+							;
+			
+			var dialogName = 'edu.gmu.csiss.covali.chords.jsframe.AddCHORDS';
+			var dialogTitle = 'Add CHORDS';
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			
+//			BootstrapDialog.show({
+//				
+//				title: "Add CHORDS",
+//				
+//	            message: function(dialog){
+//	            	
+//	            	$content = $("<div class=\"row\" style=\"padding:10px;\">"+
+//	            			
+//	            			"<div class=\"input-group col-md-12\">"+
+//	            			
+//	            			"    <form> "+
+//							"	    <label class=\"radio-inline\"> "+
+//							"	      <input type=\"radio\" name=\"chords_source\" value=\"Custom\" checked > Other CHORDS instances"+
+//							"	    </label> "+
+//							"	    <label class=\"radio-inline\"> "+
+//							"	      <input type=\"radio\" name=\"chords_source\" value=\"Builtin\"> CHORDS official instance "+
+//							"	    </label> "+
+//							"	 </form>"+
+//	            			
+//	            			"</div>"+
+//	            			
+//	            			"<div class=\"input-group col-md-12\">"+
+//	            			
+//	            			"    <input type=\"text\" id=\"chords_ins_url\"  class=\"form-control\" placeholder=\"Please input the portal URL..\">"+
+//	            			
+//	            			"    <span class=\"input-group-btn\"><button type=\"button\" onclick=\"edu.gmu.csiss.covali.chords.add();\" class=\"btn btn-default\">Add</button></span>"+
+//	            			
+//	            			"</div>"+
+//	            			
+//	            			"<div class=\"col-md-1\"></div></div>"
+//	            	);
+//	            	
+//	            	return $content;
+//	            	
+//	            },
+//	            
+//	            onshown: function(){
+//	            	
+//	            	$('input[type=radio][name=chords_source]').change(function() {
+//	            		
+//	            		$("#chords_ins_url").val(""); //clear the existing text
+//	            		
+//	            	    if (this.value == 'Custom') {
+//	            	        
+//	            	    	console.log("customized CHORDS source");
+//	            	    	
+//	            	    }else if (this.value == 'Builtin') {
+//	            	        
+//	            	    	console.log("built-in CHORDS source");
+//	            	    	
+//	            	    	$("#chords_ins_url").val(edu.gmu.csiss.covali.chords.getOfficialAddr());
+//	            	        
+//	            	    }
+//	            	});
+//	            	
+//	            },
+//	            
+//	            cssClass: 'dialog-vertical-center',
+//	            
+//	            buttons: [{
+//	                
+//	            	label: 'Close',
+//	                
+//	            	action: function(dialogItself){
+//	                	
+//	                    dialogItself.close();
+//	                    
+//	                }
+//	            
+//	            }]
+//	        
+//			});
 			
 		}
 		

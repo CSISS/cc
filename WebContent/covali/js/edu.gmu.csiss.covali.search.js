@@ -366,33 +366,41 @@ edu.gmu.csiss.covali.search = {
             });
 			content += '</tbody></table></div>';
 
-            BootstrapDialog.show({
-
-                title: product.name + ' Variables',
-
-                message: $(content),
-
-                buttons: [{
-
-                    id: 'btn-ok',
-
-                    icon: 'glyphicon glyphicon-check',
-
-                    label: 'Ok',
-
-                    cssClass: 'btn-primary',
-
-                    autospin: false,
-
-                    action: function(dialogRef){
-
-                        dialogRef.close();
-
-                    }
-
-                }]
-
-            });
+			var dialogName = 'edu.gmu.csiss.covali.search.jsframe.Variables';
+			var dialogTitle = product.name + ' Variables';
+			
+			content +="<div class=\"modal-footer\">" +
+			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
+			"</div>";
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			
+//            BootstrapDialog.show({
+//
+//                title: product.name + ' Variables',
+//
+//                message: $(content),
+//
+//                buttons: [{
+//
+//                    id: 'btn-ok',
+//
+//                    icon: 'glyphicon glyphicon-check',
+//
+//                    label: 'Ok',
+//
+//                    cssClass: 'btn-primary',
+//
+//                    autospin: false,
+//
+//                    action: function(dialogRef){
+//
+//                        dialogRef.close();
+//
+//                    }
+//
+//                }]
+//
+//            });
 
 		},
 
@@ -525,40 +533,48 @@ edu.gmu.csiss.covali.search = {
 
 
 			tablecontent += "</div>";
+			
+			tablecontent +="<div class=\"modal-footer\">" +
+				"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
+				"</div>";
+			
+			var dialogName = 'edu.gmu.csiss.covali.search.jsframe.TableContent';
+			var dialogTitle = 'Information';
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, tablecontent);
 
-			BootstrapDialog.show({
-				
-				title: 'Information',
-			    
-				message: $(tablecontent),
-
-				onshown: function(dialog) {
-                    $("#viewvars_" + product.id).click(function(){
-                        edu.gmu.csiss.covali.search.variablesTable(product);
-                    });
-				},
-			    
-				buttons: [{
-			    
-					id: 'btn-ok',   
-			        
-					icon: 'glyphicon glyphicon-check',       
-			        
-					label: 'Ok',
-			        
-					cssClass: 'btn-primary', 
-			        
-					autospin: false,
-			        
-					action: function(dialogRef){    
-			        
-						dialogRef.close();
-						
-					}
-				
-			    }]
-				
-			});
+//			BootstrapDialog.show({
+//				
+//				title: 'Information',
+//			    
+//				message: $(tablecontent),
+//
+//				onshown: function(dialog) {
+//                    $("#viewvars_" + product.id).click(function(){
+//                        edu.gmu.csiss.covali.search.variablesTable(product);
+//                    });
+//				},
+//			    
+//				buttons: [{
+//			    
+//					id: 'btn-ok',   
+//			        
+//					icon: 'glyphicon glyphicon-check',       
+//			        
+//					label: 'Ok',
+//			        
+//					cssClass: 'btn-primary', 
+//			        
+//					autospin: false,
+//			        
+//					action: function(dialogRef){    
+//			        
+//						dialogRef.close();
+//						
+//					}
+//				
+//			    }]
+//				
+//			});
 			
         },
         
@@ -921,7 +937,8 @@ edu.gmu.csiss.covali.search = {
 		
 		searchForm: function(){
 			
-			var cont = '	<div class="row">'+
+			var cont = "<div class=\"modal-body\" style=\"overflow:auto\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+			'	<div class="row">'+
 					
 			'		<!-- left-->'+
 					
@@ -1155,7 +1172,8 @@ edu.gmu.csiss.covali.search = {
 			 
 			'		</div>'+
 			
-			'	</div>';
+			'	</div>'+
+			'</dl></div>';
 			
 			return cont;
 			
@@ -1305,276 +1323,520 @@ edu.gmu.csiss.covali.search = {
 	  		$("#csw").val(2);
 	  		
 	  	},
-		
-		init: function(){
-        	BootstrapDialog.closeAll();
+	  	
+	  	searchDialogsearchButtonAction: function(dialogItself){
+        	
+        	//Pop up a new dialog to contain the results	                	
+        	//send the search request to the backend proxy which will transfer to PyCSW
+        	
+        	var formatlist = "";
+        	
+        	var ckb = $(".all").is(':checked');
+        	
+        	if(!ckb){
 
-            edu.gmu.csiss.covali.search.searchdialog = new BootstrapDialog({
+        		$("#formatlist").find("input").each(function(){
+    				
+    				if($(this).prop( 'checked')){
+    					
+    					formatlist+=($(this).attr("name"))+" ";
+    					
+    				}
+    				
+    			});
+        		
+        	}else{
+        		
+        		formatlist += "all";
+        		
+        	}
+	  		
+        	var request = {
+        		
+        		"searchtext":$("#searchtext").val(),
+        			
+        		"isvirtual":0,
+        		
+        		"csw":$("#csw").val(),
+        		
+        		"west":$("#west").val(),
+        		
+        		"east":$("#east").val(),
+        		
+        		"north":$("#north").val(),
+        		
+        		"south":$("#south").val(),
+        		
+        		"begindatetime":$("#bdtv").val(),
+        		
+        		"enddatetime":$("#edtv").val(),
+
+        		"length":$("#recordsperpage  option:selected").text(),
+
+        		"formats": formatlist
+        		
+        	};
+        	
+        	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
+        	
+        	dialogItself.close();
+        	
+//        	dialogItself.hide();
+        	
+        },
+		
+        searchDialogOnShownAction: function(dialog) {
+        	
+        	//for format list
+        	
+        	edu.gmu.csiss.covali.search.checkFormat();
+        	
+			$('.all').on('click', function(e){
 				
-	            message: edu.gmu.csiss.covali.search.searchForm(),
+				edu.gmu.csiss.covali.search.checkFormat();
+				
+			});
+	    	
+    	    $('.button-checkbox').each(function () {
+
+    	        // Settings
+    	        var $widget = $(this),
+    	            $button = $widget.find('button'),
+    	            $checkbox = $widget.find('input:checkbox'),
+    	            color = $button.data('color'),
+    	            settings = {
+    	                on: {
+    	                    icon: 'glyphicon glyphicon-check'
+    	                },
+    	                off: {
+    	                    icon: 'glyphicon glyphicon-unchecked'
+    	                }
+    	            };
+
+    	        // Event Handlers
+    	        $button.on('click', function () {
+    	            $checkbox.prop('checked', !$checkbox.is(':checked'));
+    	            $checkbox.triggerHandler('change');
+    	            updateDisplay();
+    	        });
+    	        $checkbox.on('change', function () {
+    	            updateDisplay();
+    	        });
+
+	            var isChecked = $checkbox.is(':checked');
+
+	            // Set the button's state
+	            $button.data('state', (isChecked) ? "on" : "off");
 	            
-	            title: "Search Dialog",
-	            
-	            size: BootstrapDialog.SIZE_WIDE,
-	            
-	            cssClass: 'dialog-vertical-center',
-	            
-	            onshown: function(dialog) {
-	            	
-	            	//for format list
-	            	
-	            	edu.gmu.csiss.covali.search.checkFormat();
-	            	
-	    			$('.all').on('click', function(e){
+	            // Set the button's icon
+	            $button.find('.state-icon')
+	                .removeClass()
+	                .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+	            // Update the button's color
+	            if (isChecked) {
+	                $button
+	                    .removeClass('btn-default')
+	                    .addClass('btn-' + color + ' active');
+	            }
+	            else {
+	                $button
+	                    .removeClass('btn-' + color + ' active')
+	                    .addClass('btn-default');
+	            }
+
+	            // Inject the icon if applicable
+	            if ($button.find('.state-icon').length == 0) {
+	                $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>');
+	            }
+    	    
+    	    });
+	    	
+	    	edu.gmu.csiss.covali.search.initializeSearchMap();
+	    	
+	    	$("#moreorless").click(function(){
+	    		
+	    		if($("#formatlist").is(":visible")){
+	    			
+	    			$("#formatlist").hide();
+	    			
+	    		}else{
+	    			
+	    			$("#formatlist").show();
+	    			
+	    		}
+	    		
+	    	});
+	    	
+	    	$("#formatlist").hide();
+	    	
+	    	//set CSW to null
+	    	if($("#isvirtual").val()=="0")
+	    		$('#csw').prop('disabled', false);
+	    	else	
+	    		$("#csw").val($("#csw option:eq(0)").val());
+	    	
+	    	$("#csw").on('change', function(){
+	    		
+	    		if(this.value == "2"){
+	    			
+	    			//local file need check if login is required
+	    			
+	    			$.ajax({
 	    				
-	    				edu.gmu.csiss.covali.search.checkFormat();
+	    				url: "checkLoginRequirement",
+	    				
+	    				type: "POST",
+	    				
+	    				data: "action=localfilesearch"
+	    				
+	    			}).success(function(data){
+	    				
+	    				data = $.parseJSON(data);
+	    				
+	    				if(data.ret == "true"){
+	    					
+	    					//require login permission
+	    					
+	    					$("#csw").val(1); //first switch to 1 until the login requirement is met
+	    					
+	    					edu.gmu.csiss.covali.login.loginDialog(edu.gmu.csiss.covali.search.switchLocalOn);
+	    					
+	    				}else{
+	    					
+	    					//do nothing, it is fine. go ahead
+	    					
+	    				}
 	    				
 	    			});
+	    			
+	    			
+	    		}
+	    		
+	    	});
+	    	
+	    	//add listener to virtual box
+	    	
+	    	$("#isvirtual").on('change', function(){
+	    		
+	    		if(this.value == "1"){
+	    			console.log("virtual");
+	    			$('#csw').prop('disabled', 'disabled');
+	    			$("#csw").val($("#csw option:eq(0)").val());
+	    		}else if(this.value=="0"){
+	    			console.log("real");
+	    			$('#csw').prop('disabled', false);
+	    			$("#csw").val($("#csw option:eq(1)").val());
+	    		}
+	    		
+	    	});
+	    	
+	    	$("#distime").change(function(){
+	    	    
+	    		if($(this).is(':checked')) {
+	    	        
+	    	    	$(this).val("true");
+	    	        
+	    	    	$("#bdtv").prop('disabled', true);        
 	    	    	
-	        	    $('.button-checkbox').each(function () {
-
-	        	        // Settings
-	        	        var $widget = $(this),
-	        	            $button = $widget.find('button'),
-	        	            $checkbox = $widget.find('input:checkbox'),
-	        	            color = $button.data('color'),
-	        	            settings = {
-	        	                on: {
-	        	                    icon: 'glyphicon glyphicon-check'
-	        	                },
-	        	                off: {
-	        	                    icon: 'glyphicon glyphicon-unchecked'
-	        	                }
-	        	            };
-
-	        	        // Event Handlers
-	        	        $button.on('click', function () {
-	        	            $checkbox.prop('checked', !$checkbox.is(':checked'));
-	        	            $checkbox.triggerHandler('change');
-	        	            updateDisplay();
-	        	        });
-	        	        $checkbox.on('change', function () {
-	        	            updateDisplay();
-	        	        });
-
-        	            var isChecked = $checkbox.is(':checked');
-
-        	            // Set the button's state
-        	            $button.data('state', (isChecked) ? "on" : "off");
-        	            
-        	            // Set the button's icon
-        	            $button.find('.state-icon')
-        	                .removeClass()
-        	                .addClass('state-icon ' + settings[$button.data('state')].icon);
-
-        	            // Update the button's color
-        	            if (isChecked) {
-        	                $button
-        	                    .removeClass('btn-default')
-        	                    .addClass('btn-' + color + ' active');
-        	            }
-        	            else {
-        	                $button
-        	                    .removeClass('btn-' + color + ' active')
-        	                    .addClass('btn-default');
-        	            }
-
-        	            // Inject the icon if applicable
-        	            if ($button.find('.state-icon').length == 0) {
-        	                $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>');
-        	            }
-	        	    
-	        	    });
+	    	    	$("#edtv").prop('disabled', true);        
+	    	        
+	    	    } else {
+	    	    
+	    	    	$(this).val("false");
 	    	    	
-	    	    	edu.gmu.csiss.covali.search.initializeSearchMap();
+					$("#bdtv").prop('disabled', false);        
 	    	    	
-	    	    	$("#moreorless").click(function(){
-	    	    		
-	    	    		if($("#formatlist").is(":visible")){
-	    	    			
-	    	    			$("#formatlist").hide();
-	    	    			
-	    	    		}else{
-	    	    			
-	    	    			$("#formatlist").show();
-	    	    			
-	    	    		}
-	    	    		
-	    	    	});
-	    	    	
-	    	    	$("#formatlist").hide();
-	    	    	
-	    	    	//set CSW to null
-	    	    	if($("#isvirtual").val()=="0")
-	    	    		$('#csw').prop('disabled', false);
-	    	    	else	
-	    	    		$("#csw").val($("#csw option:eq(0)").val());
-	    	    	
-	    	    	$("#csw").on('change', function(){
-	    	    		
-	    	    		if(this.value == "2"){
-	    	    			
-	    	    			//local file need check if login is required
-	    	    			
-	    	    			$.ajax({
-	    	    				
-	    	    				url: "checkLoginRequirement",
-	    	    				
-	    	    				type: "POST",
-	    	    				
-	    	    				data: "action=localfilesearch"
-	    	    				
-	    	    			}).success(function(data){
-	    	    				
-	    	    				data = $.parseJSON(data);
-	    	    				
-	    	    				if(data.ret == "true"){
-	    	    					
-	    	    					//require login permission
-	    	    					
-	    	    					$("#csw").val(1); //first switch to 1 until the login requirement is met
-	    	    					
-	    	    					edu.gmu.csiss.covali.login.loginDialog(edu.gmu.csiss.covali.search.switchLocalOn);
-	    	    					
-	    	    				}else{
-	    	    					
-	    	    					//do nothing, it is fine. go ahead
-	    	    					
-	    	    				}
-	    	    				
-	    	    			});
-	    	    			
-	    	    			
-	    	    		}
-	    	    		
-	    	    	});
-	    	    	
-	    	    	//add listener to virtual box
-	    	    	
-	    	    	$("#isvirtual").on('change', function(){
-	    	    		
-	    	    		if(this.value == "1"){
-	    	    			console.log("virtual");
-	    	    			$('#csw').prop('disabled', 'disabled');
-	    	    			$("#csw").val($("#csw option:eq(0)").val());
-	    	    		}else if(this.value=="0"){
-	    	    			console.log("real");
-	    	    			$('#csw').prop('disabled', false);
-	    	    			$("#csw").val($("#csw option:eq(1)").val());
-	    	    		}
-	    	    		
-	    	    	});
-	    	    	
-	    	    	$("#distime").change(function(){
-	    	    	    
-	    	    		if($(this).is(':checked')) {
-	    	    	        
-	    	    	    	$(this).val("true");
-	    	    	        
-	    	    	    	$("#bdtv").prop('disabled', true);        
-	    	    	    	
-	    	    	    	$("#edtv").prop('disabled', true);        
-	    	    	        
-	    	    	    } else {
-	    	    	    
-	    	    	    	$(this).val("false");
-	    	    	    	
-	    					$("#bdtv").prop('disabled', false);        
-	    	    	    	
-	    	    	    	$("#edtv").prop('disabled', false);        
-	    	    	    
-	    	    	    }
+	    	    	$("#edtv").prop('disabled', false);        
+	    	    
+	    	    }
 
-	    	    	});
-	    	    	
-	            },
-	            
-	            buttons: [{
-	                
-	            	icon: 'glyphicon glyphicon-ok',
-	                
-	                label: 'Search',
-	                
-	                title: 'Search Data',
-	                
-	                cssClass: 'btn-warning btn-search',
-	                
-	                action: function(dialogItself){
-	                	
-	                	//Pop up a new dialog to contain the results	                	
-	                	//send the search request to the backend proxy which will transfer to PyCSW
-	                	
-	                	var formatlist = "";
-	                	
-	                	var ckb = $(".all").is(':checked');
-	                	
-	                	if(!ckb){
-
-	                		$("#formatlist").find("input").each(function(){
-		        				
-		        				if($(this).prop( 'checked')){
-		        					
-		        					formatlist+=($(this).attr("name"))+" ";
-		        					
-		        				}
-		        				
-		        			});
-	                		
-	                	}else{
-	                		
-	                		formatlist += "all";
-	                		
-	                	}
-	        	  		
-	                	var request = {
-	                		
-	                		"searchtext":$("#searchtext").val(),
-	                			
-	                		"isvirtual":0,
-	                		
-	                		"csw":$("#csw").val(),
-	                		
-	                		"west":$("#west").val(),
-	                		
-	                		"east":$("#east").val(),
-	                		
-	                		"north":$("#north").val(),
-	                		
-	                		"south":$("#south").val(),
-	                		
-	                		"begindatetime":$("#bdtv").val(),
-	                		
-	                		"enddatetime":$("#edtv").val(),
-
-	                		"length":$("#recordsperpage  option:selected").text(),
-
-	                		"formats": formatlist
-	                		
-	                	};
-	                	
-	                	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
-	                	
-	                	dialogItself.close();
-	                	
-//	                	dialogItself.hide();
-	                	
-	                }
-	            	
-	            }, {
-	            	
-	                label: 'Close',
-	                
-	                action: function(dialogItself){
-	                	
-	                    dialogItself.close();
-	                    
-	                }
-	            
-	            }]
-	        
-			});
+	    	});
+	    	
+        },
+        
+		init: function(){
 			
-			edu.gmu.csiss.covali.search.searchdialog.open();
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			var dialogName = 'edu.gmu.csiss.covali.search.jsframe.SearchDialog';
+			var dialogTitle = 'Search Dialog';
+			
+			var content = edu.gmu.csiss.covali.search.searchForm() +
+				"<div class=\"modal-footer\">" +
+				"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.search.searchDialogsearchButtonAction()\">Search</span>"+
+				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+				"</div>";
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			edu.gmu.csiss.covali.search.searchDialogOnShownAction();
+			
+        	//BootstrapDialog.closeAll();
+
+//            edu.gmu.csiss.covali.search.searchdialog = new BootstrapDialog({
+//				
+//	            message: edu.gmu.csiss.covali.search.searchForm(),
+//	            
+//	            title: "Search Dialog",
+//	            
+//	            size: BootstrapDialog.SIZE_WIDE,
+//	            
+//	            cssClass: 'dialog-vertical-center',
+//	            
+//	            onshown: function(dialog) {
+//	            	
+//	            	//for format list
+//	            	
+//	            	edu.gmu.csiss.covali.search.checkFormat();
+//	            	
+//	    			$('.all').on('click', function(e){
+//	    				
+//	    				edu.gmu.csiss.covali.search.checkFormat();
+//	    				
+//	    			});
+//	    	    	
+//	        	    $('.button-checkbox').each(function () {
+//
+//	        	        // Settings
+//	        	        var $widget = $(this),
+//	        	            $button = $widget.find('button'),
+//	        	            $checkbox = $widget.find('input:checkbox'),
+//	        	            color = $button.data('color'),
+//	        	            settings = {
+//	        	                on: {
+//	        	                    icon: 'glyphicon glyphicon-check'
+//	        	                },
+//	        	                off: {
+//	        	                    icon: 'glyphicon glyphicon-unchecked'
+//	        	                }
+//	        	            };
+//
+//	        	        // Event Handlers
+//	        	        $button.on('click', function () {
+//	        	            $checkbox.prop('checked', !$checkbox.is(':checked'));
+//	        	            $checkbox.triggerHandler('change');
+//	        	            updateDisplay();
+//	        	        });
+//	        	        $checkbox.on('change', function () {
+//	        	            updateDisplay();
+//	        	        });
+//
+//        	            var isChecked = $checkbox.is(':checked');
+//
+//        	            // Set the button's state
+//        	            $button.data('state', (isChecked) ? "on" : "off");
+//        	            
+//        	            // Set the button's icon
+//        	            $button.find('.state-icon')
+//        	                .removeClass()
+//        	                .addClass('state-icon ' + settings[$button.data('state')].icon);
+//
+//        	            // Update the button's color
+//        	            if (isChecked) {
+//        	                $button
+//        	                    .removeClass('btn-default')
+//        	                    .addClass('btn-' + color + ' active');
+//        	            }
+//        	            else {
+//        	                $button
+//        	                    .removeClass('btn-' + color + ' active')
+//        	                    .addClass('btn-default');
+//        	            }
+//
+//        	            // Inject the icon if applicable
+//        	            if ($button.find('.state-icon').length == 0) {
+//        	                $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>');
+//        	            }
+//	        	    
+//	        	    });
+//	    	    	
+//	    	    	edu.gmu.csiss.covali.search.initializeSearchMap();
+//	    	    	
+//	    	    	$("#moreorless").click(function(){
+//	    	    		
+//	    	    		if($("#formatlist").is(":visible")){
+//	    	    			
+//	    	    			$("#formatlist").hide();
+//	    	    			
+//	    	    		}else{
+//	    	    			
+//	    	    			$("#formatlist").show();
+//	    	    			
+//	    	    		}
+//	    	    		
+//	    	    	});
+//	    	    	
+//	    	    	$("#formatlist").hide();
+//	    	    	
+//	    	    	//set CSW to null
+//	    	    	if($("#isvirtual").val()=="0")
+//	    	    		$('#csw').prop('disabled', false);
+//	    	    	else	
+//	    	    		$("#csw").val($("#csw option:eq(0)").val());
+//	    	    	
+//	    	    	$("#csw").on('change', function(){
+//	    	    		
+//	    	    		if(this.value == "2"){
+//	    	    			
+//	    	    			//local file need check if login is required
+//	    	    			
+//	    	    			$.ajax({
+//	    	    				
+//	    	    				url: "checkLoginRequirement",
+//	    	    				
+//	    	    				type: "POST",
+//	    	    				
+//	    	    				data: "action=localfilesearch"
+//	    	    				
+//	    	    			}).success(function(data){
+//	    	    				
+//	    	    				data = $.parseJSON(data);
+//	    	    				
+//	    	    				if(data.ret == "true"){
+//	    	    					
+//	    	    					//require login permission
+//	    	    					
+//	    	    					$("#csw").val(1); //first switch to 1 until the login requirement is met
+//	    	    					
+//	    	    					edu.gmu.csiss.covali.login.loginDialog(edu.gmu.csiss.covali.search.switchLocalOn);
+//	    	    					
+//	    	    				}else{
+//	    	    					
+//	    	    					//do nothing, it is fine. go ahead
+//	    	    					
+//	    	    				}
+//	    	    				
+//	    	    			});
+//	    	    			
+//	    	    			
+//	    	    		}
+//	    	    		
+//	    	    	});
+//	    	    	
+//	    	    	//add listener to virtual box
+//	    	    	
+//	    	    	$("#isvirtual").on('change', function(){
+//	    	    		
+//	    	    		if(this.value == "1"){
+//	    	    			console.log("virtual");
+//	    	    			$('#csw').prop('disabled', 'disabled');
+//	    	    			$("#csw").val($("#csw option:eq(0)").val());
+//	    	    		}else if(this.value=="0"){
+//	    	    			console.log("real");
+//	    	    			$('#csw').prop('disabled', false);
+//	    	    			$("#csw").val($("#csw option:eq(1)").val());
+//	    	    		}
+//	    	    		
+//	    	    	});
+//	    	    	
+//	    	    	$("#distime").change(function(){
+//	    	    	    
+//	    	    		if($(this).is(':checked')) {
+//	    	    	        
+//	    	    	    	$(this).val("true");
+//	    	    	        
+//	    	    	    	$("#bdtv").prop('disabled', true);        
+//	    	    	    	
+//	    	    	    	$("#edtv").prop('disabled', true);        
+//	    	    	        
+//	    	    	    } else {
+//	    	    	    
+//	    	    	    	$(this).val("false");
+//	    	    	    	
+//	    					$("#bdtv").prop('disabled', false);        
+//	    	    	    	
+//	    	    	    	$("#edtv").prop('disabled', false);        
+//	    	    	    
+//	    	    	    }
+//
+//	    	    	});
+//	    	    	
+//	            },
+//	            
+//	            buttons: [{
+//	                
+//	            	icon: 'glyphicon glyphicon-ok',
+//	                
+//	                label: 'Search',
+//	                
+//	                title: 'Search Data',
+//	                
+//	                cssClass: 'btn-warning btn-search',
+//	                
+//	                action: function(dialogItself){
+//	                	
+//	                	//Pop up a new dialog to contain the results	                	
+//	                	//send the search request to the backend proxy which will transfer to PyCSW
+//	                	
+//	                	var formatlist = "";
+//	                	
+//	                	var ckb = $(".all").is(':checked');
+//	                	
+//	                	if(!ckb){
+//
+//	                		$("#formatlist").find("input").each(function(){
+//		        				
+//		        				if($(this).prop( 'checked')){
+//		        					
+//		        					formatlist+=($(this).attr("name"))+" ";
+//		        					
+//		        				}
+//		        				
+//		        			});
+//	                		
+//	                	}else{
+//	                		
+//	                		formatlist += "all";
+//	                		
+//	                	}
+//	        	  		
+//	                	var request = {
+//	                		
+//	                		"searchtext":$("#searchtext").val(),
+//	                			
+//	                		"isvirtual":0,
+//	                		
+//	                		"csw":$("#csw").val(),
+//	                		
+//	                		"west":$("#west").val(),
+//	                		
+//	                		"east":$("#east").val(),
+//	                		
+//	                		"north":$("#north").val(),
+//	                		
+//	                		"south":$("#south").val(),
+//	                		
+//	                		"begindatetime":$("#bdtv").val(),
+//	                		
+//	                		"enddatetime":$("#edtv").val(),
+//
+//	                		"length":$("#recordsperpage  option:selected").text(),
+//
+//	                		"formats": formatlist
+//	                		
+//	                	};
+//	                	
+//	                	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
+//	                	
+//	                	dialogItself.close();
+//	                	
+////	                	dialogItself.hide();
+//	                	
+//	                }
+//	            	
+//	            }, {
+//	            	
+//	                label: 'Close',
+//	                
+//	                action: function(dialogItself){
+//	                	
+//	                    dialogItself.close();
+//	                    
+//	                }
+//	            
+//	            }]
+//	        
+//			});
+			
+			//edu.gmu.csiss.covali.search.searchdialog.open();
 			
 		}
 		

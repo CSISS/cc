@@ -70,7 +70,6 @@ edu.gmu.csiss.covali.statistics = {
 		
 	showPopupFunction: function(coordinate, map, side) {
 	        
-		//NEXT BUG: pop-up should react to the settings buttons
 		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 
         
@@ -313,9 +312,38 @@ edu.gmu.csiss.covali.statistics = {
 		
 	},
 	
+	startDrawing: function(thedialog){
+		
+		
+		edu.gmu.csiss.covali.statistics.removeAllListeners();
+							
+		var type = $("#typeselect").val();
+		//var bothMapsPopupChecked = $("#bothMapsPopupChk");
+		bothMapsPopupChecked = document.getElementById("bothMapsPopupChk").checked;
+		
+		if(type=="point"){
+			
+			//add a click pop-up function
+			
+			edu.gmu.csiss.covali.statistics.listenPoint("left");
+			edu.gmu.csiss.covali.statistics.listenPoint("right");
+			
+		}else if(type=="linestring"){
+			
+			//add a line drawing function
+			
+			edu.gmu.csiss.covali.statistics.listenLineString("left");
+			edu.gmu.csiss.covali.statistics.listenLineString("right");
+			
+		}
+		edu.gmu.csiss.covali.menu.closeAllDialogs();
+	    //thedialog.close();
+		
+	},
+	
 	showDialog: function(){
 		
-		BootstrapDialog.closeAll();
+		//BootstrapDialog.closeAll();
 		edu.gmu.csiss.covali.statistics.removePopupsFromBothMaps();
 		
 		var content = "<div class=\"row\" style=\"padding:10px;\">"+
@@ -333,56 +361,69 @@ edu.gmu.csiss.covali.statistics = {
 			"</select></div></div><div class=\"row\" style=\"padding:10px;\">Note: Double click on the map to stop.</div>";
 		
 		//only support the build-in ncWMS
+	
+
+		var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+			content+
+			"</dl></div>"+
+			"<div class=\"modal-footer\">" +
+			"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.statistics.startDrawing();\">Start Drawing</span></p>"+
+			"</div>";			
 		
-		BootstrapDialog.show({
-			
-			title: "Statistics",
-			
-			message: content,
-			
-			buttons: [{
-				
-				label: "Start Draw",
-				
-				action: function(thedialog){
-					
-					
-					edu.gmu.csiss.covali.statistics.removeAllListeners();
-										
-					var type = $("#typeselect").val();
-					//var bothMapsPopupChecked = $("#bothMapsPopupChk");
-					bothMapsPopupChecked = document.getElementById("bothMapsPopupChk").checked;
-					
-					if(type=="point"){
-						
-						//add a click pop-up function
-						
-						edu.gmu.csiss.covali.statistics.listenPoint("left");
-						edu.gmu.csiss.covali.statistics.listenPoint("right");
-						
-					}else if(type=="linestring"){
-						
-						//add a line drawing function
-						
-						edu.gmu.csiss.covali.statistics.listenLineString("left");
-						edu.gmu.csiss.covali.statistics.listenLineString("right");
-						
-					}
-					
-				    thedialog.close();
-					
-				}
-				
-			},{
-				
-				label: "Close",
-				
-				action: function(thedialog){
-					
-					thedialog.close();
-				}
-			}]
-		});
+		edu.gmu.csiss.covali.menu.closeAllDialogs();
+		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.Statistics';
+		var dialogTitle = 'Statistics';
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+
+//		BootstrapDialog.show({
+//			
+//			title: "Statistics",
+//			
+//			message: content,
+//			
+//			buttons: [{
+//				
+//				label: "Start Draw",
+//				
+//				action: function(thedialog){
+//					
+//					
+//					edu.gmu.csiss.covali.statistics.removeAllListeners();
+//										
+//					var type = $("#typeselect").val();
+//					//var bothMapsPopupChecked = $("#bothMapsPopupChk");
+//					bothMapsPopupChecked = document.getElementById("bothMapsPopupChk").checked;
+//					
+//					if(type=="point"){
+//						
+//						//add a click pop-up function
+//						
+//						edu.gmu.csiss.covali.statistics.listenPoint("left");
+//						edu.gmu.csiss.covali.statistics.listenPoint("right");
+//						
+//					}else if(type=="linestring"){
+//						
+//						//add a line drawing function
+//						
+//						edu.gmu.csiss.covali.statistics.listenLineString("left");
+//						edu.gmu.csiss.covali.statistics.listenLineString("right");
+//						
+//					}
+//					
+//				    thedialog.close();
+//					
+//				}
+//				
+//			},{
+//				
+//				label: "Close",
+//				
+//				action: function(thedialog){
+//					
+//					thedialog.close();
+//				}
+//			}]
+//		});
 	},
 	
 	singleClickListener: function(evt) {
@@ -521,7 +562,8 @@ edu.gmu.csiss.covali.statistics = {
 //    	http://godiva.rdg.ac.uk/ncWMS2/wms?REQUEST=GetTransect&LAYERS=cci/analysed_sst&CRS=CRS:84&LINESTRING=62.04%2018,%2064.56%204.56,%2076.56%201.08&FORMAT=image/png&TIME=2010-12-31T12:00:00.000Z&COLORSCALERANGE=269,306&NUMCOLORBANDS=250&LOGSCALE=false&ABOVEMAXCOLOR=0x000000&BELOWMINCOLOR=0x000000&BGCOLOR=transparent&PALETTE=psu-inferno
 		if(bothMapsPopupChecked == true){
 			var sides = ["left", "right"];
-			var $textAndPic = $('<div></div>');
+			//var $textAndPic = $('<div></div>');
+			var $textAndPic = $("<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\"></dl></div>")
 			sides.forEach(function(side){
 				
 				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
@@ -582,25 +624,30 @@ edu.gmu.csiss.covali.statistics = {
 	        
 			$textAndPic.append('<img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" />');			
 		}
-		        
-		BootstrapDialog.show({
-            title: 'Line Statistics Result',
-            size: BootstrapDialog.SIZE_WIDE,
-            message: $textAndPic,
-            onshown: function(){
-//            	$("img").one("load", function() {
-//        		  // do stuff
-//            		$textAndPic.append("<p id=\"notice\">Report is loading..</p>");
-//        		}).each(function() {
-//        		  if(this.complete) {
-//        		      $(this).load(); // For jQuery < 3.0 
-//        		      $("#notice").remove();
-//        		      // $(this).trigger('load'); // For jQuery >= 3.0 
-//        		  }
-//        		});
-            },
-            buttons: [
-            	//since the image can be downloaded by right click, this button is not necessary.
+		
+		edu.gmu.csiss.covali.menu.closeAllDialogs();
+		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.LineStatisticsResult';
+		var dialogTitle = 'Line Statistics Result';
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $textAndPic);
+		
+//		BootstrapDialog.show({
+//            title: 'Line Statistics Result',
+//            size: BootstrapDialog.SIZE_WIDE,
+//            message: $textAndPic,
+//            onshown: function(){
+////            	$("img").one("load", function() {
+////        		  // do stuff
+////            		$textAndPic.append("<p id=\"notice\">Report is loading..</p>");
+////        		}).each(function() {
+////        		  if(this.complete) {
+////        		      $(this).load(); // For jQuery < 3.0 
+////        		      $("#notice").remove();
+////        		      // $(this).trigger('load'); // For jQuery >= 3.0 
+////        		  }
+////        		});
+//            },
+//            buttons: [
+//            	//since the image can be downloaded by right click, this button is not necessary.
 //            	{
 //                label: 'Download',
 //                action: function(dialogRef){
@@ -614,13 +661,13 @@ edu.gmu.csiss.covali.statistics = {
 ////                    dialogRef.setClosable(true);
 //                }
 //            }, 
-            {
-                label: 'Close',
-                action: function(dialogRef){
-                    dialogRef.close();
-                }
-            }]
-        });
+//            {
+//                label: 'Close',
+//                action: function(dialogRef){
+//                    dialogRef.close();
+//                }
+//            }]
+//        });
 		
 	},
 	

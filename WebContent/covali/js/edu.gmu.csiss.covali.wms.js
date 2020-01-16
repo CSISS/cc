@@ -10,6 +10,56 @@
 
 edu.gmu.csiss.covali.wms = {
 		
+		getContent: function(){
+			$content = "<div class=\"row\" style=\"padding:10px;\">"+
+					
+					"<div class=\"input-group col-md-12\">"+
+					
+					"    <form> "+
+					"	    <label class=\"radio-inline\"> "+
+					"	      <input type=\"radio\" name=\"wms_source\" value=\"Custom\" checked /> Other WMS"+
+					"	    </label> "+
+					"	    <label class=\"radio-inline\"> "+
+					"	      <input type=\"radio\" name=\"wms_source\" value=\"Builtin\" /> Built-in ncWMS "+
+					"	    </label> "+
+					"	 </form>"+
+					
+					"</div>"+
+					
+					"<div class=\"input-group col-md-12\">"+
+					
+					"    <input type=\"text\" id=\"wms_capa_url\"  class=\"form-control\" placeholder=\"Please input the complete WMS capabilities URL..\" />"+
+					
+					"    <span class=\"input-group-btn\"><button type=\"button\" onclick=\"edu.gmu.csiss.covali.wms.addWMS();\" class=\"btn btn-default\">Add</button></span>"+
+					
+					"</div>"+
+					
+					"<div class=\"col-md-1\"></div></div>";
+			
+			return $content;
+		},
+		
+		onshown: function(){
+        	
+        	$('input[type=radio][name=wms_source]').change(function() {
+        		
+        		$("#wms_capa_url").val(""); //clear the existing text
+        		
+        	    if (this.value == 'Custom') {
+        	        
+        	    	console.log("customized wms source");
+        	    	
+        	    }else if (this.value == 'Builtin') {
+        	        
+        	    	console.log("built-in ncwms source");
+        	    	
+        	    	$("#wms_capa_url").val(edu.gmu.csiss.covali.wms.getBuiltinNCWMS());
+        	        
+        	    }
+        	});
+        	
+        },
+		
 		currentWMSCapabilities: null,
 		
 		layerlist: [],
@@ -22,9 +72,23 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
+		
+		
 		showInputDialog: function(){
 			
-			BootstrapDialog.closeAll();
+			
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			var dialogName = 'edu.gmu.csiss.covali.wms.jsframe.AddWMS';
+			var dialogTitle = 'Add WMS';
+			
+			
+			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+			edu.gmu.csiss.covali.wms.getContent()+
+			"</dl></div>";
+		
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			
+/*			BootstrapDialog.closeAll();
 			
 			BootstrapDialog.show({
 				
@@ -97,7 +161,7 @@ edu.gmu.csiss.covali.wms = {
 	            
 	            }]
 	        
-			});
+			});*/
 			
 		},
 		
@@ -694,72 +758,87 @@ edu.gmu.csiss.covali.wms = {
 		
 		showLayerDialog: function(layerlist){
 			
-			BootstrapDialog.closeAll();
+			//BootstrapDialog.closeAll();
 			
-			$content = this.getLayerHierarchyDiv(layerlist);
+			//$content = this.getLayerHierarchyDiv(layerlist);			
 			
-//			console.log($content);
+			//var content = this.getLayerHierarchyDiv(layerlist);
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			var dialogName = 'edu.gmu.csiss.covali.wms.jsframe.LayerSelector';
+			var dialogTitle = 'Layer Selector';
+			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+							this.getLayerHierarchyDiv(layerlist)+
+							"</dl></div>"+
+							"<div class=\"modal-footer\">" +
+							"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.wms.loadLayer(\"left\")\'>Add to Left</span>"+
+							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.wms.loadLayer(\"right\")\'>Add to Right</span>"+
+							"<span class=\"btn btn-primary\" onclick=\'$(\".layer-checkbox\").prop(\"checked\", true);\'>Select All</span>"+
+							"<span class=\"btn btn-primary\" onclick=\'$(\".layer-checkbox\").prop(\"checked\", false); \'>Unselect All</span>"+
+							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+							"</div>";
+
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
 			
-			BootstrapDialog.show({
-				
-	            message: $content,
-	            
-	            title: "Layer Selector",
-	            
-	            cssClass: 'dialog-vertical-center',
-	            
-	            buttons: [{
-	                
-	            	label: 'Add to Left',
-	                
-	            	action: function(dialogItself){
-	                	
-	            		edu.gmu.csiss.covali.wms.loadLayer("left");
-	            	}
-	            
-	            },{
-	                
-	            	label: 'Add to Right',
-	                
-	            	action: function(dialogItself){
-	                	
-	            		edu.gmu.csiss.covali.wms.loadLayer("right");
-	            		
-	                }
-	            
-	            },{
-	            	
-	            	label: "Unselect All",
-	            	
-	            	action: function(dialogItself){
-	            		
-	            		$(".layer-checkbox").prop('checked', false); 
-	            		
-	            	}
-	            	
-	            },{
-	            	
-	            	label: "Select All",
-	            	
-	            	action: function(dialogItself){
-	            		
-	            		$(".layer-checkbox").prop('checked', true); 
-	            		
-	            	}
-	            	
-	            },{
-	                
-	            	label: 'Close',
-	                
-	            	action: function(dialogItself){
-	                	
-	                    dialogItself.close();
-	                    
-	                }
-	            
-	            }]
-	        
-			});
+//			BootstrapDialog.show({
+//				
+//	            message: $content,
+//	            
+//	            title: "Layer Selector",
+//	            
+//	            cssClass: 'dialog-vertical-center',
+//	            
+//	            buttons: [{
+//	                
+//	            	label: 'Add to Left',
+//	                
+//	            	action: function(dialogItself){
+//	                	
+//	            		edu.gmu.csiss.covali.wms.loadLayer("left");
+//	            	}
+//	            
+//	            },{
+//	                
+//	            	label: 'Add to Right',
+//	                
+//	            	action: function(dialogItself){
+//	                	
+//	            		edu.gmu.csiss.covali.wms.loadLayer("right");
+//	            		
+//	                }
+//	            
+//	            },{
+//	            	
+//	            	label: "Unselect All",
+//	            	
+//	            	action: function(dialogItself){
+//	            		
+//	            		$(".layer-checkbox").prop('checked', false); 
+//	            		
+//	            	}
+//	            	
+//	            },{
+//	            	
+//	            	label: "Select All",
+//	            	
+//	            	action: function(dialogItself){
+//	            		
+//	            		$(".layer-checkbox").prop('checked', true); 
+//	            		
+//	            	}
+//	            	
+//	            },{
+//	                
+//	            	label: 'Close',
+//	                
+//	            	action: function(dialogItself){
+//	                	
+//	                    dialogItself.close();
+//	                    
+//	                }
+//	            
+//	            }]
+//	        
+//			});
 			
 		},
 		
