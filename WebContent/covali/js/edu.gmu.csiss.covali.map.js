@@ -445,51 +445,66 @@ edu.gmu.csiss.covali.map = {
 					
 				}
 				
-				$content += "<div class=\"row\">"+
+				$content += "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
 				
-				"	  <div class=\"col-md-9\"><img id=\"paletteselector\" src=\""+ paletteurl + "\"" +
-				
-				" 		style=\"width:100%;height:30px;\" alt=\"Palette\"></div>" +
-
-				"	  <div class=\"col-md-3\"><span><input type=\"radio\" onclick=\"edu.gmu.csiss.covali.map.choosePalette(this);\" name=\"palette\" value=\"" + palettename + "\" " + checked + " />" + palettename + "</span></div>" +
-				
-				"	</div>";
+							"	<div class=\"row\">"+
+							
+							"		<div class=\"col-md-9\"><img id=\"paletteselector\" src=\""+ paletteurl + "\"" +
+							
+							" 			style=\"width:100%;height:30px;\" alt=\"Palette\"></div>" +
+			
+							"	  	<div class=\"col-md-3\"><span><input type=\"radio\" onclick=\"edu.gmu.csiss.covali.map.choosePalette(this);\" name=\"palette\" value=\"" + palettename + "\" " + checked + " />" + palettename + "</span></div>" +
+							
+							"	</div>"+
+							"</dl></div>";
 				
 			}
 			
-			edu.gmu.csiss.covali.map.palette_dialog = new BootstrapDialog({
-				
-				message: $content,
-				
-				title: "Palette Selector",
-	            
-	            cssClass: 'dialog-vertical-center',
-	            
-	            buttons: [{
-	            	
-	            	label: "Apply",
-	            	
-	            	action: function(dialogItself){
-	            		
-	            		dialogItself.close();
-	            		
-	            	}
-	            	
-	            },{
-	                
-	            	label: 'Close',
-	                
-	            	action: function(dialogItself){
-	                	
-	                    dialogItself.close();
-	                    
-	                }
-	            
-	            }]
-				
-			});
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			var dialogName = 'edu.gmu.csiss.covali.map.jsframe.PaletteSelector';
+			var dialogTitle = 'Palette Selector';
 			
-			edu.gmu.csiss.covali.map.palette_dialog.open();
+			$content += "<div class=\"modal-footer\">" +
+			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.map.applyStyle(\""+legendid+"\",\""+legendurl+"\",\""+currentstyle+"\",\""+belowcolor+"\",\""
+				+abovecolor+"\",\""+side+"\")\'>Apply</span>"+
+			"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+			"</div>";
+			
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $content);
+			
+//			edu.gmu.csiss.covali.map.palette_dialog = new BootstrapDialog({
+//				
+//				message: $content,
+//				
+//				title: "Palette Selector",
+//	            
+//	            cssClass: 'dialog-vertical-center',
+//	            
+//	            buttons: [{
+//	            	
+//	            	label: "Apply",
+//	            	
+//	            	action: function(dialogItself){
+//	            		
+//	            		dialogItself.close();
+//	            		
+//	            	}
+//	            	
+//	            },{
+//	                
+//	            	label: 'Close',
+//	                
+//	            	action: function(dialogItself){
+//	                	
+//	                    dialogItself.close();
+//	                    
+//	                }
+//	            
+//	            }]
+//				
+//			});
+//			
+//			edu.gmu.csiss.covali.map.palette_dialog.open();
 			
 			
 		},
@@ -922,9 +937,7 @@ edu.gmu.csiss.covali.map = {
 			edu.gmu.csiss.covali.menu.closeAllDialogs();
 			var dialogName = 'edu.gmu.csiss.covali.map.jsframe.PaletteSelector';
 			var dialogTitle = "Style Manager for " + side + " Map";
-			
-			console.log("SYNC WITH:");
-			console.log("<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.map.syncWith(\""+edu.gmu.csiss.covali.map.getOtherSide(side)+"\")\'>Sync with "+side+"</span>");
+
 			$content += "<div class=\"modal-footer\">" +
 			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.map.syncWith(\""+edu.gmu.csiss.covali.map.getOtherSide(side)+"\")\'>Sync with "+edu.gmu.csiss.covali.map.getOtherSide(side)+"</span>"+
 			"<span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.map.restoreStyle()\">Restore</span>"+

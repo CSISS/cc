@@ -34,7 +34,8 @@ edu.gmu.csiss.covali.menu = {
 				'edu.gmu.csiss.covali.upload.jsframe.DataUploader', 'edu.gmu.csiss.covali.wms.jsframe.LayerSelector',
 				'edu.gmu.csiss.covali.uri.jsframe.AddDataFromURL','edu.gmu.csiss.covali.chords.jsframe.AddCHORDS',
 				'edu.gmu.csiss.covali.settings.jsframe.Settings','edu.gmu.csiss.covali.statistics.jsframe.Statistics',
-				'edu.gmu.csiss.covali.animation.jsframe.LayerSelector','edu.gmu.csiss.covali.search.jsframe.SearchDialog']
+				'edu.gmu.csiss.covali.animation.jsframe.LayerSelector','edu.gmu.csiss.covali.search.jsframe.SearchDialog',
+				'edu.gmu.csiss.covali.map.jsframe.PaletteSelector','edu.gmu.csiss.covali.animation.jsframe.CreateAnimation']
 			
 			jsframeNames.forEach(function(jsframeName){
 				edu.gmu.csiss.covali.menu.closeDialog(jsframeName);

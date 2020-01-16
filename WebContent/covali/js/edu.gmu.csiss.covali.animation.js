@@ -33,7 +33,7 @@ edu.gmu.csiss.covali.animation = {
     	
 	},
 	
-	createAnimation: function(dialogItself){
+	createAnimation: function(layername){
 		
 		//overlay the animation on the maps. show buttons in the map area to stop the animation.
 		
@@ -48,9 +48,29 @@ edu.gmu.csiss.covali.animation = {
     	edu.gmu.csiss.covali.wms.loadAnimation(layername, mapside, starttime, endtime, framerate);
 		
 		//dialogItself.close();
-    	BootstrapDialog.closeAll();
+    	edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
 	},
+	
+	animationDialogOnShown: function(timesteps){
+    	
+    	for(var i=0;i<timesteps.length;i++){
+			
+			var o1 = new Option("value", timesteps[i]);
+			
+			$(o1).html(timesteps[i]);
+			
+			$("#first-select").append(o1);
+			
+			var o2 = new Option("value", timesteps[i]);
+			
+			$(o2).html(timesteps[i]);
+			
+			$("#last-select").append(o2);
+			
+		}
+    	
+    },
 	
 	showTimeStepSelect: function(layername, timesteps){
 		
@@ -108,11 +128,12 @@ edu.gmu.csiss.covali.animation = {
 			content+
 			"</dl></div>"+
 			"<div class=\"modal-footer\">" +
-			"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.animation.createAnimation();\">Create</span></p>"+
+			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.animation.createAnimation(\""+layername+"\")\'>Create</span></p>"+
 			"</div>";
 		
 
 		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+		edu.gmu.csiss.covali.animation.animationDialogOnShown(timesteps);
 		
 //		BootstrapDialog.show({
 //			
