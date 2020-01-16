@@ -369,9 +369,12 @@ edu.gmu.csiss.covali.search = {
 			var dialogName = 'edu.gmu.csiss.covali.search.jsframe.Variables';
 			var dialogTitle = product.name + ' Variables';
 			
-			content +="<div class=\"modal-footer\">" +
-			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
-			"</div>";
+			$content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
+						$content+"</dl></div>"+
+			//content +=
+						"<div class=\"modal-footer\">" +
+						"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
+						"</div>";
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
 			
 //            BootstrapDialog.show({
@@ -937,7 +940,7 @@ edu.gmu.csiss.covali.search = {
 		
 		searchForm: function(){
 			
-			var cont = "<div class=\"modal-body\" style=\"overflow:auto\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+			var cont = "<div class=\"modal-body\" style=\"overflow:auto\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px;\">"+
 			'	<div class="row">'+
 					
 			'		<!-- left-->'+

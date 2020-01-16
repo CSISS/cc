@@ -35,7 +35,8 @@ edu.gmu.csiss.covali.menu = {
 				'edu.gmu.csiss.covali.uri.jsframe.AddDataFromURL','edu.gmu.csiss.covali.chords.jsframe.AddCHORDS',
 				'edu.gmu.csiss.covali.settings.jsframe.Settings','edu.gmu.csiss.covali.statistics.jsframe.Statistics',
 				'edu.gmu.csiss.covali.animation.jsframe.LayerSelector','edu.gmu.csiss.covali.search.jsframe.SearchDialog',
-				'edu.gmu.csiss.covali.map.jsframe.PaletteSelector','edu.gmu.csiss.covali.animation.jsframe.CreateAnimation']
+				'edu.gmu.csiss.covali.map.jsframe.PaletteSelector','edu.gmu.csiss.covali.animation.jsframe.CreateAnimation',
+				'edu.gmu.csiss.covali.map.jsframe.StyleManager']
 			
 			jsframeNames.forEach(function(jsframeName){
 				edu.gmu.csiss.covali.menu.closeDialog(jsframeName);
@@ -44,9 +45,9 @@ edu.gmu.csiss.covali.menu = {
 		
 		createDialog: function(dialogName, dialogTitle, content){
 			
-			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			//edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
-			var width = 700; var height = 250;
+			var width = 700; var height = 500;
 			
 			const frame = edu.gmu.csiss.covali.menu.jsframe.create({
 		    		title: dialogTitle,
@@ -58,17 +59,12 @@ edu.gmu.csiss.covali.menu = {
 		            movable: true,
 		            resizable: true,
 		            style:{
-//		            	width: "auto",
-//		            	height: "auto",
-//		            	position: "relative",
-//		            	overflow: "auto",
-			            //overflowX: "auto",
-			            //overflowY: "scroll",
-//			            maxHeight: "500px"
-		            	backgroundColor: 'rgb(255,255,255)',
-			    	    fontSize: 12,
-			    	    overflow:'auto',
-			    	    minHeight: "400px"
+		            	height: "auto",
+		            	position: "absolute",
+			            overflowX: "auto",
+			            overflowY: "scroll",
+			            maxHeight: "500px",
+			            resize: "both"
 		            },
 		    	    html: content
 	    	});
@@ -84,6 +80,7 @@ edu.gmu.csiss.covali.menu = {
 	            animationDuration: 150,
 	
 	        });
+			frame.setResizable(true);
 	    	
 	    	frame.show();
 	    	frame.setPosition(window.innerWidth/2, window.innerHeight*0.05, 'CENTER_TOP');

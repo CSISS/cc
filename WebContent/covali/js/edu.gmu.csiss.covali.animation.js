@@ -268,22 +268,12 @@ edu.gmu.csiss.covali.animation = {
 		
 	showDialog: function(){
 		
-		BootstrapDialog.closeAll();
+		edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
-		var jsframeNames = ['edu.gmu.csiss.covali.add.jsframe.AddingDataMethods','edu.gmu.csiss.covali.wms.jsframe.AddWMS',
-			'edu.gmu.csiss.covali.upload.jsframe.DataUploader', 'edu.gmu.csiss.covali.wms.jsframe.LayerSelector',
-			'edu.gmu.csiss.covali.uri.jsframe.AddDataFromURL','edu.gmu.csiss.covali.chords.jsframe.AddCHORDS',
-			'edu.gmu.csiss.covali.settings.jsframe.Settings']
-		
-		jsframeNames.forEach(function(jsframeName){
-			const previous_frame = edu.gmu.csiss.covali.menu.jsframe.getWindowByName(jsframeName);
-			if(previous_frame){
-				previous_frame.closeFrame();
-			}
-		})
-		
+		var dialogName = 'edu.gmu.csiss.covali.animation.jsframe.LayerSelector';
+		var dialogTitle = 'Layer Selector';
 
-		var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+		var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
 			"<label for=\"layer-select-tree\" >Select A Layer</label>"+
             	
             	"<div id=\"layer-select-tree\">"+
@@ -295,44 +285,46 @@ edu.gmu.csiss.covali.animation = {
 			edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.animation.layerSelectCallback)+
 			"<div class=\"modal-footer\">" +
 			"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.animation.layerSelector();\">Select</span></p>"+
-			"</div>";			
-		var width = 500; var height = 250;
-		console.log(height)
-		
-		const frame = edu.gmu.csiss.covali.menu.jsframe.create({
-	    		title: 'Layer Selector',
-	    		name: 'edu.gmu.csiss.covali.animation.jsframe.LayerSelector',
-	    	    left: 0, 
-	    	    top: 0, 
-	    	    width: width,
-	    	    appearanceName: 'yosemite',
-	            movable: true,
-	            resizable: true,
-	            style:{
-	            	height: "auto",
-	            	position: "absolute",
-		            overflowX: "auto",
-		            overflowY: "scroll",
-		            maxHeight: "500px"
-	            },
-	    	    html: content
-    	});
-    	
-		frame.setControl({
-            styleDisplay:'inline',
-            maximizeButton: 'zoomButton',
-            demaximizeButton: 'dezoomButton',
-            minimizeButton: 'minimizeButton',
-            deminimizeButton: 'deminimizeButton',
-            hideButton: 'closeButton',
-            animation: true,
-            animationDuration: 150,
-
-        });
-    	
-    	frame.show();
-    	
-    	frame.setPosition(window.innerWidth/2,window.innerHeight*0.05, 'CENTER_TOP');
+			"</div>";
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+//		var width = 500; var height = 250;
+//		console.log(height)
+//		
+//		const frame = edu.gmu.csiss.covali.menu.jsframe.create({
+//	    		title: 'Layer Selector',
+//	    		name: 'edu.gmu.csiss.covali.animation.jsframe.LayerSelector',
+//	    	    left: 0, 
+//	    	    top: 0, 
+//	    	    width: width,
+//	    	    appearanceName: 'yosemite',
+//	            movable: true,
+//	            resizable: true,
+//	            style:{
+//	            	height: "auto",
+//	            	position: "absolute",
+//		            overflowX: "auto",
+//		            overflowY: "scroll",
+//		            maxHeight: "500px",
+//		            resize: "both"
+//	            },
+//	    	    html: content
+//    	});
+//    	
+//		frame.setControl({
+//            styleDisplay:'inline',
+//            maximizeButton: 'zoomButton',
+//            demaximizeButton: 'dezoomButton',
+//            minimizeButton: 'minimizeButton',
+//            deminimizeButton: 'deminimizeButton',
+//            hideButton: 'closeButton',
+//            animation: true,
+//            animationDuration: 150,
+//
+//        });
+//    	
+//    	frame.show();
+//    	
+//    	frame.setPosition(window.innerWidth/2,window.innerHeight*0.05, 'CENTER_TOP');
 		
 //		BootstrapDialog.show({
 //			

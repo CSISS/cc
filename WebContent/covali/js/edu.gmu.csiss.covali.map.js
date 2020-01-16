@@ -423,7 +423,8 @@ edu.gmu.csiss.covali.map = {
 			
 			$("#paletteselector").attr("alt", palettename);
 			
-			edu.gmu.csiss.covali.map.palette_dialog.close();
+			//edu.gmu.csiss.covali.map.palette_dialog.close();
+			edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.map.jsframe.PaletteSelector');
 			
 		},
 		
@@ -445,9 +446,7 @@ edu.gmu.csiss.covali.map = {
 					
 				}
 				
-				$content += "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
-				
-							"	<div class=\"row\">"+
+				$content += "	<div class=\"row\" style=\"font-size: 12px;\">"+
 							
 							"		<div class=\"col-md-9\"><img id=\"paletteselector\" src=\""+ paletteurl + "\"" +
 							
@@ -455,20 +454,22 @@ edu.gmu.csiss.covali.map = {
 			
 							"	  	<div class=\"col-md-3\"><span><input type=\"radio\" onclick=\"edu.gmu.csiss.covali.map.choosePalette(this);\" name=\"palette\" value=\"" + palettename + "\" " + checked + " />" + palettename + "</span></div>" +
 							
-							"	</div>"+
-							"</dl></div>";
+							"	</div>";
 				
 			}
 			
-			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			//edu.gmu.csiss.covali.menu.closeAllDialogs();
 			var dialogName = 'edu.gmu.csiss.covali.map.jsframe.PaletteSelector';
 			var dialogTitle = 'Palette Selector';
 			
-			$content += "<div class=\"modal-footer\">" +
-			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.map.applyStyle(\""+legendid+"\",\""+legendurl+"\",\""+currentstyle+"\",\""+belowcolor+"\",\""
-				+abovecolor+"\",\""+side+"\")\'>Apply</span>"+
-			"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
-			"</div>";
+			$content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
+					$content+"</dl></div>"+
+					"<div class=\"modal-footer\">" +
+					//"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.map.applyStyle(\""+legendid+"\",\""+legendurl+"\",\""+currentstyle+"\",\""+belowcolor+"\",\""
+					//	+abovecolor+"\",\""+side+"\")\'>Apply</span>"+
+					"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Apply</span>"+
+					"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+					"</div>";
 			
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $content);
 			
@@ -848,7 +849,7 @@ edu.gmu.csiss.covali.map = {
 			
 			var ac = abovecolor.slice(-6);
 			
-			$content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+			$content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
 			
 			"<div class=\"row\" style=\"padding: 10px;\">" +
 			
@@ -935,7 +936,7 @@ edu.gmu.csiss.covali.map = {
 			"</div></dl></div>";
 			
 			edu.gmu.csiss.covali.menu.closeAllDialogs();
-			var dialogName = 'edu.gmu.csiss.covali.map.jsframe.PaletteSelector';
+			var dialogName = 'edu.gmu.csiss.covali.map.jsframe.StyleManager';
 			var dialogTitle = "Style Manager for " + side + " Map";
 
 			$content += "<div class=\"modal-footer\">" +
