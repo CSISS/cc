@@ -82,7 +82,7 @@ edu.gmu.csiss.covali.wms = {
 			var dialogTitle = 'Add WMS';
 			
 			
-			var content = "<div class=\"modal-body\"><div class=\"row\" style=\"font-size: 12px; padding: 10px;\">"+
+			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
 			edu.gmu.csiss.covali.wms.getContent()+
 			"</div></div>";
 		

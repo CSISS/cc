@@ -559,7 +559,7 @@ edu.gmu.csiss.covali.settings = {
 			
 			var dialogName = 'edu.gmu.csiss.covali.settings.jsframe.Settings';
 			var dialogTitle = 'Settings';
-			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
 				edu.gmu.csiss.covali.settings.getContent()+
 				"</dl></div>"+
 				"<div class=\"modal-footer\">" +

@@ -363,7 +363,7 @@ edu.gmu.csiss.covali.statistics = {
 		//only support the build-in ncWMS
 	
 
-		var content = "<div class=\"modal-body\"><div class=\"row\" style=\"font-size: 12px; padding: 5px;\">"+
+		var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
 			content+
 			"</div></div>"+
 			"<div class=\"modal-footer\">" +
@@ -563,7 +563,7 @@ edu.gmu.csiss.covali.statistics = {
 		if(bothMapsPopupChecked == true){
 			var sides = ["left", "right"];
 			//var $textAndPic = $('<div></div>');
-			var $textAndPic = $("<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px;\"></dl></div>")
+			var $textAndPic = $("<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\"></dl></div>")
 			sides.forEach(function(side){
 				
 				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
