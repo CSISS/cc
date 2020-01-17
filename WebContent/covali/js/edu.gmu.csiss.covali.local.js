@@ -102,16 +102,15 @@ edu.gmu.csiss.covali.local = {
 
 					var dialogName = 'edu.gmu.csiss.covali.local.jsframe.PublicFolder';
 					var dialogTitle = 'Add data from server public folder';
-					$content = $("<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
+					var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
 							"<p class=\"text-success\">The file is parsed. Do you want to load it into the map now?</p>" +
 							"<p class=\"text-warning\">Warning: For netCDF format, only files compliant to CF convention are supported.</p>"+
-					
 							"<div class=\"modal-footer\">" +
 							"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.wms.showLayerSelector(\""+obj.id+"\");\'>Load</span>"+
 							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
-							"</div>");
+							"</div>";
 					
-					edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $content);
+					edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
 					
 //					BootstrapDialog.show({
 //
