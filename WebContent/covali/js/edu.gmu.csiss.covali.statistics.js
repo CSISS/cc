@@ -560,10 +560,11 @@ edu.gmu.csiss.covali.statistics = {
 	getLineStatistics: function(side, linestring){
 		
 //    	http://godiva.rdg.ac.uk/ncWMS2/wms?REQUEST=GetTransect&LAYERS=cci/analysed_sst&CRS=CRS:84&LINESTRING=62.04%2018,%2064.56%204.56,%2076.56%201.08&FORMAT=image/png&TIME=2010-12-31T12:00:00.000Z&COLORSCALERANGE=269,306&NUMCOLORBANDS=250&LOGSCALE=false&ABOVEMAXCOLOR=0x000000&BELOWMINCOLOR=0x000000&BGCOLOR=transparent&PALETTE=psu-inferno
+		var textAndPic = "";
 		if(bothMapsPopupChecked == true){
 			var sides = ["left", "right"];
 			//var $textAndPic = $('<div></div>');
-			var $textAndPic = $("<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\"></dl></div>")
+			textAndPic = "<div class=\"modal-body\"><div class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">";
 			sides.forEach(function(side){
 				
 				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
@@ -589,9 +590,12 @@ edu.gmu.csiss.covali.statistics = {
 					req += "&elevation=" + elevation;
 				}
 				
-				$textAndPic.append('<img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" />');
+				textAndPic += '<img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" />';
 				
 			});
+			
+			textAndPic += "</div></div>";
+			
 		}
 		
 		else{
@@ -620,15 +624,14 @@ edu.gmu.csiss.covali.statistics = {
 			
 			//console.log(req);
 			
-			var $textAndPic = $('<div></div>');
-	        
-			$textAndPic.append('<img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" />');			
+			textAndPic = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" /></div>';
+			
 		}
 		
 		edu.gmu.csiss.covali.menu.closeAllDialogs();
 		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.LineStatisticsResult';
 		var dialogTitle = 'Line Statistics Result';
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $textAndPic);
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, textAndPic);
 		
 //		BootstrapDialog.show({
 //            title: 'Line Statistics Result',

@@ -50,7 +50,7 @@ edu.gmu.csiss.covali.menu = {
 			
 			//edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
-			var width = 700; //var height = 500;
+			var width = 700;// height = 500;
 			
 			$content = $('<div>' + content + '</div>').css("display","inline-block");
 			$('body').append($content);
@@ -70,12 +70,11 @@ edu.gmu.csiss.covali.menu = {
 		            resizable: true,
 		    
 		            style:{
-		            	overflow: "auto",
-//		            	height: "auto",
+		            	overflow: "auto"
 //		            	position: "absolute",
 //			            overflowX: "auto",
 //			            overflowY: "scroll",
-			            minHeight: "600px",
+//			            height: "600px",
 			            //minHeight: "400px",
 //			            resize: "both"
 		            },
