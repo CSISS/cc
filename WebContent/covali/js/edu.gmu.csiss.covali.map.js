@@ -15,6 +15,7 @@ edu.gmu.csiss.covali.map = {
 		
 		style_dialog: null,
 		
+		
 		init: function(){
 			
 			this.addBoundaryWMS();
@@ -1590,6 +1591,7 @@ edu.gmu.csiss.covali.map = {
 				  title: layername,
 				  visible: true,
 				  enableLocalCache:true,
+				  animated: true,
 				  source: new ol.source.TileWMS({
 //					  LAYERS=IR&ELEVATION=0&TIME=2018-05-31T02%3A00%3A19.000Z&TRANSPARENT=true&STYLES=boxfill%2Frainbow&COLORSCALERANGE=-50%2C50&NUMCOLORBANDS=20&LOGSCALE=false&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&SRS=EPSG%3A4326&BBOX=-101.47971029369,19.92840558883,-85.775652352431,35.632463530092&WIDTH=256&HEIGHT=256
 //				    url: 'http://thredds.ucar.edu/thredds/wms/grib/NCEP/GEFS/Global_1p0deg_Ensemble/members-analysis/GEFS_Global_1p0deg_Ensemble_ana_20180520_0600.grib2',
@@ -1616,11 +1618,26 @@ edu.gmu.csiss.covali.map = {
 				  })
 			});			
 			
+			
+			
 		    var animationId = null;
 		    
 		    var startDate = new Date(starttime);
 		    
 		    var endDate = new Date(endtime);
+		    
+		    function stopAnimation() {
+				  console.log();
+				  var mapid = map.get('target');
+					
+				  var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
+				  if (animationId !== null){// && stopAnimationFlag == false) {
+					console.log("animation stopped");
+					window.clearInterval(animationId);
+					animationId = null;
+					updateAnimationInfo("stop", side);
+				  }
+			};
 		    
 		    function updateAnimationInfo(StartOrStop, side) {
 		    	//console.trace();
@@ -1631,7 +1648,7 @@ edu.gmu.csiss.covali.map = {
 				
 				edu.gmu.csiss.covali.animation.style = layer.getSource().getParams()["STYLES"];
 				
-				if(layer!=null){
+				if(layer!=null && layer.values_.animated == true){
 							
 					//edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,layer.getSource().getParams()["TIME"],layer.getSource().getParams()["ELEVATION"]);
 					
@@ -1725,6 +1742,7 @@ edu.gmu.csiss.covali.map = {
 
 				}
 				else{
+					stopAnimation();
 					return;
 				}
 			}
@@ -1751,17 +1769,7 @@ edu.gmu.csiss.covali.map = {
 				}
 			 }
 			
-		   function stopAnimation() {
-			  var mapid = map.get('target');
-				
-			  var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
-			  if (animationId !== null){// && stopAnimationFlag == false) {
-				console.log("animation stopped");
-				window.clearInterval(animationId);
-				animationId = null;
-				updateAnimationInfo("stop", side);
-			  }
-			};
+		   
 			
 			var animationFunctions = function(){
 				setLayerTimeParam();
@@ -1774,124 +1782,12 @@ edu.gmu.csiss.covali.map = {
 	  
 			  console.log(1000/framerate);
 			  animationId = window.setInterval(setLayerTimeParam, 1000/framerate);
+			  
+			  
 			};
 			
 			playAnimation();
-/*		    var animationMessage =
-			{
-		    		"start": "Animation is playing. <button id=\"stop-"+side+"\" onclick=\"stoporresume('"+side+"')\"  type=\"button\" id=\"animationbtn-"+side+"\">Stop</button>" +
-		    			"<div id=\"animation-time-"+side+"\">"+
-		    			"Layer:" + myLayer1303.getSource().getParams().LAYERS +
-				    ";<br>Time: <span id=\"legend-time-"+side+"\">"+myLayer1303.getSource().getParams().TIME+"</span></div>", 
-   			 	
-					"stop": "Animation is stopped. <button id=\"restart-"+side+"\" onclick=\"stoporresume('"+side+"')\"  type=\"button\" id=\"animationbtn-"+side+"\">Resume</button>" +
-		    			"<div id=\"animation-time-"+side+"\">"+
-		    			"Layer:" + myLayer1303.getSource().getParams().LAYERS +
-		    			";<br>Time: <span id=\"legend-time-"+side+"\">"+myLayer1303.getSource().getParams().TIME+"</span></div>"
-		    	}
-		    
-		    //this function already exists, it's called updateCaption!!
-		    function stoporresume(side){
-
 				
-				if($("#animationbtn-" + side).text()=="Stop"){
-
-					window.clearInterval(window.animationId);
-					
-					$("#animationbtn-" + side).text("Resume");
-					
-				}
-				else{
-					
-					$("#animationbtn-" + side).text("Stop");
-					playAnimation();
-					
-				}
-				
-			}
-		    
-		    function setTime() {
-		    	
-//				var mapid = map.get('target');
-//				
-//				var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(mapid);
-				
-//				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-		    	
-		    		var layer = myLayer1303;
-		    	
-			    	if(layer!=null){
-			    		
-					if (startDate > endDate){
-				
-						startDate = new Date(starttime);
-					
-					}
-					
-					layer.getSource().updateParams({'TIME': startDate.toISOString()});
-				    
-//					updateInfo("start", side);
-					
-					$("#legend-time-" + side).val(layer.getSource().getParams().TIME);
-					
-					edu.gmu.csiss.covali.map.updateAnimationCaption(side, myLayer1303.getSource().getParams().LAYERS, 
-							startDate.toISOString(), "", true);
-				    
-					//console.log("StartDate: "+startDate.toISOString()+" layer time: "+layer.getSource().getParams()["TIME"]+" layer name: "+layer.getSource().getParams()["LAYERS"]);
-				    
-					startDate.setMinutes(startDate.getMinutes() + edu.gmu.csiss.covali.animation.interval/60000);
-						
-			    	}
-			    	else{
-			    		return;
-			    	}
-		   }
-			
-	       function stopAnimation() {
-	    	   	  
-	          if (window.animationId !== null){// && stopAnimationFlag == false) {
-	        	  	
-	        	  	console.log("animation stopped");
-	        	
-	            window.clearInterval(window.animationId);
-	            
-	            window.animationId = null;
-	            
-//	            updateInfo("stop", side);
-	            
-	            var lid = edu.gmu.csiss.covali.map.getTitleLegendId(side);
-        		
-        			$('#' + lid).html(animationMessage.stop);
-	            
-	          }
-	        };
-	        
-	        function playAnimation() {
-	        		
-	        		stopAnimation();
-	        		
-	        		//update that legend
-		        	
-//	        		edu.gmu.csiss.covali.map.updateLegend(side, myLayer1303.get('name'), myLayer1303.getSource().getParams()["LEGEND"], null, null,myLayer1303.getSource().getParams()["TIME"],myLayer1303.getSource().getParams()["ELEVATION"]);
-	        		
-//	        		var lid = edu.gmu.csiss.covali.map.getTitleLegendId(side);
-//	        		
-//	        		$('#' + lid).html(animationMessage.start);
-	        		
-	        		console.log(1000/framerate);
-	          
-	        		window.animationId = window.setInterval(setTime, 1000/framerate);
-	          
-	        		//window.setInterval(stopAnimation, 1000/framerate);
-	          
-	        };
-			
-	        playAnimation();
-	        
-	        //map.on('dblclick', function(evt){
-	        //	stopAnimation();
-			//});
-*/		
 			myLayer1303.on("change:visible", function(event){
 				//alert("The layer is visible now!");
 				//console.log("The layer is visible now!");
@@ -1917,6 +1813,8 @@ edu.gmu.csiss.covali.map = {
 	        		
 	        			//$('#' + lid).html(animationMessage.start);
 					
+					playAnimation();
+					
 				}else{
 					
 					console.log("The layer " + layer.get('name') + " is invisible.");
@@ -1924,7 +1822,8 @@ edu.gmu.csiss.covali.map = {
 					console.log("show the current top layer's legend");
 					
 					edu.gmu.csiss.covali.map.showNextAvailableLegend(side);
-					//stopAnimation();
+					
+					stopAnimation();
 					
 				}
 				

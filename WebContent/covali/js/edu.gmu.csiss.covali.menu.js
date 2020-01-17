@@ -75,7 +75,7 @@ edu.gmu.csiss.covali.menu = {
 //		            	position: "absolute",
 //			            overflowX: "auto",
 //			            overflowY: "scroll",
-//			            maxHeight: "500px",
+			            minHeight: "600px",
 			            //minHeight: "400px",
 //			            resize: "both"
 		            },

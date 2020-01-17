@@ -401,7 +401,7 @@ edu.gmu.csiss.covali.settings = {
 			
 			var othermap = edu.gmu.csiss.covali.map.getMapBySide(target_side);
 			
-			if (layer.values_.enableLocalCache == true){//I didn't really know how to differentiate a static layer from the animation layer so I used this
+			if (layer.values_.animated == true){//I didn't really know how to differentiate a static layer from the animation layer so I used this
 				try{
 					layer.getSource().clear();
 				}

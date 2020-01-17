@@ -22,6 +22,10 @@ edu.gmu.csiss.covali.animation = {
 	
 	style: null,
 	
+	left_animation_id: null,
+	
+	right_animation_id: null,
+	
 	/**
 	 *  show a select list to choose the rendered layer list
 	 */
