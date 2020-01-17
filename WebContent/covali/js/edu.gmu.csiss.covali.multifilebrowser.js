@@ -108,58 +108,87 @@ edu.gmu.csiss.covali.multifilebrowser = {
         });
 
     },
-
+    
     init: function() {
-        BootstrapDialog.show({
-            title: "Local Files",
-
-            cssClass: 'dialog-vertical-center dialog-local-file-list',
-
-            message: function(dialog) {
-                return($('<div id="multifilebrowser"></div>'));
-
-            },
-
-            onshown: function() {
-                edu.gmu.csiss.covali.multifilebrowser.loadPath('');
-
-            },
-
-
-            buttons: [
-                {
-                    label: 'Select All',
-                    action: function() {
-                        $('.file-browser-file').not('.selected').each(function(){
-                            edu.gmu.csiss.covali.multifilebrowser.toggleSelect($(this));
-                        });
-                    }
-                },
-                {
-                    label: 'Select None',
-                    action: function () {
-                        $('.file-browser-item.selected').each(function(){
-                            edu.gmu.csiss.covali.multifilebrowser.toggleSelect($(this));
-                            edu.gmu.csiss.covali.multifilebrowser.selectedFiles = [];
-                        });
-                    }
-                },
-                {
-                    label: 'Ok',
-                    cssClass: 'btn-warning',
-                    action: function(dialogItself) {
-                        edu.gmu.csiss.covali.multifilebrowser.selectedCallback(edu.gmu.csiss.covali.multifilebrowser.selectedFiles);
-                        dialogItself.close();
-                    }
-                },
-                {
-                    label: 'Cancel',
-                    action: function(dialogItself){
-                        this.selectedFiles = [];
-                        dialogItself.close();
-                    }
-                }]
-        });
+    	
+    	function selectAll(){
+                $('.file-browser-file').not('.selected').each(function(){
+                    edu.gmu.csiss.covali.multifilebrowser.toggleSelect($(this));
+                });
+    	};
+    	
+    	function selectNone(){
+    		$('.file-browser-item.selected').each(function(){
+                edu.gmu.csiss.covali.multifilebrowser.toggleSelect($(this));
+                edu.gmu.csiss.covali.multifilebrowser.selectedFiles = [];
+            });
+    	};
+    	
+    	var dialogName = 'edu.gmu.csiss.covali.multifilebrowser.jsframe.LocalFiles';
+		var dialogTitle = 'Local Files';
+		$content = $("<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
+				 '<div id="multifilebrowser"></div>'+
+		
+				"<div class=\"modal-footer\">" +
+				"<p><span class=\"btn btn-primary\" onclick=\'this.selectAll();\'>Select All</span>"+
+				"<span class=\"btn btn-primary\" onclick=\'this.selectNone();\'>Select None</span>"+
+				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.multifilebrowser.selectedCallback(edu.gmu.csiss.covali.multifilebrowser.selectedFiles);edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\");\'>Ok</span>"+
+				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Cancel</span></p>"+
+				"</div>");
+		
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $content);
+		edu.gmu.csiss.covali.multifilebrowser.loadPath('');
+		
+//        BootstrapDialog.show({
+//            title: "Local Files",
+//
+//            cssClass: 'dialog-vertical-center dialog-local-file-list',
+//
+//            message: function(dialog) {
+//                return($('<div id="multifilebrowser"></div>'));
+//
+//            },
+//
+//            onshown: function() {
+//                edu.gmu.csiss.covali.multifilebrowser.loadPath('');
+//
+//            },
+//
+//
+//            buttons: [
+//                {
+//                    label: 'Select All',
+//                    action: function() {
+//                        $('.file-browser-file').not('.selected').each(function(){
+//                            edu.gmu.csiss.covali.multifilebrowser.toggleSelect($(this));
+//                        });
+//                    }
+//                },
+//                {
+//                    label: 'Select None',
+//                    action: function () {
+//                        $('.file-browser-item.selected').each(function(){
+//                            edu.gmu.csiss.covali.multifilebrowser.toggleSelect($(this));
+//                            edu.gmu.csiss.covali.multifilebrowser.selectedFiles = [];
+//                        });
+//                    }
+//                },
+//                {
+//                    label: 'Ok',
+//                    cssClass: 'btn-warning',
+//                    action: function(dialogItself) {
+//                        edu.gmu.csiss.covali.multifilebrowser.selectedCallback(edu.gmu.csiss.covali.multifilebrowser.selectedFiles);
+//                        dialogItself.close();
+//                    }
+//                },
+//                {
+//                    label: 'Cancel',
+//                    action: function(dialogItself){
+//                        this.selectedFiles = [];
+//                        dialogItself.close();
+//                    }
+//                }]
+//        });
 
 
     }

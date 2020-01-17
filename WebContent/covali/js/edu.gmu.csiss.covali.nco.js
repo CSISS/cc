@@ -227,85 +227,143 @@ edu.gmu.csiss.covali.nco = {
         }
     	
     },
+    
+    calculateButtonAction: function(dialogItself){
+        if($("#nco-operation").val()=="2"){
+
+            var command = $("#ncra-command").val();
+            edu.gmu.csiss.covali.nco.doNcoCalculation('../web/nco/ncra', command, dialogItself);
+        } else if($("#nco-operation").val()=="3"){
+
+            var command = $("#ncbo-command").val();
+            edu.gmu.csiss.covali.nco.doNcoCalculation('../web/nco/ncbo', command, dialogItself);
+        }
+
+        console.log(dialogItself);
+    },
 	
 	showDialog: function(){
 		
-		BootstrapDialog.closeAll();
+		edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
-		BootstrapDialog.show({
-			
-			title: "NCO Processing",
-			
-			message: function(){
-				
-				var content = '<div class="row">';
-                content += '	<label class="col-md-3 control-label" for="nco-operation">Operation</label>';
-                content += '	<div class="col-md-8">';
-                content += '		<select id="nco-operation" name="nco-operation" class="form-control">';
-                content += '			<option value="1">Select</option>';
-                content += '			<option id="operation-ncra" value="2">Record Average (ncra)</option>';
-                content += '			<option id="operation-ncra" value="3">Binary Operator (ncbo)</option>';
-                content += '		</select>';
-                content += '	</div>';
-                content += '	<div class="col-md-1 text-left" style="padding-left: 0px;">';
-                content += '		<a class="btn btn-primary" id="process-info-btn" href="javascript:void(0)"><i class="fa fa-info"></i></a>';
-                content += '	</div>';
-                content += '</div>';
-                
 
-                content += '<div id="nco-operation-content"></div>';
+		var content = '<div class="row">';
+        content += '	<label class="col-md-3 control-label" for="nco-operation">Operation</label>';
+        content += '	<div class="col-md-8">';
+        content += '		<select id="nco-operation" name="nco-operation" class="form-control">';
+        content += '			<option value="1">Select</option>';
+        content += '			<option id="operation-ncra" value="2">Record Average (ncra)</option>';
+        content += '			<option id="operation-ncra" value="3">Binary Operator (ncbo)</option>';
+        content += '		</select>';
+        content += '	</div>';
+        content += '	<div class="col-md-1 text-left" style="padding-left: 0px;">';
+        content += '		<a class="btn btn-primary" id="process-info-btn" href="javascript:void(0)"><i class="fa fa-info"></i></a>';
+        content += '	</div>';
+        content += '</div>';
+        content += '<div id="nco-operation-content"></div>';
+        
+        //var $content = $(content);
 
-                content = $(content);
-                content.find('#nco-operation').change(function() {
-                    edu.gmu.csiss.covali.nco.changeDialogContent(this.value);
-                });
-                
-                content.find('#process-info-btn').click(function() {
-                    edu.gmu.csiss.covali.nco.information();
-                });
-                return content;
-				
-			},
-			
-			buttons: [{
-				
-            	icon: 'glyphicon glyphicon-ok',
-                
-                label: 'Calculate',
+  
+		
+		var dialogName = 'edu.gmu.csiss.covali.nco.jsframe.NCOProcessing';
+		var dialogTitle = 'NCO Processing';
+		dialogContent = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
+			content + 
+			"</dl></div>"+
+			"<div class=\"modal-footer\">" +
+			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.nco.calculateButtonAction()\'>Calculate</span>" +
+			"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+			"</div>";
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, dialogContent);
+		
+		//$('#nco-frame').append($content);
+        $('#nco-operation').change(function() {
+        	console.log($('#nco-operation').val());
+            edu.gmu.csiss.covali.nco.changeDialogContent(this.value);
+        });
+        
+        $('#process-info-btn').click(function() {
+            edu.gmu.csiss.covali.nco.information();
+        });
 
-                autospin: true,
-                
-                cssClass: 'btn-warning',
-                
-                action: function(dialogItself){
-                    if($("#nco-operation").val()=="2"){
-
-                        var command = $("#ncra-command").val();
-                        edu.gmu.csiss.covali.nco.doNcoCalculation('../web/nco/ncra', command, dialogItself);
-                    } else if($("#nco-operation").val()=="3"){
-
-                        var command = $("#ncbo-command").val();
-                        edu.gmu.csiss.covali.nco.doNcoCalculation('../web/nco/ncbo', command, dialogItself);
-                    }
-
-                    console.log(dialogItself);
-                }
-                
-			}, {
-
-            	icon: 'glyphicon',
-                
-                label: 'Close',
-                
-                cssClass: 'btn-default',
-                
-                action: function(dialogItself){
-                	dialogItself.close();
-                }
-                
-			}]
-			
-		});
+		
+//		BootstrapDialog.closeAll();
+//		
+//		BootstrapDialog.show({
+//			
+//			title: "NCO Processing",
+//			
+//			message: function(){
+//				
+//				var content = '<div class="row">';
+//                content += '	<label class="col-md-3 control-label" for="nco-operation">Operation</label>';
+//                content += '	<div class="col-md-8">';
+//                content += '		<select id="nco-operation" name="nco-operation" class="form-control">';
+//                content += '			<option value="1">Select</option>';
+//                content += '			<option id="operation-ncra" value="2">Record Average (ncra)</option>';
+//                content += '			<option id="operation-ncra" value="3">Binary Operator (ncbo)</option>';
+//                content += '		</select>';
+//                content += '	</div>';
+//                content += '	<div class="col-md-1 text-left" style="padding-left: 0px;">';
+//                content += '		<a class="btn btn-primary" id="process-info-btn" href="javascript:void(0)"><i class="fa fa-info"></i></a>';
+//                content += '	</div>';
+//                content += '</div>';
+//                
+//
+//                content += '<div id="nco-operation-content"></div>';
+//
+//                content = $(content);
+//                content.find('#nco-operation').change(function() {
+//                    edu.gmu.csiss.covali.nco.changeDialogContent(this.value);
+//                });
+//                
+//                content.find('#process-info-btn').click(function() {
+//                    edu.gmu.csiss.covali.nco.information();
+//                });
+//                return content;
+//				
+//			},
+//			
+//			buttons: [{
+//				
+//            	icon: 'glyphicon glyphicon-ok',
+//                
+//                label: 'Calculate',
+//
+//                autospin: true,
+//                
+//                cssClass: 'btn-warning',
+//                
+//                action: function(dialogItself){
+//                    if($("#nco-operation").val()=="2"){
+//
+//                        var command = $("#ncra-command").val();
+//                        edu.gmu.csiss.covali.nco.doNcoCalculation('../web/nco/ncra', command, dialogItself);
+//                    } else if($("#nco-operation").val()=="3"){
+//
+//                        var command = $("#ncbo-command").val();
+//                        edu.gmu.csiss.covali.nco.doNcoCalculation('../web/nco/ncbo', command, dialogItself);
+//                    }
+//
+//                    console.log(dialogItself);
+//                }
+//                
+//			}, {
+//
+//            	icon: 'glyphicon',
+//                
+//                label: 'Close',
+//                
+//                cssClass: 'btn-default',
+//                
+//                action: function(dialogItself){
+//                	dialogItself.close();
+//                }
+//                
+//			}]
+//			
+//		});
 		
 	}
 		

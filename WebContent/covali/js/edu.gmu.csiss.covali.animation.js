@@ -27,7 +27,7 @@ edu.gmu.csiss.covali.animation = {
 	 */
 	layerSelectCallback: function(layerjson){
 		
-		console.log(layerjson);
+		//console.log(layerjson);
 		
 		edu.gmu.csiss.covali.animation.layer_tree = $('#layer-select-tree').treeview({data: [layerjson]});
     	
@@ -287,6 +287,7 @@ edu.gmu.csiss.covali.animation = {
 			"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.animation.layerSelector();\">Select</span></p>"+
 			"</div>";
 		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+		edu.gmu.csiss.covali.menu.setFrameDimensionsToInnerHTML(dialogName);
 //		var width = 500; var height = 250;
 //		console.log(height)
 //		

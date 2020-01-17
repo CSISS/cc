@@ -36,7 +36,10 @@ edu.gmu.csiss.covali.menu = {
 				'edu.gmu.csiss.covali.settings.jsframe.Settings','edu.gmu.csiss.covali.statistics.jsframe.Statistics',
 				'edu.gmu.csiss.covali.animation.jsframe.LayerSelector','edu.gmu.csiss.covali.search.jsframe.SearchDialog',
 				'edu.gmu.csiss.covali.map.jsframe.PaletteSelector','edu.gmu.csiss.covali.animation.jsframe.CreateAnimation',
-				'edu.gmu.csiss.covali.map.jsframe.StyleManager']
+				'edu.gmu.csiss.covali.map.jsframe.StyleManager','edu.gmu.csiss.covali.local.jsframe.ParsingFile',
+				'edu.gmu.csiss.covali.local.jsframe.PublicFolder','edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles',
+				'edu.gmu.csiss.covali.multifilebrowser.jsframe.LocalFiles','edu.gmu.csiss.covali.share.jsframe.Share',
+				'edu.gmu.csiss.covali.nco.jsframe.NCOProcessing']
 			
 			jsframeNames.forEach(function(jsframeName){
 				edu.gmu.csiss.covali.menu.closeDialog(jsframeName);
@@ -47,24 +50,34 @@ edu.gmu.csiss.covali.menu = {
 			
 			//edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
-			var width = 700; var height = 500;
+			var width = 700; //var height = 500;
 			
-			const frame = edu.gmu.csiss.covali.menu.jsframe.create({
+			$content = $('<div>' + content + '</div>').css("display","inline-block");
+			$('body').append($content);
+			
+			var height = $content.height();
+			$content.remove();
+			
+			var frame = edu.gmu.csiss.covali.menu.jsframe.create({
 		    		title: dialogTitle,
 		    		name: dialogName,
 		    	    left: 0, 
 		    	    top: 0, 
 		    	    width: width,
+		    	    height: height,
 		    	    appearanceName: 'yosemite',
 		            movable: true,
 		            resizable: true,
+		    
 		            style:{
-		            	height: "auto",
-		            	position: "absolute",
-			            overflowX: "auto",
-			            overflowY: "scroll",
-			            maxHeight: "500px",
-			            resize: "both"
+		            	overflow: "auto",
+//		            	height: "auto",
+//		            	position: "absolute",
+//			            overflowX: "auto",
+//			            overflowY: "scroll",
+//			            maxHeight: "500px",
+			            //minHeight: "400px",
+//			            resize: "both"
 		            },
 		    	    html: content
 	    	});
@@ -83,8 +96,19 @@ edu.gmu.csiss.covali.menu = {
 			frame.setResizable(true);
 	    	
 	    	frame.show();
+	    	
 	    	frame.setPosition(window.innerWidth/2, window.innerHeight*0.05, 'CENTER_TOP');
-		}
+		},
 		
-		
+		setFrameDimensionsToInnerHTML: function(dialogName){
+			
+			const dialog = edu.gmu.csiss.covali.menu.jsframe.getWindowByName(dialogName);
+			var $dialogInnterHtml = $(dialog.htmlElement);//.find('modal-body');
+			
+			$dialog = $(dialog);
+			$dialog.height($dialogInnterHtml.height());
+			
+			console.log($dialogInnterHtml);
+			console.log($dialogInnterHtml.height());
+		}		
 }

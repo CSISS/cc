@@ -85,30 +85,43 @@ edu.gmu.csiss.covali.filebrowser = {
     },
 
     init: function() {
-        BootstrapDialog.show({
-            title: "Local Files",
-
-            cssClass: 'dialog-vertical-center dialog-local-file-list',
-
-            message: function(dialog) {
-                return($('<div id="filebrowser"></div>'));
-
-            },
-
-            onshown: function() {
-                edu.gmu.csiss.covali.filebrowser.loadPath('');
-
-            },
-
-            buttons: [
-                {
-                    label: 'Cancel',
-                    cssClass: 'btn-default dialog-close-button',
-                    action: function(dialogItself){
-                        dialogItself.close();
-                    }
-                }]
-        });
+    	
+    	var dialogName = 'edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles';
+		var dialogTitle = 'Local Files';
+		$content = $("<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
+					 '<div id="filebrowser"></div>'+
+		
+					 "<div class=\"modal-footer\">" +
+					 "<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Cancel</span></p>"+
+					 "</div>");
+		
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $content);
+		edu.gmu.csiss.covali.filebrowser.loadPath('');
+		
+//        BootstrapDialog.show({
+//            title: "Local Files",
+//
+//            cssClass: 'dialog-vertical-center dialog-local-file-list',
+//
+//            message: function(dialog) {
+//                return($('<div id="filebrowser"></div>'));
+//
+//            },
+//
+//            onshown: function() {
+//                edu.gmu.csiss.covali.filebrowser.loadPath('');
+//
+//            },
+//
+//            buttons: [
+//                {
+//                    label: 'Cancel',
+//                    cssClass: 'btn-default dialog-close-button',
+//                    action: function(dialogItself){
+//                        dialogItself.close();
+//                    }
+//                }]
+//        });
 
 
     }

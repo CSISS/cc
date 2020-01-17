@@ -10,80 +10,122 @@
 edu.gmu.csiss.covali.search = {
 
 		resultDialog: function(request, title){
+			
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			var dialogName = 'edu.gmu.csiss.covali.search.jsframe.'+title.replace(" ", "");
+			var dialogTitle = title;
+			
+			var content =   "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px;\">"+
+							'<table id="producttable"'+
+				        	
+							'			class="table table-striped table-bordered table-list">'+
+					
+							'		<thead>'+
+					
+							'			<tr>'+
+					
+							'				<th class="hidden-xs col-md-9" style="word-wrap: break-word; word-break: break-all;">Product</th>'+
+					
+				//			'				<th class="col-text">Information</th>'+
+					
+							'				<th class="col-text col-sm-3">Map</th>'+
+					
+							'			</tr>'+
+					
+							'		</thead>'+
+					
+							'		<tbody>'+
+					
+							'		</tbody>'+
+					
+							'	</table>'+
+							"</dl></div>"+
+							
+							"<div class=\"modal-footer\">" +
+							"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.search.init();\">Back</span>"+
+							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+							"</div>";
+			
+			//this.resultdialog = function(){
+				//edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+				//edu.gmu.csiss.covali.search.initTable(request);
+			//}
+			
+			this.resultdialog = edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
 
-			this.resultdialog = BootstrapDialog.show({
-				
-				title: title,
-				
-				size: BootstrapDialog.SIZE_WIDE,
-				
-	            message: '<table id="producttable"'+
-	            	
-					'			class="table table-striped table-bordered table-list">'+
-			
-					'		<thead>'+
-			
-					'			<tr>'+
-			
-					'				<th class="hidden-xs col-md-9" style="word-wrap: break-word; word-break: break-all;">Product</th>'+
-			
-//					'				<th class="col-text">Information</th>'+
-			
-					'				<th class="col-text col-sm-3">Map</th>'+
-			
-					'			</tr>'+
-			
-					'		</thead>'+
-			
-					'		<tbody>'+
-			
-					'		</tbody>'+
-			
-					'	</table>',
-	            
-	            cssClass: 'dialog-vertical-center',
-	            
-	            onshown: function(dialog) {
-	            	
-	            	edu.gmu.csiss.covali.search.initTable(request);
-	    	    	
-	            },
-	            
-	            buttons: [{
-	                
-	                label: 'Back',
-	                
-	                cssClass: 'btn-warning',
-	                
-	                action: function(dialogItself){
-	                	
-	                	//go back to the search dialog
-	                	
-	                	dialogItself.close();
-	                	
-//	                	if(edu.gmu.csiss.covali.search.searchdialog==null){
-
-		                	edu.gmu.csiss.covali.search.init();
-	                		
-//	                	}else{
+//			this.resultdialog = BootstrapDialog.show({
+//				
+//				title: title,
+//				
+//				size: BootstrapDialog.SIZE_WIDE,
+//				
+//	            message: '<table id="producttable"'+
+//	            	
+//					'			class="table table-striped table-bordered table-list">'+
+//			
+//					'		<thead>'+
+//			
+//					'			<tr>'+
+//			
+//					'				<th class="hidden-xs col-md-9" style="word-wrap: break-word; word-break: break-all;">Product</th>'+
+//			
+////					'				<th class="col-text">Information</th>'+
+//			
+//					'				<th class="col-text col-sm-3">Map</th>'+
+//			
+//					'			</tr>'+
+//			
+//					'		</thead>'+
+//			
+//					'		<tbody>'+
+//			
+//					'		</tbody>'+
+//			
+//					'	</table>',
+//	            
+//	            cssClass: 'dialog-vertical-center',
+//	            
+//	            onshown: function(dialog) {
+//	            	
+//	            	edu.gmu.csiss.covali.search.initTable(request);
+//	    	    	
+//	            },
+//	            
+//	            buttons: [{
+//	                
+//	                label: 'Back',
+//	                
+//	                cssClass: 'btn-warning',
+//	                
+//	                action: function(dialogItself){
+//	                	
+//	                	//go back to the search dialog
+//	                	
+//	                	dialogItself.close();
+//	                	
+////	                	if(edu.gmu.csiss.covali.search.searchdialog==null){
+//
+//		                	edu.gmu.csiss.covali.search.init();
 //	                		
-//		                	edu.gmu.csiss.covali.search.searchdialog.open();
-//	                		
-//	                	}
-	                	
-	                }
-	            	
-	            },
-	            {
-	                label: 'Close',
-	                
-	                action: function(dialogItself){
-	                	
-	                    dialogItself.close();
-	                    
-	                }
-	            }]
-	        });
+////	                	}else{
+////	                		
+////		                	edu.gmu.csiss.covali.search.searchdialog.open();
+////	                		
+////	                	}
+//	                	
+//	                }
+//	            	
+//	            },
+//	            {
+//	                label: 'Close',
+//	                
+//	                action: function(dialogItself){
+//	                	
+//	                    dialogItself.close();
+//	                    
+//	                }
+//	            }]
+//	        });
 			
 		},
 		
@@ -144,6 +186,7 @@ edu.gmu.csiss.covali.search = {
             BootstrapDialog.closeAll();
 
             edu.gmu.csiss.covali.search.resultDialog(request, "Granules for " + name);
+            edu.gmu.csiss.covali.search.initTable(request);
         },
 		
 		initTable: function(request){
@@ -1381,8 +1424,11 @@ edu.gmu.csiss.covali.search = {
         	};
         	
         	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
+        	edu.gmu.csiss.covali.search.initTable(request);
         	
-        	dialogItself.close();
+        	//dialogItself.close();
+        	
+        	//edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.search.jsframe.SearchResults');
         	
 //        	dialogItself.hide();
         	
