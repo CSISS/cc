@@ -39,24 +39,26 @@ edu.gmu.csiss.covali.menu = {
 				'edu.gmu.csiss.covali.map.jsframe.StyleManager','edu.gmu.csiss.covali.local.jsframe.ParsingFile',
 				'edu.gmu.csiss.covali.local.jsframe.PublicFolder','edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles',
 				'edu.gmu.csiss.covali.multifilebrowser.jsframe.LocalFiles','edu.gmu.csiss.covali.share.jsframe.Share',
-				'edu.gmu.csiss.covali.nco.jsframe.NCOProcessing']
+				'edu.gmu.csiss.covali.nco.jsframe.NCOProcessing', 'edu.gmu.csiss.covali.nco.jsframe.RegridData']
 			
 			jsframeNames.forEach(function(jsframeName){
 				edu.gmu.csiss.covali.menu.closeDialog(jsframeName);
 			})
 		},
 		
-		createDialog: function(dialogName, dialogTitle, content){
+		createDialog: function(dialogName, dialogTitle, content, height = null){
 			
 			//edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
-			var width = 700;// height = 500;
-			
-			$content = $('<div>' + content + '</div>').css("display","inline-block");
-			$('body').append($content);
-			
-			var height = $content.height();
-			$content.remove();
+			var width = 700;
+
+			if(height == null) {
+                $content = $('<div>' + content + '</div>').css("display", "inline-block");
+                $('body').append($content);
+
+                var height = $content.height();
+                $content.remove();
+            }
 			
 			var frame = edu.gmu.csiss.covali.menu.jsframe.create({
 		    		title: dialogTitle,

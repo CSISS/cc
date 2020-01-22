@@ -84,6 +84,10 @@ edu.gmu.csiss.covali.filebrowser = {
 
     },
 
+    close: function() {
+        edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles');
+    },
+
     init: function() {
     	
     	var dialogName = 'edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles';
@@ -95,33 +99,9 @@ edu.gmu.csiss.covali.filebrowser = {
 					 "<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Cancel</span></p>"+
 					 "</div>";
 		
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600);
 		edu.gmu.csiss.covali.filebrowser.loadPath('');
-		
-//        BootstrapDialog.show({
-//            title: "Local Files",
-//
-//            cssClass: 'dialog-vertical-center dialog-local-file-list',
-//
-//            message: function(dialog) {
-//                return($('<div id="filebrowser"></div>'));
-//
-//            },
-//
-//            onshown: function() {
-//                edu.gmu.csiss.covali.filebrowser.loadPath('');
-//
-//            },
-//
-//            buttons: [
-//                {
-//                    label: 'Cancel',
-//                    cssClass: 'btn-default dialog-close-button',
-//                    action: function(dialogItself){
-//                        dialogItself.close();
-//                    }
-//                }]
-//        });
+
 
 
     }
