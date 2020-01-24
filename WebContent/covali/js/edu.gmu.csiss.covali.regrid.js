@@ -10,6 +10,8 @@ edu.gmu.csiss.covali.regrid = {
 
         var outpath = dir + '/' + outfile;
 
+        $('#do-regrid-button .regrid-icon').toggleClass('fa-border-none fa-spinner fa-spin');
+
         $.ajax({
             type: "POST",
 
@@ -23,13 +25,13 @@ edu.gmu.csiss.covali.regrid = {
 
         }).success(function(data) {
             alert(data);
-            BootstrapDialog.closeAll();
+            edu.gmu.csiss.covali.menu.closeAllDialogs();
             edu.gmu.csiss.covali.local.showFileLoadingDialog(outpath);
             edu.gmu.csiss.covali.local.loadWMSFile(outpath);
 
         }).error(function(data) {
+            edu.gmu.csiss.covali.menu.closeAllDialogs();
             alert(data);
-            BootstrapDialog.closeAll();
         });
     },
 
@@ -55,7 +57,9 @@ edu.gmu.csiss.covali.regrid = {
     },
 
     showDialog: function () {
-        var dialogName = 'edu.gmu.csiss.covali.filebrowser.jsframe.RegridData';
+        BootstrapDialog.closeAll();
+
+        var dialogName = 'edu.gmu.csiss.covali.regrid.jsframe.RegridData';
         var dialogTitle = 'Regrid Data';
 
         var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
@@ -115,8 +119,10 @@ edu.gmu.csiss.covali.regrid = {
         content += '</div>';
 
         content += '<div class="modal-footer">';
-        content += '<p style="margin:0;"><span class="btn btn-primary" onclick="edu.gmu.csiss.covali.regrid.doRegrid();">Regrid</span></p>';
-        content += '</div>';
+        content += '<p style="margin:0;">';
+        content += '<span id="do-regrid-button" class="btn btn-primary" onclick="edu.gmu.csiss.covali.regrid.doRegrid();">';
+        content += '<span style="margin-right: 5px" class="regrid-icon fa fa-border-none"></span>Regrid</span>';
+        content += '</p></div>';
 
 
         edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 380);

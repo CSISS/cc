@@ -24,23 +24,12 @@ edu.gmu.csiss.covali.local = {
 		
 		var dialogName = 'edu.gmu.csiss.covali.local.jsframe.ParsingFile';
 		var dialogTitle = 'File Loading';
-		var content = '<b>Parsing file ' + file_path + '...</b>';
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
-		
-//        BootstrapDialog.show({
-//
-//            message: function(dialog){
-//
-//                return '<b>Parsing file ' + file_path + '...</b>';
-//
-//            },
-//
-//            title: "File Loading",
-//
-//            cssClass: 'dialog-vertical-center',
-//
-//        });
 
+		var content = '<div class="modal-body" style="font-size: 12px;">';
+		content += '<b>Parsing file ' + file_path + '...</b>';
+		content += '</div>';
+
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 76);
 
     },
 

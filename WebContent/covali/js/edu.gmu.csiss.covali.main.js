@@ -26,13 +26,6 @@ edu.gmu.csiss.covali.main = {
         edu.gmu.csiss.covali.toolbar.init();
 
         edu.gmu.csiss.covali.about.init();
-
-        // edu.gmu.csiss.covali.regrid.showDialog();
-
-        // $('#toolbar-difference').click();
-        // window.setTimeout(function () {
-        //     $("#nco-operation").val("3").change();
-        // }, 500);
     },
 	
 	
