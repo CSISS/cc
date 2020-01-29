@@ -49,6 +49,10 @@ We published a Docker image in DockerHub for docker users. The pull command is:
 
 `docker pull csiss/cyberconnector`
 
+The run command is:
+
+`docker run -p 8080:8080 -v DATAPATH:/covaliFiles csiss/cyberconnector`
+
 # Modules
 
 COVALI - a sub-system for comparison and validation of atmospheric and other Earth science models (funded by [EarthCube CyberWay](http://cube.csiss.gmu.edu/CyberWay/web/index))
