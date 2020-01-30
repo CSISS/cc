@@ -373,57 +373,8 @@ edu.gmu.csiss.covali.statistics = {
 		edu.gmu.csiss.covali.menu.closeAllDialogs();
 		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.Statistics';
 		var dialogTitle = 'Statistics';
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 260);
 
-//		BootstrapDialog.show({
-//			
-//			title: "Statistics",
-//			
-//			message: content,
-//			
-//			buttons: [{
-//				
-//				label: "Start Draw",
-//				
-//				action: function(thedialog){
-//					
-//					
-//					edu.gmu.csiss.covali.statistics.removeAllListeners();
-//										
-//					var type = $("#typeselect").val();
-//					//var bothMapsPopupChecked = $("#bothMapsPopupChk");
-//					bothMapsPopupChecked = document.getElementById("bothMapsPopupChk").checked;
-//					
-//					if(type=="point"){
-//						
-//						//add a click pop-up function
-//						
-//						edu.gmu.csiss.covali.statistics.listenPoint("left");
-//						edu.gmu.csiss.covali.statistics.listenPoint("right");
-//						
-//					}else if(type=="linestring"){
-//						
-//						//add a line drawing function
-//						
-//						edu.gmu.csiss.covali.statistics.listenLineString("left");
-//						edu.gmu.csiss.covali.statistics.listenLineString("right");
-//						
-//					}
-//					
-//				    thedialog.close();
-//					
-//				}
-//				
-//			},{
-//				
-//				label: "Close",
-//				
-//				action: function(thedialog){
-//					
-//					thedialog.close();
-//				}
-//			}]
-//		});
 	},
 	
 	singleClickListener: function(evt) {
