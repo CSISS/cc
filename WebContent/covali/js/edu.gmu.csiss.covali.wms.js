@@ -702,7 +702,7 @@ edu.gmu.csiss.covali.wms = {
 							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
 							"</div>";
 
-			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600);
 		},
 		
 		
