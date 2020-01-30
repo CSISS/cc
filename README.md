@@ -131,6 +131,8 @@ Second, a new environment with correct dependencies must be configured:
 conda create -n esmpy8 -y
 conda install -y -n esmpy8  -c conda-forge "esmf!=*nompi" esmpy xarray=0.14.1 scipy dask netCDF4 xesmf libnetcdf=4.6.2 netcdf4=1.5.1
 ``` 
+
+![regridding](docs/regridding-demo.gif)
 #### Map rotation
 
 Use `Alt+Shift+Drag` to rotate the map.
