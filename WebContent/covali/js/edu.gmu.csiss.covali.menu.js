@@ -46,11 +46,13 @@ edu.gmu.csiss.covali.menu = {
 			})
 		},
 		
-		createDialog: function(dialogName, dialogTitle, content, height = null){
+		createDialog: function(dialogName, dialogTitle, content, height = null, width = null, x = null, y = null){
 			
 			//edu.gmu.csiss.covali.menu.closeAllDialogs();
-		
-			var width = 700;
+
+            if(width == null) {
+                width = 700;
+            }
 
 			if(height == null) {
                 $content = $('<div>' + content + '</div>').css("display", "inline-block");
@@ -97,8 +99,16 @@ edu.gmu.csiss.covali.menu = {
 			frame.setResizable(true);
 	    	
 	    	frame.show();
+
+	    	if(x == null) {
+                x = window.innerWidth/2;
+            }
+
+            if(y == null) {
+                y = window.innerHeight*0.05;
+            }
 	    	
-	    	frame.setPosition(window.innerWidth/2, window.innerHeight*0.05, 'CENTER_TOP');
+	    	frame.setPosition(x, y, 'CENTER_TOP');
 
 			frame.control.on('hid', (frame, info) => {
 				edu.gmu.csiss.covali.menu.closeDialog(dialogName);
