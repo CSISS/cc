@@ -8,73 +8,179 @@
  */
 
 edu.gmu.csiss.covali.statistics = {
-	
+
 	draw: null,
-	
-	popup: null, 
-	
-	side: null,
-	
-	bothMapsPopupChecked: false,
-	
+
 	listenPoint: function(side){
-		
-			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-			var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-			
-			
-			if(!$("#popup-"+side).length)
-				$('body').append('<div id="popup-'+side+'" class="ol-popup">'+
-					'      <a href="#" id="popup-closer-'+side+'" class="ol-popup-closer"></a>'+
-					'      <div id="popup-content-'+side+'"></div>'+
-					'    </div>'); 
-			
-			var container = document.getElementById('popup-'+side);
-			var closer = document.getElementById('popup-closer-'+side);
-			
-			var popup = new ol.Overlay({
-		        element: container,
-		        id: "point-popup-" +side,
-		        autoPan: true,
-		        autoPanAnimation: {
-		          duration: 250
-		        }
-		    });
-			
-			closer.onclick = function() {
-				popup.setPosition(undefined);
-		        closer.blur();
-		        return false;
-		    };
-			
-		    map.addOverlay(popup);
-		    
-		    //add single click
-		    
-		    if(bothMapsPopupChecked == true){
-				map.on('singleclick', function(evt) {
-			    		edu.gmu.csiss.covali.statistics.showPopupsOnBothMapsSameXY(evt.coordinate);
-			    });
-		    }
-		    else{
-		    	map.on('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
-		    }
-		    
-		    //double click to close popups on both maps
-		    
-		    map.on('dblclick', function(){
-		    	edu.gmu.csiss.covali.statistics.removePopupsFromBothMaps();
-		    });	    
+		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+
+		if(!$("#popup-"+side).length)
+			$('body').append('<div id="popup-'+side+'" class="ol-popup">'+
+				'      <a href="#" id="popup-closer-'+side+'" class="ol-popup-closer"></a>'+
+				'      <div id="popup-content-'+side+'"></div>'+
+				'    </div>');
+
+		var container = document.getElementById('popup-'+side);
+		var closer = document.getElementById('popup-closer-'+side);
+
+		var popup = new ol.Overlay({
+			element: container,
+			id: "point-popup-" +side,
+			autoPan: true,
+			autoPanAnimation: {
+			  duration: 250
+			}
+		});
+
+		closer.onclick = function() {
+			popup.setPosition(undefined);
+			closer.blur();
+			return false;
+		};
+
+		map.addOverlay(popup);
+
+		//add single click
+		var bothMaps = $("#bothMapsPopupChk").prop('checked');
+		map.on('singleclick', function(evt) {
+			if(bothMaps) {
+				edu.gmu.csiss.covali.statistics.showFeatureInfo(evt.coordinate, 'left');
+				edu.gmu.csiss.covali.statistics.showFeatureInfo(evt.coordinate, 'right');
+			} else {
+				edu.gmu.csiss.covali.statistics.showFeatureInfo(evt.coordinate, side);
+			}
+		});
+
+
+		//double click to close popups on both maps
+		map.on('dblclick', function(){
+			edu.gmu.csiss.covali.statistics.removePopupsFromBothMaps();
+		});
 	},
-	
-		
-	showPopupFunction: function(coordinate, map, side) {
+
+	listenTimeseries: function(side){
+        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+        var bothMaps = $("#bothMapsPopupChk").prop('checked');
+        map.on('singleclick', function(evt) {
+            if(bothMaps) {
+                edu.gmu.csiss.covali.statistics.showTimeseries(evt.coordinate, 'left');
+                edu.gmu.csiss.covali.statistics.showTimeseries(evt.coordinate, 'right');
+            } else {
+                edu.gmu.csiss.covali.statistics.showTimeseries(evt.coordinate, side);
+            }
+        });
+
+
+        //double click to close popups on both maps
+        map.on('dblclick', function(){
+            edu.gmu.csiss.covali.statistics.removePopupsFromBothMaps();
+        });
+	},
+
+    listenVerticalProfile: function(side){
+        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+        var bothMaps = $("#bothMapsPopupChk").prop('checked');
+        map.on('singleclick', function(evt) {
+            if(bothMaps) {
+                edu.gmu.csiss.covali.statistics.showVerticalProfile(evt.coordinate, 'left');
+                edu.gmu.csiss.covali.statistics.showVerticalProfile(evt.coordinate, 'right');
+            } else {
+                edu.gmu.csiss.covali.statistics.showVerticalProfile(evt.coordinate, side);
+            }
+        });
+
+
+        //double click to close popups on both maps
+        map.on('dblclick', function(){
+            edu.gmu.csiss.covali.statistics.removePopupsFromBothMaps();
+        });
+    },
+
+    listenLineString: function(side){
+
+        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+
+        var geometryFunction, maxPoints;
+
+        var source = new ol.source.Vector({wrapX: false});
+
+        edu.gmu.csiss.covali.statistics.draw = new ol.interaction.Draw({
+            source: source,
+            type: /** @type {ol.geom.GeometryType} */ ("LineString"),
+            geometryFunction: geometryFunction,
+            maxPoints: maxPoints
+        });
+        var bothMaps = $("#bothMapsPopupChk").prop('checked');
+        edu.gmu.csiss.covali.statistics.draw.on('drawend', function(evt) {
+
+            try{
+
+                var line_geom = evt.feature.getGeometry().transform(map.getView().getProjection().getCode(),'EPSG:4326')
+
+                linestring_coords = line_geom.getCoordinates();
+
+                //use the coordinates to send a wms GetTransect request to the ncWMS
+                var coords = "";
+
+
+                for(var i=0;i<linestring_coords.length;i++){
+                    if(i!=0){
+                        coords += ",";
+                    }
+                    var coordinates = linestring_coords[i];
+//	        		var coordinates = ol.proj.transform([linestring_coords[i][0], linestring_coords[i][1]], source.getProjection(), 'EPSG:4326');
+                    coords += coordinates[0] + " " + coordinates[1];
+                }
+                if(bothMaps) {
+                    edu.gmu.csiss.covali.statistics.getLineStatistics('left', coords);
+                    edu.gmu.csiss.covali.statistics.getLineStatistics('right', coords);
+                }
+                else {
+                    edu.gmu.csiss.covali.statistics.getLineStatistics(side, coords);
+                }
+
+            }catch(e){
+
+                console.error(e);
+
+                alert("fail to generate the report " + e);
+
+            }
+
+        }, this);
+
+        map.addInteraction(edu.gmu.csiss.covali.statistics.draw);
+
+        map.on('dblclick', function(evt){
+            var map = evt.map;
+            map.getInteractions().forEach(function (interaction) {
+                if(interaction instanceof ol.interaction.Draw) {
+                    map.removeInteraction(interaction);
+                    //remove the draw from the other map as well
+                    var theotherside = edu.gmu.csiss.covali.map.getOtherSide(side);
+                    var othermap = edu.gmu.csiss.covali.map.getMapBySide(theotherside);
+                    othermap.getInteractions().forEach(function (interaction) {
+                            if(interaction instanceof ol.interaction.Draw) {
+                                othermap.removeInteraction(interaction);
+                            }
+                        }
+                    );
+                }
+            });
+        });
+
+
+    },
+
+
+
+    showFeatureInfo: function(coordinate, side) {
 	        
 		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 
         
         if(layer && layer.getVisible()==true){
-    		var hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));
             var popup = map.getOverlayById("point-popup-" + side);
             popup.setPosition(coordinate);
         	var viewResolution = /** @type {number} */ (map.getView().getResolution());
@@ -83,33 +189,34 @@ edu.gmu.csiss.covali.statistics = {
             var epsg = map.getView().getProjection().getCode();
             
             var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, epsg, {'INFO_FORMAT': 'text/xml'});
-            var params = {
-    				SERVICE: 'WMS',
-    				VERSION: '1.3.0',
-    				REQUEST: 'GetMetadata',
-    				outputFormat: 'application/json',
-    				ITEM: 'layerDetails',
-    				LayerName: wmssource.params_.LAYERS,
-    				TIME: wmssource.params_.TIME
-    			};
-            //console.log(params);
-    		var esc = encodeURIComponent;
-    		var layerMetaDataUrl = 'http://localhost:8080/ncWMS2/wms?';
-    		layerMetaDataUrl += Object.keys(params)
-    		    .map(k => esc(k) + '=' + esc(params[k]))
-    		    .join('&');
     		var content = document.getElementById('popup-content-' + side);
-    		var layerName = params.LayerName.split("/")[0];
-    		var featureId = params.LayerName.split("/")[1];
-            if (url && content) {
 
+    		if (url && content) {
             	fetch(url)
     	        	.then(function(resp){
     	        		return resp.text();
     	        	})
     	        	.then(function(data){
-    	        		parser = new DOMParser();
-    	        		xmlDoc = parser.parseFromString(data,"text/xml");
+                        var params = {
+                            SERVICE: 'WMS',
+                            VERSION: '1.3.0',
+                            REQUEST: 'GetMetadata',
+                            outputFormat: 'application/json',
+                            ITEM: 'layerDetails',
+                            LayerName: wmssource.params_.LAYERS,
+                            TIME: wmssource.params_.TIME
+                        };
+                        //console.log(params);
+                        var esc = encodeURIComponent;
+                        var layerMetaDataUrl = 'http://localhost:8080/ncWMS2/wms?';
+                        layerMetaDataUrl += Object.keys(params)
+                            .map(k => esc(k) + '=' + esc(params[k]))
+                            .join('&');
+                        var layerName = params.LayerName.split("/")[0];
+                        var featureId = params.LayerName.split("/")[1];
+
+    	        		var parser = new DOMParser();
+    	        		var xmlDoc = parser.parseFromString(data,"text/xml");
     	        		
     	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
 
@@ -119,7 +226,7 @@ edu.gmu.csiss.covali.statistics = {
 	    	        		content.innerHTML = 
 	    	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
 	    	        		'<b>Layer:</b> '+layerName+
-	    	        		'<br><b>Feature id</b>: '+featureId+
+	    	        		'<br><b>Feature Id</b>: '+featureId+
 	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
 	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
 	    	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
@@ -143,7 +250,7 @@ edu.gmu.csiss.covali.statistics = {
     	        		else{	        		
     	        			content.innerHTML = '<pre><div style="font-family: Arial, Helvetica, sans-serif">'+
 	    	        			'<b>Layer:</b> '+layerName+
-	    	        			'<br><b>Feature id</b>: '+featureId+
+	    	        			'<br><b>Feature Id</b>: '+featureId+
     	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
     	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
     	    	        		'</div></pre>';
@@ -151,21 +258,97 @@ edu.gmu.csiss.covali.statistics = {
     	        	})        	
             }
         }
-        
 
-		//console.log(layerMetaDataUrl);
-        //if (layerMetaDataUrl) {
-		
     },
-    
-    showPopupsOnBothMapsSameXY: function(coordinates){
-		var sides = ["left", "right"];
-		for (i=0; i<sides.length; i++){
-			var map = edu.gmu.csiss.covali.map.getMapBySide(sides[i]);
-			edu.gmu.csiss.covali.statistics.showPopupFunction(coordinates, map, sides[i]);			
+
+    showTimeseries: function(coordinate, side) {
+        var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+
+        if(layer && layer.getVisible() != true){
+        	return;
+        }
+
+        var layerInfo =  edu.gmu.csiss.covali.wms.getLayerByName(layer.values_.name);
+        var startTime, endTime;
+
+        for(var j=0; j<layerInfo.Dimension.length; j++) {
+            if (layerInfo.Dimension[j].name == "time" || layerInfo.Dimension[j].name == "Time") {
+                var timevalues = layerInfo.Dimension[j].values;
+
+                if(timevalues.split(",").length>1){
+                    var timesteps  = timevalues.split(",");
+                    startTime = timesteps[0];
+                    endTime = timesteps[timesteps.length - 1];
+
+                }else if(timevalues.indexOf("/")!=-1) {
+
+                    var timesplit = timevalues.split("/");
+
+                    if (timesplit.length != 3) {
+                        console.error("The time dimension definition is not supported yet.");
+                        return;
+                    }
+
+                    startTime = timesplit[0];
+                    endTime = timesplit[1];
+                }
+            }
+        }
+
+        var wmssource = layer.getSource();
+
+		var viewResolution = (map.getView().getResolution());
+		var epsg = map.getView().getProjection().getCode();
+		var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, epsg,
+			{'INFO_FORMAT': 'image/png', 'REQUEST': 'GetTimeseries', 'TIME': startTime + '/' + endTime});
+
+        var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.TimeseriesResult';
+        var dialogTitle = 'Timeseries: ' + layer.values_.name + ' from '+startTime + ' to ' + endTime;
+        var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+url+'" /></div>';
+
+        edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
+    },
+
+	showVerticalProfile: function(coordinate, side) {
+        var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+
+
+        if(layer && layer.getVisible() != true){
+            return;
+        }
+
+        var wmssource = layer.getSource();
+        var time = wmssource.params_.TIME;
+        var elevStart, elevEnd;
+
+        var layerInfo =  edu.gmu.csiss.covali.wms.getLayerByName(layer.values_.name);
+        for(var j=0; j<layerInfo.Dimension.length; j++) {
+            if (layerInfo.Dimension[j].name == "elevation" || layerInfo.Dimension[j].name == "Elevation") {
+                var evalues = layerInfo.Dimension[j].values.split(/,\s+/);
+                elevStart = evalues[0];
+                elevEnd = evalues[evalues.length - 1];
+            }
+        }
+
+        if(elevStart == null) {
+        	alert('No elevation information in the layer ' + layer.values_.name);
+        	return;
 		}
-    },
-    
+
+        var viewResolution = (map.getView().getResolution());
+        var epsg = map.getView().getProjection().getCode();
+        var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, epsg,
+            {'INFO_FORMAT': 'image/png', 'REQUEST': 'GetVerticalProfile', 'TIME': time, 'ELEVATION': elevStart + '/' + elevEnd});
+
+        var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.VerticalProfileResult';
+        var dialogTitle = 'Vertical Profile: ' + layer.values_.name;
+        var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+url+'" /></div>';
+
+        edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
+	},
+
 	clearAllPopupsOnAMap: function(side){
 		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 		if($("#popup-" + side).length){
@@ -188,10 +371,7 @@ edu.gmu.csiss.covali.statistics = {
     		}else{
     			$("#popup-" + side).show();
     		}
-    		
-    		//$(element).popover('destroy');
-    		//$("#popup-" + side).remove();
-    		//map.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
+
     	}
 	},
 	
@@ -204,109 +384,15 @@ edu.gmu.csiss.covali.statistics = {
 
 	},
 
-	listenLineString: function(side){
-		
-		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-		
-		var geometryFunction, maxPoints;
-		
-		var source = new ol.source.Vector({wrapX: false});
-		
-        edu.gmu.csiss.covali.statistics.draw = new ol.interaction.Draw({
-            source: source,
-            type: /** @type {ol.geom.GeometryType} */ ("LineString"),
-            geometryFunction: geometryFunction,
-            maxPoints: maxPoints
-        });
-        
-        edu.gmu.csiss.covali.statistics.draw.on('drawend', function(evt) {
-        	
-        	try{
-				
-        		var line_geom = evt.feature.getGeometry().transform(map.getView().getProjection().getCode(),'EPSG:4326')
 
-	        	linestring_coords = line_geom.getCoordinates();
-	        	
-	        	//use the coordinates to send a wms GetTransect request to the ncWMS
-	        	
-	        	var coords = "";
-	        	
-//	        	var newProjCode = 'EPSG:' + code;
-//	            proj4.defs(newProjCode, proj4def);
-//	            var newProj = ol.proj.get(newProjCode);
-//	            var fromLonLat = ol.proj.getTransform('EPSG:4326', newProj);
-//	            var extent = ol.extent.applyTransform(
-//	                [bbox[1], bbox[2], bbox[3], bbox[0]], fromLonLat);
-//	            newProj.setExtent(extent);
-//	            var newView = new ol.View({
-//	              projection: newProj
-//	            });
-	        	
-	        	for(var i=0;i<linestring_coords.length;i++){
-	        		if(i!=0){
-	        			coords += ",";
-	        		} 
-	        		var coordinates = linestring_coords[i];
-//	        		var coordinates = ol.proj.transform([linestring_coords[i][0], linestring_coords[i][1]], source.getProjection(), 'EPSG:4326');
-	        		coords += coordinates[0] + " " + coordinates[1];
-	        	}
-	        	
-	        	//console.log(side+":"+coords);
-	        	
-	        	//bothMapsPopupChecked = document.getElementById("bothMapsPopupChk").checked;
-	        	
-	        	//if(bothMapsPopupChecked == true){
-	        	//	edu.gmu.csiss.covali.statistics.getLineStatistics("left", coords);
-	        	//	edu.gmu.csiss.covali.statistics.getLineStatistics("right", coords);
-	        	//}
-	        	//else{
-	        		edu.gmu.csiss.covali.statistics.getLineStatistics(side, coords);
-	        	//}
-        		
-        		
-        	}catch(e){
-        		
-        		console.error(e);
-        		
-        		alert("fail to generate the report " + e);
-        		
-        	}
-        	
-        }, this);
-        
-        map.addInteraction(edu.gmu.csiss.covali.statistics.draw);
-        
-        map.on('dblclick', function(evt){
-        	var map = evt.map;
-        	map.getInteractions().forEach(function (interaction) {
-        		  if(interaction instanceof ol.interaction.Draw) {
-        			  map.removeInteraction(interaction);
-        			  //remove the draw from the other map as well
-        			  var theotherside = edu.gmu.csiss.covali.map.getOtherSide(side);
-        			  var othermap = edu.gmu.csiss.covali.map.getMapBySide(theotherside);
-        			  othermap.getInteractions().forEach(function (interaction) {
-	                		  if(interaction instanceof ol.interaction.Draw) {
-	                			  othermap.removeInteraction(interaction);
-	                		  }
-                		  }
-        			  );
-        		  }
-    		});
-        });
-        
-		
-	},
-	
 	removeAllListeners: function(){
 		
 		var leftmap = edu.gmu.csiss.covali.map.getMapBySide("left");
 		
-		//leftmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
-		
+
 		var rightmap = edu.gmu.csiss.covali.map.getMapBySide("right");
 		
-		//rightmap.un('singleclick', edu.gmu.csiss.covali.statistics.singleClickListener);
-		
+
 		rightmap.removeEventListener('singleclick');
 		leftmap.removeEventListener('singleclick');
 		
@@ -318,27 +404,23 @@ edu.gmu.csiss.covali.statistics = {
 		edu.gmu.csiss.covali.statistics.removeAllListeners();
 							
 		var type = $("#typeselect").val();
-		//var bothMapsPopupChecked = $("#bothMapsPopupChk");
-		bothMapsPopupChecked = document.getElementById("bothMapsPopupChk").checked;
-		
+
 		if(type=="point"){
-			
-			//add a click pop-up function
-			
 			edu.gmu.csiss.covali.statistics.listenPoint("left");
 			edu.gmu.csiss.covali.statistics.listenPoint("right");
-			
-		}else if(type=="linestring"){
-			
-			//add a line drawing function
-			
+        } else if(type=="pointtimeseries"){
+            edu.gmu.csiss.covali.statistics.listenTimeseries("left");
+            edu.gmu.csiss.covali.statistics.listenTimeseries("right");
+    	} else if(type=="pointverticalprofile"){
+            edu.gmu.csiss.covali.statistics.listenVerticalProfile("left");
+            edu.gmu.csiss.covali.statistics.listenVerticalProfile("right");
+		} else if(type=="linestring"){
+
 			edu.gmu.csiss.covali.statistics.listenLineString("left");
 			edu.gmu.csiss.covali.statistics.listenLineString("right");
 			
 		}
 		edu.gmu.csiss.covali.menu.closeAllDialogs();
-	    //thedialog.close();
-		
 	},
 	
 	showDialog: function(){
@@ -355,9 +437,11 @@ edu.gmu.csiss.covali.statistics = {
 			"<div class=\"form-group\">"+
 			'<div><b>Activate pop-up on both maps:<b> <input type="checkbox" id="bothMapsPopupChk" name="bothMapsPopupChk"></div><br>'+
 			"<label for=\"typeselect\">Select Statistics Type</label><select id=\"typeselect\">"+
-			"<option value=\"point\">point</option>"+
-			"<option value=\"linestring\">linestring</option><br>"+
-			
+			"<option value=\"point\">point value</option>"+
+            "<option value=\"pointtimeseries\">point timeseries</option>"+
+            "<option value=\"pointverticalprofile\">point vertical profile</option>"+
+			"<option value=\"linestring\">linestring value</option><br>"+
+
 			"</select></div></div><div class=\"row\" style=\"padding:10px;margin:0;\">Note: Double click on the map to stop.</div>";
 		
 		//only support the build-in ncWMS
@@ -367,7 +451,7 @@ edu.gmu.csiss.covali.statistics = {
 			content+
 			"</div></div>"+
 			"<div class=\"modal-footer\">" +
-			"<p style=\"margin:0;\"><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.statistics.startDrawing();\">Start Drawing</span></p>"+
+			"<p style=\"margin:0;\"><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.statistics.startDrawing();\">Start</span></p>"+
 			"</div>";			
 		
 		edu.gmu.csiss.covali.menu.closeAllDialogs();
@@ -377,253 +461,47 @@ edu.gmu.csiss.covali.statistics = {
 
 	},
 	
-	singleClickListener: function(evt) {
-		
-		//console.log(evt);
-		
-		var coordinate = evt.coordinate;
-        
-		var hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));
-        
-        var map = evt.map;
-        //http://localhost:8080/ncWMS2/wms?LAYERS=22kuuxf9%2FBand1&QUERY_LAYERS=22kuuxf9%2FBand1&STYLES=default-scalar%2Fdefault&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&BBOX=-180%2C-129.000522%2C180%2C158.999478&FEATURE_COUNT=5&HEIGHT=600&WIDTH=750&FORMAT=image%2Fpng&INFO_FORMAT=text%2Fxml&SRS=EPSG%3A4326&X=179&Y=251
-        
-//        var map = edu.gmu.csiss.covali.map.getMapBySide(edu.gmu.csiss.covali.statistics.side);
-//        
-//        //send a GetFeatureInfo request
-        
-        var side = edu.gmu.csiss.covali.map.getSideByMapContainerId(map.getTarget());
-        
-        var popup = map.getOverlayById("point-popup-" + side);
-        //var dialogModal = $("#showDialog");
-        popup.setPosition(coordinate);
-        
-//        if(side=="left")
-//        	edu.gmu.csiss.covali.statistics.popup.setPosition(coordinate);
-//        else
-//        	edu.gmu.csiss.covali.statistics.popup.setPosition(coordinate);
-//        
-        var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-//        
-//        var bbox = "-180%2C-129.000522%2C180%2C158.999478";
-//        
-//        var size = map.getSize();
-//        
-//        var pixel = map.getPixelFromCoordinate(coordinate);
-//        
-//        var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?LAYERS="+
-//        	layer.get('name') +
-//        	"&QUERY_LAYERS="+layer.get('name')+
-//        	"&STYLES=default-scalar%2Fdefault&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&BBOX="+
-//        	clickbbox+"&FEATURE_COUNT=5&HEIGHT=600&WIDTH=750&FORMAT=image%2Fpng&INFO_FORMAT=text%2Fxml&SRS=EPSG%3A4326&X=179&Y=251"
-        
 
-        var viewResolution = /** @type {number} */ (map.getView().getResolution());
-        
-		var wmssource = layer.getSource();
-		
-		var currentprojection = map.getView().getProjection();
-        
-        var url = wmssource.getGetFeatureInfoUrl(evt.coordinate, viewResolution, currentprojection, {'INFO_FORMAT': 'text/xml'});
-        var params = {
-				SERVICE: 'WMS',
-				VERSION: '1.3.0',
-				REQUEST: 'GetMetadata',
-				outputFormat: 'application/json',
-				ITEM: 'layerDetails',
-				LayerName: wmssource.params_.LAYERS,
-				TIME: wmssource.params_.TIME
-			};
-        //console.table(params);
-		var esc = encodeURIComponent;
-		var layerMetaDataUrl = 'http://localhost:8080/ncWMS2/wms?';
-		layerMetaDataUrl += Object.keys(params)
-		    .map(k => esc(k) + '=' + esc(params[k]))
-		    .join('&');
-        if (url) {
-        	
-//        	document.getElementById('info').innerHTML = '<iframe seamless src="' + url + '"></iframe>';
-
-//            var content = document.getElementById('popup-content-' + side);
-//            
-//            content.innerHTML = '<p>You clicked here:</p><code>' + hdms +
-//            
-//                '</code><iframe seamless src="' + url + '"></iframe>';
-        	
-        	
-        	
-        	fetch(url)
-	        	.then(function(resp){
-	        		return resp.text();
-	        	})
-	        	.then(function(data){
-	        		//console.log(data);
-	        		parser = new DOMParser();
-	        		xmlDoc = parser.parseFromString(data,"text/xml");
-        			
-	        		var clickWithinTheLayer = xmlDoc.getElementsByTagName("layer").length;
-	        		var content = document.getElementById('popup-content-' + side);
-	        		var layerName = params.LayerName.split("/")[0];
-	        		var featureId = params.LayerName.split("/")[1];
-	        		
-	        		if(clickWithinTheLayer>0){
-		        		
-		        		content.innerHTML = //'X, Y: <code>' + hdms +'</code><pre>'+
-		        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
-		        		'<b>Layer:</b> '+layerName+
-		        		//'<br>Layer: '+LayerName[1]+
-		        		'<br><b>Feature id</b>: '+featureId+
-		        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
-		        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
-		        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
-		        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
-		        	    $.ajax({
-		        	        url: layerMetaDataUrl,
-		        	        contentType: "application/json",
-		        	        dataType: 'json',
-		        	        success: function(result){
-		        	        	var content1 = document.getElementById('popup-content-' + side);
-		        	        	//console.log(content1);
-		        	        	content1.innerHTML= '<pre>'+content1.innerHTML+'<b>Units:</b> '+result.units+'</pre></div>';
-		        	        },
-		    				error: function(msg){
-		    					//var content1 = document.getElementById('popup-content-' + side);
-		    					//content1.innerHTML= '<pre>'+content1.innerHTML+'</pre></div>';
-		    					console.log("Failed to get layers details: " + msg);	    					
-		    				}
-		        	    })
-	        			
-	        		}
-	        		else{	        		
-	        			content.innerHTML = '<pre><div style="font-family: Arial, Helvetica, sans-serif">'+
-    	        			'<b>Layer:</b> '+layerName+
-    	        			'<br><b>Feature id</b>: '+featureId+
-	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
-	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
-	    	        		'</div></pre>';
-	        		}
-	        		
-	        	})        	
-        }
-        
-    },
-	
 	getLineStatistics: function(side, linestring){
-		
-//    	http://godiva.rdg.ac.uk/ncWMS2/wms?REQUEST=GetTransect&LAYERS=cci/analysed_sst&CRS=CRS:84&LINESTRING=62.04%2018,%2064.56%204.56,%2076.56%201.08&FORMAT=image/png&TIME=2010-12-31T12:00:00.000Z&COLORSCALERANGE=269,306&NUMCOLORBANDS=250&LOGSCALE=false&ABOVEMAXCOLOR=0x000000&BELOWMINCOLOR=0x000000&BGCOLOR=transparent&PALETTE=psu-inferno
-		var textAndPic = "";
-		if(bothMapsPopupChecked == true){
-			var sides = ["left", "right"];
-			//var $textAndPic = $('<div></div>');
-			textAndPic = "<div class=\"modal-body\"><div class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">";
-			sides.forEach(function(side){
-				
-				var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-				//console.log(layer.getSource().getParams());
-				
-				var timestep = layer.getSource().getParams()["TIME"];
-				
-				var elevation = layer.getSource().getParams()["ELEVATION"];
+		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+		//console.log(layer.getSource().getParams());
 
-				// var projection = map.getView().getProjection();
+		var timestep = layer.getSource().getParams()["TIME"];
 
-				var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" + 
-				
-					layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
-				
-					linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
-					
-				if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
-				
-					//linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
-					
-					//if(elevation!=""){
-					req += "&elevation=" + elevation;
-				}
-				
-				textAndPic += '<img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" />';
-				
-			});
-			
-			textAndPic += "</div></div>";
-			
+		var elevation = layer.getSource().getParams()["ELEVATION"];
+
+		// var projection = map.getView().getProjection();
+
+		var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" +
+
+			layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
+
+			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
+
+		if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
+
+
+			req += "&elevation=" + elevation;
 		}
-		
-		else{
-			var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-			//console.log(layer.getSource().getParams());
-			
-			var timestep = layer.getSource().getParams()["TIME"];
-			
-			var elevation = layer.getSource().getParams()["ELEVATION"];
 
-			// var projection = map.getView().getProjection();
 
-			var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" + 
-			
-				layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
-			
-				linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
-				
-			if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
-			
-				//linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep; 
-				
-				//if(elevation!=""){
-				req += "&elevation=" + elevation;
-			}
-			
-			//console.log(req);
-			
-			textAndPic = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" /></div>';
-			
-		}
-		
-		edu.gmu.csiss.covali.menu.closeAllDialogs();
 		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.LineStatisticsResult';
 		var dialogTitle = 'Line Statistics Result';
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, textAndPic);
-		
-//		BootstrapDialog.show({
-//            title: 'Line Statistics Result',
-//            size: BootstrapDialog.SIZE_WIDE,
-//            message: $textAndPic,
-//            onshown: function(){
-////            	$("img").one("load", function() {
-////        		  // do stuff
-////            		$textAndPic.append("<p id=\"notice\">Report is loading..</p>");
-////        		}).each(function() {
-////        		  if(this.complete) {
-////        		      $(this).load(); // For jQuery < 3.0 
-////        		      $("#notice").remove();
-////        		      // $(this).trigger('load'); // For jQuery >= 3.0 
-////        		  }
-////        		});
-//            },
-//            buttons: [
-//            	//since the image can be downloaded by right click, this button is not necessary.
-//            	{
-//                label: 'Download',
-//                action: function(dialogRef){
-//                	console.log("start to download the report");
-//                	dialogRef.enableButtons(false);
-////                    dialogRef.setClosable(false);
-//                	$("body").append("<a id='hiddenLink' href='" + req + "' style='display:none;' download>Download Image</a>");
-//                	$("#hiddenLink")[0].click();
-//                	$("#hiddenLink").remove();
-//                	dialogRef.enableButtons(true);
-////                    dialogRef.setClosable(true);
-//                }
-//            }, 
-//            {
-//                label: 'Close',
-//                action: function(dialogRef){
-//                    dialogRef.close();
-//                }
-//            }]
-//        });
-		
+        var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" /></div>';
+
+		edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
 	},
+
+	showResultsDialog: function(name, title, content, side) {
+        var x;
+        if(side == 'left') {
+            x = 420;
+        } else {
+            x = window.innerWidth/2 + 410;
+        }
+        edu.gmu.csiss.covali.menu.closeAllDialogs();
+        edu.gmu.csiss.covali.menu.createDialog(name, title, content, 650, 740, x);
+	}
 	
 		
 }
