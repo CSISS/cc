@@ -6,6 +6,6 @@ source "$1/etc/profile.d/conda.sh"
 conda activate esmpy8
 
 # regrid.py datafile gridfile outfile
-python "$6" "$2" "$3" "$4"
+python "$5" "$2" "$3" "$4"
 
 
