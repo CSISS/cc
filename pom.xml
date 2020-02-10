@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>CyberConnector</groupId>
     <artifactId>CyberConnector</artifactId>
-    <version>0.7.6</version>
+    <version>0.7.9</version>
     <packaging>war</packaging>
     <name>CyberConnector</name>
     <description>NSF EarthCube Funded Building Block Project</description>
