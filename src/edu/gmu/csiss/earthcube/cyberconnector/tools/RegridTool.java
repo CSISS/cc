@@ -17,8 +17,9 @@ public class RegridTool {
 
         String pwd = t.getClassPath() + "regrid";
         String script = pwd + "/conda-regrid.sh";
+        String pythonScript = pwd + '/regrid.py'
 
-        String[] args = {"/bin/bash", script, SysDir.anaconda_path, datafile, gridfile, outfile};
+        String[] args = {"/bin/bash", script, SysDir.anaconda_path, datafile, gridfile, outfile, pythonScript};
 
         logger.info("regrid parameters: pwd=" + pwd + " script=" + script + " anaconda=" + SysDir.anaconda_path +
                     " datafile=" + datafile + " gridfile=" + gridfile + " outfile=" + outfile);
