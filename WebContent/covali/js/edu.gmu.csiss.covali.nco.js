@@ -275,7 +275,7 @@ edu.gmu.csiss.covali.nco = {
 			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.nco.calculateButtonAction()\'>Calculate</span>" +
 			"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
 			"</div>";
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, dialogContent);
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, dialogContent, 400, 500);
 		
 		//$('#nco-frame').append($content);
         $('#nco-operation').change(function() {

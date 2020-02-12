@@ -566,7 +566,7 @@ edu.gmu.csiss.covali.settings = {
 				"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Ok</span>"+
 				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
 				"</div>";
-			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600, 800);
 			
 //			BootstrapDialog.show({
 //				

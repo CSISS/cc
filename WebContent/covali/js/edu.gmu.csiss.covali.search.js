@@ -51,7 +51,7 @@ edu.gmu.csiss.covali.search = {
 				//edu.gmu.csiss.covali.search.initTable(request);
 			//}
 			
-			this.resultdialog = edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			this.resultdialog = edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600, 800);
 
 //			this.resultdialog = BootstrapDialog.show({
 //				

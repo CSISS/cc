@@ -26,7 +26,7 @@ edu.gmu.csiss.covali.add= {
 		init: function(){
 			
 			//give a dialog for users to choose the way to add data
-
+			
 			edu.gmu.csiss.covali.menu.closeAllDialogs();
 			var dialogName = 'edu.gmu.csiss.covali.add.jsframe.AddingDataMethods';
 			var dialogTitle = 'Adding Data Methods';
@@ -35,7 +35,7 @@ edu.gmu.csiss.covali.add= {
 			edu.gmu.csiss.covali.add.getContent()+
 			"</dl></div>";
 
-			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 500, 600);
 			
 /*			BootstrapDialog.show({
 				

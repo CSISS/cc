@@ -46,7 +46,7 @@ edu.gmu.csiss.covali.menu = {
 			})
 		},
 		
-		createDialog: function(dialogName, dialogTitle, content, height = null, width = null, x = null, y = null){
+		createDialog: function(dialogName, dialogTitle, content, height, width, x, y){
 			
 			//edu.gmu.csiss.covali.menu.closeAllDialogs();
 
@@ -62,6 +62,10 @@ edu.gmu.csiss.covali.menu = {
                 $content.remove();
             }
 			
+//			if(x==null) x = 0;
+//			
+//			if(y==null) y = 0;
+			
 			var frame = edu.gmu.csiss.covali.menu.jsframe.create({
 		    		title: dialogTitle,
 		    		name: dialogName,
@@ -74,7 +78,8 @@ edu.gmu.csiss.covali.menu = {
 		            resizable: true,
 		    
 		            style:{
-		            	overflow: "auto"
+		            	overflow: "auto",
+		            	maxHeight: Number(height) + 300
 //		            	position: "absolute",
 //			            overflowX: "auto",
 //			            overflowY: "scroll",
