@@ -145,6 +145,10 @@ edu.gmu.csiss.covali.wms = {
 			return capability_url;
 			
 		},
+
+	    loadLocal: function() {
+            this.parse(null, this.getBuiltinNCWMS());
+		},
 		
 		/**
 		 * The onclick function of AddWMS panel

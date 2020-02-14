@@ -318,3 +318,8 @@ li.selected {
 .btn-tools {
 	margin: 3px;
 }
+
+
+#add-data-dialog .btn {
+	margin-top: -7px;
+}
