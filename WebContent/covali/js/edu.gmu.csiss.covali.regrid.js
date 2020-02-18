@@ -4,6 +4,10 @@ edu.gmu.csiss.covali.regrid = {
     doRegrid() {
         var datafile = $('#regrid-datafile').val();
         var gridfile = $('#regrid-gridfile').val();
+        var isCustomGrid = $('#is-custom-grid').prop("checked");
+        var customLat = $('#custom-grid-lat').val();
+        var customLon = $('#custom-grid-lon').val();
+        var isPeriodic = $('#is-periodic').prop("checked");
 
         var dir = $('#regrid-outdir').val();
         var outfile = $('#regrid-outfile').val();
@@ -18,7 +22,11 @@ edu.gmu.csiss.covali.regrid = {
             data: {
                 "datafile": datafile,
                 "gridfile": gridfile,
-                "outfile": outpath
+                "outfile": outpath,
+                "isCustomGrid": isCustomGrid,
+                "customLat": customLat,
+                "customLon": customLon,
+                "isPeriodic": isPeriodic
             },
 
             url: '../web/regrid',
@@ -62,7 +70,12 @@ edu.gmu.csiss.covali.regrid = {
             name2 = name2.replace(/\.[^/.]+$/, "");
         }
 
-        var outname = name1 + '-gridto-' + name2 + ".nc4";
+        var outname = name1 + '-gridto-' + name2;
+        if($('#is-periodic').prop("checked")) {
+            outname += '-periodic'
+        }
+
+        outname += ".nc4";
 
         $('#regrid-outfile').val(outname);
     },
@@ -191,7 +204,7 @@ edu.gmu.csiss.covali.regrid = {
             edu.gmu.csiss.covali.filebrowser.init();
         });
 
-        $('#regrid-datafile, #regrid-gridfile, #is-custom-grid, #custom-grid-lat, #custom-grid-lon').change(function(){
+        $('#regrid-datafile, #regrid-gridfile, #is-custom-grid, #custom-grid-lat, #custom-grid-lon, #is-periodic').change(function(){
             edu.gmu.csiss.covali.regrid.inputFilesChanged();
         });
 
