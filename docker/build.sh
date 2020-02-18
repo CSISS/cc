@@ -3,7 +3,7 @@ set -e
 
 # rebuild using maven
 cd ..
-mvn compile 
+mvn package
 
 # copy over warfile
 warfile=`ls -t target/*.war | head -1`
