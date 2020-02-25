@@ -187,7 +187,7 @@ edu.gmu.csiss.covali.iris = {
                 var detailsHtml =
                     '<div class="row"><h5><b>Network:</b> ' + station.networkcode + '</h5></div>' +
                     '<div class="row"><h5><b>Station:</b> ' + station.code + '</h5></div>' +
-                    '<div class="row"><a href="../web/iris/channelsdetails?' + urlquery + '"><b>' + data.length +  ' channels</b></a>';
+                    '<div class="row"><a onclick="edu.gmu.csiss.covali.iris.showStationDialog(\''+ station.networkcode + '\', \'' + station.code + '\')"><b>' + data.length +  ' channels</b></a>';
 
                     target.append($(detailsHtml));
 
