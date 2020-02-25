@@ -4,7 +4,8 @@ USER root
 
 RUN mkdir -p /home/geo2015
 RUN chown -R jboss:root /home/geo2015
-RUN yum install wget epel-release nco -y
+RUN yum install wget epel-release -y
+RUN yum install nco -y
 
 USER jboss
 
