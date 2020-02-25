@@ -155,7 +155,7 @@ edu.gmu.csiss.covali.iris = {
             element: popupElement[0],
             insertFirst: false,
             autoPan: true,
-            offset: [-18, -50],
+            offset: [0, -15],
             autoPanAnimation: {
                 duration: 250
             }
@@ -199,12 +199,24 @@ edu.gmu.csiss.covali.iris = {
     channelQueryString: function(dl) {
         var day = dl.find('.iris-day').val();
 
+        var nextDay = new Date(day);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        var dd = nextDay.getUTCDate();
+        var mm = nextDay.getUTCMonth() + 1;
+        var y = nextDay.getUTCFullYear();
+
+        if(mm < 10) mm = '0' + mm;
+        if(dd < 10) dd = '0' + dd;
+
+        nextDay = y + '-' + mm + '-' + dd;
+
         return 'net=' + dl.data('networkcode') +
         '&sta=' + dl.data('stationcode') +
         '&cha=' + dl.data('code') +
         '&loc=' + dl.data('location') +
         '&start=' + day + 'T00:00:00' +
-        '&end=' + day + 'T23:59:59';
+        '&end=' + nextDay + 'T01:00:00';
     },
 
     showStationDialog: function(network, station) {
