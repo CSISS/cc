@@ -114,29 +114,6 @@ public class CovaliController {
 		return "[" + String.join(", ", channelJson) + "]";
 	}
 
-
-	@RequestMapping(value = "/iris/channelsdetails", method = RequestMethod.GET)
-	public String irischanneldetails(WebRequest request, ModelMap model) {
-		String station = request.getParameter("station");
-		String network = request.getParameter("network");
-
-
-		List<Channel> channels = IRISTool.listChannels(network, station);
-		List<HashMap<String, String>> channelHMaps = new ArrayList<>();
-
-		for (Channel c: channels) {
-			channelHMaps.add(IRISTool.channelToHMap(c));
-		}
-
-		model.addAttribute("station", station);
-		model.addAttribute("network", network);
-		model.addAttribute("channels", channelHMaps);
-
-		return "irischanneldetails";
-	}
-
-
-
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
     public String productsearch(@ModelAttribute("request") SearchRequest searchreq,  ModelMap model){
 

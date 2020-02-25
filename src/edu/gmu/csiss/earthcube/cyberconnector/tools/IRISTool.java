@@ -90,11 +90,22 @@ public class IRISTool {
         criteria.addNetwork(network).addStation(station);
 
 
+
         List<Station> stations = IRISTool.fetchStations(criteria, OutputLevel.CHANNEL);
         List<Channel> results = new ArrayList<>();
         for(Station s : stations) {
             for(Channel c : s.getChannels()) {
-                results.add(c);
+                boolean duplicate = false;
+
+                for(Channel resultsC : results) {
+                    if(resultsC.getCode().equals(c.getCode()) && resultsC.getLocationCode().equals(c.getLocationCode())) {
+                        duplicate = true;
+                    }
+                }
+
+                if(!duplicate) {
+                    results.add(c);
+                }
             }
         }
 
@@ -128,7 +139,11 @@ public class IRISTool {
         hm.put("stationcode", s.getCode());
         hm.put("code", c.getCode());
         hm.put("start", dateFormat.format(c.getStartDate()));
-        hm.put("end", dateFormat.format(c.getEndDate()));
+        if(c.getEndDate() != null) {
+            hm.put("end", dateFormat.format(c.getEndDate()));
+        } else {
+            hm.put("end", dateFormat.format(new Date()));
+        }
 
         String locationCode = c.getLocationCode();
         if(locationCode == "") {
