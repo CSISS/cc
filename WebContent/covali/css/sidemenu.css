@@ -319,6 +319,10 @@ li.selected {
 	margin: 3px;
 }
 
+.btn-add-to-left, .btn-add-to-right {
+	margin-left: 2px;
+}
+
 
 #add-data-dialog .btn {
 	margin-top: -7px;
