@@ -136,8 +136,12 @@ edu.gmu.csiss.covali.animation = {
 			"</div>";
 		
 
+<<<<<<< HEAD
 		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600, 700);
 		
+=======
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 440);
+>>>>>>> jsframe height visual fixes
 		edu.gmu.csiss.covali.animation.animationDialogOnShown(timesteps);
 		
 //		BootstrapDialog.show({
@@ -291,7 +295,9 @@ edu.gmu.csiss.covali.animation = {
 			"<div class=\"modal-footer\">" +
 			"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.animation.layerSelector();\">Select</span></p>"+
 			"</div>";
+
 		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 700, 600);
+
 		edu.gmu.csiss.covali.menu.setFrameDimensionsToInnerHTML(dialogName);
 //		var width = 500; var height = 250;
 //		console.log(height)

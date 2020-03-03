@@ -59,8 +59,11 @@ edu.gmu.csiss.covali.menu = {
                 $content = $('<div>' + content + '</div>').css("display", "inline-block");
                 $('body').append($content);
 
-                var height = $content.height();
+                var height = $content.height() + 40;
                 $content.remove();
+                if(height > 1000) {
+                    height = 1000;
+				}
             }
 			
 //			if(x==null) x = 0;
