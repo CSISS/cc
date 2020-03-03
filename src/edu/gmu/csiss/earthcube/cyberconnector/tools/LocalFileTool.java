@@ -220,10 +220,9 @@ public class LocalFileTool {
 
 		File uploadf = new File(uploadFilePath);
 		
-		if(!uploadf.exists()) uploadf.mkdir();
+		if(!uploadf.exists()) uploadf.mkdirs();
 		
-		if(!(location.startsWith(covaliFilePath) || covaliFilePath.startsWith(location)
-				|| location.startsWith(uploadFilePath) || uploadFilePath.startsWith(location)))
+		if(location.startsWith("/") && !(location.startsWith(covaliFilePath) || location.startsWith(uploadFilePath)))
 		{
 			location = "";
 			logger.debug("the location is not the COVALI and Upload folder path");
@@ -231,6 +230,7 @@ public class LocalFileTool {
 		
 		logger.debug(location);
 
+		StringBuffer filelist = new StringBuffer("[") ;
 		File[] flist;
 		if (location == "") {
 			flist = new File[2];
@@ -246,23 +246,29 @@ public class LocalFileTool {
 
 		Arrays.sort(flist);
 
-		StringBuffer filelist = new StringBuffer("[") ;
-		
-		for(int i=0; i<flist.length; i++) {
-			
-			if(i!=0) {
-				
+		if(location != "") {
+			filelist.append("\"..\"");
+			if(flist.length > 0) {
 				filelist.append(",");
-				
+			}
+		}
+
+		for(int i=0; i<flist.length; i++) {
+
+			if(i!=0) {
+				filelist.append(",");
 			}
 
 			if(flist[i].isFile()) {
-				
-				filelist.append("{\"name\":\"").append(flist[i].getAbsolutePath().replaceAll("\\\\","/")).append("\",\"type\":\"file\"}");
+				filelist.append("{\"name\":\"")
+						.append(flist[i].getAbsolutePath().replaceAll("\\\\","/"))
+						.append("\",\"type\":\"file\"}");
 				
 			} else if(flist[i].isDirectory()) {
 				
-				filelist.append("{\"name\":\"").append(flist[i].getAbsolutePath().replaceAll("\\\\","/")).append("\",\"type\":\"directory\"}");
+				filelist.append("{\"name\":\"")
+						.append(flist[i].getAbsolutePath().replaceAll("\\\\","/"))
+						.append("\",\"type\":\"directory\"}");
 				
 			}
 

@@ -4,13 +4,14 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.springframework.web.context.request.WebRequest;
 
 import java.io.File;
 
 
 public class RegridTool {
 
-    public static String regrid(String datafile, String gridfile, String outfile) {
+    public static String regrid(WebRequest request) {
         Logger logger = Logger.getLogger(RegridTool.class);
 
         BaseTool t = new BaseTool();
@@ -19,10 +20,11 @@ public class RegridTool {
         String script = pwd + "/conda-regrid.sh";
         String pythonScript = pwd + "/regrid.py";
 
-        String[] args = {"/bin/bash", script, SysDir.anaconda_path, datafile, gridfile, outfile, pythonScript};
+        String paramsJSON = BaseTool.toJSONString(request.getParameterMap());
 
-        logger.info("regrid parameters: pwd=" + pwd + " script=" + script + " anaconda=" + SysDir.anaconda_path +
-                    " datafile=" + datafile + " gridfile=" + gridfile + " outfile=" + outfile);
+        String[] args = {"/bin/bash", script, SysDir.anaconda_path, pythonScript, paramsJSON};
+
+        logger.info("regrid parameters: " + paramsJSON);
 
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.directory(new File(pwd));

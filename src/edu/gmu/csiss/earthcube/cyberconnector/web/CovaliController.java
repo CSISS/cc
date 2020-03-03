@@ -63,11 +63,9 @@ public class CovaliController {
 
 	@RequestMapping(value = "/regrid", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	public @ResponseBody String regrid(WebRequest request) {
-		String datafile = request.getParameter("datafile");
-		String gridfile = request.getParameter("gridfile");
-		String outfile = request.getParameter("outfile");
 
-		String result = RegridTool.regrid(datafile, gridfile, outfile);
+
+		String result = RegridTool.regrid(request);
 
 		return result;
 	}
@@ -115,29 +113,6 @@ public class CovaliController {
 
 		return "[" + String.join(", ", channelJson) + "]";
 	}
-
-
-	@RequestMapping(value = "/iris/channelsdetails", method = RequestMethod.GET)
-	public String irischanneldetails(WebRequest request, ModelMap model) {
-		String station = request.getParameter("station");
-		String network = request.getParameter("network");
-
-
-		List<Channel> channels = IRISTool.listChannels(network, station);
-		List<HashMap<String, String>> channelHMaps = new ArrayList<>();
-
-		for (Channel c: channels) {
-			channelHMaps.add(IRISTool.channelToHMap(c));
-		}
-
-		model.addAttribute("station", station);
-		model.addAttribute("network", network);
-		model.addAttribute("channels", channelHMaps);
-
-		return "irischanneldetails";
-	}
-
-
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
     public String productsearch(@ModelAttribute("request") SearchRequest searchreq,  ModelMap model){
@@ -405,7 +380,8 @@ public class CovaliController {
 
 				location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
 
-    		}else if(location.startsWith(SysDir.getCovali_file_path())){
+    		}
+    		else if(location.startsWith("/")){
     			
 //    			location = location;
     			

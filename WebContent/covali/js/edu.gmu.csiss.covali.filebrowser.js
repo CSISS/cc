@@ -10,8 +10,9 @@ edu.gmu.csiss.covali.filebrowser = {
         var fileList = '';
         
         fileList += '<ul class="list-group">';
-        
-        if(path != '') {
+
+        if(files[0] == '..') {
+            files.shift();
             fileList += '<li class="list-group-item file-browser-item file-browser-directory" data-path="' + parentPath + '">';
             fileList += '<span class="glyphicon glyphicon-folder-close text-primary"></span>';
             fileList += '<a href="javascript:void(0)"> ..</a>';

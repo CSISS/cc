@@ -145,6 +145,10 @@ edu.gmu.csiss.covali.wms = {
 			return capability_url;
 			
 		},
+
+	    loadLocal: function() {
+            this.parse(null, this.getBuiltinNCWMS());
+		},
 		
 		/**
 		 * The onclick function of AddWMS panel
@@ -656,10 +660,11 @@ edu.gmu.csiss.covali.wms = {
 				
 				
 				$layerselector = "	<a href=\"javascript:void(0)\" class=\"list-group-item wms-layer\">"+
-					
-					"		<div class=\"checkbox pull-right col-md-1\"> <label> <input type=\"checkbox\" class=\"layer-checkbox\" value=\"\" /> </label> </div> "+
-					
-					"       <div class=\"pull-left form-control-inline col-md-11\">"+
+
+                    "       <div class=\"pull-right col-md-2\"><span class=\"btn btn-add-to-left btn-primary fa fa-caret-left\" style=\"display: inline;\"></span>" +
+					"<span class=\"btn btn-add-to-right btn-primary fa fa-caret-right\" style=\"display: inline;\"></span></div>" +
+
+                    "       <div class=\"pull-left form-control-inline col-md-10\">"+
 					
 					"			<h4 class=\"list-group-item-heading wms-layer-name\" style=\"word-wrap:break-word;\" id=\""+
 					
@@ -669,9 +674,11 @@ edu.gmu.csiss.covali.wms = {
 					
 					$styles + " " + $dims + 
 					
-					"		</div><div class=\"clearfix\"></div></a>";
-				
-				
+					"		</div>" +
+
+                    "<div class=\"clearfix\"></div></a>";
+
+                // edu.gmu.csiss.covali.wms.loadLayer(
 				divcont += $layerselector;
 				
 			}
@@ -695,14 +702,20 @@ edu.gmu.csiss.covali.wms = {
 							this.getLayerHierarchyDiv(layerlist)+
 							"</dl></div>"+
 							"<div class=\"modal-footer\">" +
-							"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.wms.loadLayer(\"left\")\'>Add to Left</span>"+
-							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.wms.loadLayer(\"right\")\'>Add to Right</span>"+
-							"<span class=\"btn btn-primary\" onclick=\'$(\".layer-checkbox\").prop(\"checked\", true);\'>Select All</span>"+
-							"<span class=\"btn btn-primary\" onclick=\'$(\".layer-checkbox\").prop(\"checked\", false); \'>Unselect All</span>"+
 							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
 							"</div>";
 
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600);
+
+			$('.btn-add-to-left').click(function(){
+				var layerName = $(this).parents('.wms-layer').find('.wms-layer-name').attr('id');
+				edu.gmu.csiss.covali.wms.loadLayer('left', layerName);
+			});
+
+            $('.btn-add-to-right').click(function(){
+                var layerName = $(this).parents('.wms-layer').find('.wms-layer-name').attr('id');
+                edu.gmu.csiss.covali.wms.loadLayer('right', layerName);
+            });
 		},
 		
 		
@@ -818,8 +831,20 @@ edu.gmu.csiss.covali.wms = {
 			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename, time, elevation);
 			
 		},
+
+		loadLayer: function(side, layername) {
+			// document.getElementById for slashes in layerName
+			var layerItem = $(document.getElementById(layername)).parents('.wms-layer');
+
+            var stylename = $(layerItem).find(".wms-layer-style").find(":selected").text();
+            var timename = $(layerItem).find(".wms-layer-time").find(":selected").text();
+            var elevationname = $(layerItem).find(".wms-layer-elevation").find(":selected").text();
+
+            edu.gmu.csiss.covali.wms.addLayer(side, layername, stylename, timename, elevationname);
+            edu.gmu.csiss.covali.map.assignZIndicesToLoadedLayers(side);
+        },
 		
-		loadLayer: function(side){
+		loadLayerChecked: function(side){
 			
 			var checknum = 0;
 			

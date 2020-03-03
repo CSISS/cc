@@ -4,6 +4,10 @@ edu.gmu.csiss.covali.regrid = {
     doRegrid() {
         var datafile = $('#regrid-datafile').val();
         var gridfile = $('#regrid-gridfile').val();
+        var isCustomGrid = $('#is-custom-grid').prop("checked");
+        var customLat = $('#custom-grid-lat').val();
+        var customLon = $('#custom-grid-lon').val();
+        var isPeriodic = $('#is-periodic').prop("checked");
 
         var dir = $('#regrid-outdir').val();
         var outfile = $('#regrid-outfile').val();
@@ -18,7 +22,11 @@ edu.gmu.csiss.covali.regrid = {
             data: {
                 "datafile": datafile,
                 "gridfile": gridfile,
-                "outfile": outpath
+                "outfile": outpath,
+                "isCustomGrid": isCustomGrid,
+                "customLat": customLat,
+                "customLon": customLon,
+                "isPeriodic": isPeriodic
             },
 
             url: '../web/regrid',
@@ -36,8 +44,11 @@ edu.gmu.csiss.covali.regrid = {
     },
 
     inputFilesChanged: function() {
+        // get the dirname and first part of the outname from the data file
         var path1 = $('#regrid-datafile').val();
-        var path2 = $('#regrid-gridfile').val();
+        var name1 = path1.substr(path1.lastIndexOf("/") + 1);
+        name1 = name1.replace(/\.[^/.]+$/, "");
+
 
         var dir = $('#regrid-outdir').val();
         if(dir == "") {
@@ -45,13 +56,26 @@ edu.gmu.csiss.covali.regrid = {
             $('#regrid-outdir').val(dir);
         }
 
-        var name1 = path1.substr(path1.lastIndexOf("/") + 1);
-        var name2 = path2.substr(path2.lastIndexOf("/") + 1);
+        // get the second part of name from either the custom grid parameters
+        // or the grid file
+        var name2 = "";
+        if($('#is-custom-grid').prop("checked") == true) {
+            var customLat = $('#custom-grid-lat').val();
+            var customLon = $('#custom-grid-lon').val();
 
-        name1 = name1.replace(/\.[^/.]+$/, "");
-        name2 = name2.replace(/\.[^/.]+$/, "");
+            name2 = customLat + 'x' + customLon;
+        } else {
+            var path2 = $('#regrid-gridfile').val();
+            name2 = path2.substr(path2.lastIndexOf("/") + 1);
+            name2 = name2.replace(/\.[^/.]+$/, "");
+        }
 
-        var outname = name1 + '-gridto-' + name2 + ".nc4";
+        var outname = name1 + '-gridto-' + name2;
+        if($('#is-periodic').prop("checked")) {
+            outname += '-periodic'
+        }
+
+        outname += ".nc4";
 
         $('#regrid-outfile').val(outname);
     },
@@ -100,6 +124,30 @@ edu.gmu.csiss.covali.regrid = {
         content += '	</div>';
         content += '  </dl>';
 
+        // CUSTOM GRID
+        content += '  <dl class="row">';
+        content += '	<label class="col-md-3 control-label" for="is-custom-grid">Custom Global Grid?</label>';
+        content += '	<div class="col-md-9">';
+        content += '		<input type="checkbox" id="is-custom-grid" name="is-custom-grid" value="" required>';
+        content += '	</div>';
+        content += '  </dl>';
+
+        // CUSTOM GRID LAT
+        content += '  <dl class="row">';
+        content += '	<label class="col-md-3 control-label" for="custom-grid-lat">Custom Lat Step</label>';
+        content += '	<div class="col-md-9">';
+        content += '		<input id="custom-grid-lat" name="custom-grid-lat" value="" class="form-control">';
+        content += '	</div>';
+        content += '  </dl>';
+
+        // CUSTOM GRID LON
+        content += '  <dl class="row">';
+        content += '	<label class="col-md-3 control-label" for="custom-grid-lon">Custom Lon Step</label>';
+        content += '	<div class="col-md-9">';
+        content += '		<input id="custom-grid-lon" name="custom-grid-lon" value="" class="form-control">';
+        content += '	</div>';
+        content += '  </dl>';
+
         // OUTPUT DIR
         content += '  <dl class="row">';
         content += '	<label class="col-md-3 control-label" for="regrid-outdir">Output folder</label>';
@@ -116,6 +164,15 @@ edu.gmu.csiss.covali.regrid = {
         content += '	</div>';
         content += '  </dl>';
 
+        // PERIODIC
+        content += '  <dl class="row">';
+        content += '	<label class="col-md-3 control-label" for="is-periodic">Periodic?</label>';
+        content += '	<div class="col-md-9">';
+        content += '		<input type="checkbox" id="is-periodic" name="is-periodic" value="" required>';
+        content += '	</div>';
+        content += '  </dl>';
+
+
         content += '</div>';
 
         content += '<div class="modal-footer">';
@@ -125,7 +182,7 @@ edu.gmu.csiss.covali.regrid = {
         content += '</p></div>';
 
 
-        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 380);
+        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 580);
 
 
         $('#regrid-add-datafile-btn').click(function(){
@@ -147,7 +204,7 @@ edu.gmu.csiss.covali.regrid = {
             edu.gmu.csiss.covali.filebrowser.init();
         });
 
-        $('#regrid-datafile, #regrid-gridfile').change(function(){
+        $('#regrid-datafile, #regrid-gridfile, #is-custom-grid, #custom-grid-lat, #custom-grid-lon, #is-periodic').change(function(){
             edu.gmu.csiss.covali.regrid.inputFilesChanged();
         });
 

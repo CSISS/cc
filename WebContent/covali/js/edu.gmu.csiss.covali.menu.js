@@ -39,7 +39,8 @@ edu.gmu.csiss.covali.menu = {
 				'edu.gmu.csiss.covali.map.jsframe.StyleManager','edu.gmu.csiss.covali.local.jsframe.ParsingFile',
 				'edu.gmu.csiss.covali.local.jsframe.PublicFolder','edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles',
 				'edu.gmu.csiss.covali.multifilebrowser.jsframe.LocalFiles','edu.gmu.csiss.covali.share.jsframe.Share',
-				'edu.gmu.csiss.covali.nco.jsframe.NCOProcessing', 'edu.gmu.csiss.covali.regrid.jsframe.RegridData']
+				'edu.gmu.csiss.covali.nco.jsframe.NCOProcessing', 'edu.gmu.csiss.covali.regrid.jsframe.RegridData',
+                'edu.gmu.csiss.covali.statistics.jsframe.Iris'];
 			
 			jsframeNames.forEach(function(jsframeName){
 				edu.gmu.csiss.covali.menu.closeDialog(jsframeName);

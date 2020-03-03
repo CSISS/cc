@@ -45,6 +45,7 @@ edu.gmu.csiss.covali.search = {
 							"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.search.init();\">Back</span>"+
 							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
 							"</div>";
+
 			
 			//this.resultdialog = function(){
 				//edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
@@ -53,79 +54,6 @@ edu.gmu.csiss.covali.search = {
 			
 			this.resultdialog = edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600, 800);
 
-//			this.resultdialog = BootstrapDialog.show({
-//				
-//				title: title,
-//				
-//				size: BootstrapDialog.SIZE_WIDE,
-//				
-//	            message: '<table id="producttable"'+
-//	            	
-//					'			class="table table-striped table-bordered table-list">'+
-//			
-//					'		<thead>'+
-//			
-//					'			<tr>'+
-//			
-//					'				<th class="hidden-xs col-md-9" style="word-wrap: break-word; word-break: break-all;">Product</th>'+
-//			
-////					'				<th class="col-text">Information</th>'+
-//			
-//					'				<th class="col-text col-sm-3">Map</th>'+
-//			
-//					'			</tr>'+
-//			
-//					'		</thead>'+
-//			
-//					'		<tbody>'+
-//			
-//					'		</tbody>'+
-//			
-//					'	</table>',
-//	            
-//	            cssClass: 'dialog-vertical-center',
-//	            
-//	            onshown: function(dialog) {
-//	            	
-//	            	edu.gmu.csiss.covali.search.initTable(request);
-//	    	    	
-//	            },
-//	            
-//	            buttons: [{
-//	                
-//	                label: 'Back',
-//	                
-//	                cssClass: 'btn-warning',
-//	                
-//	                action: function(dialogItself){
-//	                	
-//	                	//go back to the search dialog
-//	                	
-//	                	dialogItself.close();
-//	                	
-////	                	if(edu.gmu.csiss.covali.search.searchdialog==null){
-//
-//		                	edu.gmu.csiss.covali.search.init();
-//	                		
-////	                	}else{
-////	                		
-////		                	edu.gmu.csiss.covali.search.searchdialog.open();
-////	                		
-////	                	}
-//	                	
-//	                }
-//	            	
-//	            },
-//	            {
-//	                label: 'Close',
-//	                
-//	                action: function(dialogItself){
-//	                	
-//	                    dialogItself.close();
-//	                    
-//	                }
-//	            }]
-//	        });
 			
 		},
 		
