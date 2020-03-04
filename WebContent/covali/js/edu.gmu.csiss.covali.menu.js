@@ -4,9 +4,8 @@
  * @date 2018.05.31
  */
 edu.gmu.csiss.covali.menu = {
-		
-		jsframe: new JSFrame(),
-		
+		jsframe: new JSFrame({parentElement: $('#jsframe-container')[0]}),
+
 		init: function(){
 			
 			$("#add").click(edu.gmu.csiss.covali.add.init);
