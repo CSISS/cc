@@ -78,45 +78,7 @@ edu.gmu.csiss.covali.upload = {
 				    	
 				    	frame.setPosition((window.innerWidth - width) / 2, (window.innerHeight -height) / 2, 'LEFT_TOP');
 						
-//						BootstrapDialog.show({
-//							
-//				            message: function(dialog){
-//				            	
-//				            	$content = $("<p class=\"text-success\">Your file has been uploaded. You can find it via the search function. Do you want to load it onto the map now?</p>");
-//				            	
-//				            	return $content;
-//				            	
-//				            },
-//				            
-//				            title: "Data Uploader",
-//				            
-//				            cssClass: 'dialog-vertical-center',
-//				            
-//				            buttons: [{
-//					                
-//				            		label: 'Load',
-//					                
-//					                action: function(dialogItself){
-//					                	
-//					                	//open the WMS loading dialog to add a specific layer
-//					                	
-//					                	var id = obj.id; //the wms layer name
-//					                	
-//					                	edu.gmu.csiss.covali.wms.showLayerSelector(id);
-//					                    
-//					                }
-//				            	},{
-//					                
-//				            		label: 'Close',
-//					                
-//					                action: function(dialogItself){
-//					                	
-//					                    dialogItself.close();
-//					                    
-//					                }
-//				            }]
-//				        });
-						
+
 					}else{
 						
 						alert("Fail to load the file into map. Check if it is CF-compliant netcdf." + obj.reason );
@@ -138,6 +100,8 @@ edu.gmu.csiss.covali.upload = {
 		popUpWindow: function(){
 			
 			if($(".agreebtn").prop('checked')){
+
+				edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.upload.jsframe.DataUploader');
 				
 				var winUp = window.open("","","width=400,height=150");
 	            
@@ -173,6 +137,8 @@ edu.gmu.csiss.covali.upload = {
 	            "            <!--User Name:<input type=\"text\" name=\"username\" size=\"30\"/><br>--><br>\n" +
 	            
 			    "            Upload File: <input type=\"file\" name=\"file1\"><br><br>\n" +
+
+				"<p>Max file size: 4GB</p>" +
 			    
 			    "            <input type=\"hidden\" name=\"script\" value=\""+script+"\">"+
 			    
@@ -210,28 +176,6 @@ edu.gmu.csiss.covali.upload = {
 			var dialogName = 'edu.gmu.csiss.covali.upload.jsframe.DataUploader';
 			var dialogTitle = 'Data Uploader';
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
-			
-//			BootstrapDialog.show({
-//				
-//	            message: function(dialog){
-//	            	
-//	            	$content = $("<p class=\"text-danger\">Checking the box below means you agree our terms and conditions for this service. If you haven't read them, please go to <a href=\"../web/terms\" target=\"_blank\">here</a> to read through them and make sure you agree with them before proceed. </p> <p><input class=\"agreebtn\" type=\"checkbox\" value=\"\"> Agree </p> <p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.upload.popUpWindow()\" >Open Upload Window</span></p>");
-//	            	
-//	            	return $content;
-//	            	
-//	            },
-//	            
-//	            title: "Data Uploader",
-//	            
-//	            cssClass: 'dialog-vertical-center',
-//	            
-//	            buttons: [{
-//	                label: 'Close',
-//	                action: function(dialogItself){
-//	                    dialogItself.close();
-//	                }
-//	            }]
-//	        });
 			
 		}
 		

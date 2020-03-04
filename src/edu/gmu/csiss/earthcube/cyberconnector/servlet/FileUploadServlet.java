@@ -35,7 +35,7 @@ public class FileUploadServlet extends HttpServlet {
 		
 			callback=null;
     
-    private int maxvol = 2000;
+    private int maxvol = 4000;
     
     Logger logger = Logger.getLogger(this.getClass());
     
