@@ -83,7 +83,10 @@ edu.gmu.csiss.covali.wms = {
 			
 			
 			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
-			edu.gmu.csiss.covali.wms.getContent()+
+			'	<div style="margin-left: 14px">' +
+			'WMS 1.3.0 is required' +
+			'</div>' +
+            edu.gmu.csiss.covali.wms.getContent()+
 			"</div></div>";
 		
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
