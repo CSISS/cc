@@ -473,40 +473,7 @@ edu.gmu.csiss.covali.map = {
 					"</div>";
 			
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $content, 600);
-			
-//			edu.gmu.csiss.covali.map.palette_dialog = new BootstrapDialog({
-//				
-//				message: $content,
-//				
-//				title: "Palette Selector",
-//	            
-//	            cssClass: 'dialog-vertical-center',
-//	            
-//	            buttons: [{
-//	            	
-//	            	label: "Apply",
-//	            	
-//	            	action: function(dialogItself){
-//	            		
-//	            		dialogItself.close();
-//	            		
-//	            	}
-//	            	
-//	            },{
-//	                
-//	            	label: 'Close',
-//	                
-//	            	action: function(dialogItself){
-//	                	
-//	                    dialogItself.close();
-//	                    
-//	                }
-//	            
-//	            }]
-//				
-//			});
-//			
-//			edu.gmu.csiss.covali.map.palette_dialog.open();
+
 			
 			
 		},

@@ -822,8 +822,14 @@ edu.gmu.csiss.covali.wms = {
 		},
 		
 		addLayer: function(side, layername, stylename, time, elevation){
-			
+
 			var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+			var existingLayer = edu.gmu.csiss.covali.map.getMapLayerByName(side, layername);
+			if(existingLayer != null) {
+				alert('Layer ' + layername + ' is already added on the ' + side + ' map.');
+				return;
+			}
+
 			
 //			var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
 //				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
