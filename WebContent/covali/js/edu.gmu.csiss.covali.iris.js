@@ -105,8 +105,7 @@ edu.gmu.csiss.covali.iris = {
                 map2.addLayer(clusters);
 
                 var currentProj = edu.gmu.csiss.covali.projection.leftmap.getView().projection_.code_;
-
-                edu.gmu.csiss.covali.projection.reprojectIrisLayer(currentProj);
+                edu.gmu.csiss.covali.projection.reprojectPointsLayers(currentProj);
 
                 edu.gmu.csiss.covali.map.updateCaption('left', 'IRIS Layer');
                 edu.gmu.csiss.covali.map.updateCaption('right', 'IRIS Layer');

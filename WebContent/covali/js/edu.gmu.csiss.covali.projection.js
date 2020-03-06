@@ -220,14 +220,14 @@ edu.gmu.csiss.covali.projection = {
         }
 
 
-        edu.gmu.csiss.covali.projection.reprojectIrisLayer(newProj);
+        edu.gmu.csiss.covali.projection.reprojectPointsLayers(newProj);
         edu.gmu.csiss.covali.map.refreshAllWMSLayers();
 
 	},
 
-	reprojectIrisLayer: function(newProjCode) {
+	reprojectPointsLayers: function(newProjCode) {
         var newProj = ol.proj.get(newProjCode);
-		var features = edu.gmu.csiss.covali.iris.features;
+		var features = edu.gmu.csiss.covali.iris.features.concat(edu.gmu.csiss.covali.geojson.features);
 		features.forEach(function(f) {
 			var lon = f['lonlat'][0];
             var lat = f['lonlat'][1];

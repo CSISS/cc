@@ -2,6 +2,7 @@
  * Juozas
  */
 edu.gmu.csiss.covali.geojson = {
+    features: new Array(),
     addGeoJSONFeature: function(url, layertitle) {
     	
         $.ajax({
@@ -30,12 +31,15 @@ edu.gmu.csiss.covali.geojson = {
                 	var feature = gs[i];
                     var point = feature.getGeometry();
 
-                    var coords = ol.proj.fromLonLat(point.getCoordinates().map(parseFloat));
+                    // var coords = ol.proj.fromLonLat(point.getCoordinates().map(parseFloat));
+                    var coords = point.getCoordinates().map(parseFloat);
                     point.setCoordinates(coords);
+                    feature['lonlat'] = coords;
                     
                     feature.setStyle(style);
                     
                     features.push(feature);
+                    edu.gmu.csiss.covali.geojson.features.push(feature);
                 	
                 }
                 
@@ -81,6 +85,9 @@ edu.gmu.csiss.covali.geojson = {
 
                 map1.addLayer(vectorLayer);
                 map2.addLayer(vectorLayer);
+
+                var currentProj = edu.gmu.csiss.covali.projection.leftmap.getView().projection_.code_;
+                edu.gmu.csiss.covali.projection.reprojectPointsLayers(currentProj);
 
 
                 map1.on('pointermove', function(evt) {
