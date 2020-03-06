@@ -1,4 +1,6 @@
 edu.gmu.csiss.covali.iris = {
+    features: new Array(),
+
     calculateStyle: function(size) {
         var radius = Math.min(25, Math.log(size) * 5);
         radius = Math.max(10, radius);
@@ -55,27 +57,27 @@ edu.gmu.csiss.covali.iris = {
             url: '../web/iris/stations',
 
             success: function(stations, text, jxhr) {
-                BootstrapDialog.closeAll();
-
-                var features = new Array();
+                var features = edu.gmu.csiss.covali.iris.features;
 
                 stations.forEach(function (s) {
                     var lon = parseFloat(s.lon);
                     var lat = parseFloat(s.lat);
 
-                    var feature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([lon, lat])))
+                    // var feature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([lon, lat])));
+                    var feature = new ol.Feature(new ol.geom.Point([lon, lat]));
                     feature['station'] = s;
+                    feature['lonlat'] = [lon, lat];
 
                     features.push(feature);
                 })
 
                 var source = new ol.source.Vector({
-                    features: features
+                    features: features,
                 });
 
                 var clusterSource = new ol.source.Cluster({
                     distance: 70,
-                    source: source
+                    source: source,
                 });
 
                 var styleCache = {};
@@ -84,7 +86,7 @@ edu.gmu.csiss.covali.iris = {
                     title: 'IRIS Layer',
                     source: clusterSource,
                     style: function (feature) {
-                        var size = feature.get('features').length;
+                        var size = (feature.get('features') || [1]).length;
 
                         var style = styleCache[size];
                         if (!style) {
@@ -101,6 +103,10 @@ edu.gmu.csiss.covali.iris = {
 
                 map1.addLayer(clusters);
                 map2.addLayer(clusters);
+
+                var currentProj = edu.gmu.csiss.covali.projection.leftmap.getView().projection_.code_;
+
+                edu.gmu.csiss.covali.projection.reprojectIrisLayer(currentProj);
 
                 edu.gmu.csiss.covali.map.updateCaption('left', 'IRIS Layer');
                 edu.gmu.csiss.covali.map.updateCaption('right', 'IRIS Layer');

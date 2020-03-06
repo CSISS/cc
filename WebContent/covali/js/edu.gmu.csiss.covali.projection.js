@@ -218,9 +218,20 @@ edu.gmu.csiss.covali.projection = {
         	newView.fit(extent, size);
         
         }
-        
+
+
+        edu.gmu.csiss.covali.projection.reprojectIrisLayer(newProj);
         edu.gmu.csiss.covali.map.refreshAllWMSLayers();
-        
-      }
-		
+
+	},
+
+	reprojectIrisLayer: function(newProjCode) {
+        var newProj = ol.proj.get(newProjCode);
+		var features = edu.gmu.csiss.covali.iris.features;
+		features.forEach(function(f) {
+			var lon = f['lonlat'][0];
+            var lat = f['lonlat'][1];
+			f.setGeometry(new ol.geom.Point(ol.proj.fromLonLat([lon, lat], newProj)));
+		});
+    }
 };
