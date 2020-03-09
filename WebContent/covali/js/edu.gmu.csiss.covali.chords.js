@@ -174,8 +174,7 @@ edu.gmu.csiss.covali.chords = {
 			
 			edu.gmu.csiss.covali.geojson.addGeoJSONFeature(this.current_chords + "/sites/map_markers_geojson", "CHORDS instruments");
 
-			BootstrapDialog.closeAll();
-
+			edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.chords.jsframe.AddCHORDS');
 		},
 		
 		onShown: function(){
