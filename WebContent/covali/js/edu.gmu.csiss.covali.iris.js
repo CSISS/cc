@@ -314,17 +314,14 @@ edu.gmu.csiss.covali.iris = {
         edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, html, 500, 1200);
 
 
-        setTimeout(function() {
+        $('#' + id).on('error', function() {
             var img = $('#' + id);
             // spinner height
             if(img.height() == 50) {
                 img.replaceWith('<b style="margin: 10px; font-size: 14px;"> No IRIS data available for ' + day + '</b>');
             }
-        }, 4000);
+        });
     }
-
-
-
-
+    
 
 }
