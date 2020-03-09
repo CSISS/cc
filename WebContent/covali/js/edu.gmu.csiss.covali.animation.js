@@ -135,13 +135,8 @@ edu.gmu.csiss.covali.animation = {
 			"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.animation.createAnimation(\""+layername+"\")\'>Create</span></p>"+
 			"</div>";
 		
-
-<<<<<<< HEAD
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600, 700);
-		
-=======
 		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 440);
->>>>>>> jsframe height visual fixes
+		
 		edu.gmu.csiss.covali.animation.animationDialogOnShown(timesteps);
 		
 //		BootstrapDialog.show({
