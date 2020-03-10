@@ -27,6 +27,10 @@ public class SearchRequest {
 	double west = -180, east = 180, south = -90, north = 90;
 	
 	boolean distime = false;
+
+	boolean servicewms = false;
+
+	boolean geodab = false;
 	
 	String begindatetime = "1900-01-01T00:00:00", enddatetime = "2019-06-05T00:00:00"; //begin, end. Default: No restriction.
 	
@@ -210,5 +214,14 @@ public class SearchRequest {
 	public int getRecordsPerPage() {
 		return this.getLength();
 	}
+
+	public boolean isServicewms() { return servicewms; }
+
+	public void setServicewms(boolean servicewms) { this.servicewms = servicewms; }
+
+	public boolean isGeodab() { return geodab; }
+
+	public void setGeodab(boolean geodab) { this.geodab = geodab; }
+
 
 }

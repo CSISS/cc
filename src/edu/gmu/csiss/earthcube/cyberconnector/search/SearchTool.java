@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductVariable;
@@ -201,7 +203,7 @@ public class SearchTool {
 		return resp;
 		
 	}
-	
+
 	/**
 	 * Construct CSW Request
 	 * @param req
@@ -230,17 +232,17 @@ public class SearchTool {
 
 			// match csw:AnyText or apiso:Identifier
 			.append("	                <ogc:Or> ")
-			.append("	                    <ogc:PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\"> ")
+			.append("	                    <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
 			.append("	                        <ogc:PropertyName>apiso:Identifier</ogc:PropertyName> ")
-			.append("	                        <ogc:Literal>%")
+			.append("	                        <ogc:Literal>*")
 			.append(req.searchtext)
-			.append("%</ogc:Literal> ")
+			.append("*</ogc:Literal> ")
 			.append("	                    </ogc:PropertyIsLike> ")
-			.append("	                    <ogc:PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\"> ")
+			.append("	                    <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
 			.append("	                        <ogc:PropertyName>csw:AnyText</ogc:PropertyName> ")
-			.append("	                        <ogc:Literal>%")
+			.append("	                        <ogc:Literal>*")
 			.append(req.searchtext)
-			.append("%</ogc:Literal> ")
+			.append("*</ogc:Literal> ")
 			.append("	                    </ogc:PropertyIsLike> ")
 			.append("	                </ogc:Or> ");
 
@@ -259,13 +261,25 @@ public class SearchTool {
 			.append("							</ogc:Literal> ")
 			.append("	                    </ogc:PropertyIsLessThanOrEqualTo> ");
 		}
+		if(req.isServicewms()) {
+			cswreq.append("	                <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
+			.append("	                        <ogc:PropertyName>csw:AnyText</ogc:PropertyName> ")
+			.append("	                        <ogc:Literal>*WMS*</ogc:Literal> ")
+			.append("	                    </ogc:PropertyIsLike> ");
+		}
 		
 		cswreq.append("	                    <ogc:BBOX> ")
 			.append("	                        <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName> ")
-			.append("	                        <gml:Envelope> ")
-			.append("	                            <gml:lowerCorner>"+req.south + " " + req.west +"</gml:lowerCorner> ")
-			.append("	                            <gml:upperCorner>"+req.north + " " + req.east +"</gml:upperCorner> ")
-			.append("	                        </gml:Envelope> ")
+			.append("	                        <gml:Envelope> ");
+		if(req.isGeodab()) {
+			cswreq.append("	                            <gml:lowerCorner>" + req.west + " " + req.south + "</gml:lowerCorner> ")
+				  .append("	                            <gml:upperCorner>" + req.east + " " + req.north + "</gml:upperCorner> ");
+		} else {
+			cswreq.append("	                            <gml:lowerCorner>" + req.south + " " + req.west + "</gml:lowerCorner> ")
+				  .append("	                            <gml:upperCorner>" + req.north + " " + req.east + "</gml:upperCorner> ");
+		}
+
+		cswreq.append("	                        </gml:Envelope> ")
 			.append("	                    </ogc:BBOX> ")
 			.append("	                </ogc:And> ")
 			.append("	            </ogc:Filter> ")
@@ -515,12 +529,56 @@ public class SearchTool {
 			}
 			
 		}
-		
-		
+
 		return success;
 		
 	}
-	
+
+	public static SearchResponse filterWMSResults(SearchResponse resp, int max) {
+		Iterator<Product> iter = resp.getProducts().iterator();
+
+		List<Product> wmsProducts = new ArrayList<>();
+		while(iter.hasNext()) {
+			Product p = iter.next();
+			if(p.getWmsendpoint() != null) {
+				wmsProducts.add(p);
+			}
+			if(wmsProducts.size() == max ) {
+				break;
+			}
+		}
+
+		resp.setProducts(wmsProducts);
+		return resp;
+	}
+
+	public static SearchResponse searchGeoDABCSWForWMS(SearchRequest req){
+
+		req.setServicewms(true);
+		req.setGeodab(true);
+
+		int requestedLength = req.getLength();
+		req.setLength(25);
+
+		String cswreq = SearchTool.constructCSWRequest(req);
+
+		logger.debug(cswreq);
+
+		String cswresp = BaseTool.POST(cswreq, SysDir.GEODAB_CSW_URL);
+
+		// GeoDAB uses ISO 19115 instead of ISO 19115-2
+		cswresp = cswresp.replaceAll("gmd:MD_Metadata", "gmi:MI_Metadata");
+
+		logger.debug(cswresp);
+
+		SearchResponse resp = SearchTool.parseCSWResponse(cswresp);
+
+		resp = SearchTool.filterWMSResults(resp, requestedLength);
+
+
+		return resp;
+	}
+
 	/**
 	 * Search CSISS PyCSW for UCAR thredds server
 	 * @param req
@@ -551,7 +609,9 @@ public class SearchTool {
 		SearchResponse respobj = new SearchResponse();
 		
 		Document document= BaseTool.parseString(resp);
-		
+
+		Pattern wmsRegex = Pattern.compile("(https?://[^<>]*?)((/wms\\?)|(service=wms&))", Pattern.CASE_INSENSITIVE);
+
 		if(document!=null){
 			
 //			xmlns:fes20="http://www.opengis.net/fes/2.0" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows20="http://www.opengis.net/ows/2.0" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:ebrim="http://www.opengis.net/cat/wrs/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0" xmlns:wrs="http://www.opengis.net/cat/wrs/1.0" xmlns:fgdc="http://www.opengis.net/cat/csw/csdgm" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:ows11="http://www.opengis.net/ows/1.1" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dct="http://purl.org/dc/terms/" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gm03="http://www.interlis.ch/INTERLIS2.3" xmlns:apiso="http://www.opengis.net/cat/csw/apiso/1.0" xmlns:dif="http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/" xmlns:csw30="http://www.opengis.net/cat/csw/3.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd"
@@ -714,7 +774,10 @@ public class SearchTool {
 //					
 //				}
 
-				String level = hierarchylevel.selectSingleNode(ele).getText();
+				String level = "dataset";
+				Node levelNode = hierarchylevel.selectSingleNode(ele);
+				if (levelNode != null) level = levelNode.getText();
+
 				if(level.contains("series")) {
 
 					String curl = collection_url.selectSingleNode(ele).getText();
@@ -780,6 +843,14 @@ public class SearchTool {
 
 					ProductVariable pv = new ProductVariable(bName, bType, bDesc);
 					p.addVariable(pv);
+				}
+
+
+//				// parse WMS endpoint if exists
+				Matcher wmsMatch = wmsRegex.matcher(ele.asXML());
+				if(wmsMatch.find()) {
+					String wmsBaseUrl = wmsMatch.group(0).split("\\?")[0];
+					p.setWmsendpoint(wmsBaseUrl);
 				}
 
 				products.add(p);
@@ -850,8 +921,10 @@ public class SearchTool {
 			
 		}else if("4".equals(req.csw)) {
 
-			throw new RuntimeException("This catalog is not supported at present.");
+			resp = SearchTool.searchGeoDABCSWForWMS(req);
 
+		}else {
+			throw new RuntimeException("This catalog is not supported at present.");
 		}
 		
 		return resp;

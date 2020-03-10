@@ -37,6 +37,7 @@ public class Product {
 	String iscollection;
 	String filepath;
 	String filesize;
+	String wmsendpoint;
 
 
 	String title;
@@ -52,8 +53,7 @@ public class Product {
 
 	public Product(){
 		this.variables = new ArrayList<ProductVariable>();
-		this.inputlist = new ArrayList<Input>();
-	}
+		this.inputlist = new ArrayList<Input>(); }
 	
 	public String getTitle() { return title; }
 	public void setTitle(String title) { this.title = title; }
@@ -280,6 +280,10 @@ public class Product {
 	public String getFilesize() {
 		return filesize;
 	}
+
+	public String getWmsendpoint() { return wmsendpoint; }
+
+	public void setWmsendpoint(String wmsendpoint) { this.wmsendpoint = wmsendpoint; }
 
 	public void updateFileSize() {
 		File file = new File(filepath);
