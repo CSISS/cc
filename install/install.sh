@@ -34,7 +34,7 @@ if [ $platform == 'mac' ]; then
 	NCO_DIR="/usr/local/bin"
 else
 	echo "Downloading OpenJDK"
-	wget https://download.java.net/openjdk/jdk8u40/ri/openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz
+	curl -L https://download.java.net/openjdk/jdk8u40/ri/openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz --output openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz
 	tar -zxvf openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz
 
 	if [ -x "$(command -v yum)" ]; then

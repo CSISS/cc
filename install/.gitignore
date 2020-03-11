@@ -1,2 +1,4 @@
 apache-tomcat*
 *.war
+Vagrantfile
+.vagrant

@@ -2,7 +2,7 @@
 
 echo Conda: source "$1"/etc/profile.d/conda.sh 
 source "$1"/etc/profile.d/conda.sh 
-exit 0
+
 echo "Creating conda environment 'esmpy8'"
 conda create -n esmpy8 -y 
 
