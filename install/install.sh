@@ -9,8 +9,8 @@ esac
 
 
 if [ "$#" -ne 2 ]; then
-    echo "Usage: install.sh linux|mac ANACONDA_INSTALL_DIR DATA_DIR"
-    echo "Example: install.sh linux /opt/anaconda3 /data"
+    echo "Usage: install.sh ANACONDA_INSTALL_DIR DATA_DIR"
+    echo "Example: install.sh /opt/anaconda3 /data"
     exit 1
 fi
 
@@ -19,7 +19,7 @@ DATA_DIR="$2"
 
 
 echo "Installing conda xESMF environment"
-#/bin/bash ./config-conda-esmf.sh "$CONDA_DIR"
+# /bin/bash ./config-conda-esmf.sh "$CONDA_DIR"
 
 # install JRE and NCO
 if [ $platform == 'mac' ]; then
@@ -36,7 +36,7 @@ else
 	# fail on errors
 	set -e
 	if ! [ -d java-se-8u40-ri ];then
-		echo "Downloading OpenJDK"
+		echo "Downloading OpenJDK (8u40-b25)"
 		curl -L https://download.java.net/openjdk/jdk8u40/ri/openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz --output openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz
 		tar -zxvf openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz
 	fi
@@ -66,7 +66,7 @@ echo "Extracting apache-tomcat-8.5.28.tar.gz"
 rm -rf apache-tomcat-8.5.28
 tar -zxvf apache-tomcat-8.5.28.tar.gz
 
-echo "Downloading CyberConnector.war into Apache Tomcat webapps folder"
+echo "Downloading CyberConnector.war (latest) into Apache Tomcat webapps folder"
 curl -L https://github.com/CSISS/cc/releases/download/latest/CyberConnector.war --output CyberConnector.war
 mv CyberConnector.war apache-tomcat-8.5.28/webapps/
 
@@ -88,16 +88,17 @@ fi
 echo "Starting Apache Tomcat"
 chmod 755 apache-tomcat-8.5.28/bin/catalina.sh
 chmod 755 apache-tomcat-8.5.28/bin/startup.sh
-./apache-tomcat-8.5.28/bin/startup.sh
-
+/bin/bash  apache-tomcat-8.5.28/bin/startup.sh
 
 echo "Waiting for CyberConnector.war to be deployed..."
 wait=0
-while [ ! -f apache-tomcat-8.5.28/webapps/CyberConnector/WEB-INF/classes/config.properties ] && [ $wait -le 120 ]; do 
+while [ ! -f apache-tomcat-8.5.28/webapps/CyberConnector/WEB-INF/classes/config.properties ] && [ $wait -le 300 ]; do
 	sleep 1
 	wait=$(( $wait + 1 ))
-	echo $wait
+	echo -n .
 done
+
+echo " deployed"
 
 echo "Configuring CyberConnector COVALI"
 pushd .
@@ -116,22 +117,22 @@ sed -i'' 's|covali_file_path=.*|covali_file_path='$DATA_DIR'|g' config.propertie
 sed -i'' 's|ncra_path=.*|ncra_path='$NCO_DIR'/ncra|g' config.properties
 sed -i'' 's|ncbo_path=.*|ncbo_path='$NCO_DIR'/ncbo|g' config.properties
 
-dos2unix config.properties
 popd
 
 
 echo "Restarting Apache Tomcat..."
-./apache-tomcat-8.5.28/bin/shutdown.sh
-sleep 10
+sleep 180
+/bin/bash apache-tomcat-8.5.28/bin/shutdown.sh
+sleep 120
 
-./apache-tomcat-8.5.28/bin/startup.sh
-sleep 10
-# there is no need to do this
+/bin/bash apache-tomcat-8.5.28/bin/startup.sh
+sleep 120
 
-echo "CyberConnector COVALI is successfully installed!"
 
-echo "********************************************************************"
+echo 'CyberConnector COVALI is successfully installed!'
 
-echo "Please visit http://localhost:8080/CyberConnector/web/covali to use CyberConnector COVALI"
+echo '********************************************************************'
 
-echo "********************************************************************"
+echo 'Please visit http://localhost:8080/CyberConnector/web/covali to use CyberConnector COVALI'
+
+echo '********************************************************************'
