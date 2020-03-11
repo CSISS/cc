@@ -2,3 +2,5 @@ apache-tomcat*
 *.war
 Vagrantfile
 .vagrant
+*.gz
+java-*
