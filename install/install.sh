@@ -120,7 +120,7 @@ sed -i'' 's|ncbo_path=.*|ncbo_path='$NCO_DIR'/ncbo|g' config.properties
 popd
 
 
-echo "Restarting Apache Tomcat..."
+echo "Restarting Apache Tomcat (takes several minutes)..."
 sleep 180
 /bin/bash apache-tomcat-8.5.28/bin/shutdown.sh
 sleep 120
