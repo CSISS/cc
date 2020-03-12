@@ -19,7 +19,7 @@ DATA_DIR="$2"
 
 
 echo "Installing conda xESMF environment"
-# /bin/bash ./config-conda-esmf.sh "$CONDA_DIR"
+/bin/bash ./config-conda-esmf.sh "$CONDA_DIR"
 
 # install JRE and NCO
 if [ $platform == 'mac' ]; then
