@@ -88,7 +88,8 @@ fi
 echo "Starting Apache Tomcat"
 chmod 755 apache-tomcat-8.5.28/bin/catalina.sh
 chmod 755 apache-tomcat-8.5.28/bin/startup.sh
-/bin/bash  apache-tomcat-8.5.28/bin/startup.sh
+chmod 755 apache-tomcat-8.5.28/bin/shutdown.sh
+sudo su -l $(whoami) -c "$PWD/apache-tomcat-8.5.28/bin/catalina.sh start"
 
 echo "Waiting for CyberConnector.war to be deployed..."
 wait=0
@@ -122,10 +123,13 @@ popd
 
 echo "Restarting Apache Tomcat (takes several minutes)..."
 sleep 180
-/bin/bash apache-tomcat-8.5.28/bin/shutdown.sh
+
+echo "Stopping Apache Tomcat..."
+sudo su -l $(whoami) -c "$PWD/apache-tomcat-8.5.28/bin/catalina.sh stop"
 sleep 120
 
-/bin/bash apache-tomcat-8.5.28/bin/startup.sh
+echo "Starting Apache Tomcat..."
+sudo su -l $(whoami) -c "$PWD/apache-tomcat-8.5.28/bin/catalina.sh start"
 sleep 120
 
 
