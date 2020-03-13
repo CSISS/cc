@@ -35,7 +35,7 @@ CyberConnector installer support CentOS, Ubuntu/Debian and Mac OS X operating sy
 Example usage: 
 
 ```
-cd installer
+cd install
 ./install.sh /opt/anaconda3 /data
 ```
 
