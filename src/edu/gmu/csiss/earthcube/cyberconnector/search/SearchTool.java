@@ -261,13 +261,7 @@ public class SearchTool {
 			.append("							</ogc:Literal> ")
 			.append("	                    </ogc:PropertyIsLessThanOrEqualTo> ");
 		}
-		if(req.isServicewms()) {
-			cswreq.append("	                <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
-			.append("	                        <ogc:PropertyName>csw:AnyText</ogc:PropertyName> ")
-			.append("	                        <ogc:Literal>*WMS*</ogc:Literal> ")
-			.append("	                    </ogc:PropertyIsLike> ");
-		}
-		
+
 		cswreq.append("	                    <ogc:BBOX> ")
 			.append("	                        <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName> ")
 			.append("	                        <gml:Envelope> ");
@@ -534,27 +528,9 @@ public class SearchTool {
 		
 	}
 
-	public static SearchResponse filterWMSResults(SearchResponse resp, int max) {
-		Iterator<Product> iter = resp.getProducts().iterator();
 
-		List<Product> wmsProducts = new ArrayList<>();
-		while(iter.hasNext()) {
-			Product p = iter.next();
-			if(p.getWmsendpoint() != null) {
-				wmsProducts.add(p);
-			}
-			if(wmsProducts.size() == max ) {
-				break;
-			}
-		}
+	public static SearchResponse searchGeoDABCSW(SearchRequest req){
 
-		resp.setProducts(wmsProducts);
-		return resp;
-	}
-
-	public static SearchResponse searchGeoDABCSWForWMS(SearchRequest req){
-
-		req.setServicewms(true);
 		req.setGeodab(true);
 
 		int requestedLength = req.getLength();
@@ -572,9 +548,6 @@ public class SearchTool {
 		logger.debug(cswresp);
 
 		SearchResponse resp = SearchTool.parseCSWResponse(cswresp);
-
-		resp = SearchTool.filterWMSResults(resp, requestedLength);
-
 
 		return resp;
 	}
@@ -609,8 +582,6 @@ public class SearchTool {
 		SearchResponse respobj = new SearchResponse();
 		
 		Document document= BaseTool.parseString(resp);
-
-		Pattern wmsRegex = Pattern.compile("(https?://[^<>]*?)((/wms\\?)|(service=wms&))", Pattern.CASE_INSENSITIVE);
 
 		if(document!=null){
 			
@@ -846,13 +817,6 @@ public class SearchTool {
 				}
 
 
-//				// parse WMS endpoint if exists
-				Matcher wmsMatch = wmsRegex.matcher(ele.asXML());
-				if(wmsMatch.find()) {
-					String wmsBaseUrl = wmsMatch.group(0).split("\\?")[0];
-					p.setWmsendpoint(wmsBaseUrl);
-				}
-
 				products.add(p);
 				
 			}
@@ -921,7 +885,7 @@ public class SearchTool {
 			
 		}else if("4".equals(req.csw)) {
 
-			resp = SearchTool.searchGeoDABCSWForWMS(req);
+			resp = SearchTool.searchGeoDABCSW(req);
 
 		}else {
 			throw new RuntimeException("This catalog is not supported at present.");
