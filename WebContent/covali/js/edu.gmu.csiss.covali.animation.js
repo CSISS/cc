@@ -221,14 +221,161 @@ edu.gmu.csiss.covali.animation = {
 				
             	"<div class=\"row\" id=\"\"></div>"+
 			"</dl></div>"+
+			//edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.animation.layerSelectCallback)+
 			"<div class=\"modal-footer\">" +
 			"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.animation.layerSelector();\">Select</span></p>"+
 			"</div>";
-
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 700, 600);
-
-        edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.animation.layerSelectCallback)
-
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+		edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.animation.layerSelectCallback)
+		//edu.gmu.csiss.covali.menu.setFrameDimensionsToInnerHTML(dialogName);
+//		var width = 500; var height = 250;
+//		console.log(height)
+//		
+//		const frame = edu.gmu.csiss.covali.menu.jsframe.create({
+//	    		title: 'Layer Selector',
+//	    		name: 'edu.gmu.csiss.covali.animation.jsframe.LayerSelector',
+//	    	    left: 0, 
+//	    	    top: 0, 
+//	    	    width: width,
+//	    	    appearanceName: 'yosemite',
+//	            movable: true,
+//	            resizable: true,
+//	            style:{
+//	            	height: "auto",
+//	            	position: "absolute",
+//		            overflowX: "auto",
+//		            overflowY: "scroll",
+//		            maxHeight: "500px",
+//		            resize: "both"
+//	            },
+//	    	    html: content
+//    	});
+//    	
+//		frame.setControl({
+//            styleDisplay:'inline',
+//            maximizeButton: 'zoomButton',
+//            demaximizeButton: 'dezoomButton',
+//            minimizeButton: 'minimizeButton',
+//            deminimizeButton: 'deminimizeButton',
+//            hideButton: 'closeButton',
+//            animation: true,
+//            animationDuration: 150,
+//
+//        });
+//    	
+//    	frame.show();
+//    	
+//    	frame.setPosition(window.innerWidth/2,window.innerHeight*0.05, 'CENTER_TOP');
+		
+//		BootstrapDialog.show({
+//			
+//            title: "Layer Selector",
+//            
+//            message: "<label for=\"layer-select-tree\" >Select A Layer</label>"+
+//            	
+//            	"<div id=\"layer-select-tree\">"+
+//				
+//				"  </div>"+
+//				
+//            	"<div class=\"row\" id=\"\"></div>",
+//            
+//            onshown: function(dialog) {
+//            	
+//            	edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.animation.layerSelectCallback);
+//            	
+//            },
+//            
+//            buttons: [{
+//                
+//            	icon: 'glyphicon glyphicon-ok',
+//                
+//                label: 'Select',
+//                
+//                cssClass: 'btn-warning',
+//                
+//                action: function(dialogItself){
+//                	
+//                	var nodes = $('#layer-select-tree').treeview('getSelected');
+//        			
+//                	if(nodes.length!=0){
+//
+//                		var layername = nodes[0].Name;
+//                		
+//                		var timedim = edu.gmu.csiss.covali.wms.getTimeDimension(nodes[0].Dimension);
+//            			
+//                		// check if the layer has time range
+//            			if(timedim.multipleValues){
+//            				                			
+//                			// if it has, show a select dialog for users to select the first and last frame to create an animation
+//                			
+//                			var timerange = timedim.values;
+//                			
+//                			var timesteps = [];
+//                			
+//                			if(timerange.split(",").length>1){
+//                				
+//                				timesteps = timerange.split(",");
+//                				
+//                			}else if(timerange.split("/").length>1){
+//                				
+//                				//iso 8601 duration
+////                				2018-08-12T06:00:00.000Z/2018-08-17T00:00:00.000Z/PT6H
+//                				
+//                				timerange = timerange.split("/");
+//                				
+//                				start_time = moment(timerange[0]);
+//                				
+//                				end_time = moment(timerange[1]);
+//                				
+//                				edu.gmu.csiss.covali.animation.interval = moment.duration(timerange[2]);
+//                				
+//                				console.log("INTERVAL: "+timerange[2]);
+//                				
+//                				for(current_time = start_time; current_time.isBefore(end_time); current_time = current_time.add(edu.gmu.csiss.covali.animation.interval)){
+//                					
+//                					timesteps.push(current_time.toISOString());
+//                					
+//                				}
+//                				
+//                			}
+//                			
+//                			edu.gmu.csiss.covali.animation.showTimeStepSelect(layername, timesteps);
+//                			
+//            			}else{
+//            				
+//            				alert("the layer doesn't have multiple time steps!");
+//            				
+//            			}
+//            			
+//            			
+//                	}else{
+//                		
+//                		alert("Please select a layer");
+//                		
+//                	}
+//                	
+//                	
+////                	dialogItself.close();
+//                	
+//                }
+//                
+//            }, {
+//                
+//            	label: 'Cancel',
+//                
+//                action: function(dialogItself){
+//                	
+//                    dialogItself.close();
+//                    
+//                }
+//            
+//            }]
+//			
+//		});
+		
+		
+		
+		
 	}
 		
 }
