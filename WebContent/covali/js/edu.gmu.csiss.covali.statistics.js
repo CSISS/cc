@@ -190,6 +190,11 @@ edu.gmu.csiss.covali.statistics = {
             
             var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, epsg, {'INFO_FORMAT': 'text/xml'});
     		var content = document.getElementById('popup-content-' + side);
+    		var layerName = params.LayerName.split("/")[0];
+    		var featureId = params.LayerName.split("/")[1];
+    		console.log("ncWMS2 request:")
+    		console.log(url);
+            if (url && content) {
 
     		if (url && content) {
             	fetch(url)
