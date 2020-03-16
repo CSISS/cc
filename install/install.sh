@@ -17,9 +17,21 @@ fi
 CONDA_DIR="$1"
 DATA_DIR="$2"
 
+NCO_DIR=$(dirname "$(which ncra)")
+if [ "$NCO_DIR" == "." ]; then
+	echo "nco must be installed!"
+	exit 1
+fi
+
+echo "CONDA_DIR=$CONDA_DIR"
+echo "DATA_DIR=$DATA_DIR"
+echo "NCO_DIR=$NCO_DIR"
+
+sleep 1
 
 echo "Installing conda xESMF environment"
 /bin/bash ./config-conda-esmf.sh "$CONDA_DIR"
+
 
 # install JRE and NCO
 if [ $platform == 'mac' ]; then
@@ -30,8 +42,6 @@ if [ $platform == 'mac' ]; then
 
 	brew tap AdoptOpenJDK/openjdk
 	brew cask install adoptopenjdk8
-	brew install nco
-	NCO_DIR="/usr/local/bin"
 else
 	# fail on errors
 	set -e
@@ -40,16 +50,9 @@ else
 		curl -L https://download.java.net/openjdk/jdk8u40/ri/openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz --output openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz
 		tar -zxvf openjdk-8u40-b25-linux-x64-10_feb_2015.tar.gz
 	fi
-
-
-	if [ -x "$(command -v yum)" ]; then
-		sudo yum install epel-release -y
-		sudo yum install nco dos2unix -y
-	else
-		sudo apt-get install nco dos2unix -y
-	fi
-	NCO_DIR="/usr/bin"
 fi
+
+
 
 # fail on errors
 set -e
@@ -125,11 +128,11 @@ echo "Restarting Apache Tomcat (takes several minutes)..."
 sleep 180
 
 echo "Stopping Apache Tomcat..."
-sudo su -l $(whoami) -c "$PWD/apache-tomcat-8.5.28/bin/catalina.sh stop"
+/bin/bash -lc "$PWD/apache-tomcat-8.5.28/bin/catalina.sh stop"
 sleep 120
 
 echo "Starting Apache Tomcat..."
-sudo su -l $(whoami) -c "$PWD/apache-tomcat-8.5.28/bin/catalina.sh start"
+/bin/bash -lc "$PWD/apache-tomcat-8.5.28/bin/catalina.sh start"
 sleep 120
 
 
