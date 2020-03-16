@@ -1,13 +1,11 @@
 package edu.gmu.csiss.earthcube.cyberconnector.products;
 
-import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
 *Class Product.java
@@ -37,6 +35,8 @@ public class Product {
 	String iscollection;
 	String filepath;
 	String filesize;
+	String accesslink;
+	String accessinfo;
 
 	String title;
 
@@ -278,7 +278,15 @@ public class Product {
 	public String getFilesize() {
 		return filesize;
 	}
-	
+
+	public String getAccesslink() {return accesslink; }
+
+	public void setAccesslink(String accesslink) { this.accesslink = accesslink; }
+
+	public String getAccessinfo() { return accessinfo; }
+
+	public void setAccessinfo(String accessinfo) { this.accessinfo = accessinfo; }
+
 	public void updateFileSize() {
 		File file = new File(filepath);
 		if(file.exists())

@@ -61,6 +61,10 @@ edu.gmu.csiss.covali.search = {
 		 * Check whether the file format is supported
 		 */
 		checkfileformat: function(filename){
+
+			if(filename == "NA") {
+				return false;
+			}
 			
 			return edu.gmu.csiss.covali.local.filterFormats(filename);
 			
@@ -199,7 +203,7 @@ edu.gmu.csiss.covali.search = {
                                         ' id="downbtn_' + escapeid + '"> <span ' +
                                         '			class="glyphicon glyphicon-download-alt" title="Download"></span> ' +
                                         '		</button>';
-                                } else {
+                                } else if(full.accessurl != "NA") {
 
                                     content += '		<button onclick="edu.gmu.csiss.covali.search.download(\'' + full.accessurl + '\')" class="btn btn-default" ' +
                                         ' id="downbtn_' + escapeid + '"> <span ' +
@@ -218,15 +222,14 @@ edu.gmu.csiss.covali.search = {
                                         '			class="glyphicon glyphicon-film" title="Load Map"></span> ' +
                                         '		</button> ';
 
-                                }
+                                    if (!full.cached) {
 
-                                if (!full.cached) {
+                                        content += '<button onclick="edu.gmu.csiss.covali.search.cache(\'' + full.id + '\', \'' + full.name + '\', \'' + full.accessurl + '\')" id="cachebtn_' + escapeid + '" class="btn btn-default" > ' +
+                                            '			<span class="glyphicon glyphicon-save-file" title="Cache Data"></span> ' +
+                                            //        							'			DataCache '+
+                                            '		</button> ';
 
-                                    content += '<button onclick="edu.gmu.csiss.covali.search.cache(\'' + full.id + '\', \'' + full.name + '\', \'' + full.accessurl + '\')" id="cachebtn_' + escapeid + '" class="btn btn-default" > ' +
-                                        '			<span class="glyphicon glyphicon-save-file" title="Cache Data"></span> ' +
-                                        //        							'			DataCache '+
-                                        '		</button> ';
-
+                                    }
                                 }
                             }
 
@@ -380,7 +383,7 @@ edu.gmu.csiss.covali.search = {
 
     	view: function (product){
 			
-			var tablecontent = "<div>";
+			var tablecontent = "<div style='font-size: 14px;'>";
 
 
 			if(product.name) {
@@ -401,6 +404,21 @@ edu.gmu.csiss.covali.search = {
             // tablecontent += "    <label class=\"col-md-4 control-label\" >Identifier</label>";
             // tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  >" + product.id + "</label>";
             // tablecontent += "  </div>";
+
+
+            if(product.accesslink && product.accesslink != "NA") {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Access Link</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\" style=\"word-wrap: break-word;word-break: break-all;\"  ><a target='_blank' href='" + product.accesslink + "'>" + product.accesslink + "</a></label>";
+                tablecontent += "  </div>";
+            }
+
+            if(product.accessinfo && product.accessinfo != "NA") {
+                tablecontent += "  <div class=\"form-group\">\n";
+                tablecontent += "    <label class=\"col-md-4 control-label\" >Access Link Info</label>";
+                tablecontent += "    <label class=\"col-md-8 control-content\"  >" + product.accessinfo + "</label>";
+                tablecontent += "  </div>";
+            }
 
 
             if(product.keywords) {
@@ -516,39 +534,7 @@ edu.gmu.csiss.covali.search = {
 			var dialogTitle = 'Information';
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, tablecontent);
 
-//			BootstrapDialog.show({
-//				
-//				title: 'Information',
-//			    
-//				message: $(tablecontent),
-//
-//				onshown: function(dialog) {
-//                    $("#viewvars_" + product.id).click(function(){
-//                        edu.gmu.csiss.covali.search.variablesTable(product);
-//                    });
-//				},
-//			    
-//				buttons: [{
-//			    
-//					id: 'btn-ok',   
-//			        
-//					icon: 'glyphicon glyphicon-check',       
-//			        
-//					label: 'Ok',
-//			        
-//					cssClass: 'btn-primary', 
-//			        
-//					autospin: false,
-//			        
-//					action: function(dialogRef){    
-//			        
-//						dialogRef.close();
-//						
-//					}
-//				
-//			    }]
-//				
-//			});
+
 			
         },
         
@@ -977,8 +963,8 @@ edu.gmu.csiss.covali.search = {
             
             '				      <option value="2">Public & Uploaded Files</option>'+
 			
-//			'				      <option value="4">CSISS Catalogue for Landsat 4/5/7 images (incomplete)</option>'+
-			
+			'				      <option value="4">GeoDAB CSW</option>'+
+
 			'				      <option value="3">BCube Broker</option>'+
 
                 '				    </select>'+

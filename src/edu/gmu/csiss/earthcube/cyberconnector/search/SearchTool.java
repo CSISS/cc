@@ -212,6 +212,8 @@ public class SearchTool {
 	public static String constructCSWRequest(SearchRequest req){
 		
 		int startpos = req.getStart() + 1; // CSW first record = 1
+		boolean hasTextQuery = req.searchtext.length() > 0;
+		boolean hasTemporalExtent = !req.distime && !BaseTool.isNull(req.begindatetime);
 		
 		StringBuffer cswreq = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> ")
 			.append("	<GetRecords ")
@@ -227,27 +229,31 @@ public class SearchTool {
 			.append("	    <Query typeNames=\"gmd:MD_Metadata\"> ")
 			.append("	        <ElementSetName>full</ElementSetName> ")
 			.append("	        <Constraint version=\"1.1.0\"> ")
-			.append("	            <ogc:Filter> ")
-			.append("	                <ogc:And> ")
+			.append("	            <ogc:Filter> ");
+
+		    if(hasTextQuery || hasTemporalExtent) {
+				cswreq.append("	                <ogc:And> ");
+			}
 
 			// match csw:AnyText or apiso:Identifier
-			.append("	                <ogc:Or> ")
-			.append("	                    <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
-			.append("	                        <ogc:PropertyName>apiso:Identifier</ogc:PropertyName> ")
-			.append("	                        <ogc:Literal>*")
-			.append(req.searchtext)
-			.append("*</ogc:Literal> ")
-			.append("	                    </ogc:PropertyIsLike> ")
-			.append("	                    <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
-			.append("	                        <ogc:PropertyName>csw:AnyText</ogc:PropertyName> ")
-			.append("	                        <ogc:Literal>*")
-			.append(req.searchtext)
-			.append("*</ogc:Literal> ")
-			.append("	                    </ogc:PropertyIsLike> ")
-			.append("	                </ogc:Or> ");
+			if(hasTextQuery) {
+				cswreq.append("	                <ogc:Or> ")
+				.append("	                    <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
+				.append("	                        <ogc:PropertyName>apiso:Identifier</ogc:PropertyName> ")
+				.append("	                        <ogc:Literal>*")
+				.append(req.searchtext)
+				.append("*</ogc:Literal> ")
+				.append("	                    </ogc:PropertyIsLike> ")
+				.append("	                    <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
+				.append("	                        <ogc:PropertyName>csw:AnyText</ogc:PropertyName> ")
+				.append("	                        <ogc:Literal>*")
+				.append(req.searchtext)
+				.append("*</ogc:Literal> ")
+				.append("	                    </ogc:PropertyIsLike> ")
+				.append("	                </ogc:Or> ");
+			}
 
-
-		if(!req.distime && !BaseTool.isNull(req.begindatetime)){
+		if(hasTemporalExtent){
 			cswreq.append("	                <ogc:PropertyIsGreaterThanOrEqualTo> ")
 			.append("	                        <ogc:PropertyName>apiso:TempExtent_begin</ogc:PropertyName> ")
 			.append("	                        <ogc:Literal>")
@@ -260,6 +266,7 @@ public class SearchTool {
 			.append(								req.enddatetime)
 			.append("							</ogc:Literal> ")
 			.append("	                    </ogc:PropertyIsLessThanOrEqualTo> ");
+
 		}
 
 		cswreq.append("	                    <ogc:BBOX> ")
@@ -274,9 +281,13 @@ public class SearchTool {
 		}
 
 		cswreq.append("	                        </gml:Envelope> ")
-			.append("	                    </ogc:BBOX> ")
-			.append("	                </ogc:And> ")
-			.append("	            </ogc:Filter> ")
+			.append("	                    </ogc:BBOX> ");
+
+		if(hasTextQuery || hasTemporalExtent) {
+			cswreq.append("	                </ogc:And> ");
+		}
+
+		cswreq.append("	            </ogc:Filter> ")
 			.append("	        </Constraint> ")
 			.append("	    </Query> ")
 			.append("	</GetRecords>");
@@ -533,9 +544,6 @@ public class SearchTool {
 
 		req.setGeodab(true);
 
-		int requestedLength = req.getLength();
-		req.setLength(25);
-
 		String cswreq = SearchTool.constructCSWRequest(req);
 
 		logger.debug(cswreq);
@@ -632,9 +640,9 @@ public class SearchTool {
 			
 			XPath accessoptions_opendap = DocumentHelper.createXPath("gmd:identificationInfo/srv:SV_ServiceIdentification[contains(@id,'OPeNDAP')]/srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
 			
-			XPath accesslink = DocumentHelper.createXPath("gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
+			XPath accesslink = DocumentHelper.createXPath("//gmd:CI_OnlineResource/gmd:linkage/gmd:URL");
 			
-			XPath accessinfo = DocumentHelper.createXPath("gmd:CI_OnlineResource/gmd:name/gco:CharacterString");
+			XPath accessinfo = DocumentHelper.createXPath("//gmd:CI_OnlineResource/gmd:name/gco:CharacterString");
 
 			XPath collection_url = DocumentHelper.createXPath("gmd:identificationInfo/gmd:MD_DataIdentification[@id = 'DataIdentification']/gmd:aggregationInfo[1]/gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString");
 
@@ -779,6 +787,18 @@ public class SearchTool {
 					catch(Exception e) {
 						p.setAccessurl("NA");
 					}
+				}
+
+				try {
+					p.setAccesslink(accesslink.selectSingleNode(ele).getText());
+				} catch(Exception e) {
+					p.setAccesslink("NA");
+				}
+
+				try {
+					p.setAccessinfo(accessinfo.selectSingleNode(ele).getText());
+				} catch(Exception e) {
+					p.setAccessinfo("NA");
 				}
 
 				ProductCache cache = new ProductCache(p.getId(), p.getAccessurl());
