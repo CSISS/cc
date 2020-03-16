@@ -37,8 +37,6 @@ public class Product {
 	String iscollection;
 	String filepath;
 	String filesize;
-	String wmsendpoint;
-
 
 	String title;
 
@@ -280,11 +278,7 @@ public class Product {
 	public String getFilesize() {
 		return filesize;
 	}
-
-	public String getWmsendpoint() { return wmsendpoint; }
-
-	public void setWmsendpoint(String wmsendpoint) { this.wmsendpoint = wmsendpoint; }
-
+	
 	public void updateFileSize() {
 		File file = new File(filepath);
 		if(file.exists())
