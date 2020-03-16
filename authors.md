@@ -9,6 +9,6 @@ Ziheng Sun (zsun@gmu.edu)
 
 Juozas Gaigalas (juozasgaigalas@gmail.com)
 
-Sreten Cvetojevic ()
+Sreten Cvetojevic (scvetojevic1402@gmail.com)
 
 [complete list](https://github.com/CSISS/cc/graphs/contributors)
