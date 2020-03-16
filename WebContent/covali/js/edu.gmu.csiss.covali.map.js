@@ -939,14 +939,22 @@ edu.gmu.csiss.covali.map = {
 					edu.gmu.csiss.covali.map.legend_layername = layer.get('name');
 					
 				}
-					
+
+				var url = edu.gmu.csiss.covali.wms.getCurrentEndPoint();
+				if(url.indexOf('wmsproxy' ) == 0) {
+					url = url + encodeURIComponent("&request=GetMetadata&SERVICE=WMS&VERSION=1.3.0&item=layerDetails&layerName=" + edu.gmu.csiss.covali.map.legend_layername)
+				} else {
+					url = "../../ncWMS2/wms?request=GetMetadata&SERVICE=WMS&VERSION=1.3.0&item=layerDetails&layerName=" + edu.gmu.csiss.covali.map.legend_layername;
+				}
+
+
 				$.ajax({
 					
 					contentType: "application/x-www-form-urlencoded", //this is by default
 					
 					type: "GET",
 					
-					url: "../../ncWMS2/wms?request=GetMetadata&item=layerDetails&layerName=" + edu.gmu.csiss.covali.map.legend_layername,
+					url: url,
 					
 					success: function(obj, text, jxhr){
 						
@@ -955,20 +963,20 @@ edu.gmu.csiss.covali.map = {
 						var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 						var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
 
-						var minmax = [null,null];
+						var minmax = [-100, 100];
 						
 						if(typeof layer != 'undefined' && layer!=null 
 								&& edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["COLORSCALERANGE"])){
 							
 							minmax = layer.getSource().getParams()["COLORSCALERANGE"].split(",");
 							
-						}else{
+						} else if(obj.scaleRange) {
 							
 							minmax = [Number(obj.scaleRange[0]), Number(obj.scaleRange[1])];
 							
 						}
 						
-						var belowabove = [null, null];
+						var belowabove = ["0xFF000000", "0xFF000000"];
 						
 						if(typeof layer != 'undefined' && layer!=null 
 								&& edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["ABOVEMAXCOLOR"])){
@@ -977,7 +985,7 @@ edu.gmu.csiss.covali.map = {
 							
 							belowabove[1] = layer.getSource().getParams()["ABOVEMAXCOLOR"];
 							
-						}else{
+						}else if(obj.belowMinColor) {
 							
 							belowabove[0] = obj.belowMinColor;
 							
@@ -1070,10 +1078,12 @@ edu.gmu.csiss.covali.map = {
 						
 						minmax = layer.getSource().getParams()["COLORSCALERANGE"].split(",");
 						
-					}else{
+					}else if(obj.scaleRange) {
 						
 						minmax = [Number(obj.scaleRange[0]), Number(obj.scaleRange[1])];
 						
+					} else {
+						minmax = [-50, 50];
 					}
 					
 					var belowabove = [null, null];
@@ -1126,42 +1136,27 @@ edu.gmu.csiss.covali.map = {
 			if(style!=null && typeof style.LegendURL != 'undefined'){
 				
 				legendurl = style.LegendURL[0].OnlineResource;
-				
-				String.prototype.replaceAll = function(search, replacement) {
-				    var target = this;
-				    return target.replace(new RegExp(search, 'g'), replacement);
-				};
-				
+
 				var pathArray = location.href.split( '/' );
 				var protocol = pathArray[0];
 				var host = pathArray[2];
 				var urlprefix = protocol + '//' + host;
 				
 				console.log("current url base: " + urlprefix);
-				//why doing this? - because the url prefix need change if it has a proxy
-				if(legendurl.indexOf("localhost")!=-1 && !legendurl.startsWith(urlprefix)){
-					
-					var pathArray1 = legendurl.split( '/' );
-					var protocol1 = pathArray1[0];
-					var host1 = pathArray1[2];
-					pathArray1[0] = protocol;
-					pathArray1[2] = host;
-					legendurl = pathArray1.join("/");
-//					console.log("switch WMS prefix to current" + legendurl);
-					
-				}
-				
+
 				if(location.protocol=="https:"){
-					
 					legendurl = legendurl.replaceAll("http://", "https://").replaceAll("HTTP://", "https://");
-					
 				}
 				
-				//console.log("legendurl:" + legendurl);
-				
-			}
+                // proxy remote URLs
+                if(legendurl.indexOf('https://localhost') == -1 && legendurl.indexOf('http://localhost') == -1 ) {
+                    legendurl = 'wmsproxy?url=' + encodeURIComponent(legendurl);
+                }
+
+                console.log("legendurl:" + legendurl);
+            }
 			
-			return legendurl;
+			return  legendurl;
 		},
 		/**
 		 * only used when first adding the layer
@@ -1554,8 +1549,8 @@ edu.gmu.csiss.covali.map = {
 				params.ELEVATION = elevation;
 				
 			}
-			
-			var myLayer1303 = new ol.layer.Tile({
+
+            var myLayer1303 = new ol.layer.Tile({
 				  //extent: [2033814, 6414547, 2037302, 6420952],
 				  //preload: Infinity,
 				  name: layername,
@@ -1641,11 +1636,9 @@ edu.gmu.csiss.covali.map = {
 
 					source.tileCache.expireCache({});
 				    source.tileCache.clear();
-				    source.refresh();
-					
 				}
-				
-				
+
+                source.refresh();
 			}
 			
 		},

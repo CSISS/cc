@@ -184,11 +184,15 @@ edu.gmu.csiss.covali.wms = {
 			
 		},
 		
-		parseAll: function(capa_url, callback){
-
+		parseAll: function(capability_url, callback){
+            if(capability_url.indexOf('https://localhost') == -1 &&
+                capability_url.indexOf('http://localhost') == -1 &&
+                capability_url.indexOf('../../ncWMS2') == -1) {
+                capability_url = 'wmsproxy?url=' + encodeURIComponent(capability_url);
+            }
 			var parser = new ol.format.WMSCapabilities();
 			
-		    fetch(capa_url).then(function(response) {
+		    fetch(capability_url).then(function(response) {
 		      
 		    	  return response.text();
 		    
@@ -318,18 +322,23 @@ edu.gmu.csiss.covali.wms = {
 		 * parsing the layers in WMS capabilities 
 		 */
 		parse: function(layername, capability_url){
-			
-			var parser = new ol.format.WMSCapabilities();
-			
-		    fetch(capability_url).then(function(response) {
+            if(capability_url.indexOf('https://localhost') == -1 &&
+				capability_url.indexOf('http://localhost') == -1 &&
+                capability_url.indexOf('../../ncWMS2') == -1) {
+                capability_url = 'wmsproxy?url=' + encodeURIComponent(capability_url);
+            }
+
+            fetch(capability_url).then(function(response) {
 		      
 		    	  return response.text();
 		    
 		      }).then(function(text) {
 		    	  
 		    	  try{
-		    		  
-		    		  var result = parser.read(text);
+		    	  	  edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.local.jsframe.LoadingRemoteWMS');
+
+                      var parser = new ol.format.WMSCapabilities();
+                      var result = parser.read(text);
 				    	
 				    	edu.gmu.csiss.covali.wms.currentWMSCapabilities = result;
 				    
@@ -692,12 +701,6 @@ edu.gmu.csiss.covali.wms = {
 		},
 		
 		showLayerDialog: function(layerlist){
-			
-			//BootstrapDialog.closeAll();
-			
-			//$content = this.getLayerHierarchyDiv(layerlist);			
-			
-			//var content = this.getLayerHierarchyDiv(layerlist);
 			edu.gmu.csiss.covali.menu.closeAllDialogs();
 			var dialogName = 'edu.gmu.csiss.covali.wms.jsframe.LayerSelector';
 			var dialogTitle = 'Layer Selector';
@@ -783,12 +786,7 @@ edu.gmu.csiss.covali.wms = {
 					.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
 			
 			console.log(endpointurl);
-			
-			String.prototype.replaceAll = function(search, replacement) {
-			    var target = this;
-			    return target.replace(new RegExp(search, 'g'), replacement);
-			};
-			
+
 			var pathArray = location.href.split( '/' );
 			var protocol = pathArray[0];
 			var host = pathArray[2];
@@ -796,26 +794,14 @@ edu.gmu.csiss.covali.wms = {
 			
 			console.log("current url base: " + urlprefix);
 			
-			//why doing this? - because the url prefix need change if it has a proxy
-			if(endpointurl.indexOf("localhost")!=-1 && !endpointurl.startsWith(urlprefix)){
-				
-				var pathArray1 = endpointurl.split( '/' );
-				var protocol1 = pathArray1[0];
-				var host1 = pathArray1[2];
-				pathArray1[0] = protocol;
-				pathArray1[2] = host;
-				endpointurl = pathArray1.join("/");
-//				console.log("switch WMS prefix to current" + endpointurl);
-				
-			}
-			
 			if(location.protocol=="https:"){
-				
 				endpointurl = endpointurl.replaceAll("http://", "https://").replaceAll("HTTP://", "https://");
-				
 			}
-			
-			
+
+			// proxy remote URLs
+            if(endpointurl.indexOf('https://localhost') == -1 && endpointurl.indexOf('http://localhost') == -1 ) {
+                endpointurl = 'wmsproxy?url=' + encodeURIComponent(endpointurl);
+            }
 			
 			return endpointurl;
 			
@@ -834,8 +820,9 @@ edu.gmu.csiss.covali.wms = {
 //			var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
 //				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
 			endpointurl = this.getCurrentEndPoint();
-			
-			edu.gmu.csiss.covali.map.addWMSLayer(map, endpointurl, layername, stylename, time, elevation);
+
+
+            edu.gmu.csiss.covali.map.addWMSLayer(map, endpointurl, layername, stylename, time, elevation);
 			
 			edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename, time, elevation);
 			

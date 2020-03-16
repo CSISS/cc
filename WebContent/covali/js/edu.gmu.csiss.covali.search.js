@@ -61,6 +61,10 @@ edu.gmu.csiss.covali.search = {
 		 * Check whether the file format is supported
 		 */
 		checkfileformat: function(filename){
+
+			if(filename == 'NA') {
+				return false;
+			}
 			
 			return edu.gmu.csiss.covali.local.filterFormats(filename);
 			
@@ -199,7 +203,7 @@ edu.gmu.csiss.covali.search = {
                                         ' id="downbtn_' + escapeid + '"> <span ' +
                                         '			class="glyphicon glyphicon-download-alt" title="Download"></span> ' +
                                         '		</button>';
-                                } else {
+                                } else if (full.accessurl != 'NA') {
 
                                     content += '		<button onclick="edu.gmu.csiss.covali.search.download(\'' + full.accessurl + '\')" class="btn btn-default" ' +
                                         ' id="downbtn_' + escapeid + '"> <span ' +
@@ -208,7 +212,7 @@ edu.gmu.csiss.covali.search = {
 
                                 }
 
-                                //add a button to load map
+                                //add a button to load mapxx
 
                                 if (edu.gmu.csiss.covali.search.checkfileformat(full.accessurl)) {
 
@@ -220,7 +224,19 @@ edu.gmu.csiss.covali.search = {
 
                                 }
 
-                                if (!full.cached) {
+                                // load WMS
+                                if (full.wmsendpoint.startsWith("http") || full.wmsendpoint.startsWith("HTTP")) {
+
+                                    content += '		<button onclick="edu.gmu.csiss.covali.search.loadwms(\'' + full.id + '\', \'' +
+                                        full.wmsendpoint +
+                                        '\')" class="btn btn-default" id="wmsloadbtn_' + escapeid + '"> <span ' +
+                                        '			class="glyphicon glyphicon-cloud" title="Load WMS Map"></span> ' +
+                                        '		</button> ';
+
+                                }
+
+
+                                if (!full.cached && full.accessurl != 'NA') {
 
                                     content += '<button onclick="edu.gmu.csiss.covali.search.cache(\'' + full.id + '\', \'' + full.name + '\', \'' + full.accessurl + '\')" id="cachebtn_' + escapeid + '" class="btn btn-default" > ' +
                                         '			<span class="glyphicon glyphicon-save-file" title="Cache Data"></span> ' +
@@ -347,35 +363,6 @@ edu.gmu.csiss.covali.search = {
 						"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
 						"</div>";
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
-			
-//            BootstrapDialog.show({
-//
-//                title: product.name + ' Variables',
-//
-//                message: $(content),
-//
-//                buttons: [{
-//
-//                    id: 'btn-ok',
-//
-//                    icon: 'glyphicon glyphicon-check',
-//
-//                    label: 'Ok',
-//
-//                    cssClass: 'btn-primary',
-//
-//                    autospin: false,
-//
-//                    action: function(dialogRef){
-//
-//                        dialogRef.close();
-//
-//                    }
-//
-//                }]
-//
-//            });
-
 		},
 
     	view: function (product){
@@ -516,40 +503,6 @@ edu.gmu.csiss.covali.search = {
 			var dialogTitle = 'Information';
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, tablecontent);
 
-//			BootstrapDialog.show({
-//				
-//				title: 'Information',
-//			    
-//				message: $(tablecontent),
-//
-//				onshown: function(dialog) {
-//                    $("#viewvars_" + product.id).click(function(){
-//                        edu.gmu.csiss.covali.search.variablesTable(product);
-//                    });
-//				},
-//			    
-//				buttons: [{
-//			    
-//					id: 'btn-ok',   
-//			        
-//					icon: 'glyphicon glyphicon-check',       
-//			        
-//					label: 'Ok',
-//			        
-//					cssClass: 'btn-primary', 
-//			        
-//					autospin: false,
-//			        
-//					action: function(dialogRef){    
-//			        
-//						dialogRef.close();
-//						
-//					}
-//				
-//			    }]
-//				
-//			});
-			
         },
         
         cache: function(id, name, accessurl){
@@ -657,238 +610,22 @@ edu.gmu.csiss.covali.search = {
         	window.open(loc, '_blank');
         	
         },
-        
-        /**
-         * Transform data to VDP
-         * @param id
-         * @param accessurl
-         */
-//        transform: function(id, accessurl){
-//        	
-//        	cc.product.current_data_url = accessurl;
-//        	
-//        	var check = cc.util.checklog();
-//        	
-//        	if(check!=null&&check.login){
-//        		
-//        		//pop up a dialog to select VDP
-//            	
-//            	var vdpselect =  "<div class=\"row\">";
-//    			
-//            	vdpselect +=  "<div class=\"col-md-1\"></div>";
-//            	
-//            	vdpselect += "  <div class=\"form-group col-md-10\">\n";
-//    		    
-//            	vdpselect += "<div class=\"row\">";
-//            	
-//            	vdpselect += "<label class=\"col-md-3 control-label pull-left\" for=\"product_list\">select a VDP : </label>";
-//            	
-//            	vdpselect += "<select class=\"col-md-9\"  class=\"form-control\" id=\"product_list\" >";
-//            	
-//            	vdpselect += "<option></option>";
-//            	
-//            	vdpselect += "</select>";
-//            	
-//            	vdpselect += "</div>";
-//            	
-//            	vdpselect += "<hr/>";
-//            	
-//            	vdpselect += "<div class=\"row\" id=\"otherparams\">";
-//            	
-//            	vdpselect += " </div>";
-//    		    
-//            	vdpselect += "</div>";
-//            	
-//            	vdpselect +=  "<div class=\"col-md-1\"></div>";
-//            	
-//            	vdpselect += "</div>";
-//            	
-//            	BootstrapDialog.show({
-//        			
-//    				title: 'Select Target VDP to Transform',
-//    			    
-//    				message: vdpselect,
-//    				
-//    				onshown: function(dialogRef){
-//    					
-//    					//once the dialog is rendered, fetch the product list
-//    		        	
-//    					cc.product.initSelector4Dialog();
-//    					
-//    	            },
-//    			    
-//    				buttons: [{
-//    			        
-//    			    	id: 'btn-cancel',   
-//    			        
-//    			        icon: 'glyphicon glyphicon-remove',       
-//    			        
-//    			        label: 'Cancel',
-//    			        
-//    			        cssClass: 'btn-primary', 
-//    			        
-//    			        autospin: false,
-//    			        
-//    			        action: function(dialogRef){    
-//    			        
-//    			        	dialogRef.close();
-//    			        
-//    			        }
-//    			    
-//    			    },{
-//    			    	
-//    			    	id: 'btn-advanced',   
-//    			        
-//    			        icon: 'glyphicon glyphicon-check',       
-//    			        
-//    			        label: 'Advanced',
-//    			        
-//    			        cssClass: 'btn-primary', 
-//    			        
-//    			        autospin: false,
-//    			        
-//    			        action: function(dialogRef){    
-//
-//    			        	if(cc.product.selected_productid==null){
-//    			        		
-//    			        		alert("You must select a VDP first!");
-//    			        		
-//    			        		return;
-//    			        		
-//    			        	}
-//    			        	
-//    			        	cc.search.advancedOrder();
-//    			        	
-//    			        	dialogRef.close();
-//    			        	
-//    			        	cc.product.reset();
-//    			        
-//    			        }
-//    			    	
-//    			    },{
-//    			    
-//    					id: 'btn-ok',   
-//    			        
-//    					icon: 'glyphicon glyphicon-check',       
-//    			        
-//    					label: 'Instant Order',
-//    			        
-//    					cssClass: 'btn-primary', 
-//    			        
-//    					autospin: false,
-//    			        
-//    					action: function(dialogRef){    
-//    			        
-//    						if(cc.product.selected_productid==null){
-//    			        		
-//    			        		alert("You must select a VDP first!");
-//    			        		
-//    			        		return;
-//    			        		
-//    			        	}
-//    						
-//    						//make sure the values are filled
-//    						
-//    						var iscomplete = true;
-//    						
-//    						var keylist = [], valuelist = []; 
-//    						
-//    						$("#otherparams :input[type=text]").each(function(){
-//    							
-//    							if(!$(this).val() ){
-//    								
-//    								iscomplete = false;
-//    								
-//    								return;
-//    								
-//    							}
-//    							
-//    							keylist.push($(this).attr("key"));
-//    							
-//    							valuelist.push($(this).val());
-//    							
-//    						});
-//    						
-//    						if(!iscomplete){
-//    							
-//    							alert("The parameter values are incomplete!");
-//    							
-//    							return;
-//    							
-//    						}
-//    						
-//    						dialogRef.close();
-//    						
-//    						//construct a order request and send 
-//    						
-//    						var req = [];
-//    						
-//    		            	for(var i = 0, len = keylist.length; i < len; i++) {
-//    		            	    
-//    		            		var k = keylist[i];
-//    		            	    
-//    		            		var val = valuelist[i];
-//    		            	    
-//    		            		if(i!=0){
-//    		            	    
-//    		            			req.push("&");
-//    		            	    
-//    		            		}
-//    		            	    
-//    		            		req.push(k);
-//    		            	    
-//    		            		req.push("=");
-//    		            	    
-//    		            		req.push(val);
-//    		            	
-//    		            	}
-//    		            	
-//    		            	req.push("&productid=");
-//    		            	
-//    		            	req.push(cc.product.selected_productid);
-//    		            	
-//    		            	cc.product.retrievedata(req);
-//    			    
-//    					}
-//    				
-//    			    }]
-//    			
-//    			});
-//        		
-//        	}else{
-//        		
-//        		BootstrapDialog.show({
-//        			
-//    				title: 'Alert',
-//    			    
-//    				message: "You must log in to use this button.",
-//    				
-//    				buttons: [{
-//    			    
-//    					id: 'btn-ok',   
-//    			        
-//    					icon: 'glyphicon glyphicon-check',       
-//    			        
-//    					label: 'Got it',
-//    			        
-//    					cssClass: 'btn-primary', 
-//    			        
-//    					autospin: false,
-//    			        
-//    					action: function(dialogRef){    
-//    			        
-//    						dialogRef.close();
-//    			    
-//    					}
-//    				
-//    			    }]
-//    			
-//    			});
-//        		
-//        	}
-//        	
-//        },
-        
+
+		loadwms(escapeid, wmsurl) {
+
+            var dialogName = 'edu.gmu.csiss.covali.local.jsframe.LoadingRemoteWMS';
+            var dialogTitle = 'Remote WMS Loading';
+
+            var content = '<div class="modal-body" style="font-size: 12px;">';
+            content += '<b>Loading remote WMS ' + wmsurl + '...</b>';
+            content += '</div>';
+
+            edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 76);
+            console.log(dialogTitle);
+
+        	edu.gmu.csiss.covali.wms.parse(escapeid, wmsurl + '?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0', true);
+		},
+
         load: function(escapeid, accessurl){
         	
         	accessurl = unescape(accessurl);
@@ -976,12 +713,12 @@ edu.gmu.csiss.covali.search = {
             '				      <option value="1">CSISS Catalogue (UCAR/RDA)</option>'+
             
             '				      <option value="2">Public & Uploaded Files</option>'+
-			
-//			'				      <option value="4">CSISS Catalogue for Landsat 4/5/7 images (incomplete)</option>'+
-			
+
 			'				      <option value="3">BCube Broker</option>'+
 
-                '				    </select>'+
+			'				      <option selected="selected" value="4">GeoDAB WMS</option>'+
+
+			'				    </select>'+
 							  
 			'				  </div>'+
 						
@@ -1545,276 +1282,6 @@ edu.gmu.csiss.covali.search = {
 				"</div>";
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
 			edu.gmu.csiss.covali.search.searchDialogOnShownAction();
-			
-        	//BootstrapDialog.closeAll();
-
-//            edu.gmu.csiss.covali.search.searchdialog = new BootstrapDialog({
-//				
-//	            message: edu.gmu.csiss.covali.search.searchForm(),
-//	            
-//	            title: "Search Dialog",
-//	            
-//	            size: BootstrapDialog.SIZE_WIDE,
-//	            
-//	            cssClass: 'dialog-vertical-center',
-//	            
-//	            onshown: function(dialog) {
-//	            	
-//	            	//for format list
-//	            	
-//	            	edu.gmu.csiss.covali.search.checkFormat();
-//	            	
-//	    			$('.all').on('click', function(e){
-//	    				
-//	    				edu.gmu.csiss.covali.search.checkFormat();
-//	    				
-//	    			});
-//	    	    	
-//	        	    $('.button-checkbox').each(function () {
-//
-//	        	        // Settings
-//	        	        var $widget = $(this),
-//	        	            $button = $widget.find('button'),
-//	        	            $checkbox = $widget.find('input:checkbox'),
-//	        	            color = $button.data('color'),
-//	        	            settings = {
-//	        	                on: {
-//	        	                    icon: 'glyphicon glyphicon-check'
-//	        	                },
-//	        	                off: {
-//	        	                    icon: 'glyphicon glyphicon-unchecked'
-//	        	                }
-//	        	            };
-//
-//	        	        // Event Handlers
-//	        	        $button.on('click', function () {
-//	        	            $checkbox.prop('checked', !$checkbox.is(':checked'));
-//	        	            $checkbox.triggerHandler('change');
-//	        	            updateDisplay();
-//	        	        });
-//	        	        $checkbox.on('change', function () {
-//	        	            updateDisplay();
-//	        	        });
-//
-//        	            var isChecked = $checkbox.is(':checked');
-//
-//        	            // Set the button's state
-//        	            $button.data('state', (isChecked) ? "on" : "off");
-//        	            
-//        	            // Set the button's icon
-//        	            $button.find('.state-icon')
-//        	                .removeClass()
-//        	                .addClass('state-icon ' + settings[$button.data('state')].icon);
-//
-//        	            // Update the button's color
-//        	            if (isChecked) {
-//        	                $button
-//        	                    .removeClass('btn-default')
-//        	                    .addClass('btn-' + color + ' active');
-//        	            }
-//        	            else {
-//        	                $button
-//        	                    .removeClass('btn-' + color + ' active')
-//        	                    .addClass('btn-default');
-//        	            }
-//
-//        	            // Inject the icon if applicable
-//        	            if ($button.find('.state-icon').length == 0) {
-//        	                $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>');
-//        	            }
-//	        	    
-//	        	    });
-//	    	    	
-//	    	    	edu.gmu.csiss.covali.search.initializeSearchMap();
-//	    	    	
-//	    	    	$("#moreorless").click(function(){
-//	    	    		
-//	    	    		if($("#formatlist").is(":visible")){
-//	    	    			
-//	    	    			$("#formatlist").hide();
-//	    	    			
-//	    	    		}else{
-//	    	    			
-//	    	    			$("#formatlist").show();
-//	    	    			
-//	    	    		}
-//	    	    		
-//	    	    	});
-//	    	    	
-//	    	    	$("#formatlist").hide();
-//	    	    	
-//	    	    	//set CSW to null
-//	    	    	if($("#isvirtual").val()=="0")
-//	    	    		$('#csw').prop('disabled', false);
-//	    	    	else	
-//	    	    		$("#csw").val($("#csw option:eq(0)").val());
-//	    	    	
-//	    	    	$("#csw").on('change', function(){
-//	    	    		
-//	    	    		if(this.value == "2"){
-//	    	    			
-//	    	    			//local file need check if login is required
-//	    	    			
-//	    	    			$.ajax({
-//	    	    				
-//	    	    				url: "checkLoginRequirement",
-//	    	    				
-//	    	    				type: "POST",
-//	    	    				
-//	    	    				data: "action=localfilesearch"
-//	    	    				
-//	    	    			}).success(function(data){
-//	    	    				
-//	    	    				data = $.parseJSON(data);
-//	    	    				
-//	    	    				if(data.ret == "true"){
-//	    	    					
-//	    	    					//require login permission
-//	    	    					
-//	    	    					$("#csw").val(1); //first switch to 1 until the login requirement is met
-//	    	    					
-//	    	    					edu.gmu.csiss.covali.login.loginDialog(edu.gmu.csiss.covali.search.switchLocalOn);
-//	    	    					
-//	    	    				}else{
-//	    	    					
-//	    	    					//do nothing, it is fine. go ahead
-//	    	    					
-//	    	    				}
-//	    	    				
-//	    	    			});
-//	    	    			
-//	    	    			
-//	    	    		}
-//	    	    		
-//	    	    	});
-//	    	    	
-//	    	    	//add listener to virtual box
-//	    	    	
-//	    	    	$("#isvirtual").on('change', function(){
-//	    	    		
-//	    	    		if(this.value == "1"){
-//	    	    			console.log("virtual");
-//	    	    			$('#csw').prop('disabled', 'disabled');
-//	    	    			$("#csw").val($("#csw option:eq(0)").val());
-//	    	    		}else if(this.value=="0"){
-//	    	    			console.log("real");
-//	    	    			$('#csw').prop('disabled', false);
-//	    	    			$("#csw").val($("#csw option:eq(1)").val());
-//	    	    		}
-//	    	    		
-//	    	    	});
-//	    	    	
-//	    	    	$("#distime").change(function(){
-//	    	    	    
-//	    	    		if($(this).is(':checked')) {
-//	    	    	        
-//	    	    	    	$(this).val("true");
-//	    	    	        
-//	    	    	    	$("#bdtv").prop('disabled', true);        
-//	    	    	    	
-//	    	    	    	$("#edtv").prop('disabled', true);        
-//	    	    	        
-//	    	    	    } else {
-//	    	    	    
-//	    	    	    	$(this).val("false");
-//	    	    	    	
-//	    					$("#bdtv").prop('disabled', false);        
-//	    	    	    	
-//	    	    	    	$("#edtv").prop('disabled', false);        
-//	    	    	    
-//	    	    	    }
-//
-//	    	    	});
-//	    	    	
-//	            },
-//	            
-//	            buttons: [{
-//	                
-//	            	icon: 'glyphicon glyphicon-ok',
-//	                
-//	                label: 'Search',
-//	                
-//	                title: 'Search Data',
-//	                
-//	                cssClass: 'btn-warning btn-search',
-//	                
-//	                action: function(dialogItself){
-//	                	
-//	                	//Pop up a new dialog to contain the results	                	
-//	                	//send the search request to the backend proxy which will transfer to PyCSW
-//	                	
-//	                	var formatlist = "";
-//	                	
-//	                	var ckb = $(".all").is(':checked');
-//	                	
-//	                	if(!ckb){
-//
-//	                		$("#formatlist").find("input").each(function(){
-//		        				
-//		        				if($(this).prop( 'checked')){
-//		        					
-//		        					formatlist+=($(this).attr("name"))+" ";
-//		        					
-//		        				}
-//		        				
-//		        			});
-//	                		
-//	                	}else{
-//	                		
-//	                		formatlist += "all";
-//	                		
-//	                	}
-//	        	  		
-//	                	var request = {
-//	                		
-//	                		"searchtext":$("#searchtext").val(),
-//	                			
-//	                		"isvirtual":0,
-//	                		
-//	                		"csw":$("#csw").val(),
-//	                		
-//	                		"west":$("#west").val(),
-//	                		
-//	                		"east":$("#east").val(),
-//	                		
-//	                		"north":$("#north").val(),
-//	                		
-//	                		"south":$("#south").val(),
-//	                		
-//	                		"begindatetime":$("#bdtv").val(),
-//	                		
-//	                		"enddatetime":$("#edtv").val(),
-//
-//	                		"length":$("#recordsperpage  option:selected").text(),
-//
-//	                		"formats": formatlist
-//	                		
-//	                	};
-//	                	
-//	                	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
-//	                	
-//	                	dialogItself.close();
-//	                	
-////	                	dialogItself.hide();
-//	                	
-//	                }
-//	            	
-//	            }, {
-//	            	
-//	                label: 'Close',
-//	                
-//	                action: function(dialogItself){
-//	                	
-//	                    dialogItself.close();
-//	                    
-//	                }
-//	            
-//	            }]
-//	        
-//			});
-			
-			//edu.gmu.csiss.covali.search.searchdialog.open();
-			
 		}
 		
 };

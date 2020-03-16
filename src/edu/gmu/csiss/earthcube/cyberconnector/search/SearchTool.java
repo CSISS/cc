@@ -228,10 +228,12 @@ public class SearchTool {
 			.append("	        <ElementSetName>full</ElementSetName> ")
 			.append("	        <Constraint version=\"1.1.0\"> ")
 			.append("	            <ogc:Filter> ")
-			.append("	                <ogc:And> ")
+			.append("	                <ogc:And> ");
 
+		// geodab doesn't work with empty query string
+		if(req.searchtext.length() > 0 || !req.isServicewms()) {
 			// match csw:AnyText or apiso:Identifier
-			.append("	                <ogc:Or> ")
+			cswreq.append("	                <ogc:Or> ")
 			.append("	                    <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
 			.append("	                        <ogc:PropertyName>apiso:Identifier</ogc:PropertyName> ")
 			.append("	                        <ogc:Literal>*")
@@ -245,7 +247,7 @@ public class SearchTool {
 			.append("*</ogc:Literal> ")
 			.append("	                    </ogc:PropertyIsLike> ")
 			.append("	                </ogc:Or> ");
-
+		}
 
 		if(!req.distime && !BaseTool.isNull(req.begindatetime)){
 			cswreq.append("	                <ogc:PropertyIsGreaterThanOrEqualTo> ")

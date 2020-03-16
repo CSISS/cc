@@ -1,6 +1,9 @@
 package edu.gmu.csiss.earthcube.cyberconnector.web;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,18 +20,19 @@ import edu.iris.dmc.fdsn.station.model.Channel;
 import edu.iris.dmc.fdsn.station.model.Network;
 import edu.iris.dmc.fdsn.station.model.Station;
 import edu.iris.dmc.service.StationService;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.Serializers;
 import org.json.simple.JSONValue;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 
@@ -323,6 +327,45 @@ public class CovaliController {
     	return resp;
     	
     }
+
+	@RequestMapping(value = "/wmsproxy", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+	public @ResponseBody String wmsproxy(WebRequest request){
+		String resp = "";
+
+    	try {
+			String url = URLDecoder.decode(request.getParameter("url"), "UTF-8");
+
+			List <String> queryKV = new ArrayList<>();
+			Set<String> queryKeys = request.getParameterMap().keySet();
+
+			Iterator<String> keyIter = queryKeys.iterator();
+			while(keyIter.hasNext()) {
+				String key = keyIter.next();
+				if(!key.equals("url")) {
+					String[] value = request.getParameterMap().get(key);
+					queryKV.add(key + "=" + value[0]);
+				}
+			}
+			url = url + "&" + StringUtils.join(queryKV, '&');
+
+			logger.info("wmsproxy GET " + url);
+
+			HttpClient client = new HttpClient();
+			GetMethod get = new GetMethod(url);
+
+			client.executeMethod(get);
+			BufferedReader br = new BufferedReader(new InputStreamReader(get.getResponseBodyAsStream()));
+			String readLine;
+			while(((readLine = br.readLine()) != null)) {
+				resp += readLine + "\n";
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return resp;
+	}
 	
 	@RequestMapping(value = "/downloadWMSFile", method = RequestMethod.POST)
     public @ResponseBody String downloadWMSFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
