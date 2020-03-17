@@ -50,17 +50,11 @@ edu.gmu.csiss.covali.menu = {
 			
 			//edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
-			var width = 800; height = 500;
+			if (!width) { width = 800; }
+			if (!height) { height = 500; }
 			
 			content = '<div id = "jsframeInnerHtml" style="padding:10px; font-size: 12px;">' + content + '</div>';
-			
-			//$x = $(content);
-			//$('body').append($x);
-			//console.log($x.height());
-			//$('body').remove($x);
-			//$content.css("display","inline-block");
-			//$content.css("display","inherit");
-			
+
 			var frame = edu.gmu.csiss.covali.menu.jsframe.create({
 		    		title: dialogTitle,
 		    		name: dialogName,
