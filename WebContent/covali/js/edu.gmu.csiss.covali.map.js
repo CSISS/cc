@@ -956,7 +956,7 @@ edu.gmu.csiss.covali.map = {
 						var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, edu.gmu.csiss.covali.map.legend_layername);
 
 						var minmax = [null,null];
-						
+
 						if(typeof layer != 'undefined' && layer!=null 
 								&& edu.gmu.csiss.covali.map.isValue(layer.getSource().getParams()["COLORSCALERANGE"])){
 							
@@ -1353,7 +1353,7 @@ edu.gmu.csiss.covali.map = {
 							var stopLeft = document.getElementById('stop-left');
 							var animationInfoLeft = document.getElementById('animation-time-left');
 						} else{
-							var restartRight = document.getElementBy('restart-right');
+							var restartRight = document.getElementById('restart-right');
 							var stopRight = document.getElementById('stop-right');
 							var animationInfoRight = document.getElementById('animation-time-right');							
 						}		    		
