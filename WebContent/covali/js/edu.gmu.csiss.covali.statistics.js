@@ -194,7 +194,6 @@ edu.gmu.csiss.covali.statistics = {
     		var featureId = params.LayerName.split("/")[1];
     		console.log("ncWMS2 request:")
     		console.log(url);
-            if (url && content) {
 
     		if (url && content) {
             	fetch(url)
