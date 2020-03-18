@@ -227,46 +227,8 @@ edu.gmu.csiss.covali.map = {
 		    		}
 		    	}
 		},
-		
-		/**
-		 * This function is not finished, please finish it @sreten
-		 */
-		stoporresume: function(side){
 
-			
-			if($("#animationbtn-" + side).text()=="Stop"){
 
-				window.clearInterval(window.animationId);
-				
-				$("#animationbtn-" + side).text("Resume");
-				
-			}
-			else{
-				
-				$("#animationbtn-" + side).text("Stop");
-				window.animationId = window.setInterval(setTime, 1000/framerate);
-				
-			}
-			
-		},
-		
-		/**
-		 * This function is used for updating the text in the legend area only. The legend update has two parts: the color bar and the text.
-		 */
-		updateAnimationCaption: function(side,layername, time, elevation, stoporresume){
-			
-			if(!$("#animationbtn-" + side).length){
-				
-				$("#animationindicator-" + side).html("Animation is playing. <button onclick=\"stoporresume('"+side+"')\" type=\"button\" id=\"animationbtn-"+side+"\">Stop</button>");
-				
-			}
-			
-			$("#time-" + side).html(time);
-			
-
-			
-		},
-		
 		updateCaption: function(side, layername, time, elevation){
 			//console.trace();
 			
@@ -322,57 +284,41 @@ edu.gmu.csiss.covali.map = {
 		 * only used for updating the legend div element and the current legend layer variable
 		 */
 		updateLegend: function(side, layername, legendurl, palette, style, time, elevation){
-			
-			
 
 			var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
 
-			
-			
 			var lid = this.getLegendIdBySide(side);
-				
 
-		  
-			var legend_layername = layername;
-				
 
-				if(topVisibleLayer && layername == topVisibleLayer.get('name') && this.isValue(legendurl)){
-					
-					if(this.isValue(palette)){
-						
-						legendurl = this.setParameterByName("PALETTE", palette, legendurl);
-						
-//	    					$('#'+lid).attr("palette", palette);
-						
-					}
-					
-					var width = 100;
-					
-					if($("#"+lid).width()!=0){
-						
-						width = $("#"+lid).width();
-						
-					}
-				
-					$('#'+lid).css("background-image", "url(" + legendurl + "&VERTICAL=false&COLORBARONLY=true&height=20&width=" + width + ")");  
-					
-					$('#'+lid).attr("legendurl", legendurl);
-					
-					this.updateScale(side, false);
-					
-				}else{
-					
-					$('#'+lid).css("background-image", "url('')");  
-					
-					$('#'+lid).attr("legendurl", null);
-					
-					this.updateScale(side, true);
+			if(topVisibleLayer && layername == topVisibleLayer.get('name') && this.isValue(legendurl)){
+
+				if(this.isValue(palette)){
+					legendurl = this.setParameterByName("PALETTE", palette, legendurl);
 				}
 
-				
-				this.updateCaption(side, layername, time, elevation);
-		}
-			
+				var width = 100;
+
+				if($("#"+lid).width()!=0){
+					width = $("#"+lid).width();
+				}
+
+				$('#'+lid).css("background-image", "url(" + legendurl + "&VERTICAL=false&COLORBARONLY=true&height=20&width=" + width + ")");
+
+				$('#'+lid).attr("legendurl", legendurl);
+
+				this.updateScale(side, false);
+
+			}else{
+
+				$('#'+lid).css("background-image", "url('')");
+
+				$('#'+lid).attr("legendurl", null);
+
+				this.updateScale(side, true);
+			}
+
+			this.updateCaption(side, layername, time, elevation);
+
 		},
 		
 		getMapBySide: function(side){
