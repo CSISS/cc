@@ -44,4 +44,20 @@ edu.gmu.csiss.covali.util = {
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
 
     },
+
+    sortDictionaryBasedOnValues: function(obj) {
+        items = Object.keys(obj).map(function(key) {
+            return [key, obj[key]];
+        });
+        items.sort(function(first, second) {
+            return first[1] - second[1];
+        });
+        sorted_obj={}
+        $.each(items, function(k, v) {
+            use_key = v[0]
+            use_value = v[1]
+            sorted_obj[use_key] = use_value
+        })
+        return(sorted_obj)
+    },
 }

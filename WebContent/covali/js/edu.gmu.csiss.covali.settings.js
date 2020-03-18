@@ -11,22 +11,7 @@
 edu.gmu.csiss.covali.settings = {
 		
 		isSync: true,
-		
-		sortDictionaryBasedOnValues: function(obj) {
-		    items = Object.keys(obj).map(function(key) {
-		        return [key, obj[key]];
-		    });
-		    items.sort(function(first, second) {
-		        return first[1] - second[1];
-		    });
-		    sorted_obj={}
-		    $.each(items, function(k, v) {
-		        use_key = v[0]
-		        use_value = v[1]
-		        sorted_obj[use_key] = use_value
-		    })
-		    return(sorted_obj)
-		},
+
 		
 		getLayerSortedDictOfLayersAndZIndices: function(side){
 			var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
@@ -42,8 +27,8 @@ edu.gmu.csiss.covali.settings = {
 					layerNameWithMaxZIndex = layer.get('name');
 				}		
 			});
-			console.log(JSON.stringify(edu.gmu.csiss.covali.settings.sortDictionaryBasedOnValues(ZIndices), null, 2));
-			return edu.gmu.csiss.covali.settings.sortDictionaryBasedOnValues(ZIndices);
+			console.log(JSON.stringify(edu.gmu.csiss.covali.util.sortDictionaryBasedOnValues(ZIndices), null, 2));
+			return edu.gmu.csiss.covali.util.sortDictionaryBasedOnValues(ZIndices);
 			
 		},
 		
@@ -88,7 +73,7 @@ edu.gmu.csiss.covali.settings = {
 					layer.setVisible(checked);
 					if (topVisibleLayer && layername == topVisibleLayer.get('name')){
 						edu.gmu.csiss.covali.statistics.changePopupVisibility(side, checked);
-						edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);		
+						edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);
 					}
 			    }
 				
@@ -332,7 +317,6 @@ edu.gmu.csiss.covali.settings = {
 		getOneLayerControl: function(side, layername, opacity){
 			
 			var opaval = Number(opacity);
-			
 
     		
     		var onecontrol = "<div class=\"checkbox\" id=\""+side+"_"+layername.split("/")[1]+"\">"+
@@ -369,7 +353,7 @@ edu.gmu.csiss.covali.settings = {
 					}
 					
 					//opacity slider bar
-					onecontrol += "<input oninput=\"edu.gmu.csiss.covali.settings.changeOpacity(this, '"+
+					onecontrol += "<input style=\"width:220px;\" oninput=\"edu.gmu.csiss.covali.settings.changeOpacity(this, '"+
 					side + "', '" + layername +
 					"');\" type=\"range\" class=\"slider\" min=\"0\" max=\"100\" value=\""+opaval*100+"\" /><p>Opacity: <span class=\"opacity-value\">"+opaval+"</span></p>"+
 				"</label> "+
@@ -566,109 +550,7 @@ edu.gmu.csiss.covali.settings = {
 				"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Ok</span>"+
 				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
 				"</div>";
-			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600, 800);
-			
-//			BootstrapDialog.show({
-//				
-//				cssClass: 'dialog-vertical-center',
-//	            
-//	            title: "Settings",
-//	            
-//	            message: function(dialog) {
-//	            	
-//	            	var $lefttree = edu.gmu.csiss.covali.settings.getLayerControl("left");
-//	            	
-//	            	var $righttree = edu.gmu.csiss.covali.settings.getLayerControl("right");
-//	            	
-//	            	var leftstatus = "";
-//	            	
-//	            	if(edu.gmu.csiss.covali.map.getMapStatus("left")){
-//	            		
-//	            		leftstatus = "checked=\"checked\"";
-//	            		
-//	            	}
-//	            		
-//	            	var rightstatus = ""; 
-//	            	
-//	            	if(edu.gmu.csiss.covali.map.getMapStatus("right")){
-//	            		
-//	            		rightstatus = "checked=\"checked\"";
-//	            		
-//	            	} 
-//	            	
-//	            	console.log("left status: " + leftstatus + " - right status: " + rightstatus );
-//	            	
-//	            	var synccheck = "";
-//	            	
-//	            	if(edu.gmu.csiss.covali.settings.isSync){
-//	            		
-//	            		synccheck = "checked=\"checked\"";
-//	            		
-//	            	}
-//	            	
-//	                var $content = $('<div class=\"row\">'+
-//	    			
-//					'<div class=\"col-md-12\"><h2>Map Control</h2></div>'+
-//					
-//					'<div class=\"col-md-12\"><span>Enable Map Synchronization:</span> <input type=\"checkbox\" id=\"map-sync\" onchange=\"edu.gmu.csiss.covali.settings.switchSync(this.checked)\" '+synccheck+' ></div>'+
-//					
-//					'<div class=\"col-md-6\" id=\"left-settings\">'+
-//					
-//					'	<h4>Left Map '+
-//					
-//					'	<input type=\"checkbox\" '+leftstatus+' id=\"left-map-switch\" onchange=\"edu.gmu.csiss.covali.settings.checkMap(\'left\', this.checked)\" value=\"\">'+
-//					
-//					'</h4>'+
-//					
-//					$lefttree.html()+
-//					
-//					'</div>' +
-//					
-//					'<div class=\"col-md-6\" id=\"right-settings\" >'+
-//					
-//					'<h4>Right Map'+
-//					
-//					'	<input type=\"checkbox\" '+rightstatus+' id=\"left-map-switch\" onchange=\"edu.gmu.csiss.covali.settings.checkMap(\'right\', this.checked)\" value=\"\">'+
-//					
-//					'</h4>'+
-//					
-//					$righttree.html()+
-//					
-//					'</div>');
-//	                
-//	                return $content;
-//	                
-//	            },
-//	            
-//	            buttons: [{
-//	                
-//	            	icon: 'glyphicon glyphicon-ok',
-//	                
-//	                label: 'OK',
-//	                
-//	                title: 'OK',
-//	                
-//	                cssClass: 'btn-warning',
-//	                
-//	                action: function(dialogItself){
-//	                	
-//	                	dialogItself.close();
-//	                	
-//	                }
-//	                
-//	            }, {
-//	                
-//	            	label: 'Close',
-//	                
-//	                action: function(dialogItself){
-//	                	
-//	                    dialogItself.close();
-//	                    
-//	                }
-//	            
-//	            }]
-//	            
-//	        });
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 700, 840);
 			
 		}
 		
