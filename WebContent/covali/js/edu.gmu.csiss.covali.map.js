@@ -264,17 +264,6 @@ edu.gmu.csiss.covali.map = {
 			$("#time-" + side).html(time);
 			
 
-//			var caption_id = "title-" + this.getMapContainerIdBySide(side) ;
-//			
-//			var captionhtml = "name: " + layername;
-//			
-//			if(time!=null || elevation!=null){
-//				
-//				captionhtml += " - time: " + time + " - elevation : " + elevation;
-//				
-//			}
-//			
-//			$("#"+caption_id).html(captionhtml);
 			
 		},
 		
@@ -335,28 +324,18 @@ edu.gmu.csiss.covali.map = {
 		updateLegend: function(side, layername, legendurl, palette, style, time, elevation){
 			
 			
-			//var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
-			//if (topVisibleLayer == null){
-				var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-			//}
-			
+
+			var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+
 			
 			
 			var lid = this.getLegendIdBySide(side);
 				
-				//var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-				
-				//var layer = edu.gmu.csiss.covali.wms.getLayerByName(layername);
-		    		
-					
-		    		//if(theotherlayer!=null){
-		    		
-		    	//if(layer){
+
 		  
 			var legend_layername = layername;
 				
-			//if( topVisibleLayer && layername == topVisibleLayer.get('name')){
-				
+
 				if(topVisibleLayer && layername == topVisibleLayer.get('name') && this.isValue(legendurl)){
 					
 					if(this.isValue(palette)){
@@ -389,20 +368,10 @@ edu.gmu.csiss.covali.map = {
 					
 					this.updateScale(side, true);
 				}
-		    			
-//	    		}else{
-//					$('#'+lid).css("background-image", "url('')");  
-//					
-//					$('#'+lid).attr("legendurl", null);
-//					
-//					this.updateScale(side, true);
-//	    		}
+
 				
 				this.updateCaption(side, layername, time, elevation);
-				
-//				console.log("the legend div height: " + $("#"+lid).height());				
-				
-//			}
+		}
 			
 		},
 		
