@@ -59,5 +59,10 @@ edu.gmu.csiss.covali.util = {
             sorted_obj[use_key] = use_value
         })
         return(sorted_obj)
-    },
+    }
 }
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
