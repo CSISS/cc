@@ -123,7 +123,7 @@ edu.gmu.csiss.covali.animation = {
 		"</div>";
 		
 		
-		edu.gmu.csiss.covali.menu.closeAllDialogs();		
+		edu.gmu.csiss.covali.menu.closeAllDialogs();
 		
 		var dialogName = 'edu.gmu.csiss.covali.animation.jsframe.CreateAnimation';
 		var dialogTitle = 'Create Animation';
