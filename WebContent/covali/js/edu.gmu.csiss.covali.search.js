@@ -132,6 +132,8 @@ edu.gmu.csiss.covali.search = {
                 "serverSide": true,
 
 				"pageLength": request.length,
+
+				"searching": false,
                 
                 "ajax": {
                 	
@@ -382,6 +384,9 @@ edu.gmu.csiss.covali.search = {
 		},
 
     	view: function (product){
+
+            var dialogName = 'edu.gmu.csiss.covali.search.jsframe.TableContent';
+            var dialogTitle = 'Information';
 			
 			var tablecontent = "<div style='font-size: 14px;'>";
 
@@ -525,13 +530,12 @@ edu.gmu.csiss.covali.search = {
 
 
 			tablecontent += "</div>";
-			
+
 			tablecontent +="<div class=\"modal-footer\">" +
 				"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
 				"</div>";
 			
-			var dialogName = 'edu.gmu.csiss.covali.search.jsframe.TableContent';
-			var dialogTitle = 'Information';
+
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, tablecontent);
 
 
@@ -1339,12 +1343,6 @@ edu.gmu.csiss.covali.search = {
         	
         	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
         	edu.gmu.csiss.covali.search.initTable(request);
-        	
-        	//dialogItself.close();
-        	
-        	//edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.search.jsframe.SearchResults');
-        	
-//        	dialogItself.hide();
         	
         },
 		
