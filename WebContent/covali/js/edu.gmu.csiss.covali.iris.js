@@ -107,8 +107,8 @@ edu.gmu.csiss.covali.iris = {
                 var currentProj = edu.gmu.csiss.covali.projection.leftmap.getView().projection_.code_;
                 edu.gmu.csiss.covali.projection.reprojectPointsLayers(currentProj);
 
-                edu.gmu.csiss.covali.map.updateCaption('left', 'IRIS Layer');
-                edu.gmu.csiss.covali.map.updateCaption('right', 'IRIS Layer');
+                edu.gmu.csiss.covali.map.updateLegendCaption('left', 'IRIS Layer');
+                edu.gmu.csiss.covali.map.updateLegendCaption('right', 'IRIS Layer');
 
                 var select1 = new ol.interaction.Select();
                 var select2 = new ol.interaction.Select();

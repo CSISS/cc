@@ -476,7 +476,7 @@ edu.gmu.csiss.covali.statistics = {
 
 		// var projection = map.getView().getProjection();
 
-		var req = edu.gmu.csiss.covali.wms.getCurrentEndPoint() + "?REQUEST=GetTransect&LAYERS=" +
+		var req = edu.gmu.csiss.covali.wms.getCurrentEndPointUrl() + "?REQUEST=GetTransect&LAYERS=" +
 
 			layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
 

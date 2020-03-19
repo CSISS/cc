@@ -784,11 +784,6 @@ edu.gmu.csiss.covali.wms = {
 
         console.log(endpointurl);
 
-        String.prototype.replaceAll = function(search, replacement) {
-            var target = this;
-            return target.replace(new RegExp(search, 'g'), replacement);
-        };
-
         var pathArray = location.href.split( '/' );
         var protocol = pathArray[0];
         var host = pathArray[2];
@@ -832,11 +827,6 @@ edu.gmu.csiss.covali.wms = {
         if(style!=null && typeof style.LegendURL != 'undefined'){
 
             legendurl = style.LegendURL[0].OnlineResource;
-
-            String.prototype.replaceAll = function(search, replacement) {
-                var target = this;
-                return target.replace(new RegExp(search, 'g'), replacement);
-            };
 
             var pathArray = location.href.split( '/' );
             var protocol = pathArray[0];
