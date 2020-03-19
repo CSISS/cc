@@ -10,8 +10,7 @@
 edu.gmu.csiss.covali.search = {
 
 		resultDialog: function(request, title){
-			
-			edu.gmu.csiss.covali.menu.closeAllDialogs();
+
 			var dialogName = 'edu.gmu.csiss.covali.search.jsframe.'+title.replace(" ", "");
 			var dialogTitle = title;
 			
@@ -42,17 +41,12 @@ edu.gmu.csiss.covali.search = {
 							"</dl></div>"+
 							
 							"<div class=\"modal-footer\">" +
-							"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.search.init();\">Back</span>"+
-							"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+							"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Back</span>"+
+							"<span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.menu.closeAllDialogs();\">Close</span></p>"+
 							"</div>";
 
 			
-			//this.resultdialog = function(){
-				//edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
-				//edu.gmu.csiss.covali.search.initTable(request);
-			//}
-			
-			this.resultdialog = edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600, 800);
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 700);
 
 			
 		},
@@ -352,34 +346,7 @@ edu.gmu.csiss.covali.search = {
 						"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
 						"</div>";
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
-			
-//            BootstrapDialog.show({
-//
-//                title: product.name + ' Variables',
-//
-//                message: $(content),
-//
-//                buttons: [{
-//
-//                    id: 'btn-ok',
-//
-//                    icon: 'glyphicon glyphicon-check',
-//
-//                    label: 'Ok',
-//
-//                    cssClass: 'btn-primary',
-//
-//                    autospin: false,
-//
-//                    action: function(dialogRef){
-//
-//                        dialogRef.close();
-//
-//                    }
-//
-//                }]
-//
-//            });
+
 
 		},
 
@@ -647,238 +614,7 @@ edu.gmu.csiss.covali.search = {
         	window.open(loc, '_blank');
         	
         },
-        
-        /**
-         * Transform data to VDP
-         * @param id
-         * @param accessurl
-         */
-//        transform: function(id, accessurl){
-//        	
-//        	cc.product.current_data_url = accessurl;
-//        	
-//        	var check = cc.util.checklog();
-//        	
-//        	if(check!=null&&check.login){
-//        		
-//        		//pop up a dialog to select VDP
-//            	
-//            	var vdpselect =  "<div class=\"row\">";
-//    			
-//            	vdpselect +=  "<div class=\"col-md-1\"></div>";
-//            	
-//            	vdpselect += "  <div class=\"form-group col-md-10\">\n";
-//    		    
-//            	vdpselect += "<div class=\"row\">";
-//            	
-//            	vdpselect += "<label class=\"col-md-3 control-label pull-left\" for=\"product_list\">select a VDP : </label>";
-//            	
-//            	vdpselect += "<select class=\"col-md-9\"  class=\"form-control\" id=\"product_list\" >";
-//            	
-//            	vdpselect += "<option></option>";
-//            	
-//            	vdpselect += "</select>";
-//            	
-//            	vdpselect += "</div>";
-//            	
-//            	vdpselect += "<hr/>";
-//            	
-//            	vdpselect += "<div class=\"row\" id=\"otherparams\">";
-//            	
-//            	vdpselect += " </div>";
-//    		    
-//            	vdpselect += "</div>";
-//            	
-//            	vdpselect +=  "<div class=\"col-md-1\"></div>";
-//            	
-//            	vdpselect += "</div>";
-//            	
-//            	BootstrapDialog.show({
-//        			
-//    				title: 'Select Target VDP to Transform',
-//    			    
-//    				message: vdpselect,
-//    				
-//    				onshown: function(dialogRef){
-//    					
-//    					//once the dialog is rendered, fetch the product list
-//    		        	
-//    					cc.product.initSelector4Dialog();
-//    					
-//    	            },
-//    			    
-//    				buttons: [{
-//    			        
-//    			    	id: 'btn-cancel',   
-//    			        
-//    			        icon: 'glyphicon glyphicon-remove',       
-//    			        
-//    			        label: 'Cancel',
-//    			        
-//    			        cssClass: 'btn-primary', 
-//    			        
-//    			        autospin: false,
-//    			        
-//    			        action: function(dialogRef){    
-//    			        
-//    			        	dialogRef.close();
-//    			        
-//    			        }
-//    			    
-//    			    },{
-//    			    	
-//    			    	id: 'btn-advanced',   
-//    			        
-//    			        icon: 'glyphicon glyphicon-check',       
-//    			        
-//    			        label: 'Advanced',
-//    			        
-//    			        cssClass: 'btn-primary', 
-//    			        
-//    			        autospin: false,
-//    			        
-//    			        action: function(dialogRef){    
-//
-//    			        	if(cc.product.selected_productid==null){
-//    			        		
-//    			        		alert("You must select a VDP first!");
-//    			        		
-//    			        		return;
-//    			        		
-//    			        	}
-//    			        	
-//    			        	cc.search.advancedOrder();
-//    			        	
-//    			        	dialogRef.close();
-//    			        	
-//    			        	cc.product.reset();
-//    			        
-//    			        }
-//    			    	
-//    			    },{
-//    			    
-//    					id: 'btn-ok',   
-//    			        
-//    					icon: 'glyphicon glyphicon-check',       
-//    			        
-//    					label: 'Instant Order',
-//    			        
-//    					cssClass: 'btn-primary', 
-//    			        
-//    					autospin: false,
-//    			        
-//    					action: function(dialogRef){    
-//    			        
-//    						if(cc.product.selected_productid==null){
-//    			        		
-//    			        		alert("You must select a VDP first!");
-//    			        		
-//    			        		return;
-//    			        		
-//    			        	}
-//    						
-//    						//make sure the values are filled
-//    						
-//    						var iscomplete = true;
-//    						
-//    						var keylist = [], valuelist = []; 
-//    						
-//    						$("#otherparams :input[type=text]").each(function(){
-//    							
-//    							if(!$(this).val() ){
-//    								
-//    								iscomplete = false;
-//    								
-//    								return;
-//    								
-//    							}
-//    							
-//    							keylist.push($(this).attr("key"));
-//    							
-//    							valuelist.push($(this).val());
-//    							
-//    						});
-//    						
-//    						if(!iscomplete){
-//    							
-//    							alert("The parameter values are incomplete!");
-//    							
-//    							return;
-//    							
-//    						}
-//    						
-//    						dialogRef.close();
-//    						
-//    						//construct a order request and send 
-//    						
-//    						var req = [];
-//    						
-//    		            	for(var i = 0, len = keylist.length; i < len; i++) {
-//    		            	    
-//    		            		var k = keylist[i];
-//    		            	    
-//    		            		var val = valuelist[i];
-//    		            	    
-//    		            		if(i!=0){
-//    		            	    
-//    		            			req.push("&");
-//    		            	    
-//    		            		}
-//    		            	    
-//    		            		req.push(k);
-//    		            	    
-//    		            		req.push("=");
-//    		            	    
-//    		            		req.push(val);
-//    		            	
-//    		            	}
-//    		            	
-//    		            	req.push("&productid=");
-//    		            	
-//    		            	req.push(cc.product.selected_productid);
-//    		            	
-//    		            	cc.product.retrievedata(req);
-//    			    
-//    					}
-//    				
-//    			    }]
-//    			
-//    			});
-//        		
-//        	}else{
-//        		
-//        		BootstrapDialog.show({
-//        			
-//    				title: 'Alert',
-//    			    
-//    				message: "You must log in to use this button.",
-//    				
-//    				buttons: [{
-//    			    
-//    					id: 'btn-ok',   
-//    			        
-//    					icon: 'glyphicon glyphicon-check',       
-//    			        
-//    					label: 'Got it',
-//    			        
-//    					cssClass: 'btn-primary', 
-//    			        
-//    					autospin: false,
-//    			        
-//    					action: function(dialogRef){    
-//    			        
-//    						dialogRef.close();
-//    			    
-//    					}
-//    				
-//    			    }]
-//    			
-//    			});
-//        		
-//        	}
-//        	
-//        },
-        
+
         load: function(escapeid, accessurl){
         	
         	accessurl = unescape(accessurl);
@@ -1525,7 +1261,7 @@ edu.gmu.csiss.covali.search = {
 			var content = edu.gmu.csiss.covali.search.searchForm() +
 				"<div class=\"modal-footer\">" +
 				"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.search.searchDialogsearchButtonAction()\">Search</span>"+
-				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Close</span></p>"+
+				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeAllDialogs()\'>Close</span></p>"+
 				"</div>";
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 670);
 			edu.gmu.csiss.covali.search.searchDialogOnShownAction();

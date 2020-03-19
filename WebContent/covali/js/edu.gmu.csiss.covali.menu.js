@@ -29,27 +29,17 @@ edu.gmu.csiss.covali.menu = {
 		},
 		
 		closeAllDialogs: function(){
-			var jsframeNames = ['edu.gmu.csiss.covali.add.jsframe.AddingDataMethods','edu.gmu.csiss.covali.wms.jsframe.AddWMS',
-				'edu.gmu.csiss.covali.upload.jsframe.DataUploader', 'edu.gmu.csiss.covali.wms.jsframe.LayerSelector',
-				'edu.gmu.csiss.covali.uri.jsframe.AddDataFromURL','edu.gmu.csiss.covali.chords.jsframe.AddCHORDS',
-				'edu.gmu.csiss.covali.settings.jsframe.Settings','edu.gmu.csiss.covali.statistics.jsframe.Statistics',
-				'edu.gmu.csiss.covali.animation.jsframe.LayerSelector','edu.gmu.csiss.covali.search.jsframe.SearchDialog',
-				'edu.gmu.csiss.covali.map.jsframe.PaletteSelector','edu.gmu.csiss.covali.animation.jsframe.CreateAnimation',
-				'edu.gmu.csiss.covali.map.jsframe.StyleManager','edu.gmu.csiss.covali.local.jsframe.ParsingFile',
-				'edu.gmu.csiss.covali.local.jsframe.PublicFolder','edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles',
-				'edu.gmu.csiss.covali.multifilebrowser.jsframe.LocalFiles','edu.gmu.csiss.covali.share.jsframe.Share',
-				'edu.gmu.csiss.covali.nco.jsframe.NCOProcessing', 'edu.gmu.csiss.covali.regrid.jsframe.RegridData',
-                'edu.gmu.csiss.covali.statistics.jsframe.Iris'];
-			
-			jsframeNames.forEach(function(jsframeName){
-				edu.gmu.csiss.covali.menu.closeDialog(jsframeName);
-			})
+            var jsFrameBeans = edu.gmu.csiss.covali.menu.jsframe.windowManager.beanNameId;
+            for (var bName in jsFrameBeans) {
+            	// this is a covali window
+            	if(bName.indexOf('covali') != -1) {
+                    edu.gmu.csiss.covali.menu.closeDialog(bName);
+				}
+			}
 		},
 		
 		createDialog: function(dialogName, dialogTitle, content, height, width, x, y){
-			
-			//edu.gmu.csiss.covali.menu.closeAllDialogs();
-		
+
 			if (!width) { width = 800; }
 			if (!height) { height = 500; }
 			
