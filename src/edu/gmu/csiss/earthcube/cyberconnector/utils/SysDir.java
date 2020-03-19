@@ -37,6 +37,8 @@ public class SysDir {
     
 	public static String CSISS_CSW_URL = null;
 
+	public static String GEODAB_CSW_URL = "http://gs-service-production.geodab.eu/gs-service/services/essi/csw";
+
 	public static String PREFIXURL = null;
     
 	public static String ncWMSURL = null; 

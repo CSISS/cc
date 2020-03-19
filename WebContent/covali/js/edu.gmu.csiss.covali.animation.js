@@ -221,13 +221,12 @@ edu.gmu.csiss.covali.animation = {
 				
             	"<div class=\"row\" id=\"\"></div>"+
 			"</dl></div>"+
+			//edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.animation.layerSelectCallback)+
 			"<div class=\"modal-footer\">" +
 			"<p><span class=\"btn btn-primary\" onclick=\"edu.gmu.csiss.covali.animation.layerSelector();\">Select</span></p>"+
 			"</div>";
-
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 700, 600);
-
-        edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.animation.layerSelectCallback)
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
+		edu.gmu.csiss.covali.wms.getAllLayers(edu.gmu.csiss.covali.animation.layerSelectCallback)
 
 	}
 		

@@ -49,26 +49,12 @@ edu.gmu.csiss.covali.menu = {
 		createDialog: function(dialogName, dialogTitle, content, height, width, x, y){
 			
 			//edu.gmu.csiss.covali.menu.closeAllDialogs();
-
-            if(width == null) {
-                width = 700;
-            }
-
-			if(height == null) {
-                $content = $('<div>' + content + '</div>').css("display", "inline-block");
-                $('body').append($content);
-
-                var height = $content.height() + 40;
-                $content.remove();
-                if(height > 1000) {
-                    height = 1000;
-				}
-            }
+		
+			if (!width) { width = 800; }
+			if (!height) { height = 500; }
 			
-//			if(x==null) x = 0;
-//			
-//			if(y==null) y = 0;
-			
+			content = '<div id = "jsframeInnerHtml" style="padding:10px; font-size: 12px;">' + content + '</div>';
+
 			var frame = edu.gmu.csiss.covali.menu.jsframe.create({
 		    		title: dialogTitle,
 		    		name: dialogName,
@@ -82,7 +68,8 @@ edu.gmu.csiss.covali.menu = {
 		    
 		            style:{
 		            	overflow: "auto",
-		            	maxHeight: Number(height) + 300
+		            	//height: "auto"
+		            	//height: "auto"
 //		            	position: "absolute",
 //			            overflowX: "auto",
 //			            overflowY: "scroll",
@@ -106,32 +93,28 @@ edu.gmu.csiss.covali.menu = {
 	        });
 			frame.setResizable(true);
 	    	
-	    	frame.show();
-
-	    	if(x == null) {
-                x = window.innerWidth/2;
-            }
-
-            if(y == null) {
-                y = window.innerHeight*0.05;
-            }
-	    	
-	    	frame.setPosition(x, y, 'CENTER_TOP');
-
-			frame.control.on('hid', (frame, info) => {
-				edu.gmu.csiss.covali.menu.closeDialog(dialogName);
-			});
+	    	frame.show();	    	
+	    	frame.setPosition(window.innerWidth/2, window.innerHeight*0.05, 'CENTER_TOP');
 		},
 		
 		setFrameDimensionsToInnerHTML: function(dialogName){
 			
 			const dialog = edu.gmu.csiss.covali.menu.jsframe.getWindowByName(dialogName);
-			var $dialogInnterHtml = $(dialog.htmlElement);//.find('modal-body');
+			//var $dialogInnterHtml = //$(dialog.htmlElement).find('jsframeInnerHtml').context;
 			
-			$dialog = $(dialog);
-			$dialog.height($dialogInnterHtml.height());
+			//$dialog = $($dialogInnterHtml);
+			//$dialog.height($dialogInnterHtml);
 			
-			console.log($dialogInnterHtml);
-			console.log($dialogInnterHtml.height());
+/*			console.log($dialogInnterHtml);
+			console.log($('.modal-body').height());
+			console.log($('.modal-footer').height());
+			console.log("IFRAME HEIGHT: "+$("iframe").height());
+			
+	    	console.log("MODAL BODY HEIGHT: "+$('.modal-body').height());
+			console.log("MODAL FOOTER HEIGHT: "+$('.modal-footer').height());
+			console.log("JSFRAME INNER HTML HEIGHT: "+$('#jsframeInnerHtml').height());
+			console.log("IFRAME HEIGHT: "+$("iframe").height());
+			$("iframe").height(500);
+			console.log("IFRAME HEIGHT: "+$("iframe").height());*/
 		}		
 }

@@ -267,7 +267,7 @@ edu.gmu.csiss.covali.iris = {
 
                 var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.Iris';
                 var dialogTitle = 'IRIS Network ' + network + ' Station ' + station;
-                edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, html, 500, 1200, null, 100);
+                edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, html, 500, 340);
 
                 $('.iris-cal').click(function(e){
                     var dl = $(this).parents('dl');
@@ -277,11 +277,8 @@ edu.gmu.csiss.covali.iris = {
 
                 $('.iris-jpeg').click(function(e) {
                     var dl = $(this).parents('dl');
-                    var src = 'http://service.iris.edu/irisws/timeseriesplot/1/query?';
-                    src += edu.gmu.csiss.covali.iris.channelQueryString(dl);
 
-                    var dialog = $(this).parents('.iris-station');
-                    dialog.replaceWith('<img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="' + src + '"/>');
+                    edu.gmu.csiss.covali.iris.showIrisJPEG(dl);
                 });
 
                 $('.iris-geocsv').click(function(e){
@@ -295,7 +292,36 @@ edu.gmu.csiss.covali.iris = {
 
             }
         });
-    }
+    },
 
+    showIrisJPEG: function(dl) {
+        var src = 'http://service.iris.edu/irisws/timeseriesplot/1/query?';
+        src += edu.gmu.csiss.covali.iris.channelQueryString(dl);
+
+        var html = '<div class="iris-station-jpeg">';
+        var id = 'iris-jpeg-' + Math.floor(Math.random()*1000000000);
+        html += '<img id="' + id + '" style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="' + src + '"/>';
+        html += '</div>';
+
+        var network = dl.data('networkcode');
+        var station = dl.data('stationcode');
+        var channel = dl.data('code');
+        var location = dl.data('location');
+        var day = dl.find('.iris-day').val();
+
+        var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.Iris';
+        var dialogTitle = 'IRIS Network ' + network + ' Station ' + station + ' Channel ' + channel + ' Location ' + location + ' on ' + day;
+        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, html, 500, 1200);
+
+
+        $('#' + id).on('error', function() {
+            var img = $('#' + id);
+            // spinner height
+            if(img.height() == 50) {
+                img.replaceWith('<b style="margin: 10px; font-size: 14px;"> No IRIS data available for ' + day + '</b>');
+            }
+        });
+    }
+    
 
 }

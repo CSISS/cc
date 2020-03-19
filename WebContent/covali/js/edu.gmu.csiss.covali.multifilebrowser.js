@@ -126,7 +126,7 @@ edu.gmu.csiss.covali.multifilebrowser = {
     	
     	var dialogName = 'edu.gmu.csiss.covali.multifilebrowser.jsframe.LocalFiles';
 		var dialogTitle = 'Local Files';
-		$content = $("<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
+		var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
 				 '<div id="multifilebrowser"></div>'+
 		
 				"<div class=\"modal-footer\">" +
@@ -134,9 +134,9 @@ edu.gmu.csiss.covali.multifilebrowser = {
 				"<span class=\"btn btn-primary\" onclick=\'this.selectNone();\'>Select None</span>"+
 				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.multifilebrowser.selectedCallback(edu.gmu.csiss.covali.multifilebrowser.selectedFiles);edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\");\'>Ok</span>"+
 				"<span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>Cancel</span></p>"+
-				"</div>");
+				"</div>";
 		
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, $content);
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
 		edu.gmu.csiss.covali.multifilebrowser.loadPath('');
 		
 //        BootstrapDialog.show({

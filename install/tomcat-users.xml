@@ -1,0 +1,12 @@
+<tomcat-users>
+  <role rolename="admin-gui"/>
+  <role rolename="admin-script"/>
+  <role rolename="manager-gui"/>
+  <role rolename="manager-status"/>
+  <role rolename="manager-script"/>
+  <role rolename="manager-jmx"/>
+  <user name="admin" password="admin" roles="admin-gui,admin-script,manager-gui,manager-status,manager-script,manager-jmx"/>
+
+  <role rolename="ncWMS-admin" />
+  <user username="admin" password="ncWMS-password" roles="ncWMS-admin"/>
+</tomcat-users>

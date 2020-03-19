@@ -27,11 +27,24 @@ Apache Maven 3.5.0+ (optional, building CyberConnector.war from source)
 
 ## Quick Start
 
+### Automated Installer
+
+CyberConnector installer support CentOS, Ubuntu/Debian and Mac OS X operating systems. To get started download the latest source code. The installer script requires two parameters: the Anaconda directory and the data directory paths. 
+
+
+Example usage: 
+
+```
+cd install
+./install.sh /opt/anaconda3 /data
+```
+
+
 ### Java War Package
 
-To use CyberConnector, [download](https://github.com/CSISS/cc/releases) the latest release war and copy it to the webapps directory of Tomcat. Start Tomcat. 
+To manually deploy CyberConnector to Apache Tomcat, [download](https://github.com/CSISS/cc/releases) the latest release war and copy it to the webapps directory of Tomcat. Start Tomcat. 
 
-After the tomcat is fully started, configure the database connection. The configuration files are `WEB-INF/classes/config.properties` (database url, default: jdbc:mysql://localhost:3306/cyberconnector) and `WEB-INF/classes/cc_secret.properties` (database username and password: database_user=root database_password=xxxxxxxx). Fill the fields with correct values. (**Note: the database must be initiated first.**)
+After the Tomcat is fully started, configure the database connection. The configuration files are `WEB-INF/classes/config.properties` (database url, default: jdbc:mysql://localhost:3306/cyberconnector) and `WEB-INF/classes/cc_secret.properties` (database username and password: database_user=root database_password=xxxxxxxx). Fill the fields with correct values. (**Note: the database must be initiated first.**)
 
 Then enter the following URL into browser address bar to open CyberConnector:
 
@@ -132,7 +145,7 @@ conda create -n esmpy8 -y
 conda install -y -n esmpy8  -c conda-forge "esmf!=*nompi" esmpy xarray=0.14.1 scipy dask netCDF4 xesmf libnetcdf=4.6.2 netcdf4=1.5.1
 ``` 
 
-![regridding](docs/regridding-demo.gif)
+![regridding](site/regridding-demo.gif)
 #### Map rotation
 
 Use `Alt+Shift+Drag` to rotate the map.
