@@ -47,9 +47,8 @@ edu.gmu.csiss.covali.search = {
 
 			
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 700);
-
 			
-		},
+        },
 		
 		/**
 		 * Check whether the file format is supported
@@ -183,6 +182,13 @@ edu.gmu.csiss.covali.search = {
     						"		class=\"btn btn-primary btn-circle\">"+
     						"		<i class=\"glyphicon glyphicon-info-sign\" title=\"View Details\"></i>"+
     						"	</button>";
+                            if(full.accesslink && full.accesslink != 'NA') {
+
+                                content += '		<a href="'+ full.accesslink + '" target="_blank"><button class="btn btn-default" ' +
+                                    ' id="externallinkbtn_' + escapeid + '"> <span ' +
+                                    '			class="glyphicon glyphicon-new-window" title="Goto External Access Link"></span> ' +
+                                    '		</button></a>';
+							}
 
                             if(full.iscollection == "1") {
                                 content += '		<button onclick="edu.gmu.csiss.covali.search.granules('
@@ -1079,7 +1085,6 @@ edu.gmu.csiss.covali.search = {
         	
         	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
         	edu.gmu.csiss.covali.search.initTable(request);
-        	
         },
 		
         searchDialogOnShownAction: function(dialog) {
