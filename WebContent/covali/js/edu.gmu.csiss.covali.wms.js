@@ -123,17 +123,6 @@ edu.gmu.csiss.covali.wms = {
 
     },
 
-    /**
-     * Get layer in original WMS hierarchy
-     */
-    getAllLayers: function(callback){
-
-        var capa_url = this.getBuiltinNCWMS();
-
-        this.parseAll(capa_url, callback);
-
-    },
-
 
     /**
      * Get built-in ncWMS getcapabilities
@@ -174,49 +163,12 @@ edu.gmu.csiss.covali.wms = {
 
             this.parse(null, capability_url);
 
-//				this.parseAll(capability_url, this.selectCallback);
 
         }else{
 
             BootstrapDialog.alert('The inputted WMS capabilities URL is invalid!');
 
         }
-
-    },
-
-    parseAll: function(capa_url, callback){
-
-        var parser = new ol.format.WMSCapabilities();
-
-        fetch(capa_url).then(function(response) {
-
-            return response.text();
-
-        }).then(function(text) {
-
-            try{
-
-                var result = parser.read(text);
-
-                edu.gmu.csiss.covali.wms.currentWMSCapabilities = result;
-
-                var toppest_layer = result.Capability.Layer;
-
-                edu.gmu.csiss.covali.wms.layerlist = []; //have to update the layerlist at the same time, this should be improved in future
-
-                edu.gmu.csiss.covali.wms.layerjson = edu.gmu.csiss.covali.wms.getLayerJSON(toppest_layer);
-
-                callback(edu.gmu.csiss.covali.wms.layerjson);
-
-            }catch(error){
-
-                alert("Please try again.");
-
-                console.error(error);
-
-            }
-
-        });
 
     },
 

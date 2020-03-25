@@ -275,6 +275,8 @@ edu.gmu.csiss.covali.map = {
         var olayer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
         var deletedZIndex = olayer.getZIndex();
 
+        edu.gmu.csiss.covali.map.clearAnimation(side, layername);
+
         var olmap = this.getMapBySide(side);
 
         olmap.removeLayer(olayer);
@@ -341,10 +343,24 @@ edu.gmu.csiss.covali.map = {
     },
 
     // dimension = 'time' or 'elevation'
-    stepDimension: function(side, layername, dimension, direction) {
+    stepDimension: function(side, layername, dimension, direction, amount, from, to, looparound) {
+        if(!amount) {
+            amount = 1;
+        }
+
         var olayer = this.getOLLayerByName(side, layername);
+        if(!olayer) {
+            return;
+        }
 
         var allSteps = olayer.get(dimension + 'steps');
+        if(!from) {
+            from = 0;
+        }
+
+        if(!to) {
+            to = allSteps.length - 1;
+        }
 
         var paramName = dimension.toUpperCase(); // TIME or ELEVATION
         var currentStep = olayer.getSource().getParams()[paramName];
@@ -356,19 +372,56 @@ edu.gmu.csiss.covali.map = {
         var i = allSteps.indexOf(currentStep);
 
         if(direction == 'back') {
-            i--;
+            i -= amount;
         } else {
-            i++;
+            i += amount;
         }
 
-        if(i < 0) { i = 0;}
-        if(i >= allSteps.length) { i = allSteps.length - 1;}
+        if(i < from) {
+            i = from;
+        }
+
+        if(i > to) {
+            if(looparound)
+            {
+                i = from;
+            } else {
+                i = allSteps.length - 1;
+            }
+        }
 
         var newStep = allSteps[i];
 
         var update = [];
         update[paramName] = newStep;
         olayer.getSource().updateParams(update);
+        edu.gmu.csiss.covali.legend.refreshLegendCaptionAnimated(side, layername);
+    },
+
+
+    setAnimation: function(side, layername, starttime, endtime, framerate) {
+        var olayer = this.getOLLayerByName(side, layername);
+        var timesteps = olayer.get('timesteps');
+
+        var from = timesteps.indexOf(starttime);
+        var to = timesteps.indexOf(endtime);
+
+        var animation = window.setInterval(function(){
+            edu.gmu.csiss.covali.map.stepDimension(side, layername, 'time', 'forward', 1, from, to, true);
+        }, 1000/framerate);
+
+
+        olayer.set('animation', animation);
         edu.gmu.csiss.covali.legend.refreshLegendCaption(side);
+    },
+
+    clearAnimation: function(side, layername) {
+        var olayer = this.getOLLayerByName(side, layername);
+        var animation = olayer.get('animation');
+        window.clearInterval(animation);
+        olayer.set('animation', null);
+
+        edu.gmu.csiss.covali.legend.refreshLegendCaption(side);
+
     }
 }
