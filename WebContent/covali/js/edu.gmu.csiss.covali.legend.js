@@ -120,31 +120,56 @@ edu.gmu.csiss.covali.legend = {
 
         var captionhtml = "<div id=\"legendcaption-"+side+"\"></div>" +
             //"<div style=\"height: 30px;\">" +
-            "<table>"+
+            "<table style='width: 100%;'>"+
             //"<tbody>" +
             "<tr>" +
-            "<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">NAME: </font></th>" +
+            "<td style=\"width 60px; height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">NAME: </font></th>" +
             "<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+layername+"</td>" +
+            "<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"right\"></td>" +
             "</tr>";
 
         if(time){
+            var timesteps = olayer.get('timesteps');
+            var timestepNum = timesteps.indexOf(time) + 1;
+
+            var tsCaption = '';
+            if(timesteps && timesteps.length > 1) {
+                tsCaption = "<span>(" + timestepNum + " of " + timesteps.length + ") </span>";
+
+                tsCaption += '<button class="fa fa-angle-left" id="timestep-back"> </button>';
+                tsCaption += '<button class="fa fa-angle-right" id="timestep-forward"> </button>';
+
+            }
+
 
             //captionhtml += "<br><font color=\"#0841E4\">TIME: </font>" + time;
             captionhtml +=
                 "<tr>" +
-                "<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">TIME: </font></th>" +
+                "<td style=\"width: 60px; height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">TIME: </font></th>" +
                 "<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+time+"</td>" +
+                "<td style=\"width: 200px; height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"right\">"+tsCaption +"</td>" +
+
                 "</tr>";
 
         }
 
         if(elevation){
+            var elevationsteps = olayer.get('elevationsteps');
+            var elevationstepNum = elevationsteps.indexOf(elevation) + 1;
+
+            var esCaption = '';
+            if(elevationsteps && elevationsteps.length > 1) {
+                esCaption = "<span>(" + elevationstepNum + " of " + elevationsteps.length + ") </span>";
+                esCaption += '<button class="fa fa-angle-left" id="elevationstep-back"> </button>';
+                esCaption += '<button class="fa fa-angle-right" id="elevationstep-forward"> </button>';
+            }
 
             //captionhtml += "<br><font color=\"#0841E4\">ELEVATION: </font>" + elevation;
             captionhtml +=
                 "<tr>" +
                 "<td style=\"height: 12px !important; padding:0px 15px 0px 15px !important;\" align=\"left\"><font color=\"#0841E4\">ELEVATION: </font></th>" +
-                "<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+elevation+"</td>" +
+                "<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"left\">"+elevation +"</td>" +
+                "<td style=\"height: 12px !important; padding:0px 5px 0px 5px !important;\" align=\"right\">"+ esCaption +"</td>" +
                 "</tr>";
         }
         captionhtml+= "</table>";//+
@@ -152,6 +177,19 @@ edu.gmu.csiss.covali.legend = {
 
 
         $("#"+caption_id).html(captionhtml);
+        $("#"+caption_id).find('#timestep-back').click(function() {
+            edu.gmu.csiss.covali.map.stepDimension(side, layername, 'time', 'back');
+        });
+        $("#"+caption_id).find('#timestep-forward').click(function() {
+            edu.gmu.csiss.covali.map.stepDimension(side, layername, 'time', 'forward');
+        });
+        $("#"+caption_id).find('#elevationstep-back').click(function() {
+            edu.gmu.csiss.covali.map.stepDimension(side, layername, 'elevation', 'back');
+        });
+        $("#"+caption_id).find('#elevationstep-forward').click(function() {
+            edu.gmu.csiss.covali.map.stepDimension(side, layername, 'elevation', 'forward');
+        });
+
     },
 
 }

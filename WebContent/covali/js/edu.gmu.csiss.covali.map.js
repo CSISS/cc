@@ -227,7 +227,19 @@ edu.gmu.csiss.covali.map = {
         });
 
         olayer.set('legendurl', legendurl);
+
+        if(!timesteps) {
+            timesteps = [time];
+        }
         olayer.set('timesteps', timesteps);
+
+        if(!elevationsteps) {
+            if(elevation) {
+                elevationsteps = [elevation];
+            } else {
+                elevationsteps = [];
+            }
+        }
         olayer.set('elevationsteps', elevationsteps);
 
         this.addOLLayer(side, olayer);
@@ -246,8 +258,6 @@ edu.gmu.csiss.covali.map = {
             }
 
         });
-
-
 
     },
 
@@ -328,6 +338,37 @@ edu.gmu.csiss.covali.map = {
 
         rightmap.addLayer(myLayer1304);
 
-    }
+    },
 
+    // dimension = 'time' or 'elevation'
+    stepDimension: function(side, layername, dimension, direction) {
+        var olayer = this.getOLLayerByName(side, layername);
+
+        var allSteps = olayer.get(dimension + 'steps');
+
+        var paramName = dimension.toUpperCase(); // TIME or ELEVATION
+        var currentStep = olayer.getSource().getParams()[paramName];
+
+        if(!currentStep || !allSteps || allSteps.length < 2) {
+            return;
+        }
+
+        var i = allSteps.indexOf(currentStep);
+
+        if(direction == 'back') {
+            i--;
+        } else {
+            i++;
+        }
+
+        if(i < 0) { i = 0;}
+        if(i >= allSteps.length) { i = allSteps.length - 1;}
+
+        var newStep = allSteps[i];
+
+        var update = [];
+        update[paramName] = newStep;
+        olayer.getSource().updateParams(update);
+        edu.gmu.csiss.covali.legend.refreshLegendCaption(side);
+    }
 }

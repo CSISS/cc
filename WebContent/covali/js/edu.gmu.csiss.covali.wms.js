@@ -883,7 +883,7 @@ edu.gmu.csiss.covali.wms = {
         var elevationname = $(layerItem).find(".wms-layer-elevation").find(":selected").text();
 
         var timesteps = $(layerItem).find(".wms-layer-time option").map(function() {return $(this).val();}).get();
-        var elevationsteps = $(layerItem).find(".wms-layer-time option").map(function() {return $(this).val();}).get();
+        var elevationsteps = $(layerItem).find(".wms-layer-elevation option").map(function() {return $(this).val();}).get();
 
         edu.gmu.csiss.covali.wms.addLayer(side, layername, stylename, timename, elevationname, timesteps, elevationsteps);
     },
