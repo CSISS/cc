@@ -461,7 +461,7 @@ edu.gmu.csiss.covali.statistics = {
 		edu.gmu.csiss.covali.menu.closeAllDialogs();
 		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.Statistics';
 		var dialogTitle = 'Statistics';
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 260);
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 300);
 
 	},
 	
