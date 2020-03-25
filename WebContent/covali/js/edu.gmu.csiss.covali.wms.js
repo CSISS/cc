@@ -747,23 +747,23 @@ edu.gmu.csiss.covali.wms = {
         return dim;
     },
 
-    loadAnimation: function(layername, side, starttime, endtime, framerate){
-
-        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-
-        var endpointurl = edu.gmu.csiss.covali.wms.getCurrentEndPointUrl();
-
-        if(edu.gmu.csiss.covali.animation.style != null){
-            var stylename = edu.gmu.csiss.covali.animation.style;
-        }else{
-            var stylename = "default-scalar/default";
-        }
-
-        edu.gmu.csiss.covali.map.addWMSAnimationLayer(map, endpointurl, layername, starttime, endtime, framerate, stylename);
-
-        edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename, starttime, "");
-
-    },
+    // loadAnimation: function(layername, side, starttime, endtime, framerate){
+    //
+    //     var map = edu.gmu.csiss.covali.map.getMapBySide(side);
+    //
+    //     var endpointurl = edu.gmu.csiss.covali.wms.getCurrentEndPointUrl();
+    //
+    //     if(edu.gmu.csiss.covali.animation.style != null){
+    //         var stylename = edu.gmu.csiss.covali.animation.style;
+    //     }else{
+    //         var stylename = "default-scalar/default";
+    //     }
+    //
+    //     edu.gmu.csiss.covali.map.addWMSAnimationLayer(map, endpointurl, layername, starttime, endtime, framerate, stylename);
+    //
+    //     edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename, starttime, "");
+    //
+    // },
 
     /**
      * add more variables from the same file
@@ -820,9 +820,9 @@ edu.gmu.csiss.covali.wms = {
 
         var legendurl = null;
 
-        var layer = edu.gmu.csiss.covali.wms.getLayerByName(layername); //get WMS capabilities layer, not openlayer layer
+        var caplayer = edu.gmu.csiss.covali.wms.getLayerByName(layername); //get WMS capabilities layer, not openlayer layer
 
-        var style = edu.gmu.csiss.covali.wms.getStyleByName(stylename, layer);
+        var style = edu.gmu.csiss.covali.wms.getStyleByName(stylename, caplayer);
 
         if(style!=null && typeof style.LegendURL != 'undefined'){
 
@@ -853,85 +853,41 @@ edu.gmu.csiss.covali.wms = {
 
             }
 
-            //console.log("legendurl:" + legendurl);
 
         }
 
         return legendurl;
     },
 
-    addLayer: function(side, layername, stylename, time, elevation){
+    addLayer: function(side, layername, stylename, time, elevation, timesteps, elevationsteps){
 
-        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-        var existingLayer = edu.gmu.csiss.covali.map.getMapLayerByName(side, layername);
-        if(existingLayer != null) {
+        var existingLayer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
+        if(existingLayer) {
             alert('Layer ' + layername + ' is already added on the ' + side + ' map.');
             return;
         }
 
+        var endpointurl = this.getCurrentEndPointUrl();
 
-//			var endpointurl = edu.gmu.csiss.covali.wms.currentWMSCapabilities
-//				.Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource;
-        endpointurl = this.getCurrentEndPointUrl();
-
-        edu.gmu.csiss.covali.map.addWMSLayer(map, endpointurl, layername, stylename, time, elevation);
-
-        edu.gmu.csiss.covali.map.addWMSLegend(side, endpointurl, layername, stylename, time, elevation);
+        edu.gmu.csiss.covali.map.addWMSLayer(side, endpointurl, layername, stylename, time, elevation, timesteps, elevationsteps);
 
     },
 
     loadLayer: function(side, layername) {
-        // document.getElementById for slashes in layerName
+
+        // document.getElementById instead of $() because slashes in layerName
         var layerItem = $(document.getElementById(layername)).parents('.wms-layer');
 
         var stylename = $(layerItem).find(".wms-layer-style").find(":selected").text();
         var timename = $(layerItem).find(".wms-layer-time").find(":selected").text();
         var elevationname = $(layerItem).find(".wms-layer-elevation").find(":selected").text();
 
-        edu.gmu.csiss.covali.wms.addLayer(side, layername, stylename, timename, elevationname);
-        edu.gmu.csiss.covali.map.assignZIndicesToLoadedLayers(side);
+        var timesteps = $(layerItem).find(".wms-layer-time option").map(function() {return $(this).val();}).get();
+        var elevationsteps = $(layerItem).find(".wms-layer-time option").map(function() {return $(this).val();}).get();
+
+        edu.gmu.csiss.covali.wms.addLayer(side, layername, stylename, timename, elevationname, timesteps, elevationsteps);
     },
 
-    loadLayerChecked: function(side){
-
-        var checknum = 0;
-
-        $(".wms-layer").each(function(i, obj){
-
-            if($(obj).find("input").is(':checked')){
-
-                checknum ++ ;
-
-                //get layer name and style name
-
-//    				var layername = $(obj).find(".wms-layer-name").text();
-                var layername = $(obj).find(".wms-layer-name").attr('id');
-
-                console.log("checked layer: " + layername);
-
-                var stylename = $(obj).find(".wms-layer-style").find(":selected").text();
-
-                var timename = $(obj).find(".wms-layer-time").find(":selected").text();
-
-                var elevationname = $(obj).find(".wms-layer-elevation").find(":selected").text();
-
-                console.log("checked layer style: " + stylename);
-
-                edu.gmu.csiss.covali.wms.addLayer(side, layername, stylename, timename, elevationname);
-
-            }
-
-        });
-
-        if(checknum==0){
-
-            alert("You must check a layer!!!");
-
-        }
-
-        edu.gmu.csiss.covali.map.assignZIndicesToLoadedLayers(side);
-
-    },
 
     /**
      * Only can get the first-level layer by title
@@ -956,77 +912,39 @@ edu.gmu.csiss.covali.wms = {
 
     },
 
-    geonas : function(){
 
-        $("#reset").click(function(){
-            //clear the content of the field
-            $("#capaurl").val('');
-        });
+    refreshWMSOneMap: function(map){
 
-        //add by Ziheng Sun on 5/4/2016
-        $("#back").click(function(){
-            window.history.back();
-        });
+        for(var i=map.getLayers().getLength()-1;i>=0;i--){
 
-        //for page 2
-        $("#download").click(function(){
-            //get the selected radio
-            var selectedradionum = $('input[name=layer]:checked').val();
-            console.log("Selected Radio: " + selectedradionum);
-            var cid = $("#name" + selectedradionum).html();
-            var url = "<%=wms_getmap_url%>";
-            //var format = $("#outformat").val();
+            var l = map.getLayers().item(i);
 
-            var crs = "epsg:4326"
-            var bbox = "49.8639,-8.6476,60.8622,1.76943";
-            var format = "image/gif";
+            var source  = l.getSource();
 
-            var getcoveragereq = url + "service=wms&version=1.3.0&request=getmap&layers="+ cid + "&CRS=" + crs + "&BBOX=" + bbox + "&styles=default" + "&width=500" + "&height=500" + "&format=" + format;
-            window.open(getcoveragereq,'_blank');
-        });
+            if(source instanceof ol.source.TileWMS){
 
-        $("#d").click(function(){
-            //send a describe coverage request
-            var cid = $("#cid").html();
-            var dcurl = "<%=wms_getfeatureinfo_url%>";
-            var describecoveragereq = dcurl + "service=wms&version=2.0.0&request=describecoverage&coverageid=" + cid;
-            window.open(describecoveragereq,'_blank');
-            //var req = "o=details&coverageid=" + cid + "&url=" + dcurl;
-            //geonas.tool.post("/OnAS/WMSClient", req, geonas.wms.getCoverageDescription);
-        });
+                console.log("layer " + l.get('name') + " is reloaded");
 
-    },
+                source.tileCache.expireCache({});
+                source.tileCache.clear();
+                source.refresh();
 
-    getCoverageDescription: function(){
-        //pop up a new window to list the coverage descriptions
-        if(geonas.tool.xhr.readyState == 4) {
-            if (geonas.tool.xhr.status == 200) {
-                var resp = geonas.tool.xhr.responseText;
-                console.log(resp);
-            } else{
-                var errortext = "HTTP code: " + geonas.tool.xhr.status
-                    + "HTTP errorText: " + geonas.tool.xhr.statusText
-                    + "Message: " + geonas.tool.xhr.responseText;
-                $("#response").val(errortext);
             }
         }
 
     },
 
-    getCapabilityResults: function(){
+    refreshAllWMSLayers: function(){
 
-        if(geonas.tool.xhr.readyState == 4) {
-            if (geonas.tool.xhr.status == 200) {
-                var resp = geonas.tool.xhr.responseText;
-                console.log(resp);
-            } else{
-                var errortext = "HTTP code: " + geonas.tool.xhr.status
-                    + "HTTP errorText: " + geonas.tool.xhr.statusText
-                    + "Message: " + geonas.tool.xhr.responseText;
-                $("#response").val(errortext);
-            }
-        }
+        var leftmap = edu.gmu.csiss.gpkg.cmapi.openlayers.getMap("openlayers1");
+
+        var rightmap = edu.gmu.csiss.gpkg.cmapi.openlayers.getMap("openlayers2");
+
+        this.refreshWMSOneMap(leftmap);
+
+        this.refreshWMSOneMap(rightmap);
 
     }
+
 
 }

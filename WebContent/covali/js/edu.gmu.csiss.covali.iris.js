@@ -80,11 +80,31 @@ edu.gmu.csiss.covali.iris = {
                     source: source,
                 });
 
+                var topZIndex1 = edu.gmu.csiss.covali.map.getTopZIndex('left');
+                var topZIndex2 = edu.gmu.csiss.covali.map.getTopZIndex('right');
+
                 var styleCache = {};
-                var clusters = new ol.layer.Vector({
+                var clusters1 = new ol.layer.Vector({
                     name: 'IRIS',
                     title: 'IRIS Layer',
                     source: clusterSource,
+                    zIndex: topZIndex1 + 1,
+                    style: function (feature) {
+                        var size = (feature.get('features') || [1]).length;
+
+                        var style = styleCache[size];
+                        if (!style) {
+                            style = edu.gmu.csiss.covali.iris.calculateStyle(size);
+                            styleCache[size] = style;
+                        }
+                        return style;
+                    }
+                });
+                var clusters2 = new ol.layer.Vector({
+                    name: 'IRIS',
+                    title: 'IRIS Layer',
+                    source: clusterSource,
+                    zIndex: topZIndex2 + 1,
                     style: function (feature) {
                         var size = (feature.get('features') || [1]).length;
 
@@ -97,18 +117,16 @@ edu.gmu.csiss.covali.iris = {
                     }
                 });
 
+
                 var map1 = edu.gmu.csiss.covali.map.getMapBySide('left');
                 var map2 = edu.gmu.csiss.covali.map.getMapBySide('right');
 
-
-                map1.addLayer(clusters);
-                map2.addLayer(clusters);
+                edu.gmu.csiss.covali.map.addOLLayer('left', clusters1);
+                edu.gmu.csiss.covali.map.addOLLayer('right', clusters2);
 
                 var currentProj = edu.gmu.csiss.covali.projection.leftmap.getView().projection_.code_;
                 edu.gmu.csiss.covali.projection.reprojectPointsLayers(currentProj);
 
-                edu.gmu.csiss.covali.map.updateLegendCaption('left', 'IRIS Layer');
-                edu.gmu.csiss.covali.map.updateLegendCaption('right', 'IRIS Layer');
 
                 var select1 = new ol.interaction.Select();
                 var select2 = new ol.interaction.Select();

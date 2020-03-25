@@ -221,7 +221,7 @@ edu.gmu.csiss.covali.projection = {
 
 
         edu.gmu.csiss.covali.projection.reprojectPointsLayers(newProj);
-        edu.gmu.csiss.covali.map.refreshAllWMSLayers();
+        edu.gmu.csiss.covali.wms.refreshAllWMSLayers();
 
 	},
 

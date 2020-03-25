@@ -99,7 +99,9 @@ edu.gmu.csiss.gpkg.cmapi.openlayers = {
         	  
           }),
           name: "osm-basemap",
-          title: "OSM"
+          title: "OSM Basemap",
+		  zIndex: 0
+
 //          type: 'base'
         });
         

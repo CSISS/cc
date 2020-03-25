@@ -16,73 +16,13 @@ edu.gmu.csiss.covali.settings = {
         return side + '-' + layername.replaceAll(/[\/\\\.\#\,]/,'-');
     },
 
-
-    getLayerSortedDictOfLayersAndZIndices: function(side){
-        var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-        var ZIndices = {};
-        var layerNameWithMaxZIndex = null;
-        olmap.getLayers().forEach(function (layer) {
-            ZIndices[layer.get('name')] =layer.getZIndex();
-        });
-
-        var maxZIndex = Math.max(...Object.values(ZIndices));
-        olmap.getLayers().forEach(function (layer) {
-            if(layer.getZIndex() == maxZIndex){
-                layerNameWithMaxZIndex = layer.get('name');
-            }
-        });
-        console.log(JSON.stringify(edu.gmu.csiss.covali.util.sortDictionaryBasedOnValues(ZIndices), null, 2));
-        return edu.gmu.csiss.covali.util.sortDictionaryBasedOnValues(ZIndices);
-
-    },
-
-    getMapLayerWithTopZIndex: function(side){
-        var ZIndices = edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
-        var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-        var layer = null;
-        $.each( ZIndices, function( sortedDictlayerName, Zindex ){
-            //console.log("FINDING LAYER WITH TOP Z INDEX IS: "+olmap.getLayers().array_.length, Zindex, olmap.getLayers().array_.length==Zindex);
-            if(Zindex == olmap.getLayers().getLength()){
-                layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, sortedDictlayerName);
-            }
-        });
-        return layer;
-
-    },
-
-    updateLegendWithMapLayerWithTopZIndex: function(side){
-        var ZIndices = edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
-        var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-        var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
-
-        olmap.getLayers().forEach(function (layer) {
-            if (topVisibleLayer && layer.get('name') == topVisibleLayer.get('name')){
-                edu.gmu.csiss.covali.statistics.changePopupVisibility(side, true);
-                edu.gmu.csiss.covali.map.updateLegend(side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,
-                    layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
-            }
-        });
-    },
-
     checkLayer: function(side, layername, checked){
+        var layer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
 
-        var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-        //var topVisibleLayer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
-        var topVisibleLayer = edu.gmu.csiss.covali.settings.getMapLayerWithTopZIndex(side);
+        layer.setVisible(checked);
 
-        olmap.getLayers().forEach(function (layer) {
-
-            if (layer.get('name') == layername) {
-
-                layer.setVisible(checked);
-                if (topVisibleLayer && layername == topVisibleLayer.get('name')){
-                    edu.gmu.csiss.covali.statistics.changePopupVisibility(side, checked);
-                    edu.gmu.csiss.covali.map.changeLegendVisibility(side, checked);
-                }
-            }
-
-        });
-
+        edu.gmu.csiss.covali.legend.refresh(side);
+        this.redrawLayerControls();
     },
 
     changeOpacity: function(sliderinput, side, layername){
@@ -108,211 +48,32 @@ edu.gmu.csiss.covali.settings = {
     },
 
     delLayer: function(side, layername, noquestion){
-
-        if(noquestion||confirm("Do you really want to delete this layer?")){
-
-            //var legendId = edu.gmu.csiss.covali.map.getLegendIdBySide(side);
-            //$("#"+legendId).remove();
-            //$("#scale"+side).remove();
-
-            var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-
-            var layersToRemove = [];
-
-            olmap.getLayers().forEach(function (layer) {
-
-                if (layer.get('name') == layername) {
-
-                    layersToRemove.push(layer);
-
-                }
-
-            });
-
-            var len = layersToRemove.length;
-
-//				for(var i = 0; i < len; i++) {
-
-            olmap.removeLayer(layersToRemove[len-1]);
-
-//				}
-            edu.gmu.csiss.covali.statistics.clearAllPopupsOnAMap(side);
-
-            edu.gmu.csiss.covali.map.showNextAvailableLegend(side);
-
-        }
-
-    },
-
-    removeLayerName: function(layername){
-        var ele = $(layername);
-
-        ele.parent().parent().remove();
-    },
-
-    addLayerName: function(side, layername, opacity){
-
-        var id = side + "-settings";
-
-        $("#" + id).append(this.getOneLayerControl(side, layername, opacity));
-
-    },
-
-    moveLayerNameUp: function(side, layername){
-        if(layername!="osm-basemap" && layername != "World Boundary"){
-            var layerId = this.layerElementId(side, layername);
-            var elem = $("#" + layerId);
-
-            elem.next().after(elem);
-            //console.log(elem.next());
+        if(noquestion||confirm("Do you really want to delete this layer?")) {
+            var olmap = edu.gmu.csiss.covali.map.removeLayer(side, layername);
+            this.redrawLayerControls();
         }
     },
 
-    moveLayerNameDown: function(side, layername){
-        var layerId = this.layerElementId(side, layername);
-        var elem = $("#" + layerId);
-
-        if(elem.prev()[0]["id"]!=side+"_undefined"){
-            var prev_elem = elem.prev().html();
-            //console.log($($(prev_elem).find("span")[0]).text()); //previous layer name
-            elem.prev().before(elem);
-        }
-    },
     /**
      * Move back
      */
     moveBack: function(side,layername){
-
-        var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-        //console.log(olmap.getLayers().array_);
-        zIndex = 1;
-        zIndices = [];
-
-        olmap.getLayers().forEach(function (layer) {
-
-            if(isNaN(layer.getZIndex())||layer.getZIndex()==99){
-                layer.setZIndex(zIndex);
-                layer.set("id", side + zIndex);
-                zIndices.push(zIndex);
-                zIndex++;
-                //console.log(layer.get('name')+": "+layer.getZIndex());
-            }
-
-        });
-
-        var layerId = this.layerElementId(side, layername);
-        var elem = $("#" + layerId);
-
-        var prev_elem = elem.prev().html();
-        var previousLayerName = $($(prev_elem).find("span")[0]).text();
-
-        var previous_layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, previousLayerName);
-
-        var sortedDictOfLayerNamesAndZIndices = edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
-        $.each( sortedDictOfLayerNamesAndZIndices, function( sortedDictlayerName, Zindex ){
-            //olmap.getLayers().forEach(function (layer){
-
-            var layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, sortedDictlayerName);
-            if (layer.get('name') == layername)  {
-
-                layernum = layer.getZIndex();
-
-                if(layernum > 3){
-
-                    layer.setZIndex(layer.getZIndex()-1);
-
-                    previous_layer.setZIndex(layer.getZIndex()+1);
-
-                    layer.getSource().changed();
-
-                    previous_layer.getSource().changed();
-
-                    edu.gmu.csiss.covali.settings.moveLayerNameDown(side, layername);
-                    edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
-
-                }
-
-            }//else{
-
-            //	previous_layer = layer;
-
-            //}
-
-        });
-        edu.gmu.csiss.covali.settings.updateLegendWithMapLayerWithTopZIndex(side);
-
+        edu.gmu.csiss.covali.map.moveLayerBack(side, layername);
+        this.redrawLayerControls();
     },
 
     /**
      * Move front
      */
     moveFront: function(side, layername){
-
-        var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
-
-        zIndex = 1;
-
-        olmap.getLayers().forEach(function (layer) {
-
-            if(isNaN(layer.getZIndex())||layer.getZIndex()==99){
-                layer.setZIndex(zIndex);
-                layer.set("id", side + zIndex);
-                zIndex++;
-            }
-
-        });
-
-        var layerId = this.layerElementId(side, layername);
-        var elem = $("#" + layerId);
-
-        var next_elem = elem.next().html();
-        var nextLayerName = $($(next_elem).find("span")[0]).text();
-
-        var next_layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, nextLayerName);
-
-        var sortedDictOfLayerNamesAndZIndices = edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
-        $.each( sortedDictOfLayerNamesAndZIndices, function( sortedDictlayerName, Zindex ){
-            //sortedDictOfLayerNamesAndZIndices.forEach(function (sortedDictlayerName, Zindex){
-
-            var layer = edu.gmu.csiss.covali.map.getMapLayerByName(side, sortedDictlayerName);
-            if (layer.get('name') == layername){
-
-                layernum = layer.getZIndex();
-
-                console.log("the zindex :" + layer.getZIndex());
-
-                if(layernum < olmap.getLayers().getLength()){
-
-                    layer.setZIndex(layer.getZIndex()+1);
-
-                    next_layer.setZIndex(layer.getZIndex()-1);
-
-                    layer.getSource().changed();
-
-                    next_layer.getSource().changed();
-
-                    edu.gmu.csiss.covali.settings.moveLayerNameUp(side, layername);
-                    edu.gmu.csiss.covali.settings.getLayerSortedDictOfLayersAndZIndices(side);
-
-                }
-
-            }//else{
-
-            //previous_layer = layer;
-
-            //}
-
-        });
-        edu.gmu.csiss.covali.settings.updateLegendWithMapLayerWithTopZIndex(side);
+        edu.gmu.csiss.covali.map.moveLayerFront(side, layername);
+        this.redrawLayerControls();
     },
 
     checkBoxBasedOnLayerVisbility: function(side, layername){
+        var olayer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
 
-        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-
-        var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, layername);
-
-        if(layer.getVisible()==true){
+        if(olayer.getVisible()==true){
             return "checked";
         }else{
             return "";
@@ -324,6 +85,10 @@ edu.gmu.csiss.covali.settings = {
         var opaval = Number(opacity);
 
         var layerId = this.layerElementId(side, layername);
+
+        var olayer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
+        var zIndex = olayer.getZIndex();
+        var maxZIndex = edu.gmu.csiss.covali.map.getTopZIndex(side)
 
         var onecontrol = "<div class=\"checkbox\" id=\""+side+"_"+layerId+"\">"+
             "<label>"+
@@ -338,22 +103,26 @@ edu.gmu.csiss.covali.settings = {
         	//delete button
             onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.delLayer('"+
             side + "', '" + layername +
-            "'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Remove layer\"><i class=\"glyphicon glyphicon-trash\"></i></a>";
+            "'); \" class=\"btn btn-inverse\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Remove layer\"><i class=\"glyphicon glyphicon-trash\"></i></a>";
 
-			//up button
-            onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveBack('"+
-            side + "', '" + layername +
-            "'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-up\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer up!\"></i></a>";
+            if(zIndex > 1) {
+                //up (back) button
+                onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveBack('" +
+                    side + "', '" + layername +
+                    "'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-up\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer to back!\"></i></a>";
+            }
 
-			//down button
-            onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveFront('"+
-            side + "', '" + layername +
-            "'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-down\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer down!\"></i></a>";
+            if(zIndex < maxZIndex) {
+                //down (front) button
+                onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.moveFront('" +
+                    side + "', '" + layername +
+                    "'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-down\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer to front!\"></i></a>";
+            }
 
             //switch button
-            onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.switchMap('"+
+            onecontrol += "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.settings.switchSide('"+
                 side + "', '" + layername +
-                "'); edu.gmu.csiss.covali.settings.removeLayerName(this);\" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-transfer\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer to the other map!\"></i></a>"+
+                "'); \" class=\"btn btn-inverse\"><i class=\"glyphicon glyphicon-transfer\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"Move layer to the other map!\"></i></a>"+
                 //add more button
                 "<a href=\"javascript:void(0)\" onclick=\"edu.gmu.csiss.covali.wms.addMore('"+
                 side + "', '" + layername +
@@ -372,61 +141,22 @@ edu.gmu.csiss.covali.settings = {
 
     },
 
-    switchMap: function(side, layername){
+    switchSide: function(side, layername){
+        var otherside = edu.gmu.csiss.covali.map.getOtherSide(side);
 
-        edu.gmu.csiss.covali.map.legend_layername = layername;
+        var olayer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
 
-        var target_side = null;
+        edu.gmu.csiss.covali.map.removeLayer(side, layername);
 
-        if(side=="left"){
+        edu.gmu.csiss.covali.map.addOLLayer(otherside, olayer);
 
-            target_side = "right";
+        this.redrawLayerControls();
 
-        }else{
+    },
 
-            target_side = "left";
-
-        }
-
-        var map = edu.gmu.csiss.covali.map.getMapBySide(side);
-
-        var layer = edu.gmu.csiss.covali.map.getWMSLayerByName(map, layername);
-
-        var othermap = edu.gmu.csiss.covali.map.getMapBySide(target_side);
-
-        if (layer.values_.animated == true){//I didn't really know how to differentiate a static layer from the animation layer so I used this
-            try{
-                layer.getSource().clear();
-            }
-            catch(error){
-                console.log("ERROR REDRAWING THE LAYER"+error);
-            }
-            edu.gmu.csiss.covali.wms.loadAnimation(layername, target_side, starttime, endtime, framerate);
-        }
-        else{
-            othermap.addLayer(layer);
-            if(edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(target_side)){
-                layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(target_side);
-            }else{
-                var topLayerIndex = othermap.getLayers().getLength()-1;
-                layer = othermap.getLayers().item(topLayerIndex);
-            }
-
-        }
-        //add to the settings menu
-        this.addLayerName(target_side, layer.get('name'), layer.getOpacity());
-        edu.gmu.csiss.covali.map.updateLegend(target_side, layer.get('name'), layer.getSource().getParams()["LEGEND"], null, null,
-            layer.getSource().getParams()["TIME"], layer.getSource().getParams()["ELEVATION"]);
-
-        //update target (map) property of the layer. Used in layer visibility change event handler
-        if (target_side=='left'){
-            layer.set('target', 'openlayers1');
-        }else{
-            layer.set('target', 'openlayers2');
-        }
-        this.delLayer(side, layername, true);
-        edu.gmu.csiss.covali.map.assignZIndicesToLoadedLayers(side);
-        edu.gmu.csiss.covali.map.assignZIndicesToLoadedLayers(target_side);
+    redrawLayerControls: function(side) {
+        $('#layertree-left').html(this.getLayerControl('left').html());
+        $('#layertree-right').html(this.getLayerControl('right').html());
     },
 
     /**
@@ -440,7 +170,21 @@ edu.gmu.csiss.covali.settings = {
 
         var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
 
-        olmap.getLayers().forEach(function(layer,idx){
+        var layers =  olmap.getLayers().getArray();
+
+        var fixedlayers = layers.slice(0,2);
+        var sortablelayers = layers.slice(2);
+
+        sortablelayers = sortablelayers.sort(function(l1, l2) {
+            if(l1.getZIndex() < l2.getZIndex()) {
+                return -1;
+            }
+            return 1;
+        });
+
+        layers = fixedlayers.concat(sortablelayers);
+
+        layers.forEach(function(layer){
 
             var onecontrol = edu.gmu.csiss.covali.settings.getOneLayerControl(side, layer.get("name"), layer.getOpacity());
 
@@ -455,7 +199,7 @@ edu.gmu.csiss.covali.settings = {
 
     checkMap: function(side, checkstatus){
 
-        edu.gmu.csiss.covali.map.mapSwitch(side, checkstatus);
+        edu.gmu.csiss.covali.map.setMapVisible(side, checkstatus);
 
     },
 
@@ -487,7 +231,7 @@ edu.gmu.csiss.covali.settings = {
 
         var leftstatus = "";
 
-        if(edu.gmu.csiss.covali.map.getMapStatus("left")){
+        if(edu.gmu.csiss.covali.map.getMapVisible("left")){
 
             leftstatus = "checked=\"checked\"";
 
@@ -495,7 +239,7 @@ edu.gmu.csiss.covali.settings = {
 
         var rightstatus = "";
 
-        if(edu.gmu.csiss.covali.map.getMapStatus("right")){
+        if(edu.gmu.csiss.covali.map.getMapVisible("right")){
 
             rightstatus = "checked=\"checked\"";
 
@@ -525,7 +269,11 @@ edu.gmu.csiss.covali.settings = {
 
             '</h4>'+
 
+            '<div id="layertree-left">'+
+
             $lefttree.html()+
+
+            '</div>' +
 
             '</div>' +
 
@@ -537,7 +285,11 @@ edu.gmu.csiss.covali.settings = {
 
             '</h4>'+
 
+            '<div id="layertree-right">'+
+
             $righttree.html()+
+
+            '</div>' +
 
             '</div>';
 

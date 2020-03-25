@@ -42,6 +42,9 @@ edu.gmu.csiss.covali.geojson = {
                     edu.gmu.csiss.covali.geojson.features.push(feature);
                 	
                 }
+
+                var topZIndex1 = edu.gmu.csiss.covali.map.getTopZIndex('left');
+                var topZIndex2 = edu.gmu.csiss.covali.map.getTopZIndex('right');
                 
                 var vectorSource = new ol.source.Vector({
                 	format: new ol.format.GeoJSON(),
@@ -52,11 +55,20 @@ edu.gmu.csiss.covali.geojson = {
                 });
 
 
-                var vectorLayer = new ol.layer.Vector({
+                var vectorLayer1 = new ol.layer.Vector({
                     source: vectorSource,
                     style: style,
                     name: layertitle,
-                    title: layertitle
+                    title: layertitle,
+                    zIndex: topZIndex1
+                });
+
+                var vectorLayer2 = new ol.layer.Vector({
+                    source: vectorSource,
+                    style: style,
+                    name: layertitle,
+                    title: layertitle,
+                    zIndex: topZIndex2
                 });
 
                 var map1 = edu.gmu.csiss.covali.map.getMapBySide('left');
@@ -82,9 +94,8 @@ edu.gmu.csiss.covali.geojson = {
                 map1.addInteraction(select1);
                 map2.addInteraction(select2);
 
-
-                map1.addLayer(vectorLayer);
-                map2.addLayer(vectorLayer);
+                gmu.csiss.covali.map.addOLLayer('left', vectorLayer1);
+                gmu.csiss.covali.map.addOLLayer('right', vectorLayer2);
 
                 var currentProj = edu.gmu.csiss.covali.projection.leftmap.getView().projection_.code_;
                 edu.gmu.csiss.covali.projection.reprojectPointsLayers(currentProj);

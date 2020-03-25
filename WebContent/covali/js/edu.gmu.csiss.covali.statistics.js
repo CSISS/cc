@@ -176,7 +176,7 @@ edu.gmu.csiss.covali.statistics = {
 
     showFeatureInfo: function(coordinate, side) {
 	        
-		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+		var layer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
         var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 
         
@@ -266,7 +266,7 @@ edu.gmu.csiss.covali.statistics = {
     },
 
     showTimeseries: function(coordinate, side) {
-        var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+        var layer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
         var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 
         if(layer && layer.getVisible() != true){
@@ -315,7 +315,7 @@ edu.gmu.csiss.covali.statistics = {
     },
 
 	showVerticalProfile: function(coordinate, side) {
-        var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+        var layer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
         var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 
 
@@ -467,7 +467,7 @@ edu.gmu.csiss.covali.statistics = {
 	
 
 	getLineStatistics: function(side, linestring){
-		var layer = edu.gmu.csiss.covali.map.getVisibleTopWMSLayer(side);
+		var layer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
 		//console.log(layer.getSource().getParams());
 
 		var timestep = layer.getSource().getParams()["TIME"];
