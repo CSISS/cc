@@ -275,6 +275,11 @@ edu.gmu.csiss.covali.map = {
         var olayer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
         var deletedZIndex = olayer.getZIndex();
 
+        // we are removing the top visible legend map
+        if(this.getLegendOLLayer(side).get('name') == layername) {
+            edu.gmu.csiss.covali.statistics.clearAllPopupsOnAMap(side);
+        }
+
         edu.gmu.csiss.covali.map.clearAnimation(side, layername);
 
         var olmap = this.getMapBySide(side);

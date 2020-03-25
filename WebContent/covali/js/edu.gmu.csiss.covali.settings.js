@@ -19,7 +19,20 @@ edu.gmu.csiss.covali.settings = {
     checkLayer: function(side, layername, checked){
         var layer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
 
+        // layer currently visible. now becoming invisble
+        // until we hide it, it remains top layer and should have stats popups removed
+        if(!checked) {
+            edu.gmu.csiss.covali.statistics.changePopupVisibility(side, layername, checked);
+        }
+
         layer.setVisible(checked);
+
+        // layer was invisible and is now visible and possibly the top layer
+        if(checked) {
+            edu.gmu.csiss.covali.statistics.changePopupVisibility(side, layername, checked);
+        }
+
+
 
         edu.gmu.csiss.covali.legend.refresh(side);
         this.redrawLayerControls();
@@ -50,6 +63,7 @@ edu.gmu.csiss.covali.settings = {
     delLayer: function(side, layername, noquestion){
         if(noquestion||confirm("Do you really want to delete this layer?")) {
             var olmap = edu.gmu.csiss.covali.map.removeLayer(side, layername);
+
             this.redrawLayerControls();
         }
     },

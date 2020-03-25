@@ -190,9 +190,8 @@ edu.gmu.csiss.covali.statistics = {
             
             var url = wmssource.getGetFeatureInfoUrl(coordinate, viewResolution, epsg, {'INFO_FORMAT': 'text/xml'});
     		var content = document.getElementById('popup-content-' + side);
-    		var layerName = params.LayerName.split("/")[0];
-    		var featureId = params.LayerName.split("/")[1];
-    		console.log("ncWMS2 request:")
+
+    		console.log("ncWMS2 request:");
     		console.log(url);
 
     		if (url && content) {
@@ -365,7 +364,12 @@ edu.gmu.csiss.covali.statistics = {
     	}
 	},
 	
-	changePopupVisibility: function(side, checked){
+	changePopupVisibility: function(side, layername, checked){
+		var olayer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
+		if(olayer.get('name') != layername ) {
+			return;
+		}
+
 		var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 		if($("#popup-" + side).length){
 			var popup = map.getOverlayById("point-popup-" + side);
