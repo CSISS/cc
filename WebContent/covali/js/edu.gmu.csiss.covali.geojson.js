@@ -94,8 +94,8 @@ edu.gmu.csiss.covali.geojson = {
                 map1.addInteraction(select1);
                 map2.addInteraction(select2);
 
-                gmu.csiss.covali.map.addOLLayer('left', vectorLayer1);
-                gmu.csiss.covali.map.addOLLayer('right', vectorLayer2);
+                edu.gmu.csiss.covali.map.addOLLayer('left', vectorLayer1);
+                edu.gmu.csiss.covali.map.addOLLayer('right', vectorLayer2);
 
                 var currentProj = edu.gmu.csiss.covali.projection.leftmap.getView().projection_.code_;
                 edu.gmu.csiss.covali.projection.reprojectPointsLayers(currentProj);
