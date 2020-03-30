@@ -4,6 +4,8 @@
 *.iml
 *.ipr
 *.iws
+desktop.ini
+sync.ffs_db
 
 
 
