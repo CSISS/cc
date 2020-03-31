@@ -38,7 +38,7 @@ edu.gmu.csiss.covali.add= {
 			edu.gmu.csiss.covali.add.getContent()+
 			"</dl></div>";
 
-			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 554, 600);
+			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 574, 600);
 
 		}
 		
