@@ -115,8 +115,9 @@ edu.gmu.csiss.covali.search = {
         },
 		
 		initTable: function(request){
-        	
-        	//var currentRecList = [];
+			if($('#producttable').DataTable) {
+				$('#producttable').DataTable().destroy();
+			}
 
             $('#producttable').DataTable({
             	
@@ -1085,7 +1086,7 @@ edu.gmu.csiss.covali.search = {
         	
         	edu.gmu.csiss.covali.search.resultDialog(request, 'Search Results');
         	edu.gmu.csiss.covali.search.initTable(request);
-        },
+		},
 		
         searchDialogOnShownAction: function(dialog) {
         	
