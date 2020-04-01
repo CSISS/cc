@@ -19,7 +19,7 @@ edu.gmu.csiss.covali.settings = {
     checkLayer: function(side, layername, checked){
         var layer = edu.gmu.csiss.covali.map.getOLLayerByName(side, layername);
 
-        // layer currently visible. now becoming invisble
+        // layer currently visible. now becoming invisible
         // until we hide it, it remains top layer and should have stats popups removed
         if(!checked) {
             edu.gmu.csiss.covali.statistics.changePopupVisibility(side, layername, checked);

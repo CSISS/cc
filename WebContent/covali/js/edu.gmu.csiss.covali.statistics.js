@@ -181,6 +181,7 @@ edu.gmu.csiss.covali.statistics = {
 
         
         if(layer && layer.getVisible()==true){
+			$("#popup-" + side).show();
             var popup = map.getOverlayById("point-popup-" + side);
             popup.setPosition(coordinate);
         	var viewResolution = /** @type {number} */ (map.getView().getResolution());
