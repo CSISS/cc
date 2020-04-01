@@ -317,9 +317,9 @@ edu.gmu.csiss.covali.style = {
 
             }
 
-            $("#paletteselector").attr("src", thislegendurl + "&palette=" + palettename + "&height=1&VERTICAL=FALSE&COLORBARONLY=True");
+            $("#paletteselector").attr("src", thislegendurl + "&palette=" + sp[1] + "&height=1&VERTICAL=FALSE&COLORBARONLY=True");
 
-            $("#paletteselector").attr("alt", palettename);
+            $("#paletteselector").attr("alt", sp[1]);
 
             $("#min").val(minmax[0]);
 
