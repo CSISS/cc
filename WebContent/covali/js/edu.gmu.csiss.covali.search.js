@@ -702,20 +702,16 @@ edu.gmu.csiss.covali.search = {
 			'				  <div class="col-md-8">'+
 							  
 			'				    <select id="csw" name="csw" id="csw" class="form-control" disabled="disabled">'+
-							  		
-//			'				  	  <option value="-1" disabled="disabled" selected="selected" style="display:none"> -- select an option --</option>'+
-			
-//			'				      <option value="0">VDP</option>'+
 
             '				      <option value="1">CSISS Catalogue (UCAR/RDA)</option>'+
             
             '				      <option value="2">Public & Uploaded Files</option>'+
-			
+
+			'				      <option value="3">CEOS WGISS Integrated Catalog (CWIC)</option>'+
+
 			'				      <option value="4">GeoDAB CSW</option>'+
 
-			'				      <option value="3">BCube Broker</option>'+
-
-                '				    </select>'+
+			'				    </select>'+
 							  
 			'				  </div>'+
 						
