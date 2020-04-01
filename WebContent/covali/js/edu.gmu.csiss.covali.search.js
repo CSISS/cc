@@ -112,6 +112,7 @@ edu.gmu.csiss.covali.search = {
 
             edu.gmu.csiss.covali.search.resultDialog(request, "Granules for " + name);
             edu.gmu.csiss.covali.search.initTable(request);
+            edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.search.jsframe.SearchResults');
         },
 		
 		initTable: function(request){
