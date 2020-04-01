@@ -213,7 +213,7 @@ public class SearchTool {
 		
 		int startpos = req.getStart() + 1; // CSW first record = 1
 		boolean hasTextQuery = req.searchtext.length() > 0;
-		boolean hasTemporalExtent = !req.distime && !BaseTool.isNull(req.begindatetime);
+		boolean hasTemporalExtent = !req.distime && !(BaseTool.isNull(req.begindatetime) && BaseTool.isNull(req.enddatetime));
 		
 		StringBuffer cswreq = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> ")
 			.append("	<GetRecords ")
@@ -254,18 +254,22 @@ public class SearchTool {
 			}
 
 		if(hasTemporalExtent){
-			cswreq.append("	                <ogc:PropertyIsGreaterThanOrEqualTo> ")
-			.append("	                        <ogc:PropertyName>apiso:TempExtent_begin</ogc:PropertyName> ")
-			.append("	                        <ogc:Literal>")
-			.append(								req.begindatetime)
-			.append("							</ogc:Literal> ")
-			.append("	                    </ogc:PropertyIsGreaterThanOrEqualTo> ")
-			.append("	                    <ogc:PropertyIsLessThanOrEqualTo> ")
-			.append("	                        <ogc:PropertyName>apiso:TempExtent_end</ogc:PropertyName> ")
-			.append("	                        <ogc:Literal>")
-			.append(								req.enddatetime)
-			.append("							</ogc:Literal> ")
-			.append("	                    </ogc:PropertyIsLessThanOrEqualTo> ");
+			if(!BaseTool.isNull(req.begindatetime)) {
+				cswreq.append("	                <ogc:PropertyIsGreaterThanOrEqualTo> ")
+						.append("	                        <ogc:PropertyName>apiso:TempExtent_begin</ogc:PropertyName> ")
+						.append("	                        <ogc:Literal>")
+						.append(req.begindatetime)
+						.append("							</ogc:Literal> ")
+						.append("	                    </ogc:PropertyIsGreaterThanOrEqualTo> ");
+			}
+			if(!BaseTool.isNull(req.enddatetime)) {
+				cswreq.append("	                    <ogc:PropertyIsLessThanOrEqualTo> ")
+						.append("	                        <ogc:PropertyName>apiso:TempExtent_end</ogc:PropertyName> ")
+						.append("	                        <ogc:Literal>")
+						.append(req.enddatetime)
+						.append("							</ogc:Literal> ")
+						.append("	                    </ogc:PropertyIsLessThanOrEqualTo> ");
+			}
 
 		}
 
