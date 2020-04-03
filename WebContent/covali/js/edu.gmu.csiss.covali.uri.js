@@ -125,9 +125,10 @@ edu.gmu.csiss.covali.uri = {
         	if(edu.gmu.csiss.covali.uri.checkDignity()){
         		
         		if(edu.gmu.csiss.covali.uri.cached){
-            		
-                	edu.gmu.csiss.covali.upload.load(edu.gmu.csiss.covali.uri.cached_url);
-            		
+
+        			var uri = edu.gmu.csiss.covali.uri.cached_url;
+					edu.gmu.csiss.covali.local.showFileLoadingDialog(uri);
+					edu.gmu.csiss.covali.local.loadWMSFile(uri);
             	}else{
             		
             		alert("The file must be cached before being loaded onto the maps.");

@@ -624,23 +624,23 @@ edu.gmu.csiss.covali.search = {
         },
 
         load: function(escapeid, accessurl){
-        	
+
         	accessurl = unescape(accessurl);
-        	
+
         	console.log("the accessurl: " + accessurl);
-        	
+
         	var escapeid = escapeid.replace(/\./g, '_');
-        	
+
         	if( $("#cachebtn_"+escapeid).length && !$("#cachebtn_"+escapeid).prop('disabled')){
-        		
+
         		alert("This is a remote file. Need cache first.");
-        		
+
         	}else{
-        		
-        		edu.gmu.csiss.covali.upload.load(accessurl);
-        		
+
+				edu.gmu.csiss.covali.local.showFileLoadingDialog(accessurl);
+				edu.gmu.csiss.covali.local.loadWMSFile(accessurl);
         	}
-        	
+
         },
 		
 		searchForm: function(){
