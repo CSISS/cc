@@ -852,14 +852,6 @@ public class SearchTool {
 		return respobj;
 		
 	}
-	
-	public static SearchResponse searchBCube(SearchRequest req) {
-		
-		SearchResponse resp = new SearchResponse();
-		
-		return resp;
-		
-	}
 
 	/**
 	 * Search two folders: the uploaded folder and the public folder. 
