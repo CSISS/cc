@@ -214,6 +214,7 @@ public class SearchTool {
 		int startpos = req.getStart() + 1; // CSW first record = 1
 		boolean hasTextQuery = req.searchtext.length() > 0;
 		boolean hasTemporalExtent = !req.distime && !(BaseTool.isNull(req.begindatetime) && BaseTool.isNull(req.enddatetime));
+		boolean hasFormats = (!req.formats.equals("all"));
 		
 		StringBuffer cswreq = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> ")
 			.append("	<GetRecords ")
@@ -231,8 +232,29 @@ public class SearchTool {
 			.append("	        <Constraint version=\"1.1.0\"> ")
 			.append("	            <ogc:Filter> ");
 
-		    if(hasTextQuery || hasTemporalExtent) {
+		    if(hasTextQuery || hasTemporalExtent || hasFormats) {
 				cswreq.append("	                <ogc:And> ");
+			}
+
+		    if(hasFormats) {
+		    	String[] formats = req.formats.split("\\s");
+		    	if(formats.length > 1) {
+					cswreq.append("	                <ogc:Or> ");
+				}
+
+		    	for(int i = 0; i < formats.length; i++) {
+		    		String format = "." + formats[i]; // ex: format = ".nc"
+		    		cswreq.append("	                    <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"_\" escapeChar=\"\"> ")
+						.append("	                        <ogc:PropertyName>apiso:Identifier</ogc:PropertyName> ")
+						.append("	                        <ogc:Literal>*")
+						.append(format)
+						.append("*</ogc:Literal> ")
+						.append("	                    </ogc:PropertyIsLike> ");
+				}
+
+				if(formats.length > 1) {
+					cswreq.append("	                </ogc:Or> ");
+				}
 			}
 
 			// match csw:AnyText or apiso:Identifier
@@ -287,7 +309,7 @@ public class SearchTool {
 		cswreq.append("	                        </gml:Envelope> ")
 			.append("	                    </ogc:BBOX> ");
 
-		if(hasTextQuery || hasTemporalExtent) {
+		if(hasTextQuery || hasTemporalExtent || hasFormats) {
 			cswreq.append("	                </ogc:And> ");
 		}
 

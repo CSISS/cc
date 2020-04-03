@@ -753,7 +753,7 @@ edu.gmu.csiss.covali.search = {
 
 			'						      <li><label><input type="checkbox" name="nc" /> netCDF</label></li>'+
 			
-			'						      <li><label><input type="checkbox" name="grb" /> GRIB</label></li>'+
+			'						      <li><label><input type="checkbox" name="grib" /> GRIB</label></li>'+
 
 			'						      <li><label><input type="checkbox" name="tif" /> Geotiff</label></li>'+
 									      
