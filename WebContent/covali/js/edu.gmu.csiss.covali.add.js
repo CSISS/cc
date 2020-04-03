@@ -32,7 +32,7 @@ edu.gmu.csiss.covali.add= {
 			
 			edu.gmu.csiss.covali.menu.closeAllDialogs();
 			var dialogName = 'edu.gmu.csiss.covali.add.jsframe.AddingDataMethods';
-			var dialogTitle = 'Adding Data Methods';
+			var dialogTitle = 'Select the Data Source';
 			
 			var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px;\">"+
 			edu.gmu.csiss.covali.add.getContent()+
