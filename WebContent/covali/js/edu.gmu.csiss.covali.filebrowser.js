@@ -92,7 +92,9 @@ edu.gmu.csiss.covali.filebrowser = {
     init: function() {
     	
     	var dialogName = 'edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles';
-		var dialogTitle = 'Local Files';
+		
+    	var dialogTitle = 'Local Files';
+		
 		var content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
 					 '<div id="filebrowser"></div>'+
 		
@@ -101,6 +103,7 @@ edu.gmu.csiss.covali.filebrowser = {
 					 "</div>";
 		
 		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600);
+		
 		edu.gmu.csiss.covali.filebrowser.loadPath('');
 
 
