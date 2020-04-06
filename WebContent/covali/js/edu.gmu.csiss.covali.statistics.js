@@ -62,7 +62,8 @@ edu.gmu.csiss.covali.statistics = {
         var map = edu.gmu.csiss.covali.map.getMapBySide(side);
         var bothMaps = $("#bothMapsPopupChk").prop('checked');
         map.on('singleclick', function(evt) {
-            if(bothMaps) {
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+			if(bothMaps) {
                 edu.gmu.csiss.covali.statistics.showTimeseries(evt.coordinate, 'left');
                 edu.gmu.csiss.covali.statistics.showTimeseries(evt.coordinate, 'right');
             } else {
@@ -81,7 +82,9 @@ edu.gmu.csiss.covali.statistics = {
         var map = edu.gmu.csiss.covali.map.getMapBySide(side);
         var bothMaps = $("#bothMapsPopupChk").prop('checked');
         map.on('singleclick', function(evt) {
-            if(bothMaps) {
+			edu.gmu.csiss.covali.menu.closeAllDialogs();
+
+			if(bothMaps) {
                 edu.gmu.csiss.covali.statistics.showVerticalProfile(evt.coordinate, 'left');
                 edu.gmu.csiss.covali.statistics.showVerticalProfile(evt.coordinate, 'right');
             } else {
@@ -97,7 +100,6 @@ edu.gmu.csiss.covali.statistics = {
     },
 
     listenLineString: function(side){
-
         var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 
         var geometryFunction, maxPoints;
@@ -131,12 +133,14 @@ edu.gmu.csiss.covali.statistics = {
 //	        		var coordinates = ol.proj.transform([linestring_coords[i][0], linestring_coords[i][1]], source.getProjection(), 'EPSG:4326');
                     coords += coordinates[0] + " " + coordinates[1];
                 }
-                if(bothMaps) {
-                    edu.gmu.csiss.covali.statistics.getLineStatistics('left', coords);
-                    edu.gmu.csiss.covali.statistics.getLineStatistics('right', coords);
+				edu.gmu.csiss.covali.menu.closeAllDialogs();
+
+				if(bothMaps) {
+                    edu.gmu.csiss.covali.statistics.showLineStatistics('left', coords);
+                    edu.gmu.csiss.covali.statistics.showLineStatistics('right', coords);
                 }
                 else {
-                    edu.gmu.csiss.covali.statistics.getLineStatistics(side, coords);
+                    edu.gmu.csiss.covali.statistics.showLineStatistics(side, coords);
                 }
 
             }catch(e){
@@ -269,7 +273,7 @@ edu.gmu.csiss.covali.statistics = {
         var layer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
         var map = edu.gmu.csiss.covali.map.getMapBySide(side);
 
-        if(layer && layer.getVisible() != true){
+        if(!layer || !layer.getVisible()){
         	return;
         }
 
@@ -351,6 +355,47 @@ edu.gmu.csiss.covali.statistics = {
         var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+url+'" /></div>';
 
         edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
+	},
+	showLineStatistics: function(side, linestring){
+		var layer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
+		//console.log(layer.getSource().getParams());
+
+		var timestep = layer.getSource().getParams()["TIME"];
+
+		var elevation = layer.getSource().getParams()["ELEVATION"];
+
+		// var projection = map.getView().getProjection();
+
+		var req = edu.gmu.csiss.covali.wms.getCurrentEndPointUrl() + "?REQUEST=GetTransect&LAYERS=" +
+
+			layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
+
+			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
+
+		if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
+
+
+			req += "&elevation=" + elevation;
+		}
+
+
+		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.LineStatisticsResult';
+		var dialogTitle = 'Line Statistics Result';
+		var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" /></div>';
+
+		edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
+	},
+
+	showResultsDialog: function(name, title, content, side) {
+		name = name + '-' + side;
+		var x;
+		if(side == 'left') {
+			x = 420;
+		} else {
+			x = window.innerWidth/2 + 410;
+		}
+
+		edu.gmu.csiss.covali.menu.createDialog(name, title, content, 650, 740, x);
 	},
 
 	clearAllPopupsOnAMap: function(side){
@@ -468,49 +513,6 @@ edu.gmu.csiss.covali.statistics = {
 		var dialogTitle = 'Statistics';
 		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 300);
 
-	},
-	
-
-	getLineStatistics: function(side, linestring){
-		var layer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
-		//console.log(layer.getSource().getParams());
-
-		var timestep = layer.getSource().getParams()["TIME"];
-
-		var elevation = layer.getSource().getParams()["ELEVATION"];
-
-		// var projection = map.getView().getProjection();
-
-		var req = edu.gmu.csiss.covali.wms.getCurrentEndPointUrl() + "?REQUEST=GetTransect&LAYERS=" +
-
-			layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
-
-			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
-
-		if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
-
-
-			req += "&elevation=" + elevation;
-		}
-
-
-		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.LineStatisticsResult';
-		var dialogTitle = 'Line Statistics Result';
-        var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" /></div>';
-
-		edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
-	},
-
-	showResultsDialog: function(name, title, content, side) {
-        var x;
-        if(side == 'left') {
-            x = 420;
-        } else {
-            x = window.innerWidth/2 + 410;
-        }
-        edu.gmu.csiss.covali.menu.closeAllDialogs();
-        edu.gmu.csiss.covali.menu.createDialog(name, title, content, 650, 740, x);
 	}
-	
-		
+
 }

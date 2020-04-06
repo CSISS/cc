@@ -83,8 +83,15 @@ edu.gmu.csiss.covali.menu = {
 	        });
 			frame.setResizable(true);
 	    	
-	    	frame.show();	    	
-	    	frame.setPosition(window.innerWidth/2, window.innerHeight*0.05, 'CENTER_TOP');
+	    	frame.show();
+	    	if(!x) {
+	    		x = window.innerWidth/2;
+			}
+
+	    	if(!y) {
+	    		y = window.innerHeight*0.05;
+			}
+	    	frame.setPosition(x, y, 'CENTER_TOP');
 		},
 		
 		setFrameDimensionsToInnerHTML: function(dialogName){
