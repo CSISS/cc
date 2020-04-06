@@ -313,9 +313,8 @@ edu.gmu.csiss.covali.statistics = {
 
         var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.TimeseriesResult';
         var dialogTitle = 'Timeseries: ' + layer.values_.name + ' from '+startTime + ' to ' + endTime;
-        var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+url+'" /></div>';
 
-        edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
+        edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, this.statisticsContent(layer.values_.name + '-timeseries', url), side);
     },
 
 	showVerticalProfile: function(coordinate, side) {
@@ -352,9 +351,8 @@ edu.gmu.csiss.covali.statistics = {
 
         var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.VerticalProfileResult';
         var dialogTitle = 'Vertical Profile: ' + layer.values_.name;
-        var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+url+'" /></div>';
 
-        edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
+        edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, this.statisticsContent(layer.values_.name + '-verticalprofile', url), side);
 	},
 	showLineStatistics: function(side, linestring){
 		var layer = edu.gmu.csiss.covali.map.getLegendOLLayer(side);
@@ -366,7 +364,7 @@ edu.gmu.csiss.covali.statistics = {
 
 		// var projection = map.getView().getProjection();
 
-		var req = edu.gmu.csiss.covali.wms.getCurrentEndPointUrl() + "?REQUEST=GetTransect&LAYERS=" +
+		var url = edu.gmu.csiss.covali.wms.getCurrentEndPointUrl() + "?REQUEST=GetTransect&LAYERS=" +
 
 			layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
 
@@ -375,15 +373,14 @@ edu.gmu.csiss.covali.statistics = {
 		if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
 
 
-			req += "&elevation=" + elevation;
+			url += "&elevation=" + elevation;
 		}
 
 
 		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.LineStatisticsResult';
 		var dialogTitle = 'Line Statistics Result';
-		var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+req+'" /></div>';
 
-		edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, content, side);
+		edu.gmu.csiss.covali.statistics.showResultsDialog(dialogName, dialogTitle, this.statisticsContent(layer.values_.name + '-linestring', url), side);
 	},
 
 	showResultsDialog: function(name, title, content, side) {
@@ -395,7 +392,16 @@ edu.gmu.csiss.covali.statistics = {
 			x = window.innerWidth/2 + 410;
 		}
 
-		edu.gmu.csiss.covali.menu.createDialog(name, title, content, 650, 740, x);
+		edu.gmu.csiss.covali.menu.createDialog(name, title, content, 665, 740, x);
+	},
+
+	statisticsContent: function(title, url) {
+		var content = '<div><img style="background: url(\'../images/loading1.gif\') no-repeat;min-height: 50px;min-width: 50px;" src="'+url+'" />'
+		content += '<a href="' + url + '" download="'+ title + '.png' +'">[Download]</a>';
+		content += '</div>';
+
+		return content;
+
 	},
 
 	clearAllPopupsOnAMap: function(side){
