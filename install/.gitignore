@@ -4,3 +4,4 @@ Vagrantfile
 .vagrant
 *.gz
 java-*
+update-tmp
