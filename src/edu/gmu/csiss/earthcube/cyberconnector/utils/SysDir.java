@@ -39,6 +39,10 @@ public class SysDir {
 
 	public static String GEODAB_CSW_URL = "http://gs-service-production.geodab.eu/gs-service/services/essi/csw";
 
+	public static String CEOS_COLLECTION_CSW_URL = "https://cmr.earthdata.nasa.gov/csw/collections";
+
+	public static String CEOS_GRANULE_CSW_URL = "https://cwic.wgiss.ceos.org/cwicv1/discovery";
+
 	public static String PREFIXURL = null;
     
 	public static String ncWMSURL = null; 

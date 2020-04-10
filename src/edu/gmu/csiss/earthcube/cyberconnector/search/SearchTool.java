@@ -215,6 +215,9 @@ public class SearchTool {
 		boolean hasTextQuery = req.searchtext.length() > 0;
 		boolean hasTemporalExtent = !req.distime && !(BaseTool.isNull(req.begindatetime) && BaseTool.isNull(req.enddatetime));
 		boolean hasFormats = (!req.formats.equals("all"));
+		boolean isCwic = req.isCwic();
+		boolean hasMultipleAndProperties = (hasTextQuery || hasTemporalExtent || hasFormats || isCwic);
+
 		
 		StringBuffer cswreq = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> ")
 			.append("	<GetRecords ")
@@ -232,7 +235,7 @@ public class SearchTool {
 			.append("	        <Constraint version=\"1.1.0\"> ")
 			.append("	            <ogc:Filter> ");
 
-		    if(hasTextQuery || hasTemporalExtent || hasFormats) {
+		    if(hasMultipleAndProperties) {
 				cswreq.append("	                <ogc:And> ");
 			}
 
@@ -277,18 +280,24 @@ public class SearchTool {
 
 		if(hasTemporalExtent){
 			if(!BaseTool.isNull(req.begindatetime)) {
+				String begindate = req.begindatetime.trim();
+				begindate = begindate.replaceAll(" ", "T");
+				begindate =  begindate + "Z";
 				cswreq.append("	                <ogc:PropertyIsGreaterThanOrEqualTo> ")
 						.append("	                        <ogc:PropertyName>apiso:TempExtent_begin</ogc:PropertyName> ")
 						.append("	                        <ogc:Literal>")
-						.append(req.begindatetime)
-						.append("							</ogc:Literal> ")
+						.append(begindate)
+						.append("</ogc:Literal> ")
 						.append("	                    </ogc:PropertyIsGreaterThanOrEqualTo> ");
 			}
 			if(!BaseTool.isNull(req.enddatetime)) {
+				String enddate = req.enddatetime.trim();
+				enddate = enddate.replaceAll(" ", "T");
+				enddate =  enddate + "Z";
 				cswreq.append("	                    <ogc:PropertyIsLessThanOrEqualTo> ")
 						.append("	                        <ogc:PropertyName>apiso:TempExtent_end</ogc:PropertyName> ")
 						.append("	                        <ogc:Literal>")
-						.append(req.enddatetime)
+						.append(enddate)
 						.append("							</ogc:Literal> ")
 						.append("	                    </ogc:PropertyIsLessThanOrEqualTo> ");
 			}
@@ -298,7 +307,7 @@ public class SearchTool {
 		cswreq.append("	                    <ogc:BBOX> ")
 			.append("	                        <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName> ")
 			.append("	                        <gml:Envelope> ");
-		if(req.isGeodab()) {
+		if(req.isGeodab() || req.isCwic()) {
 			cswreq.append("	                            <gml:lowerCorner>" + req.west + " " + req.south + "</gml:lowerCorner> ")
 				  .append("	                            <gml:upperCorner>" + req.east + " " + req.north + "</gml:upperCorner> ");
 		} else {
@@ -309,7 +318,14 @@ public class SearchTool {
 		cswreq.append("	                        </gml:Envelope> ")
 			.append("	                    </ogc:BBOX> ");
 
-		if(hasTextQuery || hasTemporalExtent || hasFormats) {
+		if(isCwic) {
+			cswreq.append("<ogc:PropertyIsLike>")
+					.append("    <ogc:PropertyName>IsCwic</ogc:PropertyName>")
+					.append("    <ogc:Literal>true</ogc:Literal>")
+					.append("</ogc:PropertyIsLike>");
+		}
+
+		if(hasMultipleAndProperties) {
 			cswreq.append("	                </ogc:And> ");
 		}
 
@@ -455,7 +471,7 @@ public class SearchTool {
 	/**
 	 * Update Existing Records with New Http Download URL
 	 * @param id
-	 * @param newurl
+	 * @param rawurl
 	 * @return
 	 */
 	public static boolean updatePyCSWDataURL(String id, String rawurl) throws Exception {
@@ -606,6 +622,24 @@ public class SearchTool {
 		return resp;
 		
 	}
+
+	public static SearchResponse searchCEOSCSW(SearchRequest req) {
+		req.setCwic(true);
+
+		String cswreq = SearchTool.constructCSWRequest(req);
+
+		logger.debug(cswreq);
+
+		String cswresp = BaseTool.POST(cswreq, SysDir.CEOS_COLLECTION_CSW_URL);
+		cswresp = cswresp.replaceAll("gmd:MD_Metadata", "gmi:MI_Metadata");
+
+		logger.debug(cswresp);
+
+		SearchResponse resp = SearchTool.parseCSWResponse(cswresp);
+
+		return resp;
+
+	}
 	/**
 	 * Parse CSW response
 	 * @param resp
@@ -734,11 +768,12 @@ public class SearchTool {
 					p.setEndtime(endtime);
 					
 				}
-				
-				String west = westpath.selectSingleNode(ele).getText();
-				
-				if(west!=null){
-					
+
+				Node westpathNode = westpath.selectSingleNode(ele);
+
+				if(westpathNode!=null){
+					String west = westpathNode.getText();
+
 					p.setIsspatial("1");
 					
 					p.setWest(Double.valueOf(west));
@@ -785,12 +820,17 @@ public class SearchTool {
 
 				if(level.contains("series")) {
 
-					String curl = collection_url.selectSingleNode(ele).getText();
-					p.setAccessurl(curl);
 					p.setIscollection("1");
+
+					Node collection_url_node = collection_url.selectSingleNode(ele);
+
+					if(collection_url_node != null) {
+						p.setAccessurl(collection_url_node.getText());
+					}
 
 					String title = p.getTitle();
 					p.setTitle(title + " [COLLECTION]");
+					p.setAccessurl("NA");
 
 				} else {
 
@@ -918,8 +958,8 @@ public class SearchTool {
 			resp = SearchTool.searchLocal(req);
 			
 		}else if("3".equals(req.csw)) {
-			
-			throw new RuntimeException("This catalog is not supported at present.");
+
+			resp = SearchTool.searchCEOSCSW(req);
 			
 		}else if("4".equals(req.csw)) {
 
@@ -929,6 +969,7 @@ public class SearchTool {
 			throw new RuntimeException("This catalog is not supported at present.");
 		}
 		
+
 		return resp;
 		
 	}

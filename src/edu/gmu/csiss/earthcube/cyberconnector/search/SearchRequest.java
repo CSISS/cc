@@ -31,6 +31,8 @@ public class SearchRequest {
 	boolean servicewms = false;
 
 	boolean geodab = false;
+
+	boolean cwic = false;
 	
 	String begindatetime = "1900-01-01T00:00:00", enddatetime = "2019-06-05T00:00:00"; //begin, end. Default: No restriction.
 	
@@ -223,5 +225,7 @@ public class SearchRequest {
 
 	public void setGeodab(boolean geodab) { this.geodab = geodab; }
 
+	public boolean isCwic() { return cwic; }
 
+	public void setCwic(boolean cwic) { this.cwic = cwic; }
 }
