@@ -327,3 +327,7 @@ li.selected {
 #add-data-dialog .btn {
 	margin-top: -7px;
 }
+
+.ol-scale-line{
+    background-color: rgba(40, 40, 40, 0.85) !important;
+}
