@@ -212,13 +212,20 @@ public class SearchTool {
 	public static String constructCSWRequest(SearchRequest req){
 		
 		int startpos = req.getStart() + 1; // CSW first record = 1
-		boolean hasTextQuery = req.searchtext.length() > 0;
+
 		boolean hasTemporalExtent = !req.distime && !(BaseTool.isNull(req.begindatetime) && BaseTool.isNull(req.enddatetime));
 		boolean hasFormats = (!req.formats.equals("all"));
 		boolean isCwic = req.isCwic();
+		boolean isCwicGranules = isCwic && req.isCollectiongranules();
+		boolean isCwicCollection = !isCwicGranules;
+
+		boolean hasTextQuery = !req.isCollectiongranules() && req.searchtext.length() > 0;
+
 		boolean hasMultipleAndProperties = (hasTextQuery || hasTemporalExtent || hasFormats || isCwic);
 
-		
+		boolean reverseBBOXCoordinates = req.isGeodab() || isCwicCollection;
+
+
 		StringBuffer cswreq = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> ")
 			.append("	<GetRecords ")
 			.append("	    xmlns=\"http://www.opengis.net/cat/csw/2.0.2\" ")
@@ -258,6 +265,12 @@ public class SearchTool {
 				if(formats.length > 1) {
 					cswreq.append("	                </ogc:Or> ");
 				}
+			}
+		    if(isCwicGranules) {
+				cswreq.append("				<ogc:PropertyIsEqualTo>")
+				.append("						<ogc:PropertyName>dc:identifier</ogc:PropertyName>")
+				.append("						<ogc:Literal>" + req.searchtext + "</ogc:Literal>")
+				.append("					</ogc:PropertyIsEqualTo>");
 			}
 
 			// match csw:AnyText or apiso:Identifier
@@ -306,8 +319,8 @@ public class SearchTool {
 
 		cswreq.append("	                    <ogc:BBOX> ")
 			.append("	                        <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName> ")
-			.append("	                        <gml:Envelope> ");
-		if(req.isGeodab() || req.isCwic()) {
+			.append("	                        <gml:Envelope srsName=\"EPSG:4326\"> ");
+		if(reverseBBOXCoordinates) {
 			cswreq.append("	                            <gml:lowerCorner>" + req.west + " " + req.south + "</gml:lowerCorner> ")
 				  .append("	                            <gml:upperCorner>" + req.east + " " + req.north + "</gml:upperCorner> ");
 		} else {
@@ -318,7 +331,7 @@ public class SearchTool {
 		cswreq.append("	                        </gml:Envelope> ")
 			.append("	                    </ogc:BBOX> ");
 
-		if(isCwic) {
+		if(isCwicCollection) {
 			cswreq.append("<ogc:PropertyIsLike>")
 					.append("    <ogc:PropertyName>IsCwic</ogc:PropertyName>")
 					.append("    <ogc:Literal>true</ogc:Literal>")
@@ -929,20 +942,7 @@ public class SearchTool {
 		
 		return tool.search(req.searchtext, req.getRecordsPerPage(), req.getPageNumber(), formats);
 	}
-	
-	public static SearchResponse searchCWIC(SearchRequest req){
-		
-		SearchResponse resp = new SearchResponse();
-		
-		String cswreq = SearchTool.constructCSWRequest(req);
-		
-		
-		
-		return resp;
-		
-	}
 
-	
 	public static SearchResponse searchRealData(SearchRequest req){
 		
 		SearchResponse resp = null;
@@ -1010,10 +1010,38 @@ public class SearchTool {
 	}
 
 	public static SearchResponse searchGranulesIndex(SearchRequest req){
+		if("1".equals(req.csw)){
+			return SearchTool.searchCSISSCSWGranulesIndex(req);
+		}else if("3".equals(req.csw)){
+			return SearchTool.searchCEOSCWICGranulesIndex(req);
+		}else {
+			throw new RuntimeException("This catalog is not supported at present.");
+		}
+	}
+
+	public static SearchResponse searchCEOSCWICGranulesIndex(SearchRequest req){
+		req.setCwic(true);
+		String cswreq = SearchTool.constructCSWRequest(req);
+
+		logger.debug(cswreq);
+
+		String cswresp = BaseTool.POST(cswreq, SysDir.CEOS_GRANULE_CSW_URL);
+		cswresp = cswresp.replaceAll("gmd:MD_Metadata", "gmi:MI_Metadata");
+
+		logger.debug(cswresp);
+
+		SearchResponse resp = SearchTool.parseCSWResponse(cswresp);
+
+		return resp;
+	}
+
+
+	public static SearchResponse searchCSISSCSWGranulesIndex(SearchRequest req){
 
 		// first find the collection
 		String cswreq = SearchTool.constructSingleCSWReq(req.getSearchtext());
 		logger.debug(cswreq);
+
 		String cswresp = BaseTool.POST(cswreq, SysDir.CSISS_CSW_URL);
 		logger.debug(cswresp);
 
