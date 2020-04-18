@@ -53,23 +53,25 @@ public class ProductCache {
             cacheFileName = cacheFileName + "." + suffix;
         }
         
-        this.cacheDir = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path ;
+//        this.cacheDir = BaseTool.getCyberConnectorRootPath() + SysDir.upload_file_path ;
 
-        this.cacheUrl = SysDir.PREFIXURL + "/CyberConnector/" + SysDir.upload_file_path + "/" + cacheFileName;
+//        this.cacheUrl = SysDir.PREFIXURL + "/CyberConnector/" + SysDir.upload_file_path + "/" + cacheFileName;
 
-        this.cachePath = cacheDir  + "/" + cacheFileName;
+//        this.cachePath = cacheDir  + "/" + cacheFileName;
 
-        this.cacheTmpPath = this.cachePath + ".tmp";
+//        this.cacheTmpPath = this.cachePath + ".tmp";
     }
 
     public boolean cacheExists() {
-        File cacheFile = new File(cachePath);
-        return cacheFile.exists();
+        if(cachePath != null) {
+            File cacheFile = new File(cachePath);
+            return cacheFile.exists();
+        } else {
+            return false;
+        }
     }
 
     public void doCache() throws Exception {
-        (new File(cacheDir)).mkdirs();
-
         logger.info("Cache " + url + " to " + cachePath + " as " + cacheUrl);
 
 //        new FileOutputStream(cachePath).close();

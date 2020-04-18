@@ -1,23 +1,21 @@
 package edu.gmu.csiss.earthcube.cyberconnector.web;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.NcoTool;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.RegridTool;
-import edu.iris.dmc.criteria.OutputLevel;
-import edu.iris.dmc.criteria.StationCriteria;
 import edu.iris.dmc.fdsn.station.model.Channel;
-import edu.iris.dmc.fdsn.station.model.Network;
 import edu.iris.dmc.fdsn.station.model.Station;
-import edu.iris.dmc.service.StationService;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONValue;
@@ -33,9 +31,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import edu.gmu.csiss.earthcube.cyberconnector.ncwms.ncWMSTool;
-import edu.gmu.csiss.earthcube.cyberconnector.products.Product;
-import edu.gmu.csiss.earthcube.cyberconnector.search.Granule;
-import edu.gmu.csiss.earthcube.cyberconnector.search.GranulesTool;
 import edu.gmu.csiss.earthcube.cyberconnector.search.SearchRequest;
 import edu.gmu.csiss.earthcube.cyberconnector.search.SearchResponse;
 import edu.gmu.csiss.earthcube.cyberconnector.search.SearchTool;
@@ -44,9 +39,6 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.Message;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.RandomString;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
-
-import edu.iris.dmc.criteria.CriteriaException;
-import edu.iris.dmc.service.ServiceUtil;
 
 /**
 *Class CovaliController.java
@@ -187,7 +179,10 @@ public class CovaliController {
     	
 //    	String querystr = request.getQueryString();
     	
-    	String rootlocation = request.getParameter("root");
+    	String location = request.getParameter("location");
+    	if(location.isEmpty()) {
+    		location = "/";
+		}
     	
     	try {
     		
@@ -200,17 +195,7 @@ public class CovaliController {
     			resp = "{\"ret\": \"login\", \"reason\": \"Login is required to access the public files.\"}";
     			
     		}else {
-    			
-        		//have some potential threats. Restrict the folder that COVALI can publish later
-        		
-        		if(rootlocation==null) {
-        			
-        			resp = LocalFileTool.getLocalFileList("/tmp/");
-        			
-        		}else
-
-        			resp = LocalFileTool.getLocalFileList(rootlocation);
-        		
+       			resp = LocalFileTool.getJsonFileList(Paths.get(location));
     		}
     		
     	}catch(Exception e) {
@@ -290,74 +275,96 @@ public class CovaliController {
     	return resp;
     	
     }
-	
-	@RequestMapping(value = "/downloadLocalFile", method = RequestMethod.POST)
-    public @ResponseBody String downloadLocalFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-    	
-    	String resp = null;
-    	
-//    	String querystr = request.getQueryString();
-    	
-    	String path = request.getParameter("path");
-    	
-    	try {
-    		
-    		String url = LocalFileTool.turnLocalFile2Downloadable(path);
-    		
-    		File f = new File(path);
-    		
-    		resp = "{\"output\":\"success\",\"url\":\""+url+"\", \"filename\": \""+f.getName()+"\"}";
-    		
-    	}catch(Exception e) {
-    		
-    		e.printStackTrace();
-    		
-    		resp = "{\"output\":\"failure\",\"reason\": \""+
-    				
-    				e.getLocalizedMessage() +
-    				
-    				"\"}";
-    				
-    	}
-    	
-    	return resp;
-    	
-    }
-	
-	@RequestMapping(value = "/downloadWMSFile", method = RequestMethod.POST)
-    public @ResponseBody String downloadWMSFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-    	
-    	String resp = null;
-    	
-//    	String querystr = request.getQueryString();
-    	
-    	String id = request.getParameter("id");
-    	
-    	try {
-    		
-    		String location = ncWMSTool.getLocationByWMSLayerId(id);
-    		
-    		String url = LocalFileTool.turnLocalFile2Downloadable(location);
-    		
-    		File f = new File(location);
-    		
-    		resp = "{\"output\":\"success\",\"url\":\""+url+"\", \"filename\": \""+f.getName()+"\"}";
-    		
-    	}catch(Exception e) {
-    		
-    		e.printStackTrace();
-    		
-    		resp = "{\"output\":\"failure\",\"reason\": \""+
-    				
-    				e.getLocalizedMessage() +
-    				
-    				"\"}";
-    				
-    	}
-    	
-    	return resp;
-    	
-    }
+
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
+	public void download( HttpServletRequest request,  HttpServletResponse response, WebRequest webrequest) {
+		Path path = Paths.get(BaseTool.urlDecode(webrequest.getParameter("path")));
+		path = path.normalize().toAbsolutePath();
+
+		if (!LocalFileTool.isFileDownloadAllowed(path)) {
+			logger.error("Forbidden download location " + path.toString());
+			response.setStatus(403);
+			return;
+		}
+
+		try {
+			Files.copy(path, response.getOutputStream());
+			response.setContentType("application/octet-strean");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + path.getFileName() + "\"");
+			response.getOutputStream().flush();
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+	}
+
+//	@RequestMapping(value = "/downloadLocalFile", method = RequestMethod.POST)
+//    public @ResponseBody String downloadLocalFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
+//
+//    	String resp = null;
+//
+////    	String querystr = request.getQueryString();
+//
+//    	String path = request.getParameter("path");
+//
+//    	try {
+//
+//    		String url = LocalFileTool.turnLocalFile2Downloadable(Paths.get(path));
+//
+//    		File f = new File(path);
+//
+//    		resp = "{\"output\":\"success\",\"url\":\""+url+"\", \"filename\": \""+f.getName()+"\"}";
+//
+//    	}catch(Exception e) {
+//
+//    		e.printStackTrace();
+//
+//    		resp = "{\"output\":\"failure\",\"reason\": \""+
+//
+//    				e.getLocalizedMessage() +
+//
+//    				"\"}";
+//
+//    	}
+//
+//    	return resp;
+//
+//    }
+//
+//	@RequestMapping(value = "/downloadWMSFile", method = RequestMethod.POST)
+//    public @ResponseBody String downloadWMSFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
+//
+//    	String resp = null;
+//
+////    	String querystr = request.getQueryString();
+//
+//    	String id = request.getParameter("id");
+//
+//    	try {
+//
+//    		String location = ncWMSTool.getLocationByWMSLayerId(id);
+//
+//    		String url = LocalFileTool.turnLocalFile2Downloadable(location);
+//
+//    		File f = new File(location);
+//
+//    		resp = "{\"output\":\"success\",\"url\":\""+url+"\", \"filename\": \""+f.getName()+"\"}";
+//
+//    	}catch(Exception e) {
+//
+//    		e.printStackTrace();
+//
+//    		resp = "{\"output\":\"failure\",\"reason\": \""+
+//
+//    				e.getLocalizedMessage() +
+//
+//    				"\"}";
+//
+//    	}
+//
+//    	return resp;
+//
+//    }
 	
 	/**
      * Add dataset into ncWMS
@@ -375,33 +382,33 @@ public class CovaliController {
     	String location = request.getParameter("location");
 
     	try {
-    		
-    		if(location.startsWith(SysDir.PREFIXURL)) {
-
-				location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
-
-    		}
-    		else if(location.startsWith("/")){
-    			
-//    			location = location;
-    			
-    		}else {
-    			
-    			File f = new File(location);
-    			
-    			File folder = new File(BaseTool.getCyberConnectorRootPath());
-    			
-    			if(f.getAbsolutePath().indexOf(folder.getPath())!=-1){
-        			
-        			//do nothing
-        			
-        		}else {
-        			
-        			location = SysDir.getCovali_file_path() + '/' + location;
-        			
-        		} 
-    			
-    		}
+//
+//    		if(location.startsWith(SysDir.PREFIXURL)) {
+//
+//				location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
+//
+//    		}
+//    		else if(location.startsWith("/")){
+//
+////    			location = location;
+//
+//    		}else {
+//
+//    			File f = new File(location);
+//
+//    			File folder = new File(BaseTool.getCyberConnectorRootPath());
+//
+//    			if(f.getAbsolutePath().indexOf(folder.getPath())!=-1){
+//
+//        			//do nothing
+//
+//        		}else {
+//
+//        			location = SysDir.getDataPath() + '/' + location;
+//
+//        		}
+//
+//    		}
 
 			File f = new File(location);
 			String id = FilenameUtils.getBaseName(location) + '-' + RandomString.get(4);

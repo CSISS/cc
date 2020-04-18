@@ -27,7 +27,7 @@ public class Product {
 	String isspatial;
 	String modelid;
 	String format;
-	String accessurl;
+	String downloadurl;
 	String parentmodel;
 	String ontology;
 	String lastupdate;
@@ -60,7 +60,7 @@ public class Product {
 	public void setIscollection(String iscollection) { this.iscollection = iscollection; }
 
 	public boolean isCached() {
-		return new ProductCache(id, accessurl).cacheExists() || this.cached;
+		return new ProductCache(id, downloadurl).cacheExists() || this.cached;
 	}
 
 	public void setCached(boolean cached) {
@@ -187,12 +187,12 @@ public class Product {
 		this.format = format;
 	}
 
-	public String getAccessurl() {
-		return accessurl;
+	public String getDownloadurl() {
+		return downloadurl;
 	}
 
-	public void setAccessurl(String accessurl) {
-		this.accessurl = accessurl;
+	public void setDownloadurl(String downloadurl) {
+		this.downloadurl = downloadurl;
 	}
 
 	public String getOntology() {

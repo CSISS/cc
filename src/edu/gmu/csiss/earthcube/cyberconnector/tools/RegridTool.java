@@ -22,7 +22,7 @@ public class RegridTool {
 
         String paramsJSON = BaseTool.toJSONString(request.getParameterMap());
 
-        String[] args = {"/bin/bash", script, SysDir.anaconda_path, pythonScript, paramsJSON};
+        String[] args = {"/bin/bash", script, SysDir.anaconda_path.toString(), pythonScript, paramsJSON};
 
         logger.info("regrid parameters: " + paramsJSON);
 

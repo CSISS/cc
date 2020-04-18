@@ -29,7 +29,7 @@ edu.gmu.csiss.covali.local = {
 		content += '<b>Parsing file ' + file_path + '...</b>';
 		content += '</div>';
 
-		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 76);
+		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 100);
 
     },
 

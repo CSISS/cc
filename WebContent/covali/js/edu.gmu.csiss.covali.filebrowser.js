@@ -5,27 +5,25 @@ edu.gmu.csiss.covali.filebrowser = {
     selectedCallback: function() {},
     
     fileListHtml: function(path, files) {
-        var parentPath = path.substring(0, path.lastIndexOf('/'));
-        
         var fileList = '';
         
         fileList += '<ul class="list-group">';
 
-        if(files[0] == '..') {
-            files.shift();
-            fileList += '<li class="list-group-item file-browser-item file-browser-directory" data-path="' + parentPath + '">';
+        if(files[0].name == '..') {
+            fileList += '<li class="list-group-item file-browser-item file-browser-directory" data-path="' + files[0].path + '">';
             fileList += '<span class="glyphicon glyphicon-folder-close text-primary"></span>';
             fileList += '<a href="javascript:void(0)"> ..</a>';
             fileList += '</li>';
+
+            files.shift();
         }
         
         files.forEach(function(f){
             var icon = f.type == 'file' ? 'glyphicon-file' : 'glyphicon-folder-open';
 
-            var localName = f.name.substring(f.name.lastIndexOf('/') + 1);
-            fileList += '<li class="list-group-item file-browser-item file-browser-'+ f.type + '" data-path="' + f.name + '">';
+            fileList += '<li class="list-group-item file-browser-item file-browser-'+ f.type + '" data-path="' + f.path + '">';
             fileList += '<span class="glyphicon ' + icon + ' text-primary"></span>';
-            fileList += '<a href="javascript:void(0)"> ' + localName +'</a>';
+            fileList += '<a href="javascript:void(0)"> ' + f.name +'</a>';
             fileList += '</li>';
         });
         
@@ -69,7 +67,7 @@ edu.gmu.csiss.covali.filebrowser = {
 
             url: "../web/localfilelist",
 
-            data: "root=" + path,
+            data: "location=" + path,
 
             success: function (obj, text, jxhr) {
                 var obj = jQuery.parseJSON(obj);

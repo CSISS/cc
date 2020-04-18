@@ -69,7 +69,7 @@ public class Granule {
         p.setEast(collectionRecord.getEast());
         p.setNorth(collectionRecord.getNorth());
         p.setSouth(collectionRecord.getSouth());
-        p.setAccessurl(this.access_url);
+        p.setDownloadurl(this.access_url);
         p.setIfvirtual("0");
         p.setIsspatial("1");
         p.setIscollection("0");

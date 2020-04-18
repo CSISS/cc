@@ -48,9 +48,9 @@ public class FileUploadServlet extends HttpServlet {
 //        
 //        tempPath = config.getInitParameter("temppath");
     	
-    	relativePath = SysDir.upload_file_path;
+    	relativePath = SysDir.workspace_uploads_path.toString();
     	
-    	tempPath = SysDir.temp_file_path;
+    	tempPath = SysDir.workspace_tmp_path.toString();
         
         filePath = BaseTool.getCyberConnectorRootPath() + relativePath;
         

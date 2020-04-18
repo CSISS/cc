@@ -8,14 +8,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductVariable;
-import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
-import edu.iris.dmc.fdsn.station.model.Network;
-import edu.iris.dmc.fdsn.station.model.Station;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -132,7 +127,7 @@ public class SearchTool {
 				
 				p.setParentmodel(rs.getString("parent_abstract_model"));
 				
-				p.setAccessurl(rs.getString("accessURL"));
+				p.setDownloadurl(rs.getString("accessURL"));
 				
 				p.setLastupdate(rs.getString("lastUpdateDate"));
 				
@@ -838,12 +833,12 @@ public class SearchTool {
 					Node collection_url_node = collection_url.selectSingleNode(ele);
 
 					if(collection_url_node != null) {
-						p.setAccessurl(collection_url_node.getText());
+						p.setDownloadurl(collection_url_node.getText());
 					}
 
 					String title = p.getTitle();
 					p.setTitle(title + " [COLLECTION]");
-					p.setAccessurl("NA");
+					p.setDownloadurl("NA");
 
 				} else {
 
@@ -855,16 +850,16 @@ public class SearchTool {
 							logger.warn("There is no HTTP down link. We don't officially favor such records. Every time a CSW patrol find it, it will be deleted. Since the client already touches it, it will be returned with its OPeNDAP client link.");
 
 							String accessurl = accessoptions_opendap.selectSingleNode(ele).getText() + ".html";
-							p.setAccessurl(accessurl);
+							p.setDownloadurl(accessurl);
 
 						} else {
 
 							String accessurl = accessoptions.selectSingleNode(ele).getText();
-							p.setAccessurl(accessurl);
+							p.setDownloadurl(accessurl);
 						}
 					}
 					catch(Exception e) {
-						p.setAccessurl("NA");
+						p.setDownloadurl("NA");
 					}
 				}
 
@@ -880,9 +875,9 @@ public class SearchTool {
 					p.setAccessinfo("NA");
 				}
 
-				ProductCache cache = new ProductCache(p.getId(), p.getAccessurl());
+				ProductCache cache = new ProductCache(p.getId(), p.getDownloadurl());
 				if(cache.cacheExists()) {
-					p.setAccessurl(cache.getCacheUrl());
+					p.setDownloadurl(cache.getCacheUrl());
 					p.setCached(true);
 				}
 				
@@ -1066,8 +1061,8 @@ public class SearchTool {
 			products.add(p);
 
 			if(p.isCached()) {
-				ProductCache cache = new ProductCache(p.getId(), p.getAccessurl());
-				p.setAccessurl(cache.getCacheUrl());
+				ProductCache cache = new ProductCache(p.getId(), p.getDownloadurl());
+				p.setDownloadurl(cache.getCacheUrl());
 			}
 		}
 

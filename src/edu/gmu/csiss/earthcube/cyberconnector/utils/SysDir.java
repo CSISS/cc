@@ -2,7 +2,12 @@ package edu.gmu.csiss.earthcube.cyberconnector.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -28,13 +33,9 @@ public class SysDir {
 	public static String NOTIFICATION_EMAIL  = null;
     
 	public static String NOTIFICATION_EMAIL_SERVICE_URL = null;
-    
-	public static String CACHE_OPERATION = null;
-    
+
 	public static String CACHE_SERVICE_URL = null;
-    
-	public static String CACHE_DATA_URLPREFIX = null;
-    
+
 	public static String CSISS_CSW_URL = null;
 
 	public static String GEODAB_CSW_URL = "http://gs-service-production.geodab.eu/gs-service/services/essi/csw";
@@ -50,20 +51,24 @@ public class SysDir {
 	public static String ncUsername = null; 
     
 	public static String ncPassword = null;
-    
-	public static String covali_file_path = null;
-	
+
 	public static String geoweaver_file_path = null;
-    
-	public static String upload_file_path = null;
 
-	public static String ncra_path = null;
+	public static Path data_path = null;
 
-	public static String ncbo_path = null;
+	public static Path workspace_path = null;
 
-	public static String anaconda_path = null;
+	public static Path workspace_cache_path = null;
 
-	public static String temp_file_path = null;
+	public static Path workspace_uploads_path = null;
+
+	public static Path workspace_tmp_path = null;
+
+	public static Path ncra_path = null;
+
+	public static Path ncbo_path = null;
+
+	public static Path anaconda_path = null;
 
 	public static String thredds_index_url = null;
 
@@ -86,17 +91,12 @@ public class SysDir {
 	public static boolean enable_whitelist = true;
 	
 	public static List whiteusers = new ArrayList();
-	
-	public static String getCovali_file_path() {
-		
-		init();
-		
-		return covali_file_path;
-		
+
+	static  Path normalizedPath(String path) throws IOException {
+		return Paths.get(path.replaceFirst("^~",  System.getProperty("user.home"))).normalize().toAbsolutePath();
 	}
 	
 	static Properties readProperties(String path) {
-		
 		Properties p = new Properties();
 
 		try {
@@ -138,7 +138,7 @@ public class SysDir {
 			else
 				
 				secrets = readProperties(t.getClassPath()+File.separator+secretConfigFile);
-			
+
 			String number = p.getProperty("workernumber");
 			
 			SysDir.worknumber = Integer.parseInt(number);
@@ -154,27 +154,23 @@ public class SysDir {
 			NOTIFICATION_EMAIL = p.getProperty("notify");
 			
 			NOTIFICATION_EMAIL_SERVICE_URL = p.getProperty("notificationserviceaddress");
-			
-			CACHE_OPERATION = p.getProperty("datacacheoperation");
-			
+
 			CACHE_SERVICE_URL = p.getProperty("datacacheserviceaddress");
 			
 			CSISS_CSW_URL = p.getProperty("csisscswurl");
-			
-			CACHE_DATA_URLPREFIX = p.getProperty("datacacheprefix");
-			
+
 			PREFIXURL = p.getProperty("prefixurl");
 			
 			ncWMSURL = p.getProperty("ncwmsurl");
-			
-			covali_file_path = p.getProperty("covali_file_path");
-			
-			geoweaver_file_path = p.getProperty("geoweaver_file_path");
-			
-			upload_file_path = p.getProperty("upload_file_path");
-			
-			temp_file_path = p.getProperty("temp_file_path");
-			
+
+			geoweaver_file_path = normalizedPath(p.getProperty("geoweaver_file_path")).toString();
+
+			data_path = normalizedPath(p.getProperty("data_path"));
+
+			workspace_path = normalizedPath(p.getProperty("workspace_path"));
+
+			SysDir.initWorkspacePaths();
+
 			thredds_index_url = p.getProperty("thredds_index_url");
 			
 			database_driver = p.getProperty("database_driver");
@@ -185,11 +181,11 @@ public class SysDir {
 			
 			login_required = Boolean.parseBoolean(p.getProperty("login_required"));
 
-			ncra_path = p.getProperty("ncra_path");
+			ncra_path = normalizedPath(p.getProperty("ncra_path"));
 
-			ncbo_path = p.getProperty("ncbo_path");
+			ncbo_path = normalizedPath(p.getProperty("ncbo_path"));
 
-			anaconda_path = p.getProperty("anaconda_path");
+			anaconda_path = normalizedPath(p.getProperty("anaconda_path"));
 			
 			enable_whitelist = Boolean.parseBoolean(p.getProperty("enable_whitelist"));
 			
@@ -228,18 +224,37 @@ public class SysDir {
 			}
 			
 		} catch (Exception e) {
-			
 			e.printStackTrace();
-			
+			System.exit(1);
 		}
-		
 	}
 
-	static{
-		
+
+
+	static void initWorkspacePaths() throws IOException {
+		SysDir.workspace_cache_path = SysDir.workspace_path.resolve("cache");
+		SysDir.workspace_uploads_path = SysDir.workspace_path.resolve("uploads");
+		SysDir.workspace_tmp_path = SysDir.workspace_path.resolve("tmp");
+
+		Files.createDirectories(SysDir.workspace_cache_path);
+		Files.createDirectories(SysDir.workspace_uploads_path);
+		Files.createDirectories(SysDir.workspace_tmp_path);
+	}
+
+	static {
 		//initialize from config file
 		init();
-		
 	}
+
+//	public static void write(String msg) {
+//		try {
+//			FileWriter myWriter = new FileWriter("/covaliFiles/log.txt");
+//			myWriter.write(msg);
+//			myWriter.close();
+//		} catch (IOException e) {
+//			System.out.println("An error occurred.");
+//			e.printStackTrace();
+//		}
+//	}
 
 }

@@ -1,6 +1,5 @@
 package edu.gmu.csiss.earthcube.cyberconnector.tools;
 
-import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 import org.apache.commons.io.IOUtils;
 
@@ -25,12 +24,11 @@ public class NcoTool {
 
 
     public static String execNcoCommand(String command) {
-        String dataDirectory = SysDir.getCovali_file_path();
-        File log = new File(SysDir.temp_file_path + "/nco.log");
+        File log = SysDir.workspace_tmp_path.resolve("nco.log").toFile();
 
         String[] args = command.split("\\s+");
         ProcessBuilder pb = new ProcessBuilder(args);
-        pb.directory(new File(dataDirectory));
+        pb.directory(SysDir.workspace_path.toFile());
         pb.redirectErrorStream(true);
         appendToLog(log, pb.command().toString() + "\n");
 
@@ -49,12 +47,12 @@ public class NcoTool {
     }
 
     public static String execNcra(String command) {
-        command = command.replaceAll("^ncra", SysDir.ncra_path);
+        command = command.replaceAll("^ncra", SysDir.ncra_path.toString());
         return execNcoCommand(command);
     }
 
     public static String execNcbo(String command) {
-        command = command.replaceAll("^ncbo", SysDir.ncbo_path);
+        command = command.replaceAll("^ncbo", SysDir.ncbo_path.toString());
         return execNcoCommand(command);
     }
 }

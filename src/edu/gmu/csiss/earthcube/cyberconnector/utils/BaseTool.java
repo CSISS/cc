@@ -14,10 +14,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLDecoder;
+import java.net.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -552,6 +549,36 @@ public class BaseTool {
                 throw new RuntimeException("Cann't send messages to "+input_url+". Reason: "+e.getLocalizedMessage());
             }
     }
+
+    public static String urlEncode(String data) {
+		String result = data;
+
+		try {
+			result = URLEncoder.encode(data, "UTF-8");
+		}
+		catch(Exception e) {
+			logger.error(e);
+			System.out.println(e.getStackTrace());
+		}
+
+		return result;
+	}
+
+	public static String urlDecode(String data) {
+		String result = data;
+
+		try {
+			result = URLDecoder.decode(data, "UTF-8");
+		}
+		catch(Exception e) {
+			logger.error(e);
+			System.out.println(e.getStackTrace());
+		}
+
+		return result;
+	}
+
+
 	/**
 	 * Main Entry
 	 * @param args

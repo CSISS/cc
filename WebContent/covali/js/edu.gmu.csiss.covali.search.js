@@ -54,49 +54,17 @@ edu.gmu.csiss.covali.search = {
 		 * Check whether the file format is supported
 		 */
 		checkfileformat: function(filename){
-
-			if(filename == "NA") {
-				return false;
-			}
-			
 			return edu.gmu.csiss.covali.local.filterFormats(filename);
-			
 		},
 		
-		goto: function(url){
-			
-			window.open(url,'_blank');
-			
-		},
-		
-		download: function(filepath){
-			
-			$.ajax({
-				
-				"url": "downloadLocalFile",
-				
-				"type": "POST",
-				
-				"data": "path=" + filepath
-				
-			}).success(function(data){
-				
-				data = $.parseJSON(data);
-				
-				if(data.output=="success"){
-					
-					edu.gmu.csiss.covali.search.goto(data.url);
-					
-				}else{
-					
-					alert("Fail to download the data: + filepath");
-					
-				}
-				
+		download: function(url, name){
+			var a = $("<a />", {
+				href: url,
+				download: name
 			});
-			
+			a.appendTo("body").get(0).click();
 		},
-
+		
 		granules: function(name){
             api =  $('#producttable').DataTable();
 			request = api.ajax.params();
@@ -158,20 +126,20 @@ edu.gmu.csiss.covali.search = {
                     	
                     	"data": "id",
                         
-                    	"render": function ( data, type, full, meta ) {
+                    	"render": function ( data, type, product, meta ) {
                     		
                     		var desc = " ", btime = " ", etime = " ";
-                            var escapeid = full.id.replace(/\./g, '_');
+                            var escapeid = product.id.replace(/\./g, '_');
 
-                            if(full.desc!=null) desc = full.desc;
+                            if(product.desc!=null) desc = product.desc;
                     		
-                    		if(full.begintime!=null) btime = full.begintime;
+                    		if(product.begintime!=null) btime = product.begintime;
                     		
-                    		if(full.endtime!=null) etime = full.endtime;
+                    		if(product.endtime!=null) etime = product.endtime;
                         	
                     		var content = "<h4> "+
-    						"	<a href=\"#\" id=\"name_"+full.id+"\" "+
-    						"		 style=\"word-wrap: break-word;word-break: break-all;\">"+(full.title||full.name)+"</a>"+
+    						"	<a href=\"#\" id=\"name_"+product.id+"\" "+
+    						"		 style=\"word-wrap: break-word;word-break: break-all;\">"+(product.title||product.name)+"</a>"+
     						"</h4>"+
     						"<p>"+desc+"</p>"+
     						"<p>"+
@@ -180,74 +148,55 @@ edu.gmu.csiss.covali.search = {
 
                     		content += '	<div class="btn-group-horizontal"> ';
 
-                            content += "	<button type=\"button\" id=\"viewbtn_"+full.id+"\""+
+                            content += "	<button type=\"button\" id=\"viewbtn_"+product.id+"\""+
     						"		class=\"btn btn-primary btn-circle\">"+
     						"		<i class=\"glyphicon glyphicon-info-sign\" title=\"View Details\"></i>"+
     						"	</button>";
-                            if(full.accesslink && full.accesslink != 'NA') {
+                            if(product.accesslink && product.accesslink != 'NA') {
 
-                                content += '		<a href="'+ full.accesslink + '" target="_blank"><button class="btn btn-default" ' +
+                                content += '		<a href="'+ product.accesslink + '" target="_blank"><button class="btn btn-default" ' +
                                     ' id="externallinkbtn_' + escapeid + '"> <span ' +
                                     '			class="glyphicon glyphicon-new-window" title="Goto External Access Link"></span> ' +
                                     '		</button></a>';
 							}
 
-                            if(full.iscollection == "1") {
+                            if(product.iscollection == "1") {
                                 content += '		<button onclick="edu.gmu.csiss.covali.search.granules('
-									+ "'" + full.name + "'" + ')"'
+									+ "'" + product.name + "'" + ')"'
                                     + ' class="btn btn-default" ' +
                                     ' id="downbtn_' + escapeid + '"> <span ' +
                                     '			class="glyphicon glyphicon-th" title="List Granules"></span> ' +
                                     '		</button>';
                             }
                             else {
-                                if (full.accessurl.startsWith("http") || full.accessurl.startsWith("HTTP")) {
+                                if (product.downloadurl) {
 
-                                    content += '		<button onclick="edu.gmu.csiss.covali.search.goto(\'' + full.accessurl + '\')" class="btn btn-default" ' +
+                                    content += '		<button onclick="edu.gmu.csiss.covali.search.download(\'' + product.downloadurl + '\', \'' + product.name + '\')" class="btn btn-default" ' +
                                         ' id="downbtn_' + escapeid + '"> <span ' +
                                         '			class="glyphicon glyphicon-download-alt" title="Download"></span> ' +
                                         '		</button>';
-                                } else if(full.accessurl != "NA") {
-
-                                    content += '		<button onclick="edu.gmu.csiss.covali.search.download(\'' + full.accessurl + '\')" class="btn btn-default" ' +
-                                        ' id="downbtn_' + escapeid + '"> <span ' +
-                                        '			class="glyphicon glyphicon-download-alt" title="Download"></span> ' +
-                                        '		</button>';
-
                                 }
-
                                 //add a button to load map
 
-                                if (edu.gmu.csiss.covali.search.checkfileformat(full.accessurl)) {
+                                if (edu.gmu.csiss.covali.search.checkfileformat(product.filepath)) {
 
-                                    content += '		<button onclick="edu.gmu.csiss.covali.search.load(\'' + full.id + '\', \'' +
-                                        full.accessurl +
-                                        '\')" class="btn btn-default" id="loadbtn_' + escapeid + '"> <span ' +
-                                        '			class="glyphicon glyphicon-film" title="Load Map"></span> ' +
-                                        '		</button> ';
+									content += '		<button onclick="edu.gmu.csiss.covali.search.load(\'' + product.id + '\', \'' +
+										product.filepath +
+										'\')" class="btn btn-default" id="loadbtn_' + escapeid + '"> <span ' +
+										'			class="glyphicon glyphicon-film" title="Load Map"></span> ' +
+										'		</button> ';
+								}
+								if (!product.filepath && product.downloadurl) {
 
-                                    if (!full.cached) {
+									content += '<button onclick="edu.gmu.csiss.covali.search.cache(\'' + product.id + '\', \'' + product.name + '\', \'' + product.downloadurl + '\')" id="cachebtn_' + escapeid + '" class="btn btn-default" > ' +
+										'			<span class="glyphicon glyphicon-save-file" title="Cache Data"></span> ' +
+										//        							'			DataCache '+
+										'		</button> ';
 
-                                        content += '<button onclick="edu.gmu.csiss.covali.search.cache(\'' + full.id + '\', \'' + full.name + '\', \'' + full.accessurl + '\')" id="cachebtn_' + escapeid + '" class="btn btn-default" > ' +
-                                            '			<span class="glyphicon glyphicon-save-file" title="Cache Data"></span> ' +
-                                            //        							'			DataCache '+
-                                            '		</button> ';
-
-                                    }
                                 }
                             }
 
                             content += '	</div> ';
-
-                            //disabled for now, will be enabled later when Geoweaver is online.
-
-//    							content +='<button onclick="edu.gmu.csiss.covali.search.transform(\''+full.name+'\', \''+full.accessurl+'\')" class="btn btn-default"> '+
-//    							'			<span class="glyphicon glyphicon-wrench pull-left"></span> '+
-//    						  //'			Transform '+
-//    							'		</button> '+
-//    							'	</div> '+
-//    							'</p>';
-
 
                         	return content;
                         	
@@ -548,7 +497,7 @@ edu.gmu.csiss.covali.search = {
 							id+'\',\''+
 							resp.file_url+'\')');
 					
-					$('#downbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.goto(\''+
+					$('#downbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.download(\''+
 							resp.file_url+'\')');
 				}					
 				
