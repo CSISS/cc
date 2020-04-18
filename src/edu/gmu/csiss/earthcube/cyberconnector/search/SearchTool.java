@@ -212,7 +212,7 @@ public class SearchTool {
 		boolean hasFormats = (!req.formats.equals("all"));
 		boolean isCwic = req.isCwic();
 		boolean isCwicGranules = isCwic && req.isCollectiongranules();
-		boolean isCwicCollection = !isCwicGranules;
+		boolean isCwicCollection = isCwic && !isCwicGranules;
 
 		boolean hasTextQuery = !req.isCollectiongranules() && req.searchtext.length() > 0;
 
