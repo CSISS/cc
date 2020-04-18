@@ -35,24 +35,19 @@ edu.gmu.csiss.covali.local = {
 
 	filterFormats: function(file_path){
 
+		if(!file_path) {
+			return false;
+		}
+
 		//only supports netCDF, GRIB and GeoTiff rightnow
+		for(var i=0; i< edu.gmu.csiss.covali.local.formats.length; i++){
+			if(file_path.endsWith(edu.gmu.csiss.covali.local.formats[i])){
+				return true;
+			}
 
-		var support = true;
-//			
-//			for(var i=0; i< edu.gmu.csiss.covali.local.formats.length; i++){
-//				
-//				if(file_path.endsWith(edu.gmu.csiss.covali.local.formats[i])){
-//					
-//					support = true;
-//					
-//					break;
-//					
-//				}
-//				
-//			}
+		}
 
-		return support;
-
+		return false;
 	},
 
 	loadWMSFile: function(file_path){
