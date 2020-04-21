@@ -6,7 +6,7 @@
 
 edu.gmu.csiss.covali.local = {
 
-	formats: ["tif", "tiff", "shp", "grb", "grib", "grib2", "h5","hdf", "hdfeos", "hdf4", "hdf5", "nc", "nc4",  "nc3", "ncf"],
+	formats: ["tif", "tiff", "shp", "grb", "grib",  "grib1", "grib2", "h5","hdf", "hdfeos", "hdf4", "hdf5", "nc", "nc4",  "nc3", "ncf"],
 
 
 	init: function(){
@@ -55,9 +55,8 @@ edu.gmu.csiss.covali.local = {
 		if(!edu.gmu.csiss.covali.local.filterFormats(file_path)){
 
 			alert("COVALI doesn't support this format at present. Please check our website for more details.");
-
+			edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.local.jsframe.ParsingFile');
 			return;
-
 		}
 
 		var postresp = $.ajax({
@@ -71,8 +70,7 @@ edu.gmu.csiss.covali.local = {
 			data: "location="+file_path,
 
 			success: function(obj, text, jxhr){
-				edu.gmu.csiss.covali.menu.closeAllDialogs();
-                //BootstrapDialog.closeAll();
+				edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.local.jsframe.ParsingFile');
 
 				var obj = jQuery.parseJSON( obj );
 
@@ -95,49 +93,6 @@ edu.gmu.csiss.covali.local = {
 							"</div>";
 					
 					edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
-					
-//					BootstrapDialog.show({
-//
-//						title: "Add data from server public folder",
-//
-//						message: function(dialog){
-//
-//							$content = $("<p class=\"text-success\">The file is parsed. Do you want to load it into the map now?</p>" +
-//									"<p class=\"text-warning\">Warning: For netCDF format, only files compliant to CF convention are supported.</p>");
-//
-//							return $content;
-//
-//						},
-//
-//						title: "Data Uploader",
-//
-//						cssClass: 'dialog-vertical-center',
-//
-//						buttons: [{
-//
-//								label: 'Load',
-//
-//								action: function(dialogItself){
-//
-//									//open the WMS loading dialog to add a specific layer
-//
-//									var id = obj.id; //the wms layer name
-//
-//									edu.gmu.csiss.covali.wms.showLayerSelector(id);
-//
-//								}
-//							},{
-//
-//								label: 'Close',
-//
-//								action: function(dialogItself){
-//
-//									dialogItself.close();
-//
-//								}
-//						}]
-//					});
-
 				}
 
 			},
