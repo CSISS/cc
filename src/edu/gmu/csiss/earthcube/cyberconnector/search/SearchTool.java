@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
 import edu.gmu.csiss.earthcube.cyberconnector.products.ProductVariable;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
@@ -136,6 +135,8 @@ public class SearchTool {
 				p.setOntology(rs.getString("ontology_reference"));
 				
 				p.setLikes(rs.getInt("likes"));
+
+				p.setCachedFilePath();
 
 
 				ps.add(p);
@@ -465,129 +466,6 @@ public class SearchTool {
 		return doc.asXML();
 		
 	}
-	/**
-	 * Remove the XML declaration
-	 * @param xml
-	 * @return
-	 */
-	public static String removeXMLDeclaration(String xml){
-		
-		return xml.substring(xml.indexOf('\n')+1);
-		
-	}
-	
-	/**
-	 * Update Existing Records with New Http Download URL
-	 * @param id
-	 * @param rawurl
-	 * @return
-	 */
-	public static boolean updatePyCSWDataURL(String id, String rawurl) throws Exception {
-		
-		boolean success  = false;
-		
-		if(!rawurl.startsWith(SysDir.CACHE_SERVICE_URL)){
-			
-			//get the original ISO metadata
-			
-			String getreq = constructSingleCSWReq(id);
-			
-			String getresp = BaseTool.POST(getreq.toString(), SysDir.CSISS_CSW_URL);
-			
-			String single_md = getSingleISOMetadata(getresp);
-			
-			String currenturl = getCurrentURLinISO(single_md);
-			
-			if(!currenturl.startsWith(SysDir.CACHE_SERVICE_URL)){ //avoid duplicated caching
-				
-				//download the data from external links to server
-		    	
-//		    	String newurl = BaseTool.cacheData(rawurl);
-
-				ProductCache cache = new ProductCache(id, rawurl);
-				cache.doCache();
-
-				String newurl = cache.getCacheUrl();
-				
-				single_md = replaceDownloadURLInISO(single_md, rawurl, newurl);
-				
-				single_md = removeXMLDeclaration(single_md);
-				
-				StringBuffer req = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-						.append("<csw:Transaction xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" xmlns:ows=\"http://www.opengis.net/ows\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd\" service=\"CSW\" version=\"2.0.2\">")
-						.append("  <csw:Update>")
-						.append( single_md) //the full ISO metadata
-						.append(" 	</csw:Update>")
-						.append("</csw:Transaction>");
-				
-				String cswresp = BaseTool.POST(req.toString(), SysDir.CSISS_CSW_URL);
-				
-				logger.debug(cswresp);
-				
-				success = parseUpdateResponse(cswresp);
-				
-			}else{
-				
-				logger.debug("The data is already cached.");
-				
-				success = true;
-				
-			}
-			
-		}else{
-			
-			logger.debug("the URL is cached. Skip this step.");
-			
-			success = true;
-			
-		}
-		
-		return success;
-		
-	}
-	
-	/**
-	 * 
-	 * @param resp
-	 * @return
-	 */
-	public static boolean parseUpdateResponse(String resp){
-		
-		Document doc = BaseTool.parseString(resp);
-		
-		if(doc ==null){
-			
-			throw new RuntimeException("Fail to parse the response of CSW update request.");
-			
-		}
-		
-		XPath updatedpath =  DocumentHelper.createXPath("//csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated");
-		
-		updatedpath.setNamespaceURIs(map);
-		
-		Node updatenumnode = updatedpath.selectSingleNode(doc);
-		
-		boolean success = false;
-		
-		if(updatenumnode==null){
-			
-			throw new RuntimeException("Fail to get the updated element from the response XML.");
-			
-		}else{
-			
-			String updatednum = updatenumnode.getText();
-			
-			if("1".equals(updatednum)){
-				
-				success = true;
-				
-			}
-			
-		}
-
-		return success;
-		
-	}
 
 
 	public static SearchResponse searchGeoDABCSW(SearchRequest req){
@@ -875,12 +753,8 @@ public class SearchTool {
 					p.setAccessinfo("NA");
 				}
 
-				ProductCache cache = new ProductCache(p.getId(), p.getDownloadurl());
-				if(cache.cacheExists()) {
-					p.setDownloadurl(cache.getCacheUrl());
-					p.setCached(true);
-				}
-				
+				p.setCachedFilePath();
+
 				p.setIfvirtual("0");
 
 				// parse variables (bands)
@@ -909,7 +783,6 @@ public class SearchTool {
 					ProductVariable pv = new ProductVariable(bName, bType, bDesc);
 					p.addVariable(pv);
 				}
-
 
 				products.add(p);
 				
@@ -1057,11 +930,6 @@ public class SearchTool {
 			Product p = g.toProduct(collectionRecord, i, granules.size());
 
 			products.add(p);
-
-			if(p.isCached()) {
-				ProductCache cache = new ProductCache(p.getId(), p.getDownloadurl());
-				p.setDownloadurl(cache.getCacheUrl());
-			}
 		}
 
 		sr.setProducts(products);

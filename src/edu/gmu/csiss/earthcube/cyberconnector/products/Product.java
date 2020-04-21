@@ -42,7 +42,6 @@ public class Product {
 
 	int likes;
 
-	boolean cached;
 
 	double east, south, west, north;
 
@@ -51,21 +50,26 @@ public class Product {
 
 	public Product(){
 		this.variables = new ArrayList<ProductVariable>();
-		this.inputlist = new ArrayList<Input>(); }
+		this.inputlist = new ArrayList<Input>();
+	}
+
+	public void setCachedFilePath() {
+		RemoteFileCache cache = new RemoteFileCache(downloadurl);
+		if(cache.cacheExists()) {
+			this.downloadurl = cache.getCachedUrl();
+
+			if(filepath == null || filepath.isEmpty()) {
+				this.filepath = cache.getCachedFilePath().toString();
+			}
+		}
+
+	}
 	
 	public String getTitle() { return title; }
 	public void setTitle(String title) { this.title = title; }
 
 	public String getIscollection() {return iscollection; }
 	public void setIscollection(String iscollection) { this.iscollection = iscollection; }
-
-	public boolean isCached() {
-		return new ProductCache(id, downloadurl).cacheExists() || this.cached;
-	}
-
-	public void setCached(boolean cached) {
-		this.cached = cached;
-	}
 
 	public int getLikes() {
 		return likes;

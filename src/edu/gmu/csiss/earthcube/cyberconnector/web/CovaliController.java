@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import edu.gmu.csiss.earthcube.cyberconnector.products.ProductCache;
+import edu.gmu.csiss.earthcube.cyberconnector.products.RemoteFileCache;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.NcoTool;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.RegridTool;
@@ -214,69 +214,28 @@ public class CovaliController {
     	
     }
     
-	// cache remote data via url in the local filesystem
-    @RequestMapping(value = "/cachecasual", method = RequestMethod.POST)
-    public @ResponseBody String cachecasualdata(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-    	
-    	String resp = null;
-    	
-    	String dataurl = request.getParameter("accessurl");
-    	
-		String id = request.getParameter("id");
-		
-		try {
-			
-			ProductCache cache = new ProductCache(id, dataurl);
-			
-			if (!cache.cacheExists()) {
-			
-				cache.doCache();
-			
-			}
-			resp = "{\"output\":\"success\", \"file_url\": \""+cache.getCacheUrl()+"\"}";
-
-		} catch(Exception e) {
-			e.printStackTrace();
-			resp = "{\"output\":\"failure\"}";
-
-		}
-
-    	return resp;
-    }
-    
-	// cache remote data in the local filesystem and update the CSW record
 	@RequestMapping(value = "/cache", method = RequestMethod.POST)
-    public @ResponseBody String cachedata(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-    	
+    public @ResponseBody String cache(WebRequest request){
     	String resp = null;
-    	
-    	String dataurl = request.getParameter("data");
-    	
-    	//update the metadata in CSW
-    	
-    	String id = request.getParameter("id");
-    	
-    	//the updating function is disabled for now, as the transaction function in PyCSW is disabled. 
-    	
-//    	if(SearchTool.updatePyCSWDataURL(id, dataurl)){
+		String downloadurl = request.getParameter("downloadurl");
 
 		try {
-			ProductCache cache = new ProductCache(id, dataurl);
+			RemoteFileCache cache = new RemoteFileCache(downloadurl);
 			if (!cache.cacheExists()) {
 				cache.doCache();
 			}
-			resp = "{\"output\":\"success\"}";
-
+			resp = "{\"output\":\"success\", ";
+			resp += "\"filepath\": \"" + cache.getCachedFilePath() + "\", ";
+			resp += "\"downloadurl\": \"" + cache.getCachedUrl() + "\"}";
 		} catch(Exception e) {
 			resp = "{\"output\":\"failure\"}";
-
 		}
     	
     	return resp;
-    	
     }
 
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public void download( HttpServletRequest request,  HttpServletResponse response, WebRequest webrequest) {
 		Path path = Paths.get(BaseTool.urlDecode(webrequest.getParameter("path")));
 		path = path.normalize().toAbsolutePath();

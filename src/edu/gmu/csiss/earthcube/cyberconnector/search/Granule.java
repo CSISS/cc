@@ -74,6 +74,7 @@ public class Granule {
         p.setIsspatial("1");
         p.setIscollection("0");
         p.setVariables(collectionRecord.getVariables());
+        p.setCachedFilePath();
 
         return p;
     }

@@ -178,14 +178,21 @@ edu.gmu.csiss.covali.search = {
                                 }
                                 //add a button to load map
 
-                                if (edu.gmu.csiss.covali.search.checkfileformat(product.filepath)) {
 
-									content += '		<button onclick="edu.gmu.csiss.covali.search.load(\'' + product.id + '\', \'' +
-										product.filepath +
-										'\')" class="btn btn-default" id="loadbtn_' + escapeid + '"> <span ' +
-										'			class="glyphicon glyphicon-film" title="Load Map"></span> ' +
-										'		</button> ';
+								content += '		<button onclick="edu.gmu.csiss.covali.search.load(\'' + product.id + '\', \'' +
+									product.filepath +
+									'\')" class="btn btn-default" id="loadbtn_' + escapeid + '" ';
+
+                                //  if can't be loaded add "disabled" attribute to the load button
+                                if(!edu.gmu.csiss.covali.search.checkfileformat(product.filepath)) {
+                                	content += ' disabled="true" ';
 								}
+                                content += '>';
+
+                                content += '<span ' +
+									'			class="glyphicon glyphicon-film" title="Load Map"></span> ' +
+									'		</button> ';
+
 								if (!product.filepath && product.downloadurl) {
 
 									content += '<button onclick="edu.gmu.csiss.covali.search.cache(\'' + product.id + '\', \'' + product.name + '\', \'' + product.downloadurl + '\')" id="cachebtn_' + escapeid + '" class="btn btn-default" > ' +
@@ -466,7 +473,7 @@ edu.gmu.csiss.covali.search = {
 			
         },
         
-        cache: function(id, name, accessurl){
+        cache: function(id, name, downloadurl){
         	
             var escapeid = id.replace(/\./g, '_');
 
@@ -478,27 +485,28 @@ edu.gmu.csiss.covali.search = {
 				
 				type: "POST",
 				
-				url: "../web/cachecasual",
+				url: "../web/cache",
 				
-				data: "id="+id+"&accessurl="+accessurl+"&name="+name
+				data: "downloadurl="+downloadurl
         	}).success(function(obj, text, jxhr){
 					
 				var resp = $.parseJSON(obj);
 				
 				if(resp.output=="success"){
 					
-					alert("Cached " + resp.file_url);
+					alert("Cached " + resp.filepath);
 					
-					console.log("cached url is:" + resp.file_url);
+					console.log("cached url is:" + resp.downloadurl);
 					
 					//change the link of the download and loading map to the new link. 
 					
 					$('#loadbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.load(\''+
 							id+'\',\''+
-							resp.file_url+'\')');
+							resp.filepath+'\')');
+					$('#loadbtn_' + escapeid).prop('disabled', false);
 					
 					$('#downbtn_' + escapeid).attr('onclick', 'edu.gmu.csiss.covali.search.download(\''+
-							resp.file_url+'\')');
+							resp.downloadurl+'\')');
 				}					
 				
 				$("#cachebtn_"+escapeid).button('reset');

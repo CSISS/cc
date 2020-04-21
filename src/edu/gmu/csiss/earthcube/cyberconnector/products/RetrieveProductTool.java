@@ -96,7 +96,7 @@ public class RetrieveProductTool {
 				
 				p.setFormat(rs.getString("dataFormat"));
 				
-				p.setAccessurl(rs.getString("accessURL"));
+				p.setDownloadurl(rs.getString("accessURL"));
 				
 				p.setLastupdate(rs.getString("lastUpdateDate"));
 				

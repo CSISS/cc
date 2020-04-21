@@ -169,8 +169,6 @@ public class LocalFileTool {
 		p.setFilepath(pathstr);
 		p.updateFileSize();
 
-		p.setCached(true);
-
 		p.setIfvirtual("0");
 
 		String identifier = Product.generateSafeId(namestr, pathstr);
