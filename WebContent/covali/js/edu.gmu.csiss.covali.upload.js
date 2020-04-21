@@ -7,21 +7,17 @@
 */
 
 edu.gmu.csiss.covali.upload = {
-		
-		init: function(){
+				init: function(){
 			
 			this.dialog();
 			
 		},
-		
-		add2map: function(side){
-			
-		},
-		
+
 		//load the uploaded file to the maps
 		
-		load: function(sURL){
-			edu.gmu.csiss.covali.local.loadWMSFile(sURL);
+		load: function(path){
+			edu.gmu.csiss.covali.local.showFileLoadingDialog(path);
+			edu.gmu.csiss.covali.local.loadWMSFile(path);
 		},
 		
 		popUpWindow: function(){
@@ -36,7 +32,7 @@ edu.gmu.csiss.covali.upload = {
 	            
 	            docUp.open();
 	            
-	            docUp.writeln("<html><head><title>Image Uploader</title>");
+	            docUp.writeln("<html><head><title>Data Uploader</title>");
 	            
 	            docUp.writeln("<body  style=\"text-align: center;\">");
 	        	
@@ -45,16 +41,12 @@ edu.gmu.csiss.covali.upload = {
 	            "        var fl = document.getElementById('filelink');" +
 			    //"        var oRequest = new XMLHttpRequest();" +
 			    
-	            "        var sURL = fl.href;" +
+	            "        var path = fl.dataset.path;" +
 			    
 	            "        var winMain=window.opener;" +
 			    
-	            "		 winMain.edu.gmu.csiss.covali.upload.load(sURL);"+
-	            
-//	            "        var imgurlele = winMain.document.getElementById('file1');"+
-			    
-//	            "        imgurlele.value = sURL;"+
-			    
+	            "		 winMain.edu.gmu.csiss.covali.upload.load(path);"+
+
 	            "        window.close();" +
 			    
 	            "}";
@@ -69,7 +61,7 @@ edu.gmu.csiss.covali.upload = {
 			    
 			    "            <input type=\"hidden\" name=\"script\" value=\""+script+"\">"+
 			    
-			    "        <input type=\"submit\" class=\"btn btn-primary\" name=\"submit\" value=\"Upload\"> &nbsp; <input type=\"reset\" class=\"btn btn-primary\" name=\"reset\" value=\"reset\">\n" +
+			    "        <input type=\"submit\" class=\"btn btn-primary\" name=\"submit\" value=\"Upload\"> &nbsp; <input type=\"reset\" class=\"btn btn-primary\" name=\"reset\" value=\"Reset\">\n" +
 			    
 			    "      </form>";
 	        	
