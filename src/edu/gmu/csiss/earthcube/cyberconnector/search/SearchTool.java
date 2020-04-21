@@ -1047,8 +1047,6 @@ public class SearchTool {
 
 		// next get the granules
 		List<Granule> granules = GranulesTool.getCollectionGranules(req);
-
-
 		SearchResponse sr = new SearchResponse();
 
 		List products = new ArrayList();
