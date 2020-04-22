@@ -230,16 +230,20 @@ edu.gmu.csiss.covali.statistics = {
 
     	        		
     	        		if(clickWithinTheLayer>0){
-    	        			
-	    	        		content.innerHTML = 
-	    	        		'<div style="font-family: Arial, Helvetica, sans-serif">'+
+							var html = '';
+							html += '<div style="font-family: Arial, Helvetica, sans-serif">'+
 	    	        		'<b>Layer:</b> '+layerName+
 	    	        		'<br><b>Feature Id</b>: '+featureId+
 	    	        		'<br><b>Clicked Lat:</b> '+xmlDoc.getElementsByTagName("latitude")[0].childNodes[0].nodeValue+
-	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue+
-	    	        		'<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue+
-	    	        		'<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
-	    	        	    $.ajax({
+	    	        		'<br><b>Clicked Lon:</b> '+xmlDoc.getElementsByTagName("longitude")[0].childNodes[0].nodeValue;
+	    	        		if(xmlDoc.getElementsByTagName("time")[0]) {
+								html += '<br><b>Time:</b> '+xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue;
+	    	        		}
+
+							html += '<br><b>Value:</b> '+xmlDoc.getElementsByTagName("value")[0].childNodes[0].nodeValue;
+
+							content.innerHTML = html;
+							$.ajax({
 	    	        	        url: layerMetaDataUrl,
 	    	        	        contentType: "application/json",
 	    	        	        dataType: 'json',
@@ -280,29 +284,37 @@ edu.gmu.csiss.covali.statistics = {
         var layerInfo =  edu.gmu.csiss.covali.wms.getLayerByName(layer.values_.name);
         var startTime, endTime;
 
-        for(var j=0; j<layerInfo.Dimension.length; j++) {
-            if (layerInfo.Dimension[j].name == "time" || layerInfo.Dimension[j].name == "Time") {
-                var timevalues = layerInfo.Dimension[j].values;
+        if(layerInfo.Dimension) {
+			for (var j = 0; j < layerInfo.Dimension.length; j++) {
+				if (layerInfo.Dimension[j].name == "time" || layerInfo.Dimension[j].name == "Time") {
+					var timevalues = layerInfo.Dimension[j].values;
 
-                if(timevalues.split(",").length>1){
-                    var timesteps  = timevalues.split(",");
-                    startTime = timesteps[0];
-                    endTime = timesteps[timesteps.length - 1];
+					if (timevalues.split(",").length > 1) {
+						var timesteps = timevalues.split(",");
+						startTime = timesteps[0];
+						endTime = timesteps[timesteps.length - 1];
 
-                }else if(timevalues.indexOf("/")!=-1) {
+					} else if (timevalues.indexOf("/") != -1) {
 
-                    var timesplit = timevalues.split("/");
+						var timesplit = timevalues.split("/");
 
-                    if (timesplit.length != 3) {
-                        console.error("The time dimension definition is not supported yet.");
-                        return;
-                    }
+						if (timesplit.length != 3) {
+							console.error("The time dimension definition is not supported yet.");
+							return;
+						}
 
-                    startTime = timesplit[0];
-                    endTime = timesplit[1];
-                }
-            }
-        }
+						startTime = timesplit[0];
+						endTime = timesplit[1];
+					}
+				}
+			}
+		}
+
+
+        if(!(startTime && endTime)) {
+        	alert("No time dimension in layer " + layer.values_.name);
+        	return;
+		}
 
         var wmssource = layer.getSource();
 
@@ -331,13 +343,15 @@ edu.gmu.csiss.covali.statistics = {
         var elevStart, elevEnd;
 
         var layerInfo =  edu.gmu.csiss.covali.wms.getLayerByName(layer.values_.name);
-        for(var j=0; j<layerInfo.Dimension.length; j++) {
-            if (layerInfo.Dimension[j].name == "elevation" || layerInfo.Dimension[j].name == "Elevation") {
-                var evalues = layerInfo.Dimension[j].values.split(/,\s+/);
-                elevStart = evalues[0];
-                elevEnd = evalues[evalues.length - 1];
-            }
-        }
+        if(layerInfo.Dimension) {
+			for (var j = 0; j < layerInfo.Dimension.length; j++) {
+				if (layerInfo.Dimension[j].name == "elevation" || layerInfo.Dimension[j].name == "Elevation") {
+					var evalues = layerInfo.Dimension[j].values.split(/,\s+/);
+					elevStart = evalues[0];
+					elevEnd = evalues[evalues.length - 1];
+				}
+			}
+		}
 
         if(elevStart == null) {
         	alert('No elevation information in the layer ' + layer.values_.name);
@@ -365,17 +379,17 @@ edu.gmu.csiss.covali.statistics = {
 		// var projection = map.getView().getProjection();
 
 		var url = edu.gmu.csiss.covali.wms.getCurrentEndPointUrl() + "?REQUEST=GetTransect&LAYERS=" +
-
 			layer.get('name') + "&CRS=EPSG:4326&LINESTRING=" +
-
-			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent&time=" + timestep;
-
-		if(elevation != "" && elevation != null && typeof elevation !== 'undefined'){
+			linestring + "&FORMAT=image/png&LOGSCALE=false&BGCOLOR=transparent";
 
 
-			url += "&elevation=" + elevation;
+		if(timestep) {
+			url += "&time=" + timestep;
 		}
 
+		if(elevation){
+			url += "&elevation=" + elevation;
+		}
 
 		var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.LineStatisticsResult';
 		var dialogTitle = 'Line Statistics Result';
