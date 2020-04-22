@@ -257,74 +257,6 @@ public class CovaliController {
 		}
 	}
 
-//	@RequestMapping(value = "/downloadLocalFile", method = RequestMethod.POST)
-//    public @ResponseBody String downloadLocalFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-//
-//    	String resp = null;
-//
-////    	String querystr = request.getQueryString();
-//
-//    	String path = request.getParameter("path");
-//
-//    	try {
-//
-//    		String url = LocalFileTool.turnLocalFile2Downloadable(Paths.get(path));
-//
-//    		File f = new File(path);
-//
-//    		resp = "{\"output\":\"success\",\"url\":\""+url+"\", \"filename\": \""+f.getName()+"\"}";
-//
-//    	}catch(Exception e) {
-//
-//    		e.printStackTrace();
-//
-//    		resp = "{\"output\":\"failure\",\"reason\": \""+
-//
-//    				e.getLocalizedMessage() +
-//
-//    				"\"}";
-//
-//    	}
-//
-//    	return resp;
-//
-//    }
-//
-//	@RequestMapping(value = "/downloadWMSFile", method = RequestMethod.POST)
-//    public @ResponseBody String downloadWMSFile(ModelMap model, WebRequest request, SessionStatus status, HttpSession session){
-//
-//    	String resp = null;
-//
-////    	String querystr = request.getQueryString();
-//
-//    	String id = request.getParameter("id");
-//
-//    	try {
-//
-//    		String location = ncWMSTool.getLocationByWMSLayerId(id);
-//
-//    		String url = LocalFileTool.turnLocalFile2Downloadable(location);
-//
-//    		File f = new File(location);
-//
-//    		resp = "{\"output\":\"success\",\"url\":\""+url+"\", \"filename\": \""+f.getName()+"\"}";
-//
-//    	}catch(Exception e) {
-//
-//    		e.printStackTrace();
-//
-//    		resp = "{\"output\":\"failure\",\"reason\": \""+
-//
-//    				e.getLocalizedMessage() +
-//
-//    				"\"}";
-//
-//    	}
-//
-//    	return resp;
-//
-//    }
-	
 	/**
      * Add dataset into ncWMS
      * add by Z.S. on 7/6/2018
@@ -341,33 +273,6 @@ public class CovaliController {
     	String location = request.getParameter("location");
 
     	try {
-//
-//    		if(location.startsWith(SysDir.PREFIXURL)) {
-//
-//				location = BaseTool.getCyberConnectorRootPath() + "/" + location.replaceAll(SysDir.PREFIXURL+"/CyberConnector/","");
-//
-//    		}
-//    		else if(location.startsWith("/")){
-//
-////    			location = location;
-//
-//    		}else {
-//
-//    			File f = new File(location);
-//
-//    			File folder = new File(BaseTool.getCyberConnectorRootPath());
-//
-//    			if(f.getAbsolutePath().indexOf(folder.getPath())!=-1){
-//
-//        			//do nothing
-//
-//        		}else {
-//
-//        			location = SysDir.getDataPath() + '/' + location;
-//
-//        		}
-//
-//    		}
 
 			File f = new File(location);
 			String id = FilenameUtils.getBaseName(location) + '-' + RandomString.get(4);
