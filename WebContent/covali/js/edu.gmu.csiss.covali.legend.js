@@ -51,6 +51,9 @@ edu.gmu.csiss.covali.legend = {
             var styles = olayer.getSource().getParams()['STYLES'];
             if(styles) {
                 var palette = styles.split('/')[1];
+                if(!palette) {
+                    palette = "default";
+                }
                 legendurl = edu.gmu.csiss.covali.util.setUrlParameterByName(legendurl, 'PALETTE', palette);
             }
 

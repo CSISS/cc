@@ -194,13 +194,14 @@ edu.gmu.csiss.covali.map = {
 
 
     addWMSLayer: function(side, url, layername, stylename, time, elevation, timesteps, elevationsteps){
-        var legendurl = edu.gmu.csiss.covali.wms.getLegendUrl(side, layername, stylename);
+        var legendurl = edu.gmu.csiss.covali.wms.getLegendUrl(side, layername, 'default-scalar/default');
 
         var params = {'LAYERS': layername,
             'TILED': true,
             'VERSION': '1.3.0',
             'TIME': time,
-            'LEGEND': legendurl
+            'LEGEND': legendurl,
+            'STYLES': stylename
         };
 
         if(time){
