@@ -303,8 +303,8 @@ edu.gmu.csiss.covali.search = {
 			var dialogName = 'edu.gmu.csiss.covali.search.jsframe.Variables';
 			var dialogTitle = product.name + ' Variables';
 			
-			$content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
-						$content+"</dl></div>"+
+			content = "<div class=\"modal-body\"><dl class=\"row\" style=\"font-size: 12px; padding: 5px; margin:0px\">"+
+						content+"</dl></div>"+
 			//content +=
 						"<div class=\"modal-footer\">" +
 						"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
@@ -462,13 +462,15 @@ edu.gmu.csiss.covali.search = {
 
 			tablecontent += "</div>";
 
-			tablecontent +="<div class=\"modal-footer\">" +
+			tablecontent +="<div style=\"clear: both;\" class=\"modal-footer\">" +
 				"<p><span class=\"btn btn-primary\" onclick=\'edu.gmu.csiss.covali.menu.closeDialog(\""+dialogName+"\")\'>OK</span></p>"+
 				"</div>";
-			
 
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, tablecontent);
 
+			$("#viewvars_" + product.id).click(function () {
+				edu.gmu.csiss.covali.search.variablesTable(product);
+			});
 
 			
         },
