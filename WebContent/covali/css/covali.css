@@ -331,3 +331,60 @@ li.selected {
 .ol-scale-line{
     background-color: rgba(40, 40, 40, 0.85) !important;
 }
+
+#legend-left, #legend-right {
+	background-color: rgba(40, 40, 40, 0.85);
+	color: #eee;
+	font-size: 12px;
+	/*border-radius: 4px 4px 0px 0px*/
+}
+
+#legend-left {
+	border-radius: 4px 0 0 0;
+}
+
+#legend-right {
+	border-radius: 0 4px 0 0;
+}
+
+.legend-caption-layertitle {
+	font-weight: bold;
+	text-align: center;
+	font-size: 14px;
+	color: #fff;
+	margin-top: 2px;
+	margin-bottom: 4px;
+}
+
+.legend-caption-time {
+	width: 50%;
+	float: left;
+}
+
+.legend-caption-elevation {
+	float: right;
+}
+
+.caption-label {
+	float:left;
+	margin-left: 14px;
+	margin-right: 10px;
+	font-weight: bold;
+}
+
+.caption-controls {
+	margin-left: 12px;
+}
+
+.caption-label, .caption-value, .caption-controls {
+	display: inline-block;
+}
+
+.caption-controls button {
+	border: none;
+	background-color: transparent;
+	color: #eee;
+}
+.caption-controls button:hover {
+	color: #fff;
+}

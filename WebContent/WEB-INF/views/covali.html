@@ -136,7 +136,7 @@
 		<!-- Content Here -->
 		<div class="row row-xs-11" style="height:100%;">
  				
-			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;border-right: 5px solid gray; " id="openlayers1">
+			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;border-right: 2px solid rgba(40, 40, 40, 0.85); " id="openlayers1">
 				
 				<div id="toolbar-left" style="position: absolute; top: 10px; left: 30px; height: 50px; z-index:101;" >
 					
@@ -151,15 +151,15 @@
 				
 				<div id="scaleline-openlayers1" style="position:absolute; top:40px; right: 160px; z-index:200;"></div>
 				
-				<div style="position: absolute; z-index:100; width: 100%; bottom: 0px;background-image: '';" id="left_bottom_area">
-				
+				<div style="position: absolute; z-index:100; width: 100%; bottom: 0px;background-image: '';" id="legend-left">
+
 					<div style="z-index:100; height:20px; margin: auto; width:90%;background-image: '';"
 				
 				onclick="edu.gmu.csiss.covali.style.legendclick('left')" id="legend1" ></div>
 				
-					<div class="row" style="background-color: white;" id="scale_left"><div class="col-md-4 text-left" id="minleft"></div><div class="col-md-4 text-center" id="middleleft"></div><div class="col-md-4 text-right" id="maxleft"></div></div>
+					<div class="row legend-scale" id="scale_left"><div class="col-md-4 text-left" id="minleft"></div><div class="col-md-4 text-center" id="middleleft"></div><div class="col-md-4 text-right" id="maxleft"></div></div>
 				
-					<div id="title-openlayers1" style="font-weight: bold; font-family:Courier New, Courier, monospace; background-color: white; ">
+					<div class="legend-caption" id="title-openlayers1" >
 						Layer Caption
 					</div>
 					
@@ -168,30 +168,30 @@
 			</div>
 			
 			<div class="col col-xs-6" style="height:100%;padding:0 0 0 0;" id="openlayers2">
-			
+
 				<!-- <div id="toolbar-right" style="position: absolute; top: 10px; left: 30px; height: 50px; z-index:101;" >
-				
+
 					<button class="btn toolbar-btn"><i class="fa fa-home"></i></button>
 					<button class="btn toolbar-btn"><i class="fa fa-bars"></i></button>
 					<button class="btn toolbar-btn"><i class="fa fa-trash"></i></button>
 					<button class="btn toolbar-btn"><i class="fa fa-close"></i></button>
 					<button class="btn toolbar-btn"><i class="fa fa-folder"></i></button>
-				
+
 				</div> -->
-				
+
 				<div id="scaleline-openlayers2" style="position:absolute; top:40px; right: 160px; z-index:200;"></div>
 				
 				<div id="loc-indicator" style="position: absolute; width:250px; background-color:white; right: 30px; top:40px; z-index:200;"></div>
 				
-				<div style="position: absolute; z-index:100; margin: auto; width: 100%; bottom: 0px;" id="left_bottom_area">
+				<div style="position: absolute; z-index:100; margin: auto; width: 100%; bottom: 0px;" id="legend-right">
 					
 					<div style="z-index:100; height:20px; margin: auto; width:90%; background-image: '';"
 				
 						onclick="edu.gmu.csiss.covali.style.legendclick('right')" id="legend2" ></div>
 						
-					<div class="row" style="background-color: white;" id="scaleright"><div class="col-md-4 text-left" id="minright"></div><div class="col-md-4 text-center" id="middleright"></div><div class="col-md-4 text-right" id="maxright"></div></div>
+					<div class="row" id="scaleright"><div class="col-md-4 text-left" id="minright"></div><div class="col-md-4 text-center" id="middleright"></div><div class="col-md-4 text-right" id="maxright"></div></div>
 				
-					<div id="title-openlayers2" class="" style="background-color: white; font-weight: bold; font-family:Courier New, Courier, monospace;">Layer Caption</div>
+					<div id="title-openlayers2" class="legend-caption" >Layer Caption</div>
 					
 				</div>
 			

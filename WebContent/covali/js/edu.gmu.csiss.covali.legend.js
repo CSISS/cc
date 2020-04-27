@@ -120,11 +120,15 @@ edu.gmu.csiss.covali.legend = {
         var time = olayer.getSource().getParams()['TIME'];
         var elevation = olayer.getSource().getParams()['ELEVATION'];
 
+        var ln = layername.split("/");
+        var filename = ln[0];
+        var varname = ln[1];
 
-        var captionhtml = "<div>" +
-            "<div style=\"display:inline-block; height: 12px !important; color: #0841E4; padding:0px 15px 0px 15px !important;\">NAME: </div>" +
-            "<div style=\"display:inline-block; height: 12px !important; padding:0px 5px 0px 5px !important;\">"+layername+"</div>" +
-            "</div>";
+
+        var captionhtml = '<div class="legend-caption-layertitle">' +
+            // '<div class="caption-label">NAME: </div>' +
+            '<div class="caption-value">'+filename+ ' [' + varname + ']' + '</div>' +
+            '</div>';
 
         if(time){
             var timesteps = olayer.get('timesteps');
@@ -132,16 +136,16 @@ edu.gmu.csiss.covali.legend = {
 
             var tsCaption = '';
             if(timesteps && timesteps.length > 1) {
-                tsCaption = "<span class='time-step'>(" + timestepNum + " of " + timesteps.length + ") </span>";
 
                 tsCaption += '<button class="fa fa-angle-left" id="timestep-back"> </button>';
-                tsCaption += '<button class="fa fa-angle-right" id="timestep-forward"> </button> &nbsp';
+                tsCaption += "<span class='time-step'>" + timestepNum + "/" + timesteps.length + "</span>";
+                tsCaption += '<button class="fa fa-angle-right" id="timestep-forward"> </button>';
 
                 var animation = olayer.get('animation')
                 if(!animation) {
-                    tsCaption += '<button style="width: 32px" class="fa fa-film" id="timestep-play"> </button>';
+                    tsCaption += '<button  class="fa fa-film" id="timestep-play"> </button>';
                 } else {
-                    tsCaption += '<button style="width: 32px" class="fa fa-stop timestep-stop" id="timestep-stop"> </button>';
+                    tsCaption += '<button class="fa fa-stop timestep-stop" id="timestep-stop"> </button>';
                 }
 
             }
@@ -149,12 +153,14 @@ edu.gmu.csiss.covali.legend = {
 
             //captionhtml += "<br><font color=\"#0841E4\">TIME: </font>" + time;
             captionhtml +=
-                "<div>" +
-                "<div style=\"display:inline-block; height: 12px !important; color: #0841E4; padding:0px 15px 0px 15px !important;\" >TIME: </div>" +
-                "<div class='time' style=\"display:inline-block; height: 12px !important; padding:0px 5px 0px 5px !important;\" >"+time+"</div>" +
-                "<div style=\"display:inline-block; float:right; margin-top: -5px; font-weight: normal; padding:0px 5px 0px 5px !important;\">"+tsCaption +"</div>" +
+                '<div class="legend-caption-time">' +
+                '<div class="caption-label">Time</div>' +
+                '<div class="time caption-value">'+time+"</div>" +
+                '<div class="caption-controls" >'+tsCaption +"</div>" +
                 "</div>";
 
+            // "<div class='time' style=\"display:inline-block; height: 12px !important; padding:0px 5px 0px 5px !important;\" >"+time+"</div>" +
+            // "<div style=\"display:inline-block; float:right; margin-top: -5px; font-weight: normal; padding:0px 5px 0px 5px !important;\">"+tsCaption +"</div>" +
         }
 
         if(elevation){
@@ -163,18 +169,18 @@ edu.gmu.csiss.covali.legend = {
 
             var esCaption = '';
             if(elevationsteps && elevationsteps.length > 1) {
-                esCaption = "<span class='elevation-step'>(" + elevationstepNum + " of " + elevationsteps.length + ") </span>";
                 esCaption += '<button class="fa fa-angle-left" id="elevationstep-back"> </button>';
+                esCaption += "<span class='elevation-step'>" + elevationstepNum + "/" + elevationsteps.length + "</span>";
                 esCaption += '<button class="fa fa-angle-right" id="elevationstep-forward"> </button>';
-                esCaption += '&nbsp <div style="display: inline-block; width: 32px;"></div>';
+                // esCaption += '&nbsp <div style="display: inline-block; width: 32px;"></div>';
             }
 
             //captionhtml += "<br><font color=\"#0841E4\">ELEVATION: </font>" + elevation;
             captionhtml +=
-                "<div>" +
-                "<div style=\"display:inline-block; height: 12px !important; color: #0841E4; padding:0px 15px 0px 15px !important;\">ELEVATION: </div>" +
-                "<div class='elevation' style=\"display:inline-block; height: 12px !important; padding:0px 5px 0px 5px !important;\" >"+elevation +"</div>" +
-                "<div style=\"display:inline-block; float: right; margin-top: -5px;  font-weight: normal; padding:0px 5px 0px 5px !important;\">"+ esCaption +"</div>" +
+                '<div class="legend-caption-elevation">' +
+                '<div class="caption-label">Elevation</div>' +
+                '<div class="elevation caption-value">'+elevation +"</div>" +
+                '<div class="caption-controls">'+ esCaption +"</div>" +
                 "</div>";
         }
         captionhtml+= "</table>";//+
@@ -228,7 +234,7 @@ edu.gmu.csiss.covali.legend = {
             var timestepNum = timesteps.indexOf(time) + 1;
 
             caption.find('div.time').text(time);
-            caption.find('span.time-step').text("(" + timestepNum + " of " + timesteps.length + ")");
+            caption.find('span.time-step').text(timestepNum + "/" + timesteps.length);
         }
 
         if(elevation) {
@@ -236,8 +242,9 @@ edu.gmu.csiss.covali.legend = {
             var elevationstepNum = elevationsteps.indexOf(elevation) + 1;
 
             caption.find('div.elevation').text(elevation);
-            caption.find('span.elevation-step').text("(" + elevationstepNum + " of " + elevationsteps.length + ")");
+            caption.find('span.elevation-step').text(elevationstepNum + "/" + elevationsteps.length);
         }
     }
+
 
 }
