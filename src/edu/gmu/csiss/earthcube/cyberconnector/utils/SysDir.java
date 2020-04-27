@@ -93,7 +93,7 @@ public class SysDir {
 	public static List whiteusers = new ArrayList();
 
 	static  Path normalizedPath(String path) throws IOException {
-		return Paths.get(path.replaceFirst("^~",  System.getProperty("user.home"))).normalize().toAbsolutePath();
+		return Paths.get(path).normalize().toAbsolutePath();
 	}
 	
 	static Properties readProperties(String path) {
