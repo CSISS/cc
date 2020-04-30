@@ -16,7 +16,10 @@ public class RemoteFileCache {
 
 
     public String getCachedUrl() {
-        return SysDir.PREFIXURL + "/CyberConnector/web/download?path=" + BaseTool.urlEncode(cachedFilePath.toString());
+        if(cachedFilePath != null) {
+            return SysDir.PREFIXURL + "/CyberConnector/web/download?path=" + BaseTool.urlEncode(cachedFilePath.toString());
+        }
+        return "";
     }
 
     public Path getCachedFilePath() {
@@ -27,11 +30,13 @@ public class RemoteFileCache {
         this.remoteUrl = remoteUrl;
 
         String cachedFileName = remoteUrl.replaceAll(":","-").replaceAll("/", "-").replaceAll("\\\\", "-").replaceAll(" ", "");
-        this.cachedFilePath = SysDir.workspace_cache_path.resolve(cachedFileName).toAbsolutePath();
+        if(!cachedFileName.isEmpty()) {
+            this.cachedFilePath = SysDir.workspace_cache_path.resolve(cachedFileName).toAbsolutePath();
+        }
     }
 
     public boolean cacheExists() {
-        return cachedFilePath.toFile().exists();
+        return cachedFilePath != null && cachedFilePath.toFile().exists();
     }
 
     public void doCache() throws Exception {

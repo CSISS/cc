@@ -716,7 +716,7 @@ public class SearchTool {
 
 					String title = p.getTitle();
 					p.setTitle(title + " [COLLECTION]");
-					p.setDownloadurl("NA");
+					p.setDownloadurl("");
 
 				} else {
 
@@ -737,20 +737,20 @@ public class SearchTool {
 						}
 					}
 					catch(Exception e) {
-						p.setDownloadurl("NA");
+						p.setDownloadurl("");
 					}
 				}
 
 				try {
 					p.setAccesslink(accesslink.selectSingleNode(ele).getText());
 				} catch(Exception e) {
-					p.setAccesslink("NA");
+					p.setAccesslink("");
 				}
 
 				try {
 					p.setAccessinfo(accessinfo.selectSingleNode(ele).getText());
 				} catch(Exception e) {
-					p.setAccessinfo("NA");
+					p.setAccessinfo("");
 				}
 
 				p.setCachedFilePath();
