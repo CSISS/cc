@@ -63,14 +63,14 @@ public class CovaliController {
 	}
 
 
-	@RequestMapping(value = "/nco/ncra", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@RequestMapping(value = "/nco/ncra", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String nconcra(WebRequest request) {
 		String command = request.getParameter("command");
 		String result = NcoTool.execNcra(command);
 		return result;
 	}
 
-	@RequestMapping(value = "/nco/ncbo", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@RequestMapping(value = "/nco/ncbo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String nconcbo(WebRequest request) {
 		String command = request.getParameter("command");
 		String result = NcoTool.execNcbo(command);

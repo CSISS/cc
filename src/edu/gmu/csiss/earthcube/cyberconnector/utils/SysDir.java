@@ -93,6 +93,9 @@ public class SysDir {
 	public static List whiteusers = new ArrayList();
 
 	static  Path normalizedPath(String path) throws IOException {
+		String homedir = System.getProperty("user.home") + File.separator;
+		path = path.replaceAll("~", homedir);
+
 		return Paths.get(path).normalize().toAbsolutePath();
 	}
 	
