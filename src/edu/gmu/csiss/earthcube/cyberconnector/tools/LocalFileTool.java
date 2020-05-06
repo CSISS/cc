@@ -112,10 +112,13 @@ public class LocalFileTool {
 		}
 
 		// determine parentPath if it is in covali allowed paths
-		Path parentPath = location.getParent();;
-		if(parentPath != null && (parentPath.startsWith(SysDir.workspace_path) || location.startsWith(SysDir.data_path))) {
+		Path parentPath = location.getParent();
+		if(parentPath != null && (parentPath.startsWith(SysDir.workspace_path) || parentPath.startsWith(SysDir.data_path))) {
 			// add parent path
 			String e = "{\"name\": \"..\", \"path\":\"" + parentPath.toAbsolutePath() + "\",\"type\":\"directory\"}";
+			pathJsonElements.add(e);
+		} else if(location.equals(SysDir.workspace_path) || location.equals(SysDir.data_path)) {
+			String e = "{\"name\": \"..\", \"path\":\"" +  "\",\"type\":\"directory\"}";
 			pathJsonElements.add(e);
 		}
 
