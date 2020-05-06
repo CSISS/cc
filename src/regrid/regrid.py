@@ -42,8 +42,7 @@ regridder = xe.Regridder(data, grid, 'bilinear', reuse_weights=True, periodic=(p
 regridded_vars = dict()
 for vname in data.variables:
     if data[vname].ndim > 1 and not vname in ['lat', 'lon', 'x', 'y']:
-        varname = data[vname].long_name
-        regridded_vars[varname] = regridder(data[vname])
+        regridded_vars[vname] = regridder(data[vname], keep_attrs=True)
 
 
 data_out = xr.Dataset(regridded_vars)
