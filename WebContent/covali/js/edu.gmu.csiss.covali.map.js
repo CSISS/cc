@@ -4,16 +4,9 @@
  */
 
 edu.gmu.csiss.covali.map = {
-    animation_left_id: null,
-
-    animation_right_id: null,
-
-
     init: function(){
         this.addBoundaryWMS();
     },
-
-
 
     moveLayerBack: function(side, layername) {
         var olayer1 = this.getOLLayerByName(side, layername);
