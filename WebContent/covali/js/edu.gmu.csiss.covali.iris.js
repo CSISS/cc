@@ -285,7 +285,7 @@ edu.gmu.csiss.covali.iris = {
 
                 var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.Iris';
                 var dialogTitle = 'IRIS Network ' + network + ' Station ' + station;
-                edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, html, 500, 340);
+                edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, html, 500, 400);
 
                 $('.iris-cal').click(function(e){
                     var dl = $(this).parents('dl');
@@ -329,7 +329,7 @@ edu.gmu.csiss.covali.iris = {
 
         var dialogName = 'edu.gmu.csiss.covali.statistics.jsframe.Iris';
         var dialogTitle = 'IRIS Network ' + network + ' Station ' + station + ' Channel ' + channel + ' Location ' + location + ' on ' + day;
-        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, html, 500, 1200);
+        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, html, 550, 1250);
 
 
         $('#' + id).on('error', function() {
