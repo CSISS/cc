@@ -1,22 +1,31 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.60 - MySQL Community Server (GPL)
--- Server OS:                    Win64
--- HeidiSQL version:             7.0.0.4053
--- Date/time:                    2019-02-19 10:56:51
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET FOREIGN_KEY_CHECKS=0 */;
-
--- Dumping database structure for cyberconnector
-DROP DATABASE IF EXISTS `cyberconnector`;
-CREATE DATABASE IF NOT EXISTS `cyberconnector` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `cyberconnector`;
+--- To initialize the database file cc.mv.db: 
+--- 1. Start H2:
+---     java -cp h2-1.4.200.jar -Dh2.bindAddress=127.0.0.1 org.h2.tools.Server -tcpPort 9092 -baseDir THISFOLDER -ifNotExists
+--- 2. Connect to the database in MySQL mode using this connection url:
+---     jdbc:h2:tcp://localhost:9092/./cyberconnector;MODE=MYSQL
+---     ...connecting will create the database file THISFOLDER/cc.mv.db
+--- 3. Execute this SQL file
+--- 4. Stop H2
+--- 5. Commit the initialized cc.mv.db to git
 
 
--- Dumping structure for table cyberconnector.abstract_model
+---- COVALI schema ----
+DROP TABLE IF EXISTS `covali_snapshots`;
+CREATE TABLE IF NOT EXISTS `covali_snapshots` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(16) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `description` tinytext,
+  `data` text,
+  PRIMARY KEY (`id`),
+  KEY `identifier` (`identifier`)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This table stores COVALI state snapshot data with identifiers for web sharing';
+
+
+
+
+
+---- CyberConnector schema ----
 DROP TABLE IF EXISTS `abstract_model`;
 CREATE TABLE IF NOT EXISTS `abstract_model` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -36,12 +45,9 @@ CREATE TABLE IF NOT EXISTS `abstract_model` (
   `ecstermkeyword` varchar(50) DEFAULT 'N/A',
   `suported_format` varchar(50) DEFAULT 'image/png',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table stores the processing models of VDPs.';
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This table stores the processing models of VDPs.';
 
 
--- Dumping structure for table cyberconnector.association
 DROP TABLE IF EXISTS `association`;
 CREATE TABLE IF NOT EXISTS `association` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -51,12 +57,9 @@ CREATE TABLE IF NOT EXISTS `association` (
   `inputs_pathes` text,
   `output_path` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table stores the links between process and services.';
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This table stores the links between process and services.';
 
 
--- Dumping structure for table cyberconnector.datasets
 DROP TABLE IF EXISTS `datasets`;
 CREATE TABLE IF NOT EXISTS `datasets` (
   `tid` int(11) NOT NULL AUTO_INCREMENT,
@@ -72,10 +75,10 @@ CREATE TABLE IF NOT EXISTS `datasets` (
   `beginTemporal` datetime DEFAULT NULL,
   `endTemporal` datetime DEFAULT NULL,
   `referenceSystemCode` varchar(48) DEFAULT 'EPSG:4326',
-  `northBoundLatitude` double(20,6) DEFAULT '90.000000',
-  `westBoundLongitude` double(20,6) DEFAULT '-180.000000',
-  `eastBoundLongitude` double(20,6) DEFAULT '180.000000',
-  `southBoundLatitude` double(20,6) DEFAULT '-90.000000',
+  `northBoundLatitude` double(53) DEFAULT '90.000000',
+  `westBoundLongitude` double(53) DEFAULT '-180.000000',
+  `eastBoundLongitude` double(53) DEFAULT '180.000000',
+  `southBoundLatitude` double(53) DEFAULT '-90.000000',
   `Format` varchar(64) DEFAULT NULL,
   `sizeMB` varchar(64) DEFAULT NULL,
   `dataType` varchar(64) DEFAULT NULL,
@@ -85,18 +88,13 @@ CREATE TABLE IF NOT EXISTS `datasets` (
   `sourceImage` int(11) DEFAULT NULL,
   `anytext` text,
   PRIMARY KEY (`tid`),
-  KEY `identifier` (`identifier`),
-  KEY `name` (`name`(255)),
-  KEY `description` (`description`(255)),
-  KEY `keyword` (`keyword`),
-  KEY `dataType` (`dataType`),
-  KEY `featureType` (`featureType`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This tables store the metadata of individual dataset.';
-
--- Data exporting was unselected.
+  KEY (`identifier`),
+  KEY (`keyword`),
+  KEY (`dataType`),
+  KEY (`featureType`)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This tables store the metadata of individual dataset.';
 
 
--- Dumping structure for table cyberconnector.history
 DROP TABLE IF EXISTS `history`;
 CREATE TABLE IF NOT EXISTS `history` (
   `id` varchar(20) NOT NULL,
@@ -106,12 +104,9 @@ CREATE TABLE IF NOT EXISTS `history` (
   `input` longtext,
   `output` longtext,
   `host` text
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
 
--- Dumping structure for table cyberconnector.hosts
 DROP TABLE IF EXISTS `hosts`;
 CREATE TABLE IF NOT EXISTS `hosts` (
   `id` varchar(50) NOT NULL,
@@ -120,12 +115,9 @@ CREATE TABLE IF NOT EXISTS `hosts` (
   `port` smallint(6) NOT NULL,
   `user` varchar(50) NOT NULL,
   `owner` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Host managed by CyberConnector';
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='Host managed by CyberConnector';
 
 
--- Dumping structure for table cyberconnector.orders
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders` (
   `orderid` varchar(50) NOT NULL,
@@ -134,10 +126,10 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `updatetime` datetime NOT NULL,
   `project` varchar(50) DEFAULT NULL,
   `userid` int(10) DEFAULT NULL,
-  `east` double(20,6) DEFAULT NULL,
-  `south` double(20,6) DEFAULT NULL,
-  `west` double(20,6) DEFAULT NULL,
-  `north` double(20,6) DEFAULT NULL,
+  `east` double(53) DEFAULT NULL,
+  `south` double(53) DEFAULT NULL,
+  `west` double(53) DEFAULT NULL,
+  `north` double(53) DEFAULT NULL,
   `email` tinytext NOT NULL,
   `begintime` datetime DEFAULT NULL,
   `endtime` datetime DEFAULT NULL,
@@ -145,12 +137,9 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `message` text NOT NULL,
   `parametermap` text,
   UNIQUE KEY `orderid` (`orderid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table stores the user orders.';
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This table stores the user orders.';
 
 
--- Dumping structure for table cyberconnector.process_type
 DROP TABLE IF EXISTS `process_type`;
 CREATE TABLE IF NOT EXISTS `process_type` (
   `id` varchar(50) NOT NULL,
@@ -162,12 +151,9 @@ CREATE TABLE IF NOT EXISTS `process_type` (
   `output` text,
   `output_datatype` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table stores all the usable logic process for modeling.';
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This table stores all the usable logic process for modeling.';
 
 
--- Dumping structure for table cyberconnector.products
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE IF NOT EXISTS `products` (
   `identifier` varchar(50) NOT NULL DEFAULT '',
@@ -175,10 +161,10 @@ CREATE TABLE IF NOT EXISTS `products` (
   `description` tinytext,
   `keywords` tinytext,
   `name` varchar(100) NOT NULL,
-  `east` double(20,6) DEFAULT NULL,
-  `south` double(20,6) DEFAULT NULL,
-  `west` double(20,6) DEFAULT NULL,
-  `north` double(20,6) DEFAULT NULL,
+  `east` double(53) DEFAULT NULL,
+  `south` double(53) DEFAULT NULL,
+  `west` double(53) DEFAULT NULL,
+  `north` double(53) DEFAULT NULL,
   `srs` varchar(50) DEFAULT 'EPSG:4326',
   `begintime` date DEFAULT '1900-01-01',
   `endtime` date DEFAULT NULL,
@@ -193,15 +179,12 @@ CREATE TABLE IF NOT EXISTS `products` (
   `isspatial` char(1) DEFAULT NULL,
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `identifier` (`identifier`),
-  UNIQUE KEY `name` (`name`),
+  KEY `name` (`name`),
   KEY `ifvirtual` (`ifvirtual`),
   KEY `parent_abstract_model` (`parent_abstract_model`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table archives the metadata of VDPs.';
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This table archives the metadata of VDPs.';
 
 
--- Dumping structure for table cyberconnector.requirements
 DROP TABLE IF EXISTS `requirements`;
 CREATE TABLE IF NOT EXISTS `requirements` (
   `productid` varchar(50) NOT NULL,
@@ -209,12 +192,9 @@ CREATE TABLE IF NOT EXISTS `requirements` (
   `modelInput` varchar(50) NOT NULL,
   `type` enum('BoundingBox','TimeRange','TimeStamp','Projection','InitialDataURL','OutputFormat','SpatialPoint','SpatialPolygon','Unknown') NOT NULL,
   `constraints` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table is unused.';
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This table is unused.';
 
 
--- Dumping structure for table cyberconnector.service
 DROP TABLE IF EXISTS `service`;
 CREATE TABLE IF NOT EXISTS `service` (
   `tid` int(11) NOT NULL AUTO_INCREMENT,
@@ -235,17 +215,12 @@ CREATE TABLE IF NOT EXISTS `service` (
   `userid` int(10) DEFAULT NULL,
   PRIMARY KEY (`tid`),
   KEY `id` (`id`),
-  KEY `name` (`name`(64)),
-  KEY `description` (`description`(255)),
   KEY `keywords` (`keywords`),
   KEY `serviceType` (`serviceType`),
   KEY `accessURL` (`accessURL`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table stores the metadata of physical web services.';
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8 COMMENT='This table stores the metadata of physical web services.';
 
 
--- Dumping structure for table cyberconnector.users
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `uid` int(10) NOT NULL AUTO_INCREMENT,
@@ -267,8 +242,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_ip` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
--- Data exporting was unselected.
 /*!40014 SET FOREIGN_KEY_CHECKS=1 */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
