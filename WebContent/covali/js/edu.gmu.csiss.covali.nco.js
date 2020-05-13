@@ -171,6 +171,7 @@ edu.gmu.csiss.covali.nco = {
             edu.gmu.csiss.covali.filebrowser.selectedCallback = function(selectedFile) {
                 $('#ncbo-infile1').val(selectedFile);
                 $('#ncbo-infile1').change();
+                edu.gmu.csiss.covali.filebrowser.close();
             };
             edu.gmu.csiss.covali.filebrowser.init();
         });
@@ -179,6 +180,8 @@ edu.gmu.csiss.covali.nco = {
             edu.gmu.csiss.covali.filebrowser.selectedCallback = function(selectedFile) {
                 $('#ncbo-infile2').val(selectedFile);
                 $('#ncbo-infile2').change();
+                edu.gmu.csiss.covali.filebrowser.close();
+
             };
             edu.gmu.csiss.covali.filebrowser.init();
         });
