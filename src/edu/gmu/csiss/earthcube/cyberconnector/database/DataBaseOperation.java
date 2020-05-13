@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,6 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+
+
+import org.h2.tools.Server;
 
 import java.util.logging.Level;
 
@@ -39,11 +43,14 @@ public class DataBaseOperation {
 		database_url = SysDir.database_url;
 		user = SysDir.database_user;
 		password = SysDir.database_password;
-		
-		//check if docker 
-		
+
+		// try to connect or fallback to docker_database_url
 		try {
-			
+			// h2 database
+			if(SysDir.database_h2_embedded) {
+				startEmbeddedH2Server();
+			}
+
 			Class.forName(driver);	
 			
 			Connection conn = DriverManager.getConnection(database_url, user, password);
@@ -61,7 +68,7 @@ public class DataBaseOperation {
 			}
 			
 		} catch(Exception e) {   
-			
+			// fallback to docker
 //			e.printStackTrace();
 			
 			database_url = SysDir.database_docker_url;
@@ -82,6 +89,19 @@ public class DataBaseOperation {
 //		}catch(IOException e){
 //			e.printStackTrace();
 //		}
+	}
+
+	public static void startEmbeddedH2Server() throws Exception{
+		Path dbfilepath = SysDir.workspace_path.resolve("cyberconnector.h2");
+
+		System.setProperty("h2.bindAddress", SysDir.database_h2_embedded_host);
+
+		Server h2Server = Server.createTcpServer(
+				"-baseDir", SysDir.workspace_path.toString(),
+				"-ifNotExists",
+				"-tcpPort", SysDir.database_h2_embedded_port);
+
+		h2Server.start();
 	}
 	/**
 	 * Execute SQL in the current database.

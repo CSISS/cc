@@ -74,6 +74,12 @@ public class SysDir {
 
 	public static String database_driver = null;
 
+	public static boolean database_h2_embedded = false;
+
+	public static String database_h2_embedded_host = null;
+
+	public static String database_h2_embedded_port = null;
+
 	public static String database_url = null;
 	
 	public static String database_docker_url = null;
@@ -177,6 +183,13 @@ public class SysDir {
 			thredds_index_url = p.getProperty("thredds_index_url");
 			
 			database_driver = p.getProperty("database_driver");
+
+			String h2_embed_prop = p.getProperty("database_h2_embedded").toLowerCase();
+			database_h2_embedded = h2_embed_prop.equals("true");
+
+			database_h2_embedded_host = p.getProperty("database_h2_embedded_host");
+
+			database_h2_embedded_port = p.getProperty("database_h2_embedded_port");
 
 			database_url = p.getProperty("database_url");
 
