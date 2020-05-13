@@ -103,8 +103,11 @@ edu.gmu.csiss.covali.filebrowser = {
 		edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600);
 		
 		edu.gmu.csiss.covali.filebrowser.loadPath('');
+    },
 
-
-
+    close: function() {
+        var dialogName = 'edu.gmu.csiss.covali.filebrowser.jsframe.LocalFiles';
+        edu.gmu.csiss.covali.menu.closeDialog(dialogName);
     }
+
 }
