@@ -17,8 +17,6 @@ Java 1.8+ (mandatory, OpenJDK)
 
 Apache Tomcat 8.0+ (mandatory, web container)
 
-MySQL 5.5+ (mandatory, database, initialize it with db/cc.empty.sql)
-
 ncWMS 2.4.1+ (mandatory, download ncWMS.war and deploy it into Tomcat webapps folder)
 
 [cc-thredds-pycsw](https://github.com/CSISS/cc-thredds-pycsw) (optional, if you plan to set up your own catalog)
@@ -40,7 +38,7 @@ cd install
 ```
 
 
-### Java War Package
+### Java WAR Package
 
 To manually deploy CyberConnector to Apache Tomcat, [download](https://github.com/CSISS/cc/releases) the latest release war and copy it to the webapps directory of Tomcat. Start Tomcat. 
 
@@ -60,11 +58,11 @@ We provide a ready-to-use cloud template for you to install on mainstream cloud 
 
 We published a Docker image in DockerHub for docker users. The pull command is:
 
-`docker pull csiss/cyberconnector`
+`docker pull csiss/cc`
 
 The run command is:
 
-`docker run -p 8080:8080 -v DATAPATH:/covaliFiles csiss/cyberconnector`
+`docker run -p 8080:8080 -v DATAPATH:/home/jboss/covaliFiles csiss/cc`
 
 # Modules
 
