@@ -9,7 +9,7 @@ esac
 
 
 if [ "$#" -ne 2 ]; then
-    echo "Usage: install.sh ANACONDA_INSTALL_DIR DATA_DIR"
+    echo "Usage: install.sh anaconda_path data_path"
     echo "Example: install.sh /opt/anaconda3 /data"
     exit 1
 fi
@@ -23,11 +23,12 @@ if [ "$NCO_DIR" == "." ]; then
 	exit 1
 fi
 
-echo "CONDA_DIR=$CONDA_DIR"
-echo "DATA_DIR=$DATA_DIR"
-echo "NCO_DIR=$NCO_DIR"
+echo "anaconda_path=$CONDA_DIR"
+echo "data_path=$DATA_DIR"
+echo "nco_path=$NCO_DIR"
+echo "workspace_path=~/covali-workspace"
 
-sleep 1
+sleep 3
 
 echo "Installing conda xESMF environment"
 /bin/bash ./config-conda-esmf.sh "$CONDA_DIR"
@@ -123,6 +124,7 @@ sed -i'' 's|ncbo_path=.*|ncbo_path='$NCO_DIR'/ncbo|g' config.properties
 
 popd
 
+cp -u ../db/cc.mv.db ~/covali-workspace/
 
 echo "Restarting Apache Tomcat (takes several minutes)..."
 sleep 180
