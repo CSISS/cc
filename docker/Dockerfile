@@ -1,18 +1,20 @@
 FROM fabric8/tomcat-8
+# Use build.sh to setup the correct docker context
 
 USER root
 
-RUN mkdir -p /home/geo2015
-RUN chown -R jboss:root /home/geo2015
 RUN yum install wget epel-release -y
 RUN yum install nco -y
 
+RUN ln -s /opt/jboss /home/geo2015
+
 USER jboss
 
-WORKDIR /home/geo2015
+WORKDIR /opt/jboss
+RUN mkdir -p /opt/jboss/covali-workspace
 
 RUN wget https://repo.continuum.io/archive/Anaconda3-2019.10-Linux-x86_64.sh
-RUN bash Anaconda3-2019.10-Linux-x86_64.sh -b -p /home/geo2015/anaconda3
+RUN bash Anaconda3-2019.10-Linux-x86_64.sh -b -p /opt/jboss/anaconda3
 RUN rm Anaconda3-2019.10-Linux-x86_64.sh
 
 
@@ -22,3 +24,5 @@ RUN source /home/geo2015/anaconda3/etc/profile.d/conda.sh && conda create -n esm
 COPY *.war /maven/
 
 COPY tomcat-users.xml /opt/tomcat/conf/
+
+COPY cc.mv.db /opt/jboss/covali-workspace/
