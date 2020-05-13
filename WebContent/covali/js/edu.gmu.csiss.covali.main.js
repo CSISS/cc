@@ -26,6 +26,10 @@ edu.gmu.csiss.covali.main = {
         edu.gmu.csiss.covali.toolbar.init();
 
         edu.gmu.csiss.covali.about.init();
+
+        // edu.gmu.csiss.covali.automate.loadExampleData();
+		// edu.gmu.csiss.covali.search.init();
+
     },
 	
 	
@@ -79,8 +83,13 @@ edu.gmu.csiss.covali.main = {
 }
 
 $(document).ready(function () {
-	
-	edu.gmu.csiss.covali.main.init();
+		edu.gmu.csiss.covali.main.init();
+
+	$(document).on('keydown', function(event) {
+		if (event.key == "Escape") {
+			edu.gmu.csiss.covali.menu.closeOnTopDialog();
+		}
+	});
 
 });
 

@@ -39,6 +39,13 @@ edu.gmu.csiss.covali.menu = {
 		}
 	},
 
+	closeOnTopDialog: function() {
+		var topObject = edu.gmu.csiss.covali.menu.jsframe.windowManager.onTopObject;
+		if(topObject) {
+			topObject.closeFrame();
+		}
+	},
+
 	closeAllDialogs: function(){
 		var jsFrameBeans = edu.gmu.csiss.covali.menu.jsframe.windowManager.beanNameId;
 		for (var bName in jsFrameBeans) {
