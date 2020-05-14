@@ -4,16 +4,18 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
 import edu.gmu.csiss.earthcube.cyberconnector.products.RemoteFileCache;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
-import edu.gmu.csiss.earthcube.cyberconnector.tools.NcoTool;
-import edu.gmu.csiss.earthcube.cyberconnector.tools.RegridTool;
+import edu.gmu.csiss.earthcube.cyberconnector.tools.ExternalShellCommandTool;
 import edu.iris.dmc.fdsn.station.model.Channel;
 import edu.iris.dmc.fdsn.station.model.Station;
 import org.apache.commons.io.FilenameUtils;
@@ -50,14 +52,12 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 @Controller 
 //@SessionAttributes({"sessionUser"})
 public class CovaliController {
-	
+
 	Logger logger = Logger.getLogger(this.getClass());
 
 	@RequestMapping(value = "/regrid", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
 	public @ResponseBody String regrid(WebRequest request) {
-
-
-		String result = RegridTool.regrid(request);
+		String result = ExternalShellCommandTool.regrid(request);
 
 		return result;
 	}
@@ -66,14 +66,14 @@ public class CovaliController {
 	@RequestMapping(value = "/nco/ncra", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String nconcra(WebRequest request) {
 		String command = request.getParameter("command");
-		String result = NcoTool.execNcra(command);
+		String result = ExternalShellCommandTool.execNcra(command);
 		return result;
 	}
 
 	@RequestMapping(value = "/nco/ncbo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String nconcbo(WebRequest request) {
 		String command = request.getParameter("command");
-		String result = NcoTool.execNcbo(command);
+		String result = ExternalShellCommandTool.execNcbo(command);
 		return result;
 	}
 

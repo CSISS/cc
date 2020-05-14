@@ -9,38 +9,32 @@ edu.gmu.csiss.covali.regrid = {
         var customLon = $('#custom-grid-lon').val();
         var isPeriodic = $('#is-periodic').prop("checked");
 
-        var dir = $('#regrid-outdir').val();
         var outfile = $('#regrid-outfile').val();
-
-        var outpath = dir + '/' + outfile;
+        // remove leading slash
+        outfile = outfile.replace(/^\/+/g, '');
 
         $('#do-regrid-button .regrid-icon').toggleClass('fa-border-none fa-spinner fa-spin');
 
-        $.ajax({
-            type: "POST",
-
-            data: {
-                "datafile": datafile,
-                "gridfile": gridfile,
-                "outfile": outpath,
-                "isCustomGrid": isCustomGrid,
-                "customLat": customLat,
-                "customLon": customLon,
-                "isPeriodic": isPeriodic
-            },
-
-            url: '../web/regrid',
-
-        }).success(function(data) {
-            alert(data);
-            edu.gmu.csiss.covali.menu.closeAllDialogs();
-            edu.gmu.csiss.covali.local.showFileLoadingDialog(outpath);
-            edu.gmu.csiss.covali.local.loadWMSFile(outpath);
-
-        }).error(function(data) {
-            edu.gmu.csiss.covali.menu.closeAllDialogs();
-            alert(data);
+        edu.gmu.csiss.covali.tools.remoteProcessAndLoad( '../web/regrid', {
+            "datafile": datafile,
+            "gridfile": gridfile,
+            "outfile": outfile,
+            "isCustomGrid": isCustomGrid,
+            "customLat": customLat,
+            "customLon": customLon,
+            "isPeriodic": isPeriodic
         });
+
+        edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.regrid.jsframe.RegridData');
+
+        var dialogName = 'edu.gmu.csiss.covali.jsframe.RemoteProcessingWaiting';
+        var dialogTitle = 'Executing Regrid Process';
+        var waiting_message = "Creating regridded file: " + outfile + "...";
+        var content = '<div class="modal-body" style="font-size: 12px;">';
+        content += '<b>' + waiting_message + '</b>';
+        content += '</div>';
+
+        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 100, 700);
     },
 
     inputFilesChanged: function() {
@@ -81,7 +75,7 @@ edu.gmu.csiss.covali.regrid = {
     },
 
     showDialog: function () {
-        BootstrapDialog.closeAll();
+        edu.gmu.csiss.covali.menu.closeAllDialogs();
 
         var dialogName = 'edu.gmu.csiss.covali.regrid.jsframe.RegridData';
         var dialogTitle = 'Regrid Data';
@@ -148,21 +142,22 @@ edu.gmu.csiss.covali.regrid = {
         content += '	</div>';
         content += '  </dl>';
 
-        // OUTPUT DIR
-        content += '  <dl class="row">';
-        content += '	<label class="col-md-3 control-label" for="regrid-outdir">Output folder</label>';
-        content += '	<div class="col-md-9">';
-        content += '		<input id="regrid-outdir" name="regrid-outdir" value="" class="form-control" required>';
-        content += '	</div>';
-        content += '  </dl>';
 
         // OUTPUT FILE
-        content += '  <dl class="row">';
+        content += '  <dl class="row" style="margin-bottom: 0px;">';
         content += '	<label class="col-md-3 control-label" for="regrid-outfile">Output file</label>';
         content += '	<div class="col-md-9">';
         content += '		<input id="regrid-outfile" name="regrid-outfile" value="" class="form-control" required>';
         content += '	</div>';
         content += '  </dl>';
+
+        content += '  <dl class="row">';
+        content += '	<label class="col-md-3"></label>';
+        content += '	<div class="col-md-9" style="padding-top:4px; padding-left:16px; font-style: italic">';
+        content += '		<span>The output file will be stored in the <span style="font-family: monospace;">covali-workspace/results</span> folder</span>';
+        content += '	</div>';
+        content += '  </dl><br/>';
+
 
         // PERIODIC
         content += '  <dl class="row">';

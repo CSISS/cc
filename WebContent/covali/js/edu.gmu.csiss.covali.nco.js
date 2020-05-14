@@ -7,40 +7,6 @@
  */
 
 edu.gmu.csiss.covali.nco = {
-
-    doNcoCalculation: function(action, command, dialog) {
-        var outfile = command.split(' ').pop();
-        
-        $.ajax({
-        	
-            dataType: 'json',
-        	
-            type: "POST",
-            
-            data: {
-                "command": command
-            },
-
-            url: action,
-
-        }).success(function (data) {
-            if(data.success){
-                var filepath = data.success.filepath
-                edu.gmu.csiss.covali.local.showFileLoadingDialog(filepath);
-                edu.gmu.csiss.covali.local.loadWMSFile(filepath);
-
-            } else {
-                console.log(data);
-                alert(data.failure.message);
-            }
-        }).error(function(data) {
-            console.log(data);
-            alert(data.responseText);
-        });
-        
-    },
-
-
     ncraDialogContent: function() {
         var content = "<br/>";
         
@@ -68,6 +34,13 @@ edu.gmu.csiss.covali.nco = {
         content += '	<label class="col-md-3 control-label" for="ncra-infile">Output file</label>';
         content += '	<div class="col-md-9">';
         content += '		<input id="ncra-outfile" name="ncra-outfile" value="nco_record_average_result.nc" class="form-control" required>';
+        content += '	</div>';
+        content += '  </div>';
+
+        content += '  <div class="row">';
+        content += '	<label class="col-md-3"></label>';
+        content += '	<div class="col-md-9" style="padding-top:4px; padding-left:16px; font-style: italic">';
+        content += '		<span>The output file will be stored in the <span style="font-family: monospace;">covali-workspace/results</span> folder</span>';
         content += '	</div>';
         content += '  </div><br/>';
 
@@ -155,7 +128,15 @@ edu.gmu.csiss.covali.nco = {
         content += '	<div class="col-md-9">';
         content += '		<input id="ncbo-outfile" name="ncbo-outfile" value="nco_binary_operator_result.nc" class="form-control" required>';
         content += '	</div>';
+        content += '  </div>';
+
+        content += '  <div class="row">';
+        content += '	<label class="col-md-3"></label>';
+        content += '	<div class="col-md-9" style="padding-top:4px; padding-left:16px; font-style: italic">';
+        content += '		<span>The output file will be stored in the <span style="font-family: monospace;">covali-workspace/results</span> folder</span>';
+        content += '	</div>';
         content += '  </div><br/>';
+
 
         // COMMAND
         content += '  <div class="row infile-row">';
@@ -236,18 +217,29 @@ edu.gmu.csiss.covali.nco = {
     	
     },
     
-    calculateButtonAction: function(dialogItself){
+    calculateButtonAction: function(){
+        var waiting_message = "Waiting..."
         if($("#nco-operation").val()=="2"){
-
             var command = $("#ncra-command").val();
-            edu.gmu.csiss.covali.nco.doNcoCalculation('../web/nco/ncra', command, dialogItself);
+            edu.gmu.csiss.covali.tools.remoteProcessAndLoad('../web/nco/ncra', {"command": command});
+            waiting_message = "Executing: " + command + "...";
         } else if($("#nco-operation").val()=="3"){
-
             var command = $("#ncbo-command").val();
-            edu.gmu.csiss.covali.nco.doNcoCalculation('../web/nco/ncbo', command, dialogItself);
+            edu.gmu.csiss.covali.tools.remoteProcessAndLoad('../web/nco/ncbo', {"command": command});
+            waiting_message = "Executing: " + command + "...";
         }
 
-        console.log(dialogItself);
+
+        edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.nco.jsframe.NCOProcessing');
+
+        var dialogName = 'edu.gmu.csiss.covali.jsframe.RemoteProcessingWaiting';
+        var dialogTitle = 'Executing NCO Process';
+        var content = '<div class="modal-body" style="font-size: 12px;">';
+        content += '<b>' + waiting_message + '</b>';
+        content += '</div>';
+
+        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 100, 700);
+
     },
 	
 	showDialog: function(){

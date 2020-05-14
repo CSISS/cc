@@ -8,7 +8,7 @@ import json
 # {
 #     "datafile" : "/media/volume1/cc_cache/regrid/asr15km.anl.2D.20010101.nc",
 #     "gridfile" : "/media/volume1/cc_cache/regrid/grid-720x1440.nc",
-#     "outfile" : "/media/volume1/cc_cache/regrid/asr15km.anl.2D.20010101-gridto-1x2.nc4",
+#     "outfile" : "asr15km.anl.2D.20010101-gridto-1x2.nc4",
 #     "isCustomGrid" : "true",
 #     "customLat" : "1",
 #     "customLon" : "2",

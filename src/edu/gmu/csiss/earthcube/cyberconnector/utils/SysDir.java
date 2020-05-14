@@ -64,6 +64,8 @@ public class SysDir {
 
 	public static Path workspace_tmp_path = null;
 
+	public static Path workspace_results_path = null;
+
 	public static Path ncra_path = null;
 
 	public static Path ncbo_path = null;
@@ -251,10 +253,12 @@ public class SysDir {
 		SysDir.workspace_cache_path = SysDir.workspace_path.resolve("cache");
 		SysDir.workspace_uploads_path = SysDir.workspace_path.resolve("uploads");
 		SysDir.workspace_tmp_path = SysDir.workspace_path.resolve("tmp");
+		SysDir.workspace_results_path = SysDir.workspace_path.resolve("results");
 
 		Files.createDirectories(SysDir.workspace_cache_path);
 		Files.createDirectories(SysDir.workspace_uploads_path);
 		Files.createDirectories(SysDir.workspace_tmp_path);
+		Files.createDirectories(SysDir.workspace_results_path);
 	}
 
 	static {
