@@ -387,8 +387,8 @@ public class UserController {
     		resp = "{ \"ret\" : \"true\", \"uid\":\""+uid+"\" }";
     		
     	}else{
-    		
-    		resp = "{ \"ret\" : \"false\" }";
+
+    		resp = "{ \"ret\" : \"false\", \"message\":\"" + msg.getInformation() + "\" }";
     		
     	}
     	
