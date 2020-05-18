@@ -13,12 +13,12 @@ end
 
 
 
-def getyeargroup(year, gid, gname)
-	dir = "#{gname}/#{year}"
+def getyeargroup(ds, year, gid, gname)
+	dir = "#{ds}/#{gname}/#{year}"
 	puts "Process #{dir}  g=#{year}#{gid}"
 	`mkdir -p #{dir}`
 
-	gurl = "https://rda.ucar.edu/data/ds630.1/index.html?g=#{year}#{gid}"
+	gurl = "https://rda.ucar.edu/data/#{ds}/index.html?g=#{year}#{gid}"
 	doc = Nokogiri::HTML(url_read(gurl))
 
 
@@ -30,7 +30,7 @@ def getyeargroup(year, gid, gname)
     end
 end
 
-
+dataset = "ds630.1"
 
 years = 
 %w(
@@ -60,7 +60,7 @@ threads = []
 		until years.empty?
 			year = years.pop
 			groups.each do |id, name|
-				getyeargroup(year, id, name)	
+				getyeargroup(dataset, year, id, name)
 			end
 			
 		end
