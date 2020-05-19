@@ -77,6 +77,13 @@ public class CovaliController {
 		return result;
 	}
 
+	@RequestMapping(value = "/ncdump", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String ncdump(WebRequest request) {
+		String filepath = request.getParameter("filepath");
+		String result = ExternalShellCommandTool.ncdump(filepath);
+		return result;
+	}
+
 	@RequestMapping(value = "/iris/stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String irisstationlist() {
 

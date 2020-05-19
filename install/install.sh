@@ -23,6 +23,12 @@ if [ "$NCO_DIR" == "." ]; then
 	exit 1
 fi
 
+if [ ! -f "/usr/bin/ncdump" ]; then
+	echo "/usr/bin/ncdump not found!"
+	exit 1
+fi
+
+
 echo "anaconda_path=$CONDA_DIR"
 echo "data_path=$DATA_DIR"
 echo "nco_path=$NCO_DIR"

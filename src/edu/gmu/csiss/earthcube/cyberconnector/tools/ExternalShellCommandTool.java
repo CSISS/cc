@@ -4,8 +4,9 @@ import edu.gmu.csiss.earthcube.cyberconnector.utils.BaseTool;
 import edu.gmu.csiss.earthcube.cyberconnector.utils.SysDir;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -16,7 +17,6 @@ public class ExternalShellCommandTool {
     static Logger logger = Logger.getLogger(ExternalShellCommandTool.class);
 
     public static String execNcoCommand(String command) {
-        File log = SysDir.workspace_tmp_path.resolve("nco.log").toFile();
         String[] args = command.split("\\s+");
 
         // remove absolute path for outfile
@@ -56,6 +56,33 @@ public class ExternalShellCommandTool {
     public static String execNcbo(String command) {
         command = command.replaceAll("^ncbo", SysDir.ncbo_path.toString());
         return execNcoCommand(command);
+    }
+
+    public static String ncdump(String filepath) {
+        // TODO: add SysDir option
+        String ncdumpPath = "/usr/bin/ncdump";
+
+        ProcessBuilder pb = new ProcessBuilder(ncdumpPath, "-c", filepath);
+        pb.directory(SysDir.workspace_path.toFile());
+        pb.redirectErrorStream(true);
+        logger.info(pb.command().toString());
+
+        boolean success = false;
+        String output = "";
+
+        try {
+            Process p = pb.start();
+            p.waitFor(30, TimeUnit.SECONDS);
+            output = IOUtils.toString(p.getInputStream());
+            if(p.exitValue() == 0) {
+                success = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            output = e.getLocalizedMessage();
+        }
+
+        return formatNcdumpJSONResult(success, output);
     }
 
     public static String regrid(WebRequest request) {
@@ -108,5 +135,31 @@ public class ExternalShellCommandTool {
         }
 
         return  "{ \"failure\": {\"message\": \"" + JSONValue.escape(message) + "\"}}";
+    }
+
+    public static String formatNcdumpJSONResult(boolean success, String output) {
+
+        if(success) {
+            return "{ \"success\": {\"message\": \"" + JSONValue.escape(output) + "\"}}";
+        }
+
+        return  "{ \"failure\": {\"message\": \"" + JSONValue.escape(output) + "\"}}";
+
+//        List<String> varNames = new ArrayList<>();
+//
+//        for (String  line : output.split(System.lineSeparator())) {
+//            if(line.startsWith("\tfloat ") ||
+//                    line.startsWith("\tchar ") ||
+//                    line.startsWith("\tbyte ") ||
+//                    line.startsWith("\tshort ") ||
+//                    line.startsWith("\tint ") ||
+//                    line.startsWith("\tdouble ")) {
+//                String varnname = line.split("\\b")[3];
+//                varNames.add("\"" + varnname + "\"");
+//            }
+//        }
+//
+//        String variables = String.join(",", varNames);
+//        return "{ \"success\": {\"variables\": [" + variables + "]}}";
     }
 }
