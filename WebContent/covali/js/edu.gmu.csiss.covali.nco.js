@@ -98,7 +98,7 @@ edu.gmu.csiss.covali.nco = {
 
         // Variables
         content += '  <div class="row">';
-        content += '	<label class="col-md-3 control-label" for="nco-variables">Variables</label>';
+        content += '	<label class="col-md-3 control-label" for="nco-variables">Variables (-V)</label>';
         content += '	<div class="col-md-9">';
         content += '		<input id="nco-variables" name="nco-variables" class="nco-command-element form-control" value="">';
         content += '	</div>';
@@ -106,7 +106,7 @@ edu.gmu.csiss.covali.nco = {
 
         // OUTPUT FILE
         content += '  <div class="row">';
-        content += '	<label class="col-md-3 control-label" for="ncra-infile">Output file</label>';
+        content += '	<label class="col-md-3 control-label" for="ncra-infile">Output File</label>';
         content += '	<div class="col-md-9">';
         content += '		<input id="nco-outfile" name="nco-outfile" value="nco_record_average_result.nc" class="nco-command-element form-control" required>';
         content += '	</div>';
@@ -218,7 +218,7 @@ edu.gmu.csiss.covali.nco = {
 
         // Variables
         content += '  <div class="row">';
-        content += '	<label class="col-md-3 control-label" for="nco-variables">Variables</label>';
+        content += '	<label class="col-md-3 control-label" for="nco-variables">Variables (-V)</label>';
         content += '	<div class="col-md-9">';
         content += '		<input id="nco-variables" name="nco-variables" class="nco-command-element form-control" value="">';
         content += '	</div>';
@@ -226,7 +226,7 @@ edu.gmu.csiss.covali.nco = {
 
         // OUTPUT FILE
         content += '  <div class="row">';
-        content += '	<label class="col-md-3 control-label" for="ncbo-infile">Output file</label>';
+        content += '	<label class="col-md-3 control-label" for="ncbo-infile">Output File</label>';
         content += '	<div class="col-md-9">';
         content += '		<input id="nco-outfile" name="nco-outfile" value="nco_binary_operator_result.nc" class="nco-command-element form-control" required>';
         content += '	</div>';
@@ -298,6 +298,127 @@ edu.gmu.csiss.covali.nco = {
     },
 
 
+    ncap2DialogContent: function() {
+        var content = "<br/>";
+
+        // INPUT FILE
+        content += '  <div class="row infile-row">';
+        content += '	<label class="col-md-3 control-label" for="ncap2-infile">Input File</label>';
+        content += '	<div class="col-md-8">';
+        content += '		<input id="ncap2-infile" name="ncap2-infile" class="nco-command-element form-control" required/>';
+        content += '	</div>';
+        content += '	<div class="col-md-1 text-left"  style="padding-left: 0px;">';
+        content += '		<a class="btn btn-primary" id="ncap2-add-file-btn" href="javascript:void(0)"><i class="fa fa-folder"></i></a>';
+        content += '	</div>';
+        content += '  </div><br/>';
+
+        // FILEINFO
+        content += '  <div class="row">';
+        content += '	<label class="col-md-3 control-label">File Info (ncdump)</label>';
+        content += '	<div class="col-md-9 fileinfo-links">';
+        content += '	</div>';
+        content += '  </div><br/>';
+
+        // SCRIPT
+        content += '  <div class="row infile-row">';
+        content += '	<label class="col-md-3 control-label" for="ncap2-script">Script</label>';
+        content += '	<div class="col-md-8">';
+        content += '		<textarea rows=5 id="ncap2-script" name="ncap2-script" class="nco-command-element form-control"/>';
+        content += '	</div>';
+        content += '  </div><br/>';
+
+
+        // OPTIONS
+        content += '  <div class="row">';
+        content += '	<label class="col-md-3 control-label" for="nco-options">Options</label>';
+        content += '	<div class="col-md-9">';
+        content += '		<input id="nco-options" name="nco-options" class="nco-command-element form-control" value="">';
+        content += '	</div>';
+        content += '  </div><br/>';
+
+        // // User Variables Only
+        // Setting -v to true will delete the grid making it unusable for ncWMS - not option we want
+        // content += '  <div class="row">';
+        // content += '	<label class="col-md-3 control-label" for="ncap2-user-variables-only">User Variables Only (-v)</label>';
+        // content += '	<div class="col-md-9">';
+        // content += '		<input type="checkbox" checked id="ncap2-user-variables-only" name="ncap2-user-variables-only" class="nco-command-element"  >';
+        // content += '	</div>';
+        // content += '  </div><br/>';
+
+        // OUTPUT FILE
+        content += '  <div class="row">';
+        content += '	<label class="col-md-3 control-label" for="ncbo-infile">Output File</label>';
+        content += '	<div class="col-md-9">';
+        content += '		<input id="nco-outfile" name="nco-outfile" value="ncap2_result.nc" class="nco-command-element form-control" required>';
+        content += '	</div>';
+        content += '  </div>';
+
+        content += '  <div class="row">';
+        content += '	<label class="col-md-3"></label>';
+        content += '	<div class="col-md-9" style="padding-top:4px; padding-left:16px; font-style: italic">';
+        content += '		<span>The output file will be stored in the <span style="font-family: monospace;">covali-workspace/results</span> folder</span>';
+        content += '	</div>';
+        content += '  </div><br/>';
+
+        // Overwrite
+        content += '  <div class="row">';
+        content += '	<label class="col-md-3 control-label" for="nco-overwrite">Overwrite Output (-O)</label>';
+        content += '	<div class="col-md-9">';
+        content += '		<input type="checkbox" checked id="nco-overwrite" name="nco-overwrite" class="nco-command-element"  >';
+        content += '	</div>';
+        content += '  </div><br/>';
+
+
+        // COMMAND
+        content += '  <div class="row infile-row">';
+        content += '	<label class="col-md-3 control-label" for="ncbo-command">Command</label>';
+        content += '	<div class="col-md-9">';
+        content += '		<textarea rows=6 id="ncap2-command" name="ncbo-command" class="form-control"/>';
+        content += '	</div>';
+
+
+        content = $(content);
+
+        content.find('#ncap2-add-file-btn').click(function(){
+            edu.gmu.csiss.covali.filebrowser.selectedCallback = function(selectedFile) {
+                $('#ncap2-infile').val(selectedFile);
+                $('#ncap2-infile').change();
+                edu.gmu.csiss.covali.filebrowser.close();
+            };
+            edu.gmu.csiss.covali.filebrowser.init();
+        });
+
+        content.find('.nco-command-element').bind('change keyup', function(){
+            var input = $('#ncap2-infile').val();
+
+            var overwrite = $('#nco-overwrite').prop('checked');
+            // var userVariablesOnly = $('#ncap2-user-variables-only').prop('checked');
+
+            var ncoCommandCommonOptions =  $('#nco-options').val();
+
+            if(overwrite) {
+                ncoCommandCommonOptions += " -O ";
+            }
+
+            // if(userVariablesOnly) {
+            //     ncoCommandCommonOptions += " -v ";
+            // }
+
+            var script = $('#ncap2-script').val();
+            var output = $('#nco-outfile').val();
+
+            // update variables list
+            edu.gmu.csiss.covali.nco.updateFileInfoLinks([input]);
+
+
+            var command = 'ncap2 ' + '-s "' + script + '" ' + ncoCommandCommonOptions + ' ' + input + ' ' + output;
+            $('#ncap2-command').val(command);
+        });
+
+        return content;
+    },
+
+
     changeDialogContent: function(selected){
         var dialogName = 'edu.gmu.csiss.covali.nco.jsframe.NCOProcessing';
         var content = "";
@@ -305,15 +426,19 @@ edu.gmu.csiss.covali.nco = {
         switch(selected) {
             case "1":
                 content = "<div></div>";
-                edu.gmu.csiss.covali.menu.setSize(dialogName, 200);
+                edu.gmu.csiss.covali.menu.setSize(dialogName, 200, 750);
                 break;
             case "2":
                 content = edu.gmu.csiss.covali.nco.ncraDialogContent();
-                edu.gmu.csiss.covali.menu.setSize(dialogName, 730);
+                edu.gmu.csiss.covali.menu.setSize(dialogName, 730, 750);
                 break;
             case "3":
                 content = edu.gmu.csiss.covali.nco.ncboDialogContent();
-                edu.gmu.csiss.covali.menu.setSize(dialogName, 760);
+                edu.gmu.csiss.covali.menu.setSize(dialogName, 760, 750);
+                break;
+            case "4":
+                content = edu.gmu.csiss.covali.nco.ncap2DialogContent();
+                edu.gmu.csiss.covali.menu.setSize(dialogName, 810, 750);
                 break;
         }
         $('#nco-operation-content').html(content);
@@ -322,14 +447,12 @@ edu.gmu.csiss.covali.nco = {
     information: function(){
     	
     	if($("#nco-operation").val()=="2"){
-    		
     		window.open('https://linux.die.net/man/1/ncra', '_blank');
-    		
-    	}else if($("#nco-operation").val()=="3"){
+    	} else if($("#nco-operation").val()=="3"){
             window.open('https://linux.die.net/man/1/ncbo', '_blank');
-
+        } else if($("#nco-operation").val()=="4"){
+            window.open('https://linux.die.net/man/1/ncap2', '_blank');
         }
-    	
     },
     
     calculateButtonAction: function(){
@@ -342,8 +465,11 @@ edu.gmu.csiss.covali.nco = {
             var command = $("#ncbo-command").val();
             edu.gmu.csiss.covali.tools.remoteProcessAndLoad('../web/nco/ncbo', {"command": command});
             waiting_message = "Executing: " + command + "...";
+        }  else if($("#nco-operation").val()=="4"){
+            var command = $("#ncap2-command").val();
+            edu.gmu.csiss.covali.tools.remoteProcessAndLoad('../web/nco/ncap2', {"command": command});
+            waiting_message = "Executing: " + command + "...";
         }
-
 
         edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.nco.jsframe.NCOProcessing');
 
@@ -354,13 +480,11 @@ edu.gmu.csiss.covali.nco = {
         content += '</div>';
 
         edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 100, 700);
-
     },
 	
 	showDialog: function(){
 		
 		edu.gmu.csiss.covali.menu.closeAllDialogs();
-		
 
 		var content = '<div class="row">';
         content += '	<label class="col-md-3 control-label" for="nco-operation">Operation</label>';
@@ -369,6 +493,7 @@ edu.gmu.csiss.covali.nco = {
         content += '			<option value="1">Select</option>';
         content += '			<option id="operation-ncra" value="2">Record Average (ncra)</option>';
         content += '			<option id="operation-ncra" value="3">Binary Operator (ncbo)</option>';
+        content += '			<option id="operation-ncap2" value="4">Arithmetic Processor (ncap2)</option>';
         content += '		</select>';
         content += '	</div>';
         content += '	<div class="col-md-1 text-left" style="padding-left: 0px;">';

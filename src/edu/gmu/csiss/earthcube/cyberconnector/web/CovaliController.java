@@ -77,6 +77,13 @@ public class CovaliController {
 		return result;
 	}
 
+	@RequestMapping(value = "/nco/ncap2", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String ncap2(WebRequest request) {
+		String command = request.getParameter("command");
+		String result = ExternalShellCommandTool.execNcap2(command);
+		return result;
+	}
+
 	@RequestMapping(value = "/ncdump", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String ncdump(WebRequest request) {
 		String filepath = request.getParameter("filepath");

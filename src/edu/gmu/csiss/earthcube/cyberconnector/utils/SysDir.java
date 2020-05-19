@@ -66,9 +66,7 @@ public class SysDir {
 
 	public static Path workspace_results_path = null;
 
-	public static Path ncra_path = null;
-
-	public static Path ncbo_path = null;
+	public static Path nco_path = null;
 
 	public static Path anaconda_path = null;
 
@@ -199,9 +197,7 @@ public class SysDir {
 			
 			login_required = Boolean.parseBoolean(p.getProperty("login_required"));
 
-			ncra_path = normalizedPath(p.getProperty("ncra_path"));
-
-			ncbo_path = normalizedPath(p.getProperty("ncbo_path"));
+			nco_path = normalizedPath(p.getProperty("nco_path"));
 
 			anaconda_path = normalizedPath(p.getProperty("anaconda_path"));
 			

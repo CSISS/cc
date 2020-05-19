@@ -23,8 +23,8 @@ if [ "$NCO_DIR" == "." ]; then
 	exit 1
 fi
 
-if [ ! -f "/usr/bin/ncdump" ]; then
-	echo "/usr/bin/ncdump not found!"
+if [ ! -f "$NCO_DIR/ncdump" ]; then
+	echo "$NCO_DIR/ncdump not found!"
 	exit 1
 fi
 
@@ -125,8 +125,7 @@ sed -i'' 's|anaconda_path=.*|anaconda_path='$CONDA_DIR'|g' config.properties
 # data dir
 sed -i'' 's|covali_file_path=.*|covali_file_path='$DATA_DIR'|g' config.properties
 # nco
-sed -i'' 's|ncra_path=.*|ncra_path='$NCO_DIR'/ncra|g' config.properties
-sed -i'' 's|ncbo_path=.*|ncbo_path='$NCO_DIR'/ncbo|g' config.properties
+sed -i'' 's|nco_path=.*|nco_path='$NCO_DIR'|g' config.properties
 
 popd
 

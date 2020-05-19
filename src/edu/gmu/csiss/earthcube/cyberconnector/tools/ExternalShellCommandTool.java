@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,7 +18,13 @@ public class ExternalShellCommandTool {
     static Logger logger = Logger.getLogger(ExternalShellCommandTool.class);
 
     public static String execNcoCommand(String command) {
-        String[] args = command.split("\\s+");
+        // split on whitespace unless in quotes
+        String[] args = command.split("\\s(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+        args = Arrays.stream(args)
+                .filter(s -> !s.isEmpty())
+                .map(s -> s.replaceAll("^\"|\"$", ""))
+                .toArray(String[]::new);
+
 
         // remove absolute path for outfile
         String outfile = args[args.length - 1];
@@ -49,18 +56,25 @@ public class ExternalShellCommandTool {
     }
 
     public static String execNcra(String command) {
-        command = command.replaceAll("^ncra", SysDir.ncra_path.toString());
+        String ncra_path = SysDir.nco_path.resolve("ncra").toString();
+        command = command.replaceAll("^ncra", ncra_path);
         return execNcoCommand(command);
     }
 
     public static String execNcbo(String command) {
-        command = command.replaceAll("^ncbo", SysDir.ncbo_path.toString());
+        String ncbo_path = SysDir.nco_path.resolve("ncbo").toString();
+        command = command.replaceAll("^ncbo", ncbo_path);
+        return execNcoCommand(command);
+    }
+
+    public static String execNcap2(String command) {
+        String ncap2_path = SysDir.nco_path.resolve("ncap2").toString();
+        command = command.replaceAll("^ncap2", ncap2_path);
         return execNcoCommand(command);
     }
 
     public static String ncdump(String filepath) {
-        // TODO: add SysDir option
-        String ncdumpPath = "/usr/bin/ncdump";
+        String ncdumpPath = SysDir.nco_path.resolve("ncdump").toString();
 
         ProcessBuilder pb = new ProcessBuilder(ncdumpPath, "-c", filepath);
         pb.directory(SysDir.workspace_path.toFile());
