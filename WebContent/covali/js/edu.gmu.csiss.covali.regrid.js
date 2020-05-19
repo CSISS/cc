@@ -118,6 +118,13 @@ edu.gmu.csiss.covali.regrid = {
         content += '	</div>';
         content += '  </dl>';
 
+        // FILEINFO
+        content += '  <div class="row">';
+        content += '	<label class="col-md-3 control-label">File Info (ncdump)</label>';
+        content += '	<div class="col-md-9 fileinfo-links">';
+        content += '	</div>';
+        content += '  </div><br/>';
+
         // CUSTOM GRID
         content += '  <dl class="row">';
         content += '	<label class="col-md-3 control-label" for="is-custom-grid">Custom Global Grid?</label>';
@@ -177,7 +184,7 @@ edu.gmu.csiss.covali.regrid = {
         content += '</p></div>';
 
 
-        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 580);
+        edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content, 600);
 
 
         $('#regrid-add-datafile-btn').click(function(){
@@ -185,7 +192,6 @@ edu.gmu.csiss.covali.regrid = {
                 $('#regrid-datafile').val(selectedFile);
                 $('#regrid-datafile').change();
                 edu.gmu.csiss.covali.filebrowser.close();
-
             };
             edu.gmu.csiss.covali.filebrowser.init();
         });
@@ -201,6 +207,11 @@ edu.gmu.csiss.covali.regrid = {
 
         $('#regrid-datafile, #regrid-gridfile, #is-custom-grid, #custom-grid-lat, #custom-grid-lon, #is-periodic').change(function(){
             edu.gmu.csiss.covali.regrid.inputFilesChanged();
+
+            var file1 = $('#regrid-datafile').val();
+            var file2 = $('#regrid-gridfile').val();
+
+            edu.gmu.csiss.covali.nco.updateFileInfoLinks([file1, file2]);
         });
 
 
