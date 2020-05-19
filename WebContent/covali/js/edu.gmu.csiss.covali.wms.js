@@ -186,8 +186,12 @@ edu.gmu.csiss.covali.wms = {
             //get time dimension
 
             json = layer;
-
             json.text = layer.Title;
+
+            var shortName = layer.Name.split('/')[1];
+            if(shortName && shortName != layer.Title) {
+                json.text += ' (' + shortName + ')';
+            }
 
             edu.gmu.csiss.covali.wms.layerlist.push(layer); //update the layerlist as well. It means once layerjson is updated, layerlist must be updated. The reverse will not happen.
 
