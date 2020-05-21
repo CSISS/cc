@@ -329,10 +329,6 @@ li.selected {
 }
 
 #projectionselector {
-	position: absolute;
-	right:20px;
-	top:1px;
-	z-index:100;
 	height: 20px;
 	width: 176px;
 	padding: 2px;
