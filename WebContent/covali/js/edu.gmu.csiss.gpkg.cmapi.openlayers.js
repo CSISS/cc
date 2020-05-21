@@ -90,16 +90,21 @@ edu.gmu.csiss.gpkg.cmapi.openlayers = {
 	},
 	
 	loadMap: function(divid){
-		
+
 		// Declare a Tile layer with an OSM source
         var osmLayer = new ol.layer.Tile({
-          source: new ol.source.OSM({
-        	  
-        	  crossOrigin: null
-        	  
-          }),
-          name: "osm-basemap",
-          title: "OSM Basemap",
+          // source: new ol.source.OSM({
+			//   crossOrigin: null,
+			//   url: 'http://{a-c}.tile.stamen.com/terrain-background/{z}/{x}/{y}@2x.png'
+          // }),
+			source: new ol.source.Stamen({
+				crossOrigin: null,
+				layer: 'toner-lite',
+				url: 'http://{a-c}.tile.stamen.com/toner-lite/{z}/{x}/{y}@2x.png',
+				reprojectionErrorThreshold: 0
+			}),
+          name: "osm-toner",
+          title: "Basemap",
 		  zIndex: 0
 
 //          type: 'base'
