@@ -16,6 +16,7 @@ import edu.gmu.csiss.earthcube.cyberconnector.database.DataBaseOperation;
 import edu.gmu.csiss.earthcube.cyberconnector.products.RemoteFileCache;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.IRISTool;
 import edu.gmu.csiss.earthcube.cyberconnector.tools.ExternalShellCommandTool;
+import edu.gmu.csiss.earthcube.cyberconnector.tools.SnapshotTool;
 import edu.iris.dmc.fdsn.station.model.Channel;
 import edu.iris.dmc.fdsn.station.model.Station;
 import org.apache.commons.io.FilenameUtils;
@@ -90,6 +91,17 @@ public class CovaliController {
 		String result = ExternalShellCommandTool.ncdump(filepath);
 		return result;
 	}
+
+	@RequestMapping(value = "/snapshot/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String snapsave(WebRequest request) {
+		return SnapshotTool.saveSnapshot(request);
+	}
+
+	@RequestMapping(value = "/snapshot/load", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String snapload(WebRequest request) {
+		return SnapshotTool.loadSnapshot(request);
+	}
+
 
 	@RequestMapping(value = "/iris/stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String irisstationlist() {

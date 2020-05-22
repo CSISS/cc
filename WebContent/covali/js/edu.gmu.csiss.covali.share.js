@@ -40,42 +40,6 @@ edu.gmu.csiss.covali.share = {
 				"</div>";
 			edu.gmu.csiss.covali.menu.createDialog(dialogName, dialogTitle, content);
 			edu.gmu.csiss.covali.share.shareOnShown();
-			
-//			BootstrapDialog.show({
-//	            
-//				message: content,
-//	            
-//	            title: "Share",
-//	            
-//	            cssClass: 'dialog-vertical-center',
-//	            
-//	            onshown: function(){
-//	            	
-//	            	$("#social-btns").jsSocials({
-//	                    shares: ["email", "twitter", "facebook", "googleplus", "linkedin", "pinterest", "stumbleupon", "whatsapp"],
-//	                    text: "COVALI: a web system for comparison and validation of atmospheric models",
-//	                    showLabel: true,
-//	                    showCount: true,
-//	                    shareIn: "popup"
-//	                });
-//	            	
-//	            },
-//	            
-//	            buttons: [{
-//	            
-//	            	label: 'Close',
-//	            	
-//	                action: function(dialogItself){
-//	                	
-//	                    dialogItself.close();
-//	                    
-//	                }
-//	            
-//	            }]
-//	        
-//			});
-			
-			
 		}
 		
 }
