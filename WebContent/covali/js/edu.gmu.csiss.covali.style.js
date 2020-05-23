@@ -10,9 +10,6 @@ edu.gmu.csiss.covali.style = {
         var legendurl = layer.get('legendurl');
         var layerdetails = layer.get('layerdetails');
 
-        layer.getP
-
-
         var palettename = edu.gmu.csiss.covali.util.getUrlParameterByName(legendurl, "PALETTE") ;
 
         if(!palettename){
