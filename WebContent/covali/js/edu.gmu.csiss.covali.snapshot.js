@@ -34,10 +34,66 @@ edu.gmu.csiss.covali.snapshot = {
         }, 300);
     },
 
-    serializeLayers: function() {
+
+    serializeMapLayers: function(side) {
+        var olmap = edu.gmu.csiss.covali.map.getMapBySide(side);
+
+        var layers =  olmap.getLayers().getArray();
+
+        var sortablelayers = layers.slice(2);
+
+        sortablelayers = sortablelayers.sort(function(l1, l2) {
+            if(l1.getZIndex() < l2.getZIndex()) {
+                return -1;
+            }
+            return 1;
+        });
+
+        return sortablelayers.map(function(olayer) {
+            var layerState = {}
+            layerState.creationArguments = olayer.get('creationArguments');
+            layerState.opacity = olayer.getOpacity();
+            layerState.params = olayer.getSource().getParams();
+
+            return layerState;
+        });
     },
 
-    deserializeLayers: function(layerState) {
+    deserializeMapLayer: function(side, layerState) {
+        var args = Object.values(layerState.creationArguments)
+        edu.gmu.csiss.covali.map.addWMSLayer(...args);
+
+        // wait for layer to initialize (load metadata, run map events)
+        setTimeout(function() {
+            var olayer = edu.gmu.csiss.covali.map.getOLLayerByName(side, args[2]);
+            olayer.setOpacity(layerState.opacity);
+            olayer.getSource().updateParams(layerState.params);
+        }, 300);
+    },
+
+    serializeLayers: function() {
+        var layerStates = {}
+
+        layerStates.left = this.serializeMapLayers('left');
+        layerStates.right = this.serializeMapLayers('right');
+
+        return layerStates;
+    },
+
+    deserializeLayers: function(layerStates) {
+        layerStates.left.forEach(function(layerState) {
+            edu.gmu.csiss.covali.snapshot.deserializeMapLayer('left', layerState);
+        });
+
+        layerStates.right.forEach(function(layerState) {
+            edu.gmu.csiss.covali.snapshot.deserializeMapLayer('right', layerState);
+        });
+
+        setTimeout(function() {
+            edu.gmu.csiss.covali.legend.refresh('left');
+            edu.gmu.csiss.covali.legend.refresh('right');
+        }, 500);
+
     },
 
     serializeSnapshot: function() {
@@ -50,7 +106,13 @@ edu.gmu.csiss.covali.snapshot = {
 
     deserializeSnapshot: function(snapshot) {
         this.deserializeView(snapshot.view);
-        this.deserializeLayers(snapshot.layers);
+
+        edu.gmu.csiss.covali.wms.loadLocal();
+        setTimeout(function() {
+            edu.gmu.csiss.covali.menu.closeDialog('edu.gmu.csiss.covali.wms.jsframe.LayerSelector');
+            edu.gmu.csiss.covali.snapshot.deserializeLayers(snapshot.layers);
+        }, 300);
+
     },
 
     saveSnapshot: function() {
@@ -59,6 +121,8 @@ edu.gmu.csiss.covali.snapshot = {
         var description = "Description " + identifier;
         var snapshot = this.serializeSnapshot();
 
+        console.log('Saving snapshot ' + identifier + ':');
+        console.log(snapshot);
 
         $.ajax({
             // contentType: "application/json", //this is by default

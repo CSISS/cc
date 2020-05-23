@@ -220,6 +220,9 @@ edu.gmu.csiss.covali.map = {
             })
         });
 
+        olayer.set('creationArguments', arguments);
+
+
         olayer.set('legendurl', legendurl);
 
         if(!timesteps) {
