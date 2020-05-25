@@ -164,7 +164,7 @@ edu.gmu.csiss.covali.snapshot = {
                 alert(data.failure.message);
             }
         }).error(function (error) {
-            alert("Failed to save snapshot: " + error);
+            alert("Failed to load snapshot: " + error);
             console.log(error);
         });
     },
