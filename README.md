@@ -82,7 +82,7 @@ Example:
 
 ![comparison](docs/comparison_asr_era5.jpg)
 
-Animation Demo:
+General Demo:
 
 ![general](docs/covali-demo.gif)
 
@@ -124,6 +124,13 @@ COVALI provides a Settings menu to controll the two maps. It allows users to man
 
 COVALI provides a number of tools to facilitate the comparison and validation among the data. 
 
+
+#### Animation
+
+Create an animation from multiple data time steps.
+
+![animdemo](docs/animdemo.gif)
+
 #### Statistic Report
 
 Users can draw points or lines on the map to get a statistics on the values on the points or along the lines.
@@ -144,6 +151,25 @@ conda install -y -n esmpy8  -c conda-forge "esmf!=*nompi" esmpy xarray=0.14.1 sc
 ``` 
 
 ![regridding](site/regridding-demo.gif)
+
+#### NCO Operations
+
+The following NetCDF operators are supported for selected variables in files:
+
+* ncra (Record Average)
+* ncbo (Binary Operators: Add, Subtract, Multiply, Divide)
+* ncap2 (Scriptable Arithmetic Operator)
+
+![ncra](docs/ncra.png)
+
+![ncbo](docs/ncbo.png)
+
+![ncap2](docs/ncap2.png)
+
+ncdump is supported for providing file information for NCO and Regridding tools:
+
+![ncdump](docs/ncdump.png)
+
 #### Map rotation
 
 Use `Alt+Shift+Drag` to rotate the map.
