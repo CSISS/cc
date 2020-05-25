@@ -176,7 +176,7 @@ edu.gmu.csiss.covali.snapshot = {
         if(snapshotId) {
             this.loadSnapshot(snapshotId);
         }
-        history.replaceState(null, '', 'covali')
+        history.replaceState(null, '', 'covali');
 
     }
 }
