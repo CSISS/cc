@@ -96,11 +96,11 @@ COVALI has different projection options and 3-D view to enable multi-perspective
 
 ### Search Data
 
-#### search in UCAR server
+#### Search in UCAR server
 
 ![ucar](docs/search_ucar.png)
 
-#### search in the public folder
+#### Search in the public folder
 
 ![local](docs/search_local.png)
 
