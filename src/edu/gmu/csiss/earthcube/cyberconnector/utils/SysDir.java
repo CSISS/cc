@@ -184,8 +184,12 @@ public class SysDir {
 			
 			database_driver = p.getProperty("database_driver");
 
-			String h2_embed_prop = p.getProperty("database_h2_embedded").toLowerCase();
-			database_h2_embedded = h2_embed_prop.equals("true");
+			String h2_embed_prop = p.getProperty("database_h2_embedded");
+			if(h2_embed_prop == null) {
+				h2_embed_prop = "false";
+			}
+
+			database_h2_embedded = h2_embed_prop.toLowerCase().equals("true");
 
 			database_h2_embedded_host = p.getProperty("database_h2_embedded_host");
 
