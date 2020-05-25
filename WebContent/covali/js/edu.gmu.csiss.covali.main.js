@@ -27,6 +27,8 @@ edu.gmu.csiss.covali.main = {
 
         edu.gmu.csiss.covali.about.init();
 
+		edu.gmu.csiss.covali.snapshot.loadFromUrl();
+
         // edu.gmu.csiss.covali.automate.loadExampleData();
 		// edu.gmu.csiss.covali.search.init();
 

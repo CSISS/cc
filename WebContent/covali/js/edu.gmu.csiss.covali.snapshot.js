@@ -137,7 +137,7 @@ edu.gmu.csiss.covali.snapshot = {
         }).success(function(data) {
             if(data.success) {
                 console.log(identifier);
-                alert("Saved snapshot " + identifier);
+                // alert("Saved snapshot " + identifier);
             } else {
                 alert(data.failure.message);
             }
@@ -157,6 +157,7 @@ edu.gmu.csiss.covali.snapshot = {
             data: {identifier: identifier}
         }).success(function(data) {
             if(data.success) {
+                console.log("Loaded snapshot " + identifier);
                 console.log(data.success);
                 edu.gmu.csiss.covali.snapshot.deserializeSnapshot(JSON.parse(data.success.snapshot));
             } else {
@@ -166,5 +167,16 @@ edu.gmu.csiss.covali.snapshot = {
             alert("Failed to save snapshot: " + error);
             console.log(error);
         });
+    },
+
+    loadFromUrl: function() {
+        var params = new URLSearchParams(window.location.href.split('?')[1])
+        var snapshotId = params.get('snapshot');
+
+        if(snapshotId) {
+            this.loadSnapshot(snapshotId);
+        }
+        history.replaceState(null, '', 'covali')
+
     }
 }
