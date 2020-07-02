@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.soap.SOAPException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -365,7 +364,7 @@ public class BaseTool {
             
             resp =  client.getRespmessage();
             
-        } catch (SOAPException ex) {
+        } catch (Exception ex) {
         
         	String errmsg = ex.getClass().getName()+ex.getLocalizedMessage();
             

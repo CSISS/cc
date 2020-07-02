@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>CyberConnector</groupId>
     <artifactId>CyberConnector</artifactId>
-    <version>0.8.3</version>
+    <version>0.8.4</version>
     <packaging>war</packaging>
     <name>CyberConnector</name>
     <description>NSF EarthCube Funded Building Block Project</description>
@@ -278,6 +278,18 @@
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>
         </dependency>
+        
+        <dependency>
+		    <groupId>javax.xml.soap</groupId>
+		    <artifactId>javax.xml.soap-api</artifactId>
+		    <version>1.4.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.3.1</version>
+		</dependency>
 
     </dependencies>
     <organization>

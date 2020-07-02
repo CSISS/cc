@@ -52,7 +52,7 @@ edu.gmu.csiss.covali.style = {
             minmax[1],
             sp[0],
             belowabove[0],
-            belowabove[1],
+            belowabove[1]
         );
 
     },
