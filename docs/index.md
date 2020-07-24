@@ -11,18 +11,6 @@ This project aims to connect the existing data sources to the Earth science mode
 
 A sub-system for comparison and validation of Earth system science models. COVALI is the most important sub-system of CyberConnector. It can support comparison and validation of the tremendous amount of observational data or modeling data from atmospheric and other Earth science models (funded by [EarthCube CyberWay](http://cube.csiss.gmu.edu/CyberWay/web/index)). 
 
-## 1.2 Data Searcher
-
-A sub-system for searching Earth observations, model results or virtual data products (VDP)
-
-## 1.3 Data Orderer
-
-A sub-system for orderring VDP (customizing existing observations into ready-to-use format)
-
-## 1.4 Data Register
-
-A sub-system for registering and searching geoprocessing web services
-
 # 2. Installation
 
 ## 2.1 Prerequisite
@@ -39,17 +27,16 @@ ncWMS 2.4.1+ (mandatory, download ncWMS.war and deploy it into Tomcat webapps fo
 
 Apache Maven 3.5.0+ (optional, building CyberConnector.war from source)
 
-## 2.2 Java War Package
+## 2.2 Quick Install
 
-To use CyberConnector, [download](https://github.com/CSISS/cc/releases) the latest release war and copy it to the webapps directory of Tomcat. Start Tomcat. 
+CyberConnector installer support CentOS, Ubuntu/Debian and Mac OS X operating systems. To get started download the latest source code. The installer script requires two parameters: the Anaconda directory and the data directory paths. 
 
-After the tomcat is fully started, configure the database connection. The configuration files are `WEB-INF/classes/config.properties` (database url, default: jdbc:mysql://localhost:3306/cyberconnector) and `WEB-INF/classes/cc_secret.properties` (database username and password: database_user=root database_password=xxxxxxxx). Fill the fields with correct values. (**Note: the database must be initiated first.**)
+Example usage: 
 
-Then enter the following URL into browser address bar to open CyberConnector:
-
-`http://your-ip:your-port/CyberConnector-<version>/web/CyberConnector`
-
-Replace the `your-ip`, `your-port`, `CyberConnector-<version>` with the real name of your tomcat and downloaded CyberConnector package. For example, `localhost:8080`, `CyberConnector-0.6.6`.
+```
+cd install
+./install.sh /opt/anaconda3 /data
+```
 
 ## 2.3 Docker Image
 
@@ -57,9 +44,6 @@ We published a Docker image in DockerHub for docker users. The pull command is:
 
 `docker pull csiss/cyberconnector`
 
-## 2.4 Cloud Instance Template
-
-We provide a ready-to-use cloud template for you to install on mainstream cloud platforms like AWS, Google Cloud, Azure, OpenStack and CloudStack. Please go here to download the template.
 
 # 3. Usage
 

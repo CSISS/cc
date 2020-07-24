@@ -29,30 +29,12 @@ Apache Maven 3.5.0+ (optional, building CyberConnector.war from source)
 
 CyberConnector installer support CentOS, Ubuntu/Debian and Mac OS X operating systems. To get started download the latest source code. The installer script requires two parameters: the Anaconda directory and the data directory paths. 
 
-
 Example usage: 
 
 ```
 cd install
 ./install.sh /opt/anaconda3 /data
 ```
-
-
-### Java WAR Package
-
-To manually deploy CyberConnector to Apache Tomcat, [download](https://github.com/CSISS/cc/releases) the latest release war and copy it to the webapps directory of Tomcat. Start Tomcat. 
-
-After the Tomcat is fully started, configure the database connection. The configuration files are `WEB-INF/classes/config.properties` (database url, default: jdbc:mysql://localhost:3306/cyberconnector) and `WEB-INF/classes/cc_secret.properties` (database username and password: database_user=root database_password=xxxxxxxx). Fill the fields with correct values. (**Note: the database must be initiated first.**)
-
-Then enter the following URL into browser address bar to open CyberConnector:
-
-`http://your-ip:your-port/CyberConnector-<version>/web/CyberConnector`
-
-Replace the `your-ip`, `your-port`, `CyberConnector-<version>` with the real name of your tomcat and downloaded CyberConnector package. For example, `localhost:8080`, `CyberConnector-0.6.6`.
-
-### Cloud Instance Template
-
-We provide a ready-to-use cloud template for you to install on mainstream cloud platforms like AWS, Google Cloud, Azure, OpenStack and CloudStack. Please go here to download the template.
 
 ### Docker Image
 
@@ -67,12 +49,6 @@ The run command is:
 # Modules
 
 COVALI - a sub-system for comparison and validation of atmospheric and other Earth science models (funded by [EarthCube CyberWay](http://cube.csiss.gmu.edu/CyberWay/web/index))
-
-CyberConnector Searcher - a sub-system for searching Earth observations, model results or virtual data products (VDP)
-
-CyberConnector Orderer - a sub-system for orderring VDP (customizing existing observations into ready-to-use format)
-
-CyberConnector Service Register - a sub-system for registering and searching geoprocessing web services
 
 # Usage
 
