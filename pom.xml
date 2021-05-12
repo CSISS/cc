@@ -8,7 +8,7 @@
     <description>NSF EarthCube Funded Building Block Project</description>
     <properties>
         <org.springframework-version>4.3.19.RELEASE</org.springframework-version>
-        <org.springsecurity-version>4.2.9.RELEASE</org.springsecurity-version>
+        <org.springsecurity-version>5.2.10.RELEASE</org.springsecurity-version>
     </properties>
     <build>
         <sourceDirectory>src</sourceDirectory>
